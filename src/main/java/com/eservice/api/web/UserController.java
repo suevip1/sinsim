@@ -83,7 +83,11 @@ public class UserController {
                 }
             }
             UserDetail userDetail = userService.requestLogin(account, password);
-            return ResultGenerator.genSuccessResult(userDetail);
+            if(userDetail == null) {
+                return ResultGenerator.genFailResult("账号或密码不正确！");
+            }else {
+                return ResultGenerator.genSuccessResult(userDetail);
+            }
         }
     }
 }
