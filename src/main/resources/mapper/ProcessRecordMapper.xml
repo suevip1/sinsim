@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.ProcessRecordMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.process_record.ProcessRecord">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="machine_id" jdbcType="INTEGER" property="machineId" />
+    <result column="process_id" jdbcType="INTEGER" property="processId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="link_data" jdbcType="LONGVARCHAR" property="linkData" />
+    <result column="node_data" jdbcType="LONGVARCHAR" property="nodeData" />
+  </resultMap>
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.user.User">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="valid" jdbcType="TINYINT" property="valid" />
+  </resultMap>
+
+    <resultMap id="UserDetailMap" type="com.eservice.api.model.user.UserDetail">
+        <id column="id" property="id" />
+        <result column="account" jdbcType="VARCHAR" property="account" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <!--<result column="password" jdbcType="VARCHAR" property="password" />-->
+        <result column="valid" jdbcType="TINYINT" property="valid" />
+        <association javaType="com.eservice.api.model.role.Role" property="role">
+            <id column="id" property="id" />
+            <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+            <result column="role_des" jdbcType="VARCHAR" property="roleDes" />
+        </association>
+        <association javaType="com.eservice.api.model.install_group.InstallGroup" property="group">
+            <id column="id" property="id" />
+            <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+        </association>
+    </resultMap>
+
+
+    <select id="getUserAllDetail" resultMap="UserDetailMap">
+        SELECT u.*, r.*
+        FROM user u
+        JOIN role r ON r.id = u.role_id
+        WHERE u.id = ${id}
+    </select>
+
+    <select id="requestLogin" resultMap="UserDetailMap">
+        SELECT u.id, u.name, u.account, u.valid, r.*, ig.*
+        FROM user u
+        JOIN role r ON r.id = u.role_id
+        JOIN install_group ig ON u.group_id = ig.id
+        WHERE u.account = '${account}' AND u.password = '${password}'
+    </select>
+
+</mapper>

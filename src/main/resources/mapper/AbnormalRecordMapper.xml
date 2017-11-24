@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.AbnormalRecordMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.abnormal_record.AbnormalRecord">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="abnormal_type" jdbcType="TINYINT" property="abnormalType" />
+    <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
+    <result column="submit_user" jdbcType="INTEGER" property="submitUser" />
+    <result column="solution_user" jdbcType="INTEGER" property="solutionUser" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+    <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
+  </resultMap>
+</mapper>

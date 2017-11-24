@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.OrderDetailMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.order_detail.OrderDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="special_towel_color" jdbcType="VARCHAR" property="specialTowelColor" />
+    <result column="special_towel_daxle" jdbcType="VARCHAR" property="specialTowelDaxle" />
+    <result column="special_towel_haxle" jdbcType="VARCHAR" property="specialTowelHaxle" />
+    <result column="special_towel_motor" jdbcType="VARCHAR" property="specialTowelMotor" />
+    <result column="special_taping_head" jdbcType="VARCHAR" property="specialTapingHead" />
+    <result column="special_towel_needle" jdbcType="VARCHAR" property="specialTowelNeedle" />
+    <result column="electric_pc" jdbcType="VARCHAR" property="electricPc" />
+    <result column="electric_motor" jdbcType="VARCHAR" property="electricMotor" />
+    <result column="electric_motor_xy" jdbcType="VARCHAR" property="electricMotorXy" />
+    <result column="electric_trim" jdbcType="VARCHAR" property="electricTrim" />
+    <result column="electric_power" jdbcType="VARCHAR" property="electricPower" />
+    <result column="electric_switch" jdbcType="VARCHAR" property="electricSwitch" />
+    <result column="electric_oil" jdbcType="VARCHAR" property="electricOil" />
+    <result column="axle_split" jdbcType="VARCHAR" property="axleSplit" />
+    <result column="axle_panel" jdbcType="VARCHAR" property="axlePanel" />
+    <result column="axle_needle" jdbcType="VARCHAR" property="axleNeedle" />
+    <result column="axle_rail" jdbcType="VARCHAR" property="axleRail" />
+    <result column="axle_down_check" jdbcType="VARCHAR" property="axleDownCheck" />
+    <result column="axle_hook" jdbcType="VARCHAR" property="axleHook" />
+    <result column="axle_jump" jdbcType="VARCHAR" property="axleJump" />
+    <result column="axle_upper_thread" jdbcType="VARCHAR" property="axleUpperThread" />
+    <result column="axle_addition" jdbcType="VARCHAR" property="axleAddition" />
+    <result column="framework_color" jdbcType="VARCHAR" property="frameworkColor" />
+    <result column="framework_platen" jdbcType="VARCHAR" property="frameworkPlaten" />
+    <result column="framework_platen_color" jdbcType="VARCHAR" property="frameworkPlatenColor" />
+    <result column="framework_ring" jdbcType="VARCHAR" property="frameworkRing" />
+    <result column="framework_bracket" jdbcType="VARCHAR" property="frameworkBracket" />
+    <result column="framework_stop" jdbcType="VARCHAR" property="frameworkStop" />
+    <result column="framework_light" jdbcType="VARCHAR" property="frameworkLight" />
+    <result column="driver_type" jdbcType="VARCHAR" property="driverType" />
+    <result column="driver_method" jdbcType="VARCHAR" property="driverMethod" />
+    <result column="driver_reel_hole" jdbcType="VARCHAR" property="driverReelHole" />
+    <result column="driver_horizon_num" jdbcType="TINYINT" property="driverHorizonNum" />
+    <result column="driver_vertical_num" jdbcType="TINYINT" property="driverVerticalNum" />
+    <result column="driver_reel" jdbcType="VARCHAR" property="driverReel" />
+  </resultMap>
+</mapper>
