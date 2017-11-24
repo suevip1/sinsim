@@ -29,6 +29,11 @@ public class UserController {
     @Resource
     private DeviceServiceImpl deviceService;
 
+    /**
+     * 该值为default值， Android端传入的参数不能为“0”
+     */
+    private static String ZERO_STRING = "0";
+
     @PostMapping("/add")
     public Result add(User user) {
         userService.save(user);
@@ -77,7 +82,7 @@ public class UserController {
             return ResultGenerator.genFailResult("密码不能为空！");
         }else {
             //移动端MEID值需要传入，且不为“0”
-            if(!"0".equals(meid)) {
+            if(!ZERO_STRING.equals(meid)) {
                 if(deviceService.findDeviceByMEID(meid) == null) {
                     return ResultGenerator.genFailResult("设备没有登陆权限！");
                 }
