@@ -2,6 +2,7 @@ package com.eservice.api.service.impl;
 
 import com.eservice.api.dao.MachineOrderMapper;
 import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.service.MachineOrderService;
 import com.eservice.api.core.AbstractService;
 import org.springframework.stereotype.Service;
@@ -21,4 +22,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
     @Resource
     private MachineOrderMapper machineOrderMapper;
 
+    public MachineOrderDetail getOrderAllDetail(Integer id) {
+        return  machineOrderMapper.getOrderAllDetail(id);
+    }
 }
