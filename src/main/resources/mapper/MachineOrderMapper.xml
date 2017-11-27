@@ -31,4 +31,88 @@
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="mark" jdbcType="LONGVARCHAR" property="mark" />
   </resultMap>
+
+  <resultMap id="MachineOrderDetailMap" type="com.eservice.api.model.machine_order.MachineOrderDetail">
+    <!--<id column="id" jdbcType="INTEGER" property="id" />-->
+    <id column="id"  property="id" />
+    <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId" />
+    <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId" />
+    <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
+    <result column="contract_num" jdbcType="VARCHAR" property="contractNum" />
+    <result column="customer" jdbcType="VARCHAR" property="customer" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="brand" jdbcType="VARCHAR" property="brand" />
+    <result column="machine_type" jdbcType="INTEGER" property="machineType" />
+    <result column="needle_num" jdbcType="INTEGER" property="needleNum" />
+    <result column="head_num" jdbcType="INTEGER" property="headNum" />
+    <result column="head_distance" jdbcType="INTEGER" property="headDistance" />
+    <result column="x_distance" jdbcType="VARCHAR" property="xDistance" />
+    <result column="y_distance" jdbcType="VARCHAR" property="yDistance" />
+    <result column="package_method" jdbcType="VARCHAR" property="packageMethod" />
+    <result column="machine_num" jdbcType="TINYINT" property="machineNum" />
+    <result column="machine_price" jdbcType="VARCHAR" property="machinePrice" />
+    <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
+    <result column="plan_ship_date" jdbcType="DATE" property="planShipDate" />
+    <result column="sellman" jdbcType="VARCHAR" property="sellman" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="mark" jdbcType="LONGVARCHAR" property="mark" />
+    <association javaType="com.eservice.api.model.order_detail.OrderDetail" property="orderDetail">
+      <!--<id column="id" jdbcType="INTEGER" property="id" />-->
+      <id column="id"  property="id" />
+      <result column="special_towel_color" jdbcType="VARCHAR" property="specialTowelColor" />
+      <result column="special_towel_daxle" jdbcType="VARCHAR" property="specialTowelDaxle" />
+      <result column="special_towel_haxle" jdbcType="VARCHAR" property="specialTowelHaxle" />
+      <result column="special_towel_motor" jdbcType="VARCHAR" property="specialTowelMotor" />
+      <result column="special_taping_head" jdbcType="VARCHAR" property="specialTapingHead" />
+      <result column="special_towel_needle" jdbcType="VARCHAR" property="specialTowelNeedle" />
+      <result column="electric_pc" jdbcType="VARCHAR" property="electricPc" />
+      <result column="electric_motor" jdbcType="VARCHAR" property="electricMotor" />
+      <result column="electric_motor_xy" jdbcType="VARCHAR" property="electricMotorXy" />
+      <result column="electric_trim" jdbcType="VARCHAR" property="electricTrim" />
+      <result column="electric_power" jdbcType="VARCHAR" property="electricPower" />
+      <result column="electric_switch" jdbcType="VARCHAR" property="electricSwitch" />
+      <result column="electric_oil" jdbcType="VARCHAR" property="electricOil" />
+      <result column="axle_split" jdbcType="VARCHAR" property="axleSplit" />
+      <result column="axle_panel" jdbcType="VARCHAR" property="axlePanel" />
+      <result column="axle_needle" jdbcType="VARCHAR" property="axleNeedle" />
+      <result column="axle_rail" jdbcType="VARCHAR" property="axleRail" />
+      <result column="axle_down_check" jdbcType="VARCHAR" property="axleDownCheck" />
+      <result column="axle_hook" jdbcType="VARCHAR" property="axleHook" />
+      <result column="axle_jump" jdbcType="VARCHAR" property="axleJump" />
+      <result column="axle_upper_thread" jdbcType="VARCHAR" property="axleUpperThread" />
+      <result column="axle_addition" jdbcType="VARCHAR" property="axleAddition" />
+      <result column="framework_color" jdbcType="VARCHAR" property="frameworkColor" />
+      <result column="framework_platen" jdbcType="VARCHAR" property="frameworkPlaten" />
+      <result column="framework_platen_color" jdbcType="VARCHAR" property="frameworkPlatenColor" />
+      <result column="framework_ring" jdbcType="VARCHAR" property="frameworkRing" />
+      <result column="framework_bracket" jdbcType="VARCHAR" property="frameworkBracket" />
+      <result column="framework_stop" jdbcType="VARCHAR" property="frameworkStop" />
+      <result column="framework_light" jdbcType="VARCHAR" property="frameworkLight" />
+      <result column="driver_type" jdbcType="VARCHAR" property="driverType" />
+      <result column="driver_method" jdbcType="VARCHAR" property="driverMethod" />
+      <result column="driver_reel_hole" jdbcType="VARCHAR" property="driverReelHole" />
+      <result column="driver_horizon_num" jdbcType="TINYINT" property="driverHorizonNum" />
+      <result column="driver_vertical_num" jdbcType="TINYINT" property="driverVerticalNum" />
+      <result column="driver_reel" jdbcType="VARCHAR" property="driverReel" />
+    </association>
+
+  </resultMap>
+
+  <!--<select id="getOrderAllDetail" resultMap="BaseResultMap">-->
+    <!--select  mo.id-->
+    <!--from machine_order mo-->
+    <!--where mo.id = ${id};-->
+  <!--</select>-->
+  <select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
+    select  mo.*, od.*
+    from machine_order mo
+     join order_detail od
+     on mo.order_detail_id=od.id
+     where mo.id = ${id};
+  </select>
+
+
 </mapper>

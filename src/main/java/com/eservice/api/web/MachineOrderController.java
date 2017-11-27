@@ -2,7 +2,10 @@ package com.eservice.api.web;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.machine_order.MachineOrderDetail;
+import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.service.MachineOrderService;
+import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +25,8 @@ import java.util.List;
 @RequestMapping("/machine/order")
 public class MachineOrderController {
     @Resource
-    private MachineOrderService machineOrderService;
+//    private MachineOrderService machineOrderService;
+    private MachineOrderServiceImpl machineOrderService;
 
     @PostMapping("/add")
     public Result add(MachineOrder machineOrder) {
@@ -46,6 +50,12 @@ public class MachineOrderController {
     public Result detail(@RequestParam Integer id) {
         MachineOrder machineOrder = machineOrderService.findById(id);
         return ResultGenerator.genSuccessResult(machineOrder);
+    }
+	
+    @PostMapping("/all_detail")
+    public Result allDetail(@RequestParam Integer id) {
+        MachineOrderDetail machineOrderDetail = machineOrderService.getOrderAllDetail(id);
+        return ResultGenerator.genSuccessResult(machineOrderDetail);
     }
 
     @PostMapping("/list")
