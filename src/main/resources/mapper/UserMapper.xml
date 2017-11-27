@@ -33,9 +33,10 @@
 
 
     <select id="getUserAllDetail" resultMap="UserDetailMap">
-        SELECT u.*, r.*
+        SELECT u.id, u.name, u.account, u.valid, r.*, ig.*
         FROM user u
         JOIN role r ON r.id = u.role_id
+        JOIN install_group ig ON u.group_id = ig.id
         WHERE u.id = ${id}
     </select>
 
