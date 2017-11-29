@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -24,5 +26,13 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
 
     public MachineOrderDetail getOrderAllDetail(Integer id) {
         return  machineOrderMapper.getOrderAllDetail(id);
+    }
+    public List<MachineOrderDetail> selectOrder(Integer id, String contract_num, Integer status, String sellman,
+                                                String customer, String query_start_time, String query_finish_time, String machine_name, Boolean is_fuzzy){
+//        if (is_fuzzy){
+            return  machineOrderMapper.selectOrderFuzzy(id, contract_num, status,sellman,customer,query_start_time,query_finish_time,machine_name);
+//        } else {
+//            return  machineOrderMapper.selectOrder(id, contract_num, status,saleman,customer,create_time,end_time,machine_name);
+//        }
     }
 }

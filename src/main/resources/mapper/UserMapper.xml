@@ -21,19 +21,19 @@
         <!--<result column="password" jdbcType="VARCHAR" property="password" />-->
         <result column="valid" jdbcType="TINYINT" property="valid" />
         <association javaType="com.eservice.api.model.role.Role" property="role">
-            <id column="id" property="id" />
+            <id column="role_id" property="id" />
             <result column="role_name" jdbcType="VARCHAR" property="roleName" />
             <result column="role_des" jdbcType="VARCHAR" property="roleDes" />
         </association>
         <association javaType="com.eservice.api.model.install_group.InstallGroup" property="group">
-            <id column="id" property="id" />
+            <id column="install_group_id" property="id" />
             <result column="group_name" jdbcType="VARCHAR" property="groupName" />
         </association>
     </resultMap>
 
 
     <select id="getUserAllDetail" resultMap="UserDetailMap">
-        SELECT u.id, u.name, u.account, u.valid, r.*, ig.*
+        SELECT u.*, r.id role_id, r.role_des, r.role_name, ig.id install_group_id, ig.group_name
         FROM user u
         JOIN role r ON r.id = u.role_id
         JOIN install_group ig ON u.group_id = ig.id

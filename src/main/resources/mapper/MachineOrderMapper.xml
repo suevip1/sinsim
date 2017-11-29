@@ -42,7 +42,7 @@
     <result column="customer" jdbcType="VARCHAR" property="customer" />
     <result column="country" jdbcType="VARCHAR" property="country" />
     <result column="brand" jdbcType="VARCHAR" property="brand" />
-    <result column="machine_type" jdbcType="INTEGER" property="machineType" />
+    <!--<result column="machine_type" jdbcType="INTEGER" property="machineType" />-->
     <result column="needle_num" jdbcType="INTEGER" property="needleNum" />
     <result column="head_num" jdbcType="INTEGER" property="headNum" />
     <result column="head_distance" jdbcType="INTEGER" property="headDistance" />
@@ -98,20 +98,53 @@
       <result column="driver_vertical_num" jdbcType="TINYINT" property="driverVerticalNum" />
       <result column="driver_reel" jdbcType="VARCHAR" property="driverReel" />
     </association>
+    <association javaType="com.eservice.api.model.machine_type.MachineType" property="machineType" >
+      <id column="machineTypeID"  property="id" />
+      <result column="name" jdbcType="VARCHAR" property="name"/>
+    </association>
 
   </resultMap>
 
-  <!--<select id="getOrderAllDetail" resultMap="BaseResultMap">-->
-    <!--select  mo.id-->
-    <!--from machine_order mo-->
-    <!--where mo.id = ${id};-->
-  <!--</select>-->
   <select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
-    select  mo.*, od.*
+    select  mo.*, od.*, mt.id machineTypeID, mt.name
     from machine_order mo
-     join order_detail od
-     on mo.order_detail_id=od.id
+     join order_detail od  on mo.order_detail_id=od.id
+     join machine_type mt  on mo.machine_type=mt.id
      where mo.id = ${id};
+  </select>
+
+  <select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
+    select mo.*, od.*, mt.id machineTypeID, mt.name
+    from machine_order mo
+    join order_detail od on mo.order_detail_id=od.id
+    join machine_type mt on mo.machine_type=mt.id
+    where 1=1
+    <if test="id != null and id != ''">
+     and mo.id=#{id}
+    </if>
+    <if test = "contract_num != null and contract_num != ''">
+      and mo.contract_num like CONCAT('%','${contract_num}','%' )
+    </if>
+    <if test="status != null and status != ''">
+      and mo.id=${status}
+    </if>
+    <if test="sellman != null and sellman != '' ">
+      and mo.sellman like CONCAT('%','${sellman}','%' )
+    </if>
+    <if test="customer!=null and customer != '' ">
+      and mo.customer like CONCAT('%','${customer}','%' )
+    </if>
+    <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+    <if test="query_start_time!=null and query_start_time != '' ">
+      and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+    </if>
+    <if test="query_finish_time!=null and query_finish_time != '' ">
+      and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+    </if>
+
+    <if test="machine_name!=null and machine_name != '' ">
+      and mt.name like CONCAT('%','${machine_name}','%' )
+    </if>
   </select>
 
 

@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : sinsim
-Source Server Version : 50505
+Source Server         : Local_sinsim
+Source Server Version : 50553
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50505
+Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2017-11-24 23:46:47
+Date: 2017-11-29 11:33:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -75,6 +75,48 @@ CREATE TABLE `abnormal_record` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for `clas`
+-- ----------------------------
+DROP TABLE IF EXISTS `clas`;
+CREATE TABLE `clas` (
+  `c_id` int(11) NOT NULL AUTO_INCREMENT,
+  `c_name` varchar(20) DEFAULT NULL,
+  `teacher_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`c_id`),
+  KEY `teacher_id` (`teacher_id`) USING BTREE,
+  CONSTRAINT `FK_ID` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`t_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of clas
+-- ----------------------------
+INSERT INTO `clas` VALUES ('1', 'classMath', '1');
+INSERT INTO `clas` VALUES ('2', 'classChinese', '2');
+INSERT INTO `clas` VALUES ('3', 'classChemistry', '3');
+INSERT INTO `clas` VALUES ('4', 'classEnglis', '2');
+
+-- ----------------------------
+-- Table structure for `class`
+-- ----------------------------
+DROP TABLE IF EXISTS `class`;
+CREATE TABLE `class` (
+  `c_id` int(11) NOT NULL AUTO_INCREMENT,
+  `c_name` varchar(20) DEFAULT NULL,
+  `teacher_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`c_id`),
+  KEY `teacher_id` (`teacher_id`) USING BTREE,
+  CONSTRAINT `class_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`t_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of class
+-- ----------------------------
+INSERT INTO `class` VALUES ('1', 'classMath', '1');
+INSERT INTO `class` VALUES ('2', 'classChinese', '2');
+INSERT INTO `class` VALUES ('3', 'classChemistry', '3');
+INSERT INTO `class` VALUES ('4', 'classEnglis', '2');
+
+-- ----------------------------
 -- Table structure for `device`
 -- ----------------------------
 DROP TABLE IF EXISTS `device`;
@@ -89,6 +131,26 @@ CREATE TABLE `device` (
 -- Records of device
 -- ----------------------------
 INSERT INTO `device` VALUES ('1', '上轴', '12:34:56:78:90');
+
+-- ----------------------------
+-- Table structure for `grouprr`
+-- ----------------------------
+DROP TABLE IF EXISTS `grouprr`;
+CREATE TABLE `grouprr` (
+  `id` int(10) unsigned NOT NULL,
+  `group_name` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT '公司部门',
+  PRIMARY KEY (`id`),
+  KEY `group_name` (`group_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of grouprr
+-- ----------------------------
+INSERT INTO `grouprr` VALUES ('1', '上轴安装组');
+INSERT INTO `grouprr` VALUES ('2', '下轴安装组');
+INSERT INTO `grouprr` VALUES ('4', '台板安装组');
+INSERT INTO `grouprr` VALUES ('5', '电控组');
+INSERT INTO `grouprr` VALUES ('3', '驱动安装组');
 
 -- ----------------------------
 -- Table structure for `install_group`
@@ -168,11 +230,15 @@ CREATE TABLE `machine_order` (
   KEY `fk_o_order_detail_id` (`order_detail_id`),
   CONSTRAINT `fk_o_machine_type` FOREIGN KEY (`machine_type`) REFERENCES `machine_type` (`id`),
   CONSTRAINT `fk_o_order_detail_id` FOREIGN KEY (`order_detail_id`) REFERENCES `order_detail` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of machine_order
 -- ----------------------------
+INSERT INTO `machine_order` VALUES ('1', '1', '1', '1', '123', 'cst1111===', 'cn', 'SINSIM', '3', '22', '33', '44', '22', '22', '22', '22', '5566', '2017-10-27', '2017-11-30', 'mm', 'alice', '1', '2017-11-21 11:45:23', '2017-11-27 13:36:44', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('2', '12', '2', '2', '22', 'cst2222===', 'fr', 'SINSIM', '2', '22', '22', '224', '11', '22', '33', '55', '333', '2017-11-28', '2017-12-09', 'eee', 'bob', '1', '2017-11-24 11:45:23', '2017-11-29 11:45:28', '2017-11-30 11:45:33');
+INSERT INTO `machine_order` VALUES ('3', '1', '2', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('4', '4', '1', '3', 'contractNum123', 'cst4444===', 'contr1', 'SINSIM', '1', '1', '1', '2', '3', '3', '3', '4', '4', '2017-11-28', '2017-12-07', 'm', 'Dim', '1', '2017-11-29 14:24:37', '2017-11-29 14:24:42', '2017-12-10 14:24:48');
 
 -- ----------------------------
 -- Table structure for `machine_type`
@@ -182,14 +248,15 @@ CREATE TABLE `machine_type` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '机器类型',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of machine_type
 -- ----------------------------
-INSERT INTO `machine_type` VALUES ('1', '平绣');
-INSERT INTO `machine_type` VALUES ('2', '毛巾绣');
-INSERT INTO `machine_type` VALUES ('3', '特种机');
+INSERT INTO `machine_type` VALUES ('1', ' 平绣11');
+INSERT INTO `machine_type` VALUES ('2', '毛巾秀22');
+INSERT INTO `machine_type` VALUES ('3', '特种秀');
+INSERT INTO `machine_type` VALUES ('4', '11');
 
 -- ----------------------------
 -- Table structure for `order_cancel_record`
@@ -275,11 +342,13 @@ CREATE TABLE `order_detail` (
   `driver_vertical_num` tinyint(4) DEFAULT NULL COMMENT '驱动：直档数量',
   `driver_reel` varchar(255) DEFAULT NULL COMMENT '驱动：绷架',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_detail
 -- ----------------------------
+INSERT INTO `order_detail` VALUES ('1', 'rred', '11', 'dd', 'ttt', 'head', 'nnbb', 'opc', 'ff', 'ff', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhh', 'rrr', 'ccc', 'hhhh', 'jj', 'yy', 'yyr', 'fttrttr', 'fr', 'rfrf', 'aaa', 'bbbb', 'st', 'aa', 'aa', 'dd', 'hol', '11', '22', 'fffffff');
+INSERT INTO `order_detail` VALUES ('2', 'blue', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'rr', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
 
 -- ----------------------------
 -- Table structure for `order_loading_list`
@@ -530,4 +599,4 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'sinsim', '胡通', '1', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('1', 'sinsim', '胡通', '3', 'sinsim', '4', '1');

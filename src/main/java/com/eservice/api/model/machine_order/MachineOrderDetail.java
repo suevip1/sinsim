@@ -1,5 +1,6 @@
 package com.eservice.api.model.machine_order;
 
+import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.order_detail.OrderDetail;
 
 import javax.persistence.*;
@@ -50,12 +51,13 @@ public class MachineOrderDetail {
      */
     private String brand;
 
-    /**
-     * 机器类型
-     */
-    @Column(name = "machine_type")
-    private Integer machineType;
+//    /**
+//     * 机器类型
+//     */
+//    @Column(name = "machine_type")
+//    private Integer machineType;
 
+    private  MachineType machineType;
     /**
      * 针数
      */
@@ -142,6 +144,16 @@ public class MachineOrderDetail {
      * 备注信息
      */
     private String mark;
+
+    /*
+    订单详情,和order_detail表关联
+     */
+    private OrderDetail orderDetail;
+
+//    /*
+//    机器类型，和machine_type关联
+//     */
+//    private MachineType machineType;
 
     /**
      * @return id
@@ -283,23 +295,23 @@ public class MachineOrderDetail {
         this.brand = brand;
     }
 
-    /**
-     * 获取机器类型
-     *
-     * @return machine_type - 机器类型
-     */
-    public Integer getMachineType() {
-        return machineType;
-    }
+//    /**
+//     * 获取机器类型
+//     *
+//     * @return machine_type - 机器类型
+//     */
+//    public Integer getMachineType() {
+//        return machineType;
+//    }
 
-    /**
-     * 设置机器类型
-     *
-     * @param machineType 机器类型
-     */
-    public void setMachineType(Integer machineType) {
-        this.machineType = machineType;
-    }
+//    /**
+//     * 设置机器类型
+//     *
+//     * @param machineType 机器类型
+//     */
+//    public void setMachineType(Integer machineType) {
+//        this.machineType = machineType;
+//    }
 
     /**
      * 获取针数
@@ -582,12 +594,26 @@ public class MachineOrderDetail {
     }
 
 
-    ///
-    private OrderDetail orderDetail;
+    /*
+    获取订单详情
+     */
     public OrderDetail getOrderDetail(){
         return this.orderDetail;
     }
+    /*
+    设置订单详情
+     */
     public void setOrderDetail(OrderDetail orderDetail) {
         this.orderDetail=orderDetail;
     }
+
+    /*
+    获取机器类型
+     */
+    public MachineType getMachineType() {  return this.machineType; }
+
+    /*
+    设置机器类型
+     */
+    public void setMachineType(MachineType machineType) {this.machineType=machineType;}
 }
