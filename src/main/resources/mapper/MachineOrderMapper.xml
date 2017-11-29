@@ -148,4 +148,39 @@
   </select>
 
 
+  <select id="selectOrder" resultMap="MachineOrderDetailMap">
+    select mo.*, od.*, mt.id machineTypeID, mt.name
+    from machine_order mo
+    join order_detail od on mo.order_detail_id=od.id
+    join machine_type mt on mo.machine_type=mt.id
+    where 1=1
+    <if test="id != null and id != ''">
+      and mo.id=#{id}
+    </if>
+    <if test = "contract_num != null and contract_num != ''">
+      and mo.contract_num = CONCAT('%','${contract_num}','%' )
+    </if>
+    <if test="status != null and status != ''">
+      and mo.id=${status}
+    </if>
+    <if test="sellman != null and sellman != '' ">
+      and mo.sellman = CONCAT('%','${sellman}','%' )
+    </if>
+    <if test="customer!=null and customer != '' ">
+      and mo.customer = CONCAT('%','${customer}','%' )
+    </if>
+    <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+    <if test="query_start_time!=null and query_start_time != '' ">
+      and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+    </if>
+    <if test="query_finish_time!=null and query_finish_time != '' ">
+      and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+    </if>
+
+    <if test="machine_name!=null and machine_name != '' ">
+      and mt.name = CONCAT('%','${machine_name}','%' )
+    </if>
+  </select>
+
+
 </mapper>

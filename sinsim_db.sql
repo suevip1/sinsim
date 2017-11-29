@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2017-11-29 11:33:50
+Date: 2017-11-29 14:14:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -75,48 +75,6 @@ CREATE TABLE `abnormal_record` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `clas`
--- ----------------------------
-DROP TABLE IF EXISTS `clas`;
-CREATE TABLE `clas` (
-  `c_id` int(11) NOT NULL AUTO_INCREMENT,
-  `c_name` varchar(20) DEFAULT NULL,
-  `teacher_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`c_id`),
-  KEY `teacher_id` (`teacher_id`) USING BTREE,
-  CONSTRAINT `FK_ID` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`t_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of clas
--- ----------------------------
-INSERT INTO `clas` VALUES ('1', 'classMath', '1');
-INSERT INTO `clas` VALUES ('2', 'classChinese', '2');
-INSERT INTO `clas` VALUES ('3', 'classChemistry', '3');
-INSERT INTO `clas` VALUES ('4', 'classEnglis', '2');
-
--- ----------------------------
--- Table structure for `class`
--- ----------------------------
-DROP TABLE IF EXISTS `class`;
-CREATE TABLE `class` (
-  `c_id` int(11) NOT NULL AUTO_INCREMENT,
-  `c_name` varchar(20) DEFAULT NULL,
-  `teacher_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`c_id`),
-  KEY `teacher_id` (`teacher_id`) USING BTREE,
-  CONSTRAINT `class_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`t_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of class
--- ----------------------------
-INSERT INTO `class` VALUES ('1', 'classMath', '1');
-INSERT INTO `class` VALUES ('2', 'classChinese', '2');
-INSERT INTO `class` VALUES ('3', 'classChemistry', '3');
-INSERT INTO `class` VALUES ('4', 'classEnglis', '2');
-
--- ----------------------------
 -- Table structure for `device`
 -- ----------------------------
 DROP TABLE IF EXISTS `device`;
@@ -131,26 +89,6 @@ CREATE TABLE `device` (
 -- Records of device
 -- ----------------------------
 INSERT INTO `device` VALUES ('1', '上轴', '12:34:56:78:90');
-
--- ----------------------------
--- Table structure for `grouprr`
--- ----------------------------
-DROP TABLE IF EXISTS `grouprr`;
-CREATE TABLE `grouprr` (
-  `id` int(10) unsigned NOT NULL,
-  `group_name` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT '公司部门',
-  PRIMARY KEY (`id`),
-  KEY `group_name` (`group_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Records of grouprr
--- ----------------------------
-INSERT INTO `grouprr` VALUES ('1', '上轴安装组');
-INSERT INTO `grouprr` VALUES ('2', '下轴安装组');
-INSERT INTO `grouprr` VALUES ('4', '台板安装组');
-INSERT INTO `grouprr` VALUES ('5', '电控组');
-INSERT INTO `grouprr` VALUES ('3', '驱动安装组');
 
 -- ----------------------------
 -- Table structure for `install_group`

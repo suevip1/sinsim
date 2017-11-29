@@ -3,18 +3,15 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
-import com.eservice.api.model.order_detail.OrderDetail;
-import com.eservice.api.service.MachineOrderService;
 import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
