@@ -5,8 +5,10 @@ import com.eservice.api.model.user.User;
 import com.eservice.api.model.user.UserDetail;
 import com.eservice.api.service.impl.DeviceServiceImpl;
 import com.eservice.api.service.impl.UserServiceImpl;
+import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +30,9 @@ public class UserController {
 
     @Resource
     private DeviceServiceImpl deviceService;
+
+    @Resource
+    MqttMessageHelper mqttMessageHelper;
 
     /**
      * 该值为default值， Android端传入的参数不能为“0”
@@ -91,6 +96,7 @@ public class UserController {
             if(userDetail == null) {
                 return ResultGenerator.genFailResult("账号或密码不正确！");
             }else {
+                ///mqttMessageHelper.sendToClient("2", "Send to Client!");
                 return ResultGenerator.genSuccessResult(userDetail);
             }
         }
