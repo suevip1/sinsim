@@ -41,7 +41,7 @@
     </select>
 
     <select id="requestLogin" resultMap="UserDetailMap">
-        SELECT u.id, u.name, u.account, u.valid, r.*, ig.*
+        SELECT u.*, r.id role_id, r.role_des, r.role_name, ig.id install_group_id, ig.group_name
         FROM user u
         JOIN role r ON r.id = u.role_id
         JOIN install_group ig ON u.group_id = ig.id
