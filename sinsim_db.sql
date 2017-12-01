@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2017-11-29 14:14:35
+Date: 2017-12-01 16:36:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -98,7 +98,7 @@ CREATE TABLE `install_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) NOT NULL COMMENT '公司部门',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of install_group
@@ -108,6 +108,8 @@ INSERT INTO `install_group` VALUES ('2', '下轴安装组');
 INSERT INTO `install_group` VALUES ('3', '驱动安装组');
 INSERT INTO `install_group` VALUES ('4', '台板安装组');
 INSERT INTO `install_group` VALUES ('5', '电控组');
+INSERT INTO `install_group` VALUES ('6', '');
+INSERT INTO `install_group` VALUES ('7', '');
 
 -- ----------------------------
 -- Table structure for `machine`
@@ -127,11 +129,14 @@ CREATE TABLE `machine` (
   PRIMARY KEY (`id`),
   KEY `idx_m_order_id` (`order_id`) USING BTREE,
   CONSTRAINT `fk_m_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of machine
 -- ----------------------------
+INSERT INTO `machine` VALUES ('1', '1', '1', 'nnn', 'loca111', '1', '2017-11-30 10:54:59', '2017-11-30 10:55:03', '2017-12-01 10:55:09', '2017-12-23 10:55:14');
+INSERT INTO `machine` VALUES ('2', '2', 'machhineID2', 'nnnnn', 'loca222', '1', '2017-11-30 10:56:01', '2017-11-30 10:56:05', '2017-12-07 10:56:10', '2017-12-22 10:56:16');
+INSERT INTO `machine` VALUES ('3', '4', '333', 'nnnme', 'loca333', '2', '2017-11-30 11:11:16', '2017-11-30 11:11:19', '2017-12-01 11:11:29', '2017-12-07 11:11:36');
 
 -- ----------------------------
 -- Table structure for `machine_order`
@@ -168,7 +173,7 @@ CREATE TABLE `machine_order` (
   KEY `fk_o_order_detail_id` (`order_detail_id`),
   CONSTRAINT `fk_o_machine_type` FOREIGN KEY (`machine_type`) REFERENCES `machine_type` (`id`),
   CONSTRAINT `fk_o_order_detail_id` FOREIGN KEY (`order_detail_id`) REFERENCES `order_detail` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of machine_order
@@ -177,6 +182,14 @@ INSERT INTO `machine_order` VALUES ('1', '1', '1', '1', '123', 'cst1111===', 'cn
 INSERT INTO `machine_order` VALUES ('2', '12', '2', '2', '22', 'cst2222===', 'fr', 'SINSIM', '2', '22', '22', '224', '11', '22', '33', '55', '333', '2017-11-28', '2017-12-09', 'eee', 'bob', '1', '2017-11-24 11:45:23', '2017-11-29 11:45:28', '2017-11-30 11:45:33');
 INSERT INTO `machine_order` VALUES ('3', '1', '2', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
 INSERT INTO `machine_order` VALUES ('4', '4', '1', '3', 'contractNum123', 'cst4444===', 'contr1', 'SINSIM', '1', '1', '1', '2', '3', '3', '3', '4', '4', '2017-11-28', '2017-12-07', 'm', 'Dim', '1', '2017-11-29 14:24:37', '2017-11-29 14:24:42', '2017-12-10 14:24:48');
+INSERT INTO `machine_order` VALUES ('11', '1', '28', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('12', '1', '29', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('13', '1', '30', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('14', '1', '31', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('15', '1', '32', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('16', '1', '33', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('18', '1', '35', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('20', '1', '27', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
 
 -- ----------------------------
 -- Table structure for `machine_type`
@@ -280,13 +293,24 @@ CREATE TABLE `order_detail` (
   `driver_vertical_num` tinyint(4) DEFAULT NULL COMMENT '驱动：直档数量',
   `driver_reel` varchar(255) DEFAULT NULL COMMENT '驱动：绷架',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_detail
 -- ----------------------------
 INSERT INTO `order_detail` VALUES ('1', 'rred', '11', 'dd', 'ttt', 'head', 'nnbb', 'opc', 'ff', 'ff', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhh', 'rrr', 'ccc', 'hhhh', 'jj', 'yy', 'yyr', 'fttrttr', 'fr', 'rfrf', 'aaa', 'bbbb', 'st', 'aa', 'aa', 'dd', 'hol', '11', '22', 'fffffff');
 INSERT INTO `order_detail` VALUES ('2', 'blue', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'rr', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('27', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('28', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('29', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', '222add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('30', '2222blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', '222add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('31', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('32', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('33', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('34', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('35', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('36', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('37', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
 
 -- ----------------------------
 -- Table structure for `order_loading_list`
@@ -359,11 +383,14 @@ CREATE TABLE `process` (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of process
 -- ----------------------------
+INSERT INTO `process` VALUES ('1', 'processAAA', 'tsk123', '2017-11-30 10:58:17', '2017-11-30 10:58:20');
+INSERT INTO `process` VALUES ('2', 'processBBB', 'tsk22', '2017-11-30 10:58:43', '2017-11-30 10:58:46');
+INSERT INTO `process` VALUES ('3', 'pro33', 'taskList333', '2017-11-30 11:10:08', '2017-11-30 22:10:12');
 
 -- ----------------------------
 -- Table structure for `process_record`
@@ -382,11 +409,14 @@ CREATE TABLE `process_record` (
   KEY `fk_pr_process_id` (`process_id`),
   CONSTRAINT `fk_pr_machine_id` FOREIGN KEY (`machine_id`) REFERENCES `machine` (`id`),
   CONSTRAINT `fk_pr_process_id` FOREIGN KEY (`process_id`) REFERENCES `process` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of process_record
 -- ----------------------------
+INSERT INTO `process_record` VALUES ('1', '1', '1', 'linkData111', 'node_data111', '2017-11-30 11:00:05', '2017-11-30 11:00:44');
+INSERT INTO `process_record` VALUES ('2', '2', '2', 'llll', 'nnn', '2017-11-30 11:00:39', '2017-11-30 11:00:50');
+INSERT INTO `process_record` VALUES ('3', '1', '1', 'dddd', 'aaaa', '2017-11-30 11:00:49', '2017-12-01 11:01:16');
 
 -- ----------------------------
 -- Table structure for `quality_record_image`
@@ -444,11 +474,14 @@ CREATE TABLE `task` (
   PRIMARY KEY (`id`),
   KEY `fk_t_group_id` (`group_id`),
   CONSTRAINT `fk_t_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task
 -- ----------------------------
+INSERT INTO `task` VALUES ('1', 'tsk111', '1', 'gaaa');
+INSERT INTO `task` VALUES ('2', 'tskName222Have', '1', 'ggga');
+INSERT INTO `task` VALUES ('3', 'tskName333Have', '2', 'gggs');
 
 -- ----------------------------
 -- Table structure for `task_plan`
@@ -466,11 +499,14 @@ CREATE TABLE `task_plan` (
   KEY `fk_tp_user_id` (`user_id`),
   CONSTRAINT `fk_tp_task_record_id` FOREIGN KEY (`task_record_id`) REFERENCES `task_record` (`id`),
   CONSTRAINT `fk_tp_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task_plan
 -- ----------------------------
+INSERT INTO `task_plan` VALUES ('36666', '3', '2017-11-30 13:15:54', '1', '2017-11-30 13:16:00', '2017-12-10 13:16:06');
+INSERT INTO `task_plan` VALUES ('177777', '1', '2017-11-30 22:14:45', '2', '2017-11-30 13:14:54', '2017-11-30 13:14:58');
+INSERT INTO `task_plan` VALUES ('255555', '2', '2017-12-07 13:15:18', '2', '2017-11-30 13:15:30', '2017-12-09 13:15:35');
 
 -- ----------------------------
 -- Table structure for `task_quality_record`
@@ -509,11 +545,14 @@ CREATE TABLE `task_record` (
   PRIMARY KEY (`id`),
   KEY `fk_tr_process_record_id` (`process_record_id`),
   CONSTRAINT `fk_tr_process_record_id` FOREIGN KEY (`process_record_id`) REFERENCES `process_record` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task_record
 -- ----------------------------
+INSERT INTO `task_record` VALUES ('1', 'tskName111', '1', '111', 'bob', 'w1,w2,w3,w4', '1', '2017-11-30 11:04:40', '2017-12-08 11:04:43');
+INSERT INTO `task_record` VALUES ('2', 'tskName222Have', '2', '32', 'zhang2', 'r1,r,2,w3,22', '2', '2017-11-30 11:05:43', '2017-11-30 11:05:48');
+INSERT INTO `task_record` VALUES ('3', 'tskName333Have', '1', '44', 'leader33', 'worker11,张三', '3', '2017-11-30 11:08:54', '2017-11-30 22:08:58');
 
 -- ----------------------------
 -- Table structure for `user`
@@ -532,9 +571,17 @@ CREATE TABLE `user` (
   KEY `fk_user_group_id` (`group_id`),
   CONSTRAINT `fk_user_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`),
   CONSTRAINT `fk_user_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'sinsim', '胡通', '3', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('1', 'sinsim', '胡通', '1', 'sinsim', null, '1');
+INSERT INTO `user` VALUES ('2', 'sinsim22', '李四', '2', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('3', 'sinsim33', '王五', '4', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('4', 'sinsim555', '李四555', '2', 'sinsim555', '1', '1');
+INSERT INTO `user` VALUES ('5', 'sinsim555', '李四555', '2', 'sinsim555', '1', '1');
+INSERT INTO `user` VALUES ('6', 'sinsim555', '李四555', '2', '', '1', '1');
+INSERT INTO `user` VALUES ('7', 'sss', 'saaa', '3', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('9', 'sinsimAAA', '胡通', '1', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('10', 'account22', '李四2', '2', 'sinsim', '1', '1');

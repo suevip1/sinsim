@@ -51,9 +51,15 @@ public class MachineOrderController {
         return ResultGenerator.genSuccessResult();
     }
 
+    /*
+    同时删除MachineOrder表和OrderDetail表的相关内容
+     */
     @PostMapping("/delete")
+    @Transactional (rollbackFor = Exception.class)
     public Result delete(@RequestParam Integer id) {
-        machineOrderService.deleteById(id);
+        Integer orderDetailID = machineOrderService.findById(id).getOrderDetailId();
+        machineOrderService.deleteById(id);//先删除主表
+        orderDetailService.deleteById(orderDetailID);//再删除外键所在的表
         return ResultGenerator.genSuccessResult();
     }
 

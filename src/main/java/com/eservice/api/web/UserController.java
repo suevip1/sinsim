@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.user.User;
@@ -39,9 +40,16 @@ public class UserController {
     private static String ZERO_STRING = "0";
 
     @PostMapping("/add")
-    public Result add(User user) {
-        userService.save(user);
-        return ResultGenerator.genSuccessResult();
+    public Result add(String user) {
+        User userObj = JSON.parseObject(user, User.class);
+        if(userObj.getPassword() == null) {
+            return ResultGenerator.genFailResult("密码不存在!");
+        } else if (userObj.getAccount() == null || userObj.getAccount().isEmpty()) {
+            return ResultGenerator.genFailResult("用户名不存在或为空！");
+        } else {
+            userService.save(userObj);
+            return ResultGenerator.genSuccessResult();
+        }
     }
 
     @PostMapping("/delete")
