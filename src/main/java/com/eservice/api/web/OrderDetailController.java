@@ -24,15 +24,13 @@ public class OrderDetailController {
     @Resource
     private OrderDetailService orderDetailService;
 
-    /*
-     为保证 MachineOrder和OrderDetail的一致性，该类的修改性接口不再暴露，而是通过 MachineOrderController统一暴露
-  */
-//    @PostMapping("/add")
+///鍒犻櫎瀵瑰鐨勫鍒犺鎺ュ彛
+///    @PostMapping("/add")
 //    public Result add(OrderDetail orderDetail) {
 //        orderDetailService.save(orderDetail);
 //        return ResultGenerator.genSuccessResult();
 //    }
-
+//
 //    @PostMapping("/delete")
 //    public Result delete(@RequestParam Integer id) {
 //        orderDetailService.deleteById(id);
