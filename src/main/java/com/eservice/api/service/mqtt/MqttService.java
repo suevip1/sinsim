@@ -14,10 +14,8 @@ import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannel
 import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.integration.mqtt.support.MqttHeaders;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
-import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 
@@ -50,14 +48,13 @@ public class MqttService {
 
     @Bean
     @ServiceActivator(inputChannel = "mqttInputChannel")
-    public MessageHandler handler() {
-        return new MessageHandler() {
-
-            @Override
-            public void handleMessage(Message<?> message) throws MessagingException {
-                System.out.println(message.getPayload());
+    public MessageHandler handler(MqttMessageHelper requestHandler) {
+        return message -> {
+            try {
+                requestHandler.handleMessage(message);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
         };
     }
 
@@ -72,23 +69,22 @@ public class MqttService {
     }
 
     @Bean
-    public MessageChannel mqttOutboundChannel(){
-        return new DirectChannel();
-    }
-
-    @Bean
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     public MessageHandler mqttOutbound(){
-        MqttPahoMessageHandler messageHandler =
-                new MqttPahoMessageHandler("server",mqttClientFactory());
+        MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler("server",mqttClientFactory());
         messageHandler.setAsync(true);
         messageHandler.setDefaultTopic("/topic/client/test");
         return messageHandler;
     }
 
+    @Bean
+    public MessageChannel mqttOutboundChannel(){
+        return new DirectChannel();
+    }
+
     @MessagingGateway(defaultRequestChannel = "mqttOutboundChannel")
     public interface MyGateway {
-        void sendToMqtt(@Payload String data, @Header(MqttHeaders.TOPIC) String topic);
+        void sendToMqtt(@Header(MqttHeaders.TOPIC) String topic,@Payload String data);
     }
 
 

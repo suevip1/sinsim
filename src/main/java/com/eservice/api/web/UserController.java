@@ -8,7 +8,6 @@ import com.eservice.api.service.impl.UserServiceImpl;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -96,7 +95,7 @@ public class UserController {
             if(userDetail == null) {
                 return ResultGenerator.genFailResult("账号或密码不正确！");
             }else {
-                ///mqttMessageHelper.sendToClient("2", "Send to Client!");
+                ///mqttMessageHelper.sendToClient("topic/client/2", JSON.toJSONString(userDetail));
                 return ResultGenerator.genSuccessResult(userDetail);
             }
         }
