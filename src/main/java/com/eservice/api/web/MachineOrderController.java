@@ -9,6 +9,7 @@ import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.eservice.api.service.impl.OrderDetailServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,9 +34,10 @@ public class MachineOrderController {
     private OrderDetailServiceImpl orderDetailService;
 
     /*
-        为保证 MachineOrder和OrderDetail的一致性，MachineOrder表和OrderDetail表，都在这里统一完成
+        为保证 MachineOrder表和OrderDetail表的一致性，MachineOrder表和OrderDetail表，都在这里统一完成
      */
     @PostMapping("/add")
+    @Transactional(rollbackFor = Exception.class)
     public Result add(String  machineOrder, String orderDetail) {
         MachineOrder machineOrder1 = JSON.parseObject(machineOrder,MachineOrder.class);
         OrderDetail orderDetail1 = JSON.parseObject(orderDetail,OrderDetail.class);
