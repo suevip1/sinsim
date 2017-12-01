@@ -1,9 +1,12 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
+import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.service.impl.MachineOrderServiceImpl;
+import com.eservice.api.service.impl.OrderDetailServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,9 +29,23 @@ public class MachineOrderController {
 //    private MachineOrderService machineOrderService;
     private MachineOrderServiceImpl machineOrderService;
 
+    @Resource
+    private OrderDetailServiceImpl orderDetailService;
+
+    /*
+        为保证 MachineOrder和OrderDetail的一致性，MachineOrder表和OrderDetail表，都在这里统一完成
+     */
     @PostMapping("/add")
-    public Result add(MachineOrder machineOrder) {
-        machineOrderService.save(machineOrder);
+    public Result add(String  machineOrder, String orderDetail) {
+        MachineOrder machineOrder1 = JSON.parseObject(machineOrder,MachineOrder.class);
+        OrderDetail orderDetail1 = JSON.parseObject(orderDetail,OrderDetail.class);
+        orderDetailService.saveAndGetID(orderDetail1);
+        Integer savedOrderDetailID = orderDetail1.getId();
+
+        //orderDetail里返回的id 就是machineOrder里的order_detail_id
+        machineOrder1.setOrderDetailId(savedOrderDetailID);
+        machineOrderService.save(machineOrder1);
+
         return ResultGenerator.genSuccessResult();
     }
 

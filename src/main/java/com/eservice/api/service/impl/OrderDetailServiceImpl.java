@@ -21,4 +21,7 @@ public class OrderDetailServiceImpl extends AbstractService<OrderDetail> impleme
     @Resource
     private OrderDetailMapper orderDetailMapper;
 
+    public  void saveAndGetID( OrderDetail orderDetail){
+         orderDetailMapper.saveAndGetID( orderDetail);
+    }
 }

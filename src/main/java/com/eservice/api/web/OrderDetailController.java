@@ -24,23 +24,26 @@ public class OrderDetailController {
     @Resource
     private OrderDetailService orderDetailService;
 
-    @PostMapping("/add")
-    public Result add(OrderDetail orderDetail) {
-        orderDetailService.save(orderDetail);
-        return ResultGenerator.genSuccessResult();
-    }
+    /*
+     为保证 MachineOrder和OrderDetail的一致性，该类的修改性接口不再暴露，而是通过 MachineOrderController统一暴露
+  */
+//    @PostMapping("/add")
+//    public Result add(OrderDetail orderDetail) {
+//        orderDetailService.save(orderDetail);
+//        return ResultGenerator.genSuccessResult();
+//    }
 
-    @PostMapping("/delete")
-    public Result delete(@RequestParam Integer id) {
-        orderDetailService.deleteById(id);
-        return ResultGenerator.genSuccessResult();
-    }
-
-    @PostMapping("/update")
-    public Result update(OrderDetail orderDetail) {
-        orderDetailService.update(orderDetail);
-        return ResultGenerator.genSuccessResult();
-    }
+//    @PostMapping("/delete")
+//    public Result delete(@RequestParam Integer id) {
+//        orderDetailService.deleteById(id);
+//        return ResultGenerator.genSuccessResult();
+//    }
+//
+//    @PostMapping("/update")
+//    public Result update(OrderDetail orderDetail) {
+//        orderDetailService.update(orderDetail);
+//        return ResultGenerator.genSuccessResult();
+//    }
 
     @PostMapping("/detail")
     public Result detail(@RequestParam Integer id) {
