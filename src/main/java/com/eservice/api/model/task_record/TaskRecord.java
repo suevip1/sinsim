@@ -18,7 +18,8 @@ public class TaskRecord {
     /**
      * 对应流程中node节点的key值
      */
-    private Byte key;
+    @Column(name = "node_key")
+    private Byte nodeKey;
 
     /**
      * 扫描组长（名字）
@@ -93,19 +94,19 @@ public class TaskRecord {
     /**
      * 获取对应流程中node节点的key值
      *
-     * @return key - 对应流程中node节点的key值
+     * @return node_key - 对应流程中node节点的key值
      */
-    public Byte getKey() {
-        return key;
+    public Byte getNodeKey() {
+        return nodeKey;
     }
 
     /**
      * 设置对应流程中node节点的key值
      *
-     * @param key 对应流程中node节点的key值
+     * @param nodeKey 对应流程中node节点的key值
      */
-    public void setKey(Byte key) {
-        this.key = key;
+    public void setNodeKey(Byte nodeKey) {
+        this.nodeKey = nodeKey;
     }
 
     /**

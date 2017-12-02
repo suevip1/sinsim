@@ -8,7 +8,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="task_name" jdbcType="VARCHAR" property="taskName" />
     <result column="process_record_id" jdbcType="INTEGER" property="processRecordId" />
-    <result column="key" jdbcType="TINYINT" property="key" />
+    <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
     <result column="leader" jdbcType="VARCHAR" property="leader" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />

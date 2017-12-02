@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2017-12-01 16:36:20
+Date: 2017-12-01 17:16:52
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -536,7 +536,7 @@ CREATE TABLE `task_record` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `task_name` varchar(255) NOT NULL,
   `process_record_id` int(10) unsigned NOT NULL,
-  `key` tinyint(4) NOT NULL COMMENT '对应流程中node节点的key值',
+  `node_key` tinyint(4) NOT NULL COMMENT '对应流程中node节点的key值',
   `leader` varchar(255) DEFAULT NULL COMMENT '扫描组长（名字）',
   `worker_list` text COMMENT '组长扫描结束之前，需要填入的工人名字,保存格式为string数组',
   `status` tinyint(4) unsigned NOT NULL COMMENT 'task状态，“1”==>未开始， “2”==>进行中，“3”==>完成， “4”==>异常',
