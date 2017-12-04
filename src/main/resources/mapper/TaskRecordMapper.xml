@@ -15,4 +15,32 @@
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
   </resultMap>
+
+  <!--根据user.account查 task_record OK-->
+  <select id="selectTaskReocords" resultMap="BaseResultMap">
+  select
+  tr.*
+  from task_record tr
+  join task on task.task_name = tr.task_name
+  join install_group  on install_group.id = task.group_id
+  join user on user.group_id = install_group.id
+  where user.account  = #{userAccount}
+  </select>
+
+  <resultMap id="taskPlanResultMap" type="com.eservice.api.model.task_plan.TaskPlan">
+    <id column="id"  property="id" />
+    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+    <result column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="guidance" jdbcType="LONGVARCHAR" property="guidance" />
+  </resultMap>
+
+<!--根据 taskId查task plan-->
+  <select id="selectTaskPlans" resultMap="taskPlanResultMap">
+    select
+    tp.*
+    from task_plan tp
+    join task_record  tr on tr.id = tp.task_record_id
+    where tr.id = #{taskId}
+  </select>
+
 </mapper>

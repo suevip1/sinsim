@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -20,5 +21,12 @@ import javax.annotation.Resource;
 public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implements TaskRecordService {
     @Resource
     private TaskRecordMapper taskRecordMapper;
+
+    public List<TaskRecord> selectTaskReocords(String userAccount) {
+        return taskRecordMapper.selectTaskReocords(userAccount);
+    }
+    public List<TaskRecord> selectTaskPlans(Integer taskRecordId) {
+        return taskRecordMapper.selectTaskPlans(taskRecordId);
+    }
 
 }

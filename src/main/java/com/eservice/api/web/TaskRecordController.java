@@ -2,7 +2,7 @@ package com.eservice.api.web;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.task_record.TaskRecord;
-import com.eservice.api.service.TaskRecordService;
+import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping("/task/record")
 public class TaskRecordController {
     @Resource
-    private TaskRecordService taskRecordService;
+    private TaskRecordServiceImpl taskRecordService;
 
     @PostMapping("/add")
     public Result add(TaskRecord taskRecord) {
@@ -55,4 +55,45 @@ public class TaskRecordController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     *  根据userAccount 返回该用户的 Tasks
+     * @param page
+     * @param size
+     * @param userAccount
+     * @return 返回该用户的 Tasks
+     */
+    @PostMapping("/selectTaskReocords")
+    public  Result selectTaskReocords(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                               @RequestParam String userAccount) {
+        PageHelper.startPage(page, size);
+        List<TaskRecord> list = taskRecordService.selectTaskReocords(userAccount);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     *  根据 taskRecord.id 返回 task_plans
+     * @param page
+     * @param size
+     * @param taskRecordId
+     * @return
+     */
+    @PostMapping("/selectTaskPlans")
+    public  Result selectTasks(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                               @RequestParam Integer taskRecordId) {
+        PageHelper.startPage(page, size);
+        List<TaskRecord> list = taskRecordService.selectTaskPlans(taskRecordId);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+//    @PostMapping("selectTaskDetail")
+//    public Result selectTaskDetail(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+//                                   @RequestParam String taskId) {
+//        PageHelper.startPage(page, size);
+//        List<TaskRecordDetail> list = taskRecordService.selectTaskDetail(taskId);
+//        PageInfo pageInfo = new PageInfo(list);
+//        return ResultGenerator.genSuccessResult(pageInfo);
+//    }
 }
