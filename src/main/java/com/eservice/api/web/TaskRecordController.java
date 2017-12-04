@@ -2,6 +2,7 @@ package com.eservice.api.web;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.task_record.TaskRecord;
+import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -57,11 +58,11 @@ public class TaskRecordController {
     }
 
     /**
-     *  ¸ù¾İuserAccount ·µ»Ø¸ÃÓÃ»§µÄ Tasks
+     *  æ ¹æ®userAccount è¿”å›è¯¥ç”¨æˆ·çš„ Tasks
      * @param page
      * @param size
      * @param userAccount
-     * @return ·µ»Ø¸ÃÓÃ»§µÄ Tasks
+     * @return è¿”å›è¯¥ç”¨æˆ·çš„ Tasks
      */
     @PostMapping("/selectTaskReocords")
     public  Result selectTaskReocords(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
@@ -73,7 +74,7 @@ public class TaskRecordController {
     }
 
     /**
-     *  ¸ù¾İ taskRecord.id ·µ»Ø task_plans
+     *  æ ¹æ® taskRecord.id è¿”å› task_plans
      * @param page
      * @param size
      * @param taskRecordId
@@ -88,12 +89,15 @@ public class TaskRecordController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
-//    @PostMapping("selectTaskDetail")
-//    public Result selectTaskDetail(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
-//                                   @RequestParam String taskId) {
-//        PageHelper.startPage(page, size);
-//        List<TaskRecordDetail> list = taskRecordService.selectTaskDetail(taskId);
-//        PageInfo pageInfo = new PageInfo(list);
-//        return ResultGenerator.genSuccessResult(pageInfo);
-//    }
+    /**
+     * æ ¹æ®  taskRecord.id è¿”å›processRecord, machineä¿¡æ¯ï¼Œmachine orderä¿¡æ¯ã€‚
+     * @param taskRecordId
+     * @return
+     */
+    @PostMapping("selectTaskRecordDetail")
+    public Result selectTaskRecordDetail( @RequestParam Integer taskRecordId) {
+        TaskRecordDetail taskRecordDetail = taskRecordService.selectTaskRecordDetail(taskRecordId);
+        return ResultGenerator.genSuccessResult(taskRecordDetail);
+
+    }
 }

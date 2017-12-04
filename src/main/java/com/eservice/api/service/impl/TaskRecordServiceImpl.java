@@ -2,6 +2,7 @@ package com.eservice.api.service.impl;
 
 import com.eservice.api.dao.TaskRecordMapper;
 import com.eservice.api.model.task_record.TaskRecord;
+import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.service.TaskRecordService;
 import com.eservice.api.core.AbstractService;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
     }
     public List<TaskRecord> selectTaskPlans(Integer taskRecordId) {
         return taskRecordMapper.selectTaskPlans(taskRecordId);
+    }
+    public TaskRecordDetail selectTaskRecordDetail(Integer taskRecordId) {
+        return taskRecordMapper.selectTaskRecordDetail(taskRecordId);
     }
 
 }

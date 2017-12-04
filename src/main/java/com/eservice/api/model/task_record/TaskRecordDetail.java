@@ -1,11 +1,8 @@
 package com.eservice.api.model.task_record;
 
-import com.eservice.api.model.install_group.InstallGroup;
 import com.eservice.api.model.machine.Machine;
+import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.process_record.ProcessRecord;
-import com.eservice.api.model.task.Task;
-import com.eservice.api.model.task_plan.TaskPlan;
-import com.eservice.api.model.user.User;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -58,15 +55,12 @@ public class TaskRecordDetail {
 
     /**
     task_record相关的：
-    task_plan信息，
+     process_Record 信息，
     machine信息,等
      */
-    private TaskPlan taskPlan;
     private ProcessRecord processRecord;
     private Machine machine;
-    private Task task;
-    private InstallGroup installGroup;
-    private User user;
+    private MachineOrder machineOrder;
 
     /**
      * @return id
@@ -218,10 +212,6 @@ public class TaskRecordDetail {
         this.workerList = workerList;
     }
 
-
-
-    public TaskPlan getTaskPlan() { return  this.taskPlan; }
-    public void setTaskPlan(TaskPlan taskPlan) { this.taskPlan = taskPlan; }
     public ProcessRecord getProcessRecord() {return  this.processRecord; }
     public void setProcessRecord(ProcessRecord processRecord) { this.processRecord = processRecord; }
 
@@ -234,12 +224,6 @@ public class TaskRecordDetail {
      * 设置Task_record的机器信息
      */
     public void setMachine(Machine machine) { this.machine = machine; }
-
-    public Task getTask() { return  this.task;}
-    public void setTask(Task task ) { this.task = task; }
-
-    public InstallGroup getInstallGroup() { return  this.installGroup; }
-    public void setInstallGroup(InstallGroup installGroup) { this.installGroup = installGroup; }
-    public User getUser() { return  this.user; }
-    public void setUser(User user) { this.user = user; }
+    public MachineOrder getMachineOrder() { return machineOrder; }
+    public void setMachineOrder(MachineOrder machineOrder) { this.machineOrder = machineOrder; }
 }
