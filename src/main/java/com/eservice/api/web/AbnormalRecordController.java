@@ -62,7 +62,7 @@ public class AbnormalRecordController {
     }
 
     /**
-     * 根据 task_record.id 返回abnormalRecordDetail
+     * 鏍规嵁 task_record.id 杩斿洖abnormalRecordDetail
      * @param taskRecordId
      * @return
      */
