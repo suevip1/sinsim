@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.abnormal.Abnormal;
@@ -25,8 +26,9 @@ public class AbnormalController {
     private AbnormalService abnormalService;
 
     @PostMapping("/add")
-    public Result add(Abnormal abnormal) {
-        abnormalService.save(abnormal);
+    public Result add(String abnormal) {
+        Abnormal abnormal1 = JSON.parseObject(abnormal,Abnormal.class);
+        abnormalService.save(abnormal1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -37,8 +39,9 @@ public class AbnormalController {
     }
 
     @PostMapping("/update")
-    public Result update(Abnormal abnormal) {
-        abnormalService.update(abnormal);
+    public Result update(String abnormal) {
+        Abnormal abnormal1 = JSON.parseObject(abnormal,Abnormal.class);
+        abnormalService.update(abnormal1);
         return ResultGenerator.genSuccessResult();
     }
 

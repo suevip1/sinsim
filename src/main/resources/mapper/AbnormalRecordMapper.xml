@@ -13,4 +13,32 @@
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
     <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
   </resultMap>
+
+  <resultMap id="AbnormalRecordDetailResultMap" type="com.eservice.api.model.abnormal_record.AbnormalRecordDetail">
+    <id column="id"  property="id" />
+    <result column="abnormal_type" jdbcType="TINYINT" property="abnormalType" />
+    <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
+    <result column="submit_user" jdbcType="INTEGER" property="submitUser" />
+    <result column="solution_user" jdbcType="INTEGER" property="solutionUser" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+    <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
+    <association javaType="com.eservice.api.model.abnormal.Abnormal" property="abnormal">
+      <id column="id"  property="id" />
+      <result column="abnormal_name" jdbcType="VARCHAR" property="abnormalName" />
+    </association>
+    <association javaType="com.eservice.api.model.abnormal_image.AbnormalImage" property="abnormalImage">
+      <id column="id"  property="id" />
+      <result column="abnormal_record_id" jdbcType="INTEGER" property="abnormalRecordId" />
+      <result column="image" jdbcType="VARCHAR" property="image" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </association>
+  </resultMap>
+
+  <select id="selectAbnormalRecordDetail" resultMap="AbnormalRecordDetailResultMap">
+    SELECT *
+    FROM abnormal_record ar
+    JOIN abnormal a on a.id = ar.abnormal_type
+    JOIN abnormal_image ai on ai.abnormal_record_id = ar.id
+    where ar.id = #{taskRecordId}
+  </select>
 </mapper>

@@ -1,8 +1,10 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.abnormal_record.AbnormalRecord;
-import com.eservice.api.service.AbnormalRecordService;
+import com.eservice.api.model.abnormal_record.AbnormalRecordDetail;
+import com.eservice.api.service.impl.AbnormalRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +24,13 @@ import java.util.List;
 @RequestMapping("/abnormal/record")
 public class AbnormalRecordController {
     @Resource
-    private AbnormalRecordService abnormalRecordService;
+    private AbnormalRecordServiceImpl abnormalRecordService;
 
     @PostMapping("/add")
-    public Result add(AbnormalRecord abnormalRecord) {
-        abnormalRecordService.save(abnormalRecord);
+    public Result add(String abnormalRecord) {
+        AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord,AbnormalRecord.class);
+
+        abnormalRecordService.save(abnormalRecord1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -37,8 +41,9 @@ public class AbnormalRecordController {
     }
 
     @PostMapping("/update")
-    public Result update(AbnormalRecord abnormalRecord) {
-        abnormalRecordService.update(abnormalRecord);
+    public Result update(String abnormalRecord) {
+        AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
+        abnormalRecordService.update(abnormalRecord1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -54,5 +59,16 @@ public class AbnormalRecordController {
         List<AbnormalRecord> list = abnormalRecordService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     * ¸ù¾Ý task_record.id ·µ»ØabnormalRecordDetail
+     * @param taskRecordId
+     * @return
+     */
+    @PostMapping("/selectAbnormalRecordDetail")
+    public Result selectAbnormalRecord(@RequestParam Integer taskRecordId) {
+        AbnormalRecordDetail abnormalRecordDetail = abnormalRecordService.selectAbnormalRecordDetail(taskRecordId);
+        return ResultGenerator.genSuccessResult(abnormalRecordDetail);
     }
 }

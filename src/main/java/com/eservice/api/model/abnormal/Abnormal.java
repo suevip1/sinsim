@@ -5,7 +5,7 @@ import javax.persistence.*;
 public class Abnormal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Byte id;
+    private Integer id;
 
     /**
      * 异常名称
@@ -16,14 +16,14 @@ public class Abnormal {
     /**
      * @return id
      */
-    public Byte getId() {
+    public Integer getId() {
         return id;
     }
 
     /**
      * @param id
      */
-    public void setId(Byte id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

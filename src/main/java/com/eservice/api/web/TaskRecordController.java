@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.task_record.TaskRecord;
@@ -26,8 +27,9 @@ public class TaskRecordController {
     private TaskRecordServiceImpl taskRecordService;
 
     @PostMapping("/add")
-    public Result add(TaskRecord taskRecord) {
-        taskRecordService.save(taskRecord);
+    public Result add(String taskRecord) {
+        TaskRecord taskRecord1 = JSON.parseObject(taskRecord,TaskRecord.class);
+        taskRecordService.save(taskRecord1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -38,8 +40,9 @@ public class TaskRecordController {
     }
 
     @PostMapping("/update")
-    public Result update(TaskRecord taskRecord) {
-        taskRecordService.update(taskRecord);
+    public Result update(String taskRecord) {
+        TaskRecord taskRecord1 = JSON.parseObject(taskRecord,TaskRecord.class);
+        taskRecordService.update(taskRecord1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -98,6 +101,6 @@ public class TaskRecordController {
     public Result selectTaskRecordDetail( @RequestParam Integer taskRecordId) {
         TaskRecordDetail taskRecordDetail = taskRecordService.selectTaskRecordDetail(taskRecordId);
         return ResultGenerator.genSuccessResult(taskRecordDetail);
-
     }
+
 }

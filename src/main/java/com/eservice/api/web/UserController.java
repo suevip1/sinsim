@@ -59,8 +59,9 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public Result update(User user) {
-        userService.update(user);
+    public Result update(String user) {
+        User user1 = JSON.parseObject(user,User.class);
+        userService.update(user1);
         return ResultGenerator.genSuccessResult();
     }
 

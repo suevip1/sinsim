@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.abnormal_image.AbnormalImage;
@@ -25,8 +26,9 @@ public class AbnormalImageController {
     private AbnormalImageService abnormalImageService;
 
     @PostMapping("/add")
-    public Result add(AbnormalImage abnormalImage) {
-        abnormalImageService.save(abnormalImage);
+    public Result add(String abnormalImage) {
+        AbnormalImage abnormalImage1 = JSON.parseObject(abnormalImage,AbnormalImage.class);
+        abnormalImageService.save(abnormalImage1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -37,8 +39,9 @@ public class AbnormalImageController {
     }
 
     @PostMapping("/update")
-    public Result update(AbnormalImage abnormalImage) {
-        abnormalImageService.update(abnormalImage);
+    public Result update(String abnormalImage) {
+        AbnormalImage abnormalImage1 = JSON.parseObject(abnormalImage,AbnormalImage.class);
+        abnormalImageService.update(abnormalImage1);
         return ResultGenerator.genSuccessResult();
     }
 

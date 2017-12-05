@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2017-12-04 14:18:46
+Date: 2017-12-05 14:54:42
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -23,11 +23,16 @@ CREATE TABLE `abnormal` (
   `id` tinyint(4) unsigned NOT NULL AUTO_INCREMENT,
   `abnormal_name` varchar(255) NOT NULL COMMENT '异常名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of abnormal
 -- ----------------------------
+INSERT INTO `abnormal` VALUES ('1', 'abnormalName111');
+INSERT INTO `abnormal` VALUES ('2', 'abn_222');
+INSERT INTO `abnormal` VALUES ('3', 'abn333-by-update');
+INSERT INTO `abnormal` VALUES ('4', 'abnABC');
+INSERT INTO `abnormal` VALUES ('5', 'abn333-by-add');
 
 -- ----------------------------
 -- Table structure for `abnormal_image`
@@ -41,11 +46,17 @@ CREATE TABLE `abnormal_image` (
   PRIMARY KEY (`id`),
   KEY `fk_ai_abnormal_record_id` (`abnormal_record_id`),
   CONSTRAINT `fk_ai_abnormal_record_id` FOREIGN KEY (`abnormal_record_id`) REFERENCES `abnormal_record` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of abnormal_image
 -- ----------------------------
+INSERT INTO `abnormal_image` VALUES ('1', '1', 'img1111', '2017-12-05 13:34:56');
+INSERT INTO `abnormal_image` VALUES ('2', '2', 'img333-by-update', '2017-12-05 13:35:42');
+INSERT INTO `abnormal_image` VALUES ('3', '2', 'img333', '2017-12-05 13:35:42');
+INSERT INTO `abnormal_image` VALUES ('4', '2', 'img333-by-add', '2017-12-05 13:35:42');
+INSERT INTO `abnormal_image` VALUES ('5', '3', 'img555', '2017-12-05 14:45:26');
+INSERT INTO `abnormal_image` VALUES ('6', '4', 'img556666', '2017-12-05 14:45:42');
 
 -- ----------------------------
 -- Table structure for `abnormal_record`
@@ -68,11 +79,15 @@ CREATE TABLE `abnormal_record` (
   CONSTRAINT `fk_ar_solution_user` FOREIGN KEY (`solution_user`) REFERENCES `user` (`id`),
   CONSTRAINT `fk_ar_submit_user` FOREIGN KEY (`submit_user`) REFERENCES `user` (`id`),
   CONSTRAINT `fk_ar_task_record_id` FOREIGN KEY (`task_record_id`) REFERENCES `task_record` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of abnormal_record
 -- ----------------------------
+INSERT INTO `abnormal_record` VALUES ('1', '1', '3', '4', 'cmtAaa', 'solutionAAA', '6');
+INSERT INTO `abnormal_record` VALUES ('2', '2', '4', '5', 'cmt111-by-update', 'solu3333-by-update', '7');
+INSERT INTO `abnormal_record` VALUES ('3', '4', '7', '2', 'cmt333', 'slutionCCC', '3');
+INSERT INTO `abnormal_record` VALUES ('4', '2', '4', '5', 'cmt111-by-Add', 'solu3333-by_add', '7');
 
 -- ----------------------------
 -- Table structure for `device`
@@ -431,11 +446,14 @@ CREATE TABLE `quality_record_image` (
   PRIMARY KEY (`id`),
   KEY `fk_task_quality_record_id` (`task_quality_record_id`),
   CONSTRAINT `fk_task_quality_record_id` FOREIGN KEY (`task_quality_record_id`) REFERENCES `task_quality_record` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of quality_record_image
 -- ----------------------------
+INSERT INTO `quality_record_image` VALUES ('1', '1', 'img_url123', '2017-12-05 13:25:31');
+INSERT INTO `quality_record_image` VALUES ('2', '2', 'image_url222', '2017-12-05 13:25:49');
+INSERT INTO `quality_record_image` VALUES ('3', '3', 'NoImge', '2017-12-05 13:26:11');
 
 -- ----------------------------
 -- Table structure for `role`
@@ -474,16 +492,18 @@ CREATE TABLE `task` (
   `guidance` text COMMENT '作业指导，后续可能会需要（一般是html格式）',
   PRIMARY KEY (`id`),
   KEY `fk_t_group_id` (`group_id`),
+  KEY `task_name` (`task_name`),
   CONSTRAINT `fk_t_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task
 -- ----------------------------
 INSERT INTO `task` VALUES ('1', 'tsk111', '1', 'guidance111');
-INSERT INTO `task` VALUES ('2', 'tskName222Have', '1', 'guidance2222');
+INSERT INTO `task` VALUES ('2', 'tskName222Have', '2', 'guidance2222');
 INSERT INTO `task` VALUES ('3', 'tskName333Have', '2', 'guidance3333');
 INSERT INTO `task` VALUES ('4', 'tsk44', '4', 'guidance444');
+INSERT INTO `task` VALUES ('5', 'tskAbc', '3', 'guidanceAAA');
 
 -- ----------------------------
 -- Table structure for `task_plan`
@@ -526,11 +546,14 @@ CREATE TABLE `task_quality_record` (
   PRIMARY KEY (`id`),
   KEY `tqr_task_record_id` (`task_record_id`),
   CONSTRAINT `tqr_task_record_id` FOREIGN KEY (`task_record_id`) REFERENCES `task_record` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task_quality_record
 -- ----------------------------
+INSERT INTO `task_quality_record` VALUES ('1', '1', 'QAer111', '1', 'passOK', '2017-12-05 13:23:02');
+INSERT INTO `task_quality_record` VALUES ('2', '7', 'CheckerBob', '0', 'NoPass', '2017-12-05 13:23:57');
+INSERT INTO `task_quality_record` VALUES ('3', '3', 'QAer333', '1', 'Passed', '2017-12-05 13:24:42');
 
 -- ----------------------------
 -- Table structure for `task_record`
@@ -548,17 +571,20 @@ CREATE TABLE `task_record` (
   `end_time` datetime DEFAULT NULL COMMENT 'task结束时间',
   PRIMARY KEY (`id`),
   KEY `fk_tr_process_record_id` (`process_record_id`),
+  KEY `fk_tr_task_name` (`task_name`),
+  CONSTRAINT `fk_tr_task_name` FOREIGN KEY (`task_name`) REFERENCES `task` (`task_name`),
   CONSTRAINT `fk_tr_process_record_id` FOREIGN KEY (`process_record_id`) REFERENCES `process_record` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task_record
 -- ----------------------------
-INSERT INTO `task_record` VALUES ('1', 'tskName111', '1', '111', 'bob', 'worder1,w2,w3,wworder4', '1', '2017-11-30 11:04:40', '2017-12-08 11:04:43');
-INSERT INTO `task_record` VALUES ('2', 'tskName222Have', '2', '32', 'zhang2', 'worder1,r,2,w3,worder22', '2', '2017-11-30 11:05:43', '2017-11-30 11:05:48');
-INSERT INTO `task_record` VALUES ('3', 'tskName333Have', '1', '44', 'leader33', 'worker11,woker33_of_tsk3', '3', '2017-11-30 11:08:54', '2017-11-30 22:08:58');
-INSERT INTO `task_record` VALUES ('4', 'tsk444', '3', '127', 'leadA', 'workA,WokerB', '1', '2017-12-04 11:18:16', '2017-12-04 11:18:20');
-INSERT INTO `task_record` VALUES ('5', 'tskName333Have', '4', '22', 'leadB', 'wker22,wk33_of_tsk5', '1', '2017-12-04 11:19:30', '2017-12-04 11:19:34');
+INSERT INTO `task_record` VALUES ('1', 'tskAbc', '1', '111', 'bob', 'worder1,w2,w3,wworder4', '1', '2017-11-30 11:04:40', '2017-12-08 11:04:43');
+INSERT INTO `task_record` VALUES ('2', 'tskName222Have', '4', '32', 'zhang2-by-update', 'worder1,r,2,w3,worder22-by-update', '2', '2017-11-30 11:05:43', '2017-11-30 11:05:48');
+INSERT INTO `task_record` VALUES ('3', 'tsk111', '1', '44', 'leader33', 'worker11,woker33_of_tsk3', '3', '2017-11-30 11:08:54', '2017-11-30 22:08:58');
+INSERT INTO `task_record` VALUES ('4', 'tsk111', '2', '127', 'lead33', 'wk111', '2', '2017-12-05 11:42:47', '2017-12-05 11:42:50');
+INSERT INTO `task_record` VALUES ('5', 'tsk44', '2', '127', 'leadDD', 'wk11,wk33', '1', '2017-12-05 11:45:39', '2017-12-05 11:45:44');
+INSERT INTO `task_record` VALUES ('7', 'tskName333Have', '3', '33', 'lead22', 'wokerAA,wokerB', '2', '2017-12-05 11:40:42', '2017-12-29 11:40:48');
 
 -- ----------------------------
 -- Table structure for `user`
@@ -583,11 +609,11 @@ CREATE TABLE `user` (
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', 'sinsim', '胡通', '1', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('2', 'sinsim22', 'user李四', '2', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('2', 'sinsim22', 'user李四-by_update', '2', 'sinsim-by-update', '1', '1');
 INSERT INTO `user` VALUES ('3', 'sinsim33', 'user王五', '4', 'sinsim', '2', '1');
 INSERT INTO `user` VALUES ('4', 'sinsim555', 'user李四555', '2', 'sinsim555', '1', '1');
 INSERT INTO `user` VALUES ('5', 'sinsim555', 'user李四555', '2', 'sinsim555', '1', '1');
-INSERT INTO `user` VALUES ('6', 'sinsim555', 'user李四555', '2', 'pppwd', '1', '1');
+INSERT INTO `user` VALUES ('6', 'QAer1', 'user李四555', '11', 'pppwd', null, '1');
 INSERT INTO `user` VALUES ('7', 'sss', 'saaa_user', '3', 'sinsim', '2', '1');
 INSERT INTO `user` VALUES ('9', 'sinsimAAA', 'user999', '1', 'sinsim', '1', '1');
 INSERT INTO `user` VALUES ('10', 'account22', 'user10', '2', 'sinsim', '1', '1');
