@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.ContractMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.contract.Contract">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="contract_num" jdbcType="VARCHAR" property="contractNum" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="sellman" jdbcType="VARCHAR" property="sellman" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+</mapper>

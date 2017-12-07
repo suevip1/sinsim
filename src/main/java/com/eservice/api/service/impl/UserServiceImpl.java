@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -24,6 +25,10 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
 
     public UserDetail getUserAllDetail(Integer id) {
         return userMapper.getUserAllDetail(id);
+    }
+
+    public List<UserDetail> selectUsers(String account, String name, Integer roleId, Integer groupId, Integer valid) {
+        return userMapper.selectUsers(account, name, roleId, groupId, valid);
     }
 
     public UserDetail requestLogin(String account, String password) {

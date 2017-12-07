@@ -75,7 +75,7 @@ public class MachineOrderController {
         return ResultGenerator.genSuccessResult(machineOrder);
     }
 	
-    @PostMapping("/all_detail")
+    @PostMapping("/allDetail")
     public Result allDetail(@RequestParam Integer id) {
         MachineOrderDetail machineOrderDetail = machineOrderService.getOrderAllDetail(id);
         return ResultGenerator.genSuccessResult(machineOrderDetail);
@@ -93,8 +93,8 @@ public class MachineOrderController {
     根据条件查询订单。
     比如 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单
      */
-    @PostMapping("/selectOrder")
-    public Result selectOrder(
+    @PostMapping("/selectOrders")
+    public Result selectOrders(
             @RequestParam(defaultValue = "0") Integer page,@RequestParam(defaultValue = "0") Integer size,
 
             Integer id,

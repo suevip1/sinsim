@@ -16,6 +16,12 @@ public class MachineOrder {
     private Integer originalOrderId;
 
     /**
+     * 合同号对应ID
+     */
+    @Column(name = "contract_id")
+    private Integer contractId;
+
+    /**
      * Order详细信息，通过它来多表关联
      */
     @Column(name = "order_detail_id")
@@ -28,17 +34,6 @@ public class MachineOrder {
     private Integer createUserId;
 
     /**
-     * 合同编号
-     */
-    @Column(name = "contract_num")
-    private String contractNum;
-
-    /**
-     * 客户姓名
-     */
-    private String customer;
-
-    /**
      * 国家
      */
     private String country;
@@ -47,6 +42,12 @@ public class MachineOrder {
      * 商标
      */
     private String brand;
+
+    /**
+     * 机器台数
+     */
+    @Column(name = "machine_num")
+    private Byte machineNum;
 
     /**
      * 机器类型
@@ -89,12 +90,6 @@ public class MachineOrder {
      */
     @Column(name = "package_method")
     private String packageMethod;
-
-    /**
-     * 机器台数
-     */
-    @Column(name = "machine_num")
-    private Byte machineNum;
 
     /**
      * 机器价格（不包括装置）
@@ -174,6 +169,24 @@ public class MachineOrder {
     }
 
     /**
+     * 获取合同号对应ID
+     *
+     * @return contract_id - 合同号对应ID
+     */
+    public Integer getContractId() {
+        return contractId;
+    }
+
+    /**
+     * 设置合同号对应ID
+     *
+     * @param contractId 合同号对应ID
+     */
+    public void setContractId(Integer contractId) {
+        this.contractId = contractId;
+    }
+
+    /**
      * 获取Order详细信息，通过它来多表关联
      *
      * @return order_detail_id - Order详细信息，通过它来多表关联
@@ -210,42 +223,6 @@ public class MachineOrder {
     }
 
     /**
-     * 获取合同编号
-     *
-     * @return contract_num - 合同编号
-     */
-    public String getContractNum() {
-        return contractNum;
-    }
-
-    /**
-     * 设置合同编号
-     *
-     * @param contractNum 合同编号
-     */
-    public void setContractNum(String contractNum) {
-        this.contractNum = contractNum;
-    }
-
-    /**
-     * 获取客户姓名
-     *
-     * @return customer - 客户姓名
-     */
-    public String getCustomer() {
-        return customer;
-    }
-
-    /**
-     * 设置客户姓名
-     *
-     * @param customer 客户姓名
-     */
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
-
-    /**
      * 获取国家
      *
      * @return country - 国家
@@ -279,6 +256,24 @@ public class MachineOrder {
      */
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    /**
+     * 获取机器台数
+     *
+     * @return machine_num - 机器台数
+     */
+    public Byte getMachineNum() {
+        return machineNum;
+    }
+
+    /**
+     * 设置机器台数
+     *
+     * @param machineNum 机器台数
+     */
+    public void setMachineNum(Byte machineNum) {
+        this.machineNum = machineNum;
     }
 
     /**
@@ -405,24 +400,6 @@ public class MachineOrder {
      */
     public void setPackageMethod(String packageMethod) {
         this.packageMethod = packageMethod;
-    }
-
-    /**
-     * 获取机器台数
-     *
-     * @return machine_num - 机器台数
-     */
-    public Byte getMachineNum() {
-        return machineNum;
-    }
-
-    /**
-     * 设置机器台数
-     *
-     * @param machineNum 机器台数
-     */
-    public void setMachineNum(Byte machineNum) {
-        this.machineNum = machineNum;
     }
 
     /**

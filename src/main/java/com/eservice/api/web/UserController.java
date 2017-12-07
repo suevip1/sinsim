@@ -71,7 +71,7 @@ public class UserController {
         return ResultGenerator.genSuccessResult(user);
     }
 
-    @PostMapping("/all_detail")
+    @PostMapping("/allDetail")
     public Result getUserAllDetail(@RequestParam Integer id) {
         UserDetail user = userService.getUserAllDetail(id);
         return ResultGenerator.genSuccessResult(user);
@@ -81,6 +81,21 @@ public class UserController {
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
         List<User> list = userService.findAll();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+
+    @PostMapping("/selectUsers")
+    public Result selectUsers(@RequestParam(defaultValue = "0") Integer page,
+                              @RequestParam(defaultValue = "0") Integer size,
+                              String account,
+                              String name,
+                              Integer roleId,
+                              Integer groupId,
+                              Integer valid) {
+        PageHelper.startPage(page, size);
+        List<UserDetail> list = userService.selectUsers(account,name,roleId,groupId,valid);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

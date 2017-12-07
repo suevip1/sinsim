@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : Local_sinsim
-Source Server Version : 50553
+Source Server         : sinsim
+Source Server Version : 50505
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50553
+Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-12-05 14:54:42
+Date: 2017-12-08 00:55:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -90,6 +90,60 @@ INSERT INTO `abnormal_record` VALUES ('3', '4', '7', '2', 'cmt333', 'slutionCCC'
 INSERT INTO `abnormal_record` VALUES ('4', '2', '4', '5', 'cmt111-by-Add', 'solu3333-by_add', '7');
 
 -- ----------------------------
+-- Table structure for `change_sign_process`
+-- ----------------------------
+DROP TABLE IF EXISTS `change_sign_process`;
+CREATE TABLE `change_sign_process` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `number` tinyint(4) NOT NULL COMMENT '流程序列编号',
+  `role_id` int(10) unsigned NOT NULL COMMENT '签核流程的角色',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of change_sign_process
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `contract`
+-- ----------------------------
+DROP TABLE IF EXISTS `contract`;
+CREATE TABLE `contract` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `contract_num` varchar(255) NOT NULL COMMENT '合同号',
+  `customer_name` varchar(255) NOT NULL COMMENT '客户姓名',
+  `sellman` varchar(255) NOT NULL COMMENT '销售人员',
+  `create_time` datetime NOT NULL COMMENT '填表时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of contract
+-- ----------------------------
+INSERT INTO `contract` VALUES ('2', 'ss123456', '', '', '0000-00-00 00:00:00');
+
+-- ----------------------------
+-- Table structure for `contract_sign`
+-- ----------------------------
+DROP TABLE IF EXISTS `contract_sign`;
+CREATE TABLE `contract_sign` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `contract_id` int(10) unsigned NOT NULL COMMENT '合同ID',
+  `sign_content` text NOT NULL COMMENT '签核内容，以json格式的数组形式存放, 所有项完成后更新status为完成.[ \r\n    {"step_number":1, "role_id": 1, "role_name":"销售经理"，“person”：“张三”，”comment“: "同意"，"resolved":1,”update_time“:"2017-11-05 12:08:55"},\r\n    {"step_number":1,"role_id":2, "role_name":"财务部"，“person”：“李四”，”comment“: "同意，但是部分配件需要新设计"，"resolved":0, ”update_time“:"2017-11-06 12:08:55"}\r\n]',
+  `current_step` varchar(255) NOT NULL COMMENT '当前进行中的签核环节（来至于role_name）',
+  `status` tinyint(4) NOT NULL COMMENT '签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，“4”==>改单，“5”==>拆单，该条记录在驳回后停止修改，会新创建签核记录',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `fk_cs_contract_id` (`contract_id`),
+  CONSTRAINT `fk_cs_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `contract` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of contract_sign
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for `device`
 -- ----------------------------
 DROP TABLE IF EXISTS `device`;
@@ -123,8 +177,6 @@ INSERT INTO `install_group` VALUES ('2', '下轴安装组');
 INSERT INTO `install_group` VALUES ('3', '驱动安装组');
 INSERT INTO `install_group` VALUES ('4', '台板安装组');
 INSERT INTO `install_group` VALUES ('5', '电控组');
-INSERT INTO `install_group` VALUES ('6', '');
-INSERT INTO `install_group` VALUES ('7', '');
 
 -- ----------------------------
 -- Table structure for `machine`
@@ -160,12 +212,12 @@ DROP TABLE IF EXISTS `machine_order`;
 CREATE TABLE `machine_order` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `original_order_id` int(10) unsigned DEFAULT NULL COMMENT '在改单/拆单情况发生时，原订单无效，为了做到数据恢复和订单原始记录，需要记录',
+  `contract_id` int(10) unsigned NOT NULL COMMENT '合同号对应ID',
   `order_detail_id` int(10) unsigned NOT NULL COMMENT 'Order详细信息，通过它来多表关联',
   `create_user_id` int(10) unsigned NOT NULL COMMENT '创建订单的ID， 只有销售员和销售主管可以创建订单',
-  `contract_num` varchar(255) NOT NULL COMMENT '合同编号',
-  `customer` varchar(255) NOT NULL COMMENT '客户姓名',
   `country` varchar(255) DEFAULT NULL COMMENT '国家',
   `brand` varchar(255) NOT NULL DEFAULT 'SINSIM' COMMENT '商标',
+  `machine_num` tinyint(4) unsigned NOT NULL COMMENT '机器台数',
   `machine_type` int(10) unsigned NOT NULL COMMENT '机器类型',
   `needle_num` int(11) unsigned NOT NULL COMMENT '针数',
   `head_num` int(11) unsigned NOT NULL COMMENT '头数',
@@ -173,7 +225,6 @@ CREATE TABLE `machine_order` (
   `x_distance` varchar(255) NOT NULL COMMENT 'X-行程',
   `y_distance` varchar(255) NOT NULL COMMENT 'Y-行程',
   `package_method` varchar(255) NOT NULL COMMENT '包装方式',
-  `machine_num` tinyint(4) unsigned NOT NULL COMMENT '机器台数',
   `machine_price` varchar(255) NOT NULL COMMENT '机器价格（不包括装置）',
   `contract_ship_date` date NOT NULL,
   `plan_ship_date` date NOT NULL,
@@ -186,6 +237,8 @@ CREATE TABLE `machine_order` (
   PRIMARY KEY (`id`),
   KEY `fk_o_machine_type` (`machine_type`),
   KEY `fk_o_order_detail_id` (`order_detail_id`),
+  KEY `fk_o_contract_id` (`contract_id`),
+  CONSTRAINT `fk_o_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `contract` (`id`),
   CONSTRAINT `fk_o_machine_type` FOREIGN KEY (`machine_type`) REFERENCES `machine_type` (`id`),
   CONSTRAINT `fk_o_order_detail_id` FOREIGN KEY (`order_detail_id`) REFERENCES `order_detail` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
@@ -193,18 +246,18 @@ CREATE TABLE `machine_order` (
 -- ----------------------------
 -- Records of machine_order
 -- ----------------------------
-INSERT INTO `machine_order` VALUES ('1', '1', '1', '1', '123', 'cst1111===', 'cn', 'SINSIM', '3', '22', '33', '44', '22', '22', '22', '22', '5566', '2017-10-27', '2017-11-30', 'mm', 'alice', '1', '2017-11-21 11:45:23', '2017-11-27 13:36:44', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('2', '12', '2', '2', '22', 'cst2222===', 'fr', 'SINSIM', '2', '22', '22', '224', '11', '22', '33', '55', '333', '2017-11-28', '2017-12-09', 'eee', 'bob', '1', '2017-11-24 11:45:23', '2017-11-29 11:45:28', '2017-11-30 11:45:33');
-INSERT INTO `machine_order` VALUES ('3', '1', '2', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('4', '4', '1', '3', 'contractNum123', 'cst4444===', 'contr1', 'SINSIM', '1', '1', '1', '2', '3', '3', '3', '4', '4', '2017-11-28', '2017-12-07', 'm', 'Dim', '1', '2017-11-29 14:24:37', '2017-11-29 14:24:42', '2017-12-10 14:24:48');
-INSERT INTO `machine_order` VALUES ('11', '1', '28', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('12', '1', '29', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('13', '1', '30', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '1', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('14', '1', '31', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('15', '1', '32', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('16', '1', '33', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('18', '1', '35', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('20', '1', '27', '66', 'cta222', 'cst3333===', 'fr', 'SINSIM-add-by-interface', '2', '22', '22', '33', '13', '22', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('1', '1', '2', '1', '1', 'cn', 'SINSIM', '22', '3', '22', '33', '44', '22', '22', '22', '5566', '2017-10-27', '2017-11-30', 'mm', 'alice', '1', '2017-11-21 11:45:23', '2017-11-27 13:36:44', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('2', '12', '2', '2', '2', 'fr', 'SINSIM', '55', '2', '22', '22', '224', '11', '22', '33', '333', '2017-11-28', '2017-12-09', 'eee', 'bob', '1', '2017-11-24 11:45:23', '2017-11-29 11:45:28', '2017-11-30 11:45:33');
+INSERT INTO `machine_order` VALUES ('3', '1', '2', '2', '66', 'fr', 'SINSIM', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('4', '4', '2', '1', '3', 'contr1', 'SINSIM', '4', '1', '1', '1', '2', '3', '3', '3', '4', '2017-11-28', '2017-12-07', 'm', 'Dim', '1', '2017-11-29 14:24:37', '2017-11-29 14:24:42', '2017-12-10 14:24:48');
+INSERT INTO `machine_order` VALUES ('11', '1', '2', '28', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('12', '1', '2', '29', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('13', '1', '2', '30', '66', 'fr', 'SINSIM-add-by-interface', '22', '1', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('14', '1', '2', '31', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('15', '1', '2', '32', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('16', '1', '2', '33', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('18', '1', '2', '35', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('20', '1', '2', '27', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
 
 -- ----------------------------
 -- Table structure for `machine_type`
@@ -223,6 +276,24 @@ INSERT INTO `machine_type` VALUES ('1', ' 平绣11');
 INSERT INTO `machine_type` VALUES ('2', '毛巾秀22');
 INSERT INTO `machine_type` VALUES ('3', '特种秀');
 INSERT INTO `machine_type` VALUES ('4', '11');
+
+-- ----------------------------
+-- Table structure for `normal_sign_process`
+-- ----------------------------
+DROP TABLE IF EXISTS `normal_sign_process`;
+CREATE TABLE `normal_sign_process` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `number` tinyint(4) NOT NULL COMMENT '流程序列编号',
+  `role_id` int(10) unsigned NOT NULL COMMENT '签核流程的角色',
+  `type` tinyint(4) NOT NULL COMMENT '流程环节属于合同还是需求单',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of normal_sign_process
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `order_cancel_record`
@@ -353,8 +424,8 @@ DROP TABLE IF EXISTS `order_sign`;
 CREATE TABLE `order_sign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` int(10) unsigned NOT NULL COMMENT '订单ID',
-  `sign_content` text NOT NULL COMMENT '签核内容，以json格式的数组形式存放, 所有项完成后更新status为完成\r\n[ \r\n    {"role_id": 1, "role_name":"销售经理"，“person”：“张三”，”comment“: "同意"， ”update_time“:"2017-11-05 12:08:55"},\r\n    {"role_id":2, "role_name":"技术部"，“person”：“李四”，”comment“: "同意，但是部分配件需要新设计"， ”update_time“:"2017-11-06 12:08:55"}\r\n]',
-  `status` tinyint(4) unsigned NOT NULL COMMENT '签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，该条记录在驳回后停止修改，会新创建签核记录',
+  `sign_content` text NOT NULL COMMENT '签核内容，以json格式的数组形式存放, 所有项完成后更新status为完成\r\n[ \r\n    {"role_id": 1, "role_name":"技术部"，“person”：“张三”，”comment“: "同意"， ”update_time“:"2017-11-05 12:08:55"},\r\n    {"role_id":2, "role_name":"PMC"，“person”：“李四”，”comment“: "同意，但是部分配件需要新设计"， ”update_time“:"2017-11-06 12:08:55"}\r\n]',
+  `status` tinyint(4) unsigned NOT NULL COMMENT '需求单签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，该条记录在驳回后停止修改，会新创建签核记录',
   `create_time` datetime NOT NULL COMMENT '签核流程开始时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -572,8 +643,8 @@ CREATE TABLE `task_record` (
   PRIMARY KEY (`id`),
   KEY `fk_tr_process_record_id` (`process_record_id`),
   KEY `fk_tr_task_name` (`task_name`),
-  CONSTRAINT `fk_tr_task_name` FOREIGN KEY (`task_name`) REFERENCES `task` (`task_name`),
-  CONSTRAINT `fk_tr_process_record_id` FOREIGN KEY (`process_record_id`) REFERENCES `process_record` (`id`)
+  CONSTRAINT `fk_tr_process_record_id` FOREIGN KEY (`process_record_id`) REFERENCES `process_record` (`id`),
+  CONSTRAINT `fk_tr_task_name` FOREIGN KEY (`task_name`) REFERENCES `task` (`task_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------

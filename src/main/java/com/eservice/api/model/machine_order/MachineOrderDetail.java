@@ -18,6 +18,20 @@ public class MachineOrderDetail {
     @Column(name = "original_order_id")
     private Integer originalOrderId;
 
+
+    /**
+     * 合同对应的数据库ID
+     */
+    private Integer contractId;
+
+    public Integer getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(Integer contractId) {
+        this.contractId = contractId;
+    }
+
     /**
      * Order详细信息，通过它来多表关联
      */
