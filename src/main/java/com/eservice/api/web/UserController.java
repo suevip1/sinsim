@@ -46,7 +46,9 @@ public class UserController {
             return ResultGenerator.genFailResult("密码不存在!");
         } else if (userObj.getAccount() == null || userObj.getAccount().isEmpty()) {
             return ResultGenerator.genFailResult("用户名不存在或为空！");
-        } else {
+        } else if(userService.selectUsers(userObj.getAccount(),null,null,null,null).size() > 0){
+            return ResultGenerator.genFailResult("账号已存在！");
+        }else {
             userService.save(userObj);
             return ResultGenerator.genSuccessResult();
         }
@@ -61,6 +63,10 @@ public class UserController {
     @PostMapping("/update")
     public Result update(String user) {
         User user1 = JSON.parseObject(user,User.class);
+        ///防止插入空密码
+        if("".equals(user1.getPassword())) {
+            user1.setPassword(null);
+        }
         userService.update(user1);
         return ResultGenerator.genSuccessResult();
     }
