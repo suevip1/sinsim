@@ -10,6 +10,20 @@ public class Role {
     @Column(name = "role_name")
     private String roleName;
 
+    public String getRoleScope() {
+        return roleScope;
+    }
+
+    public void setRoleScope(String roleScope) {
+        this.roleScope = roleScope;
+    }
+
+    /**
+     * 角色对应的权限列表
+     */
+    @Column(name = "role_scope")
+    private String roleScope;
+
     /**
      * 角色说明
      */

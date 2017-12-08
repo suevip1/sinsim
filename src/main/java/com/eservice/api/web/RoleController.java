@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.role.Role;
@@ -25,8 +26,9 @@ public class RoleController {
     private RoleService roleService;
 
     @PostMapping("/add")
-    public Result add(Role role) {
-        roleService.save(role);
+    public Result add(String role) {
+        Role role1 = JSONObject.parseObject(role, Role.class);
+        roleService.save(role1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -37,8 +39,9 @@ public class RoleController {
     }
 
     @PostMapping("/update")
-    public Result update(Role role) {
-        roleService.update(role);
+    public Result update(String role) {
+        Role role1 = JSONObject.parseObject(role, Role.class);
+        roleService.update(role1);
         return ResultGenerator.genSuccessResult();
     }
 

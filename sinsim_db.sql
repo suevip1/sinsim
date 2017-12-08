@@ -167,7 +167,7 @@ CREATE TABLE `install_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) NOT NULL COMMENT '公司部门',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of install_group
@@ -534,23 +534,24 @@ CREATE TABLE `role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `role_name` varchar(255) NOT NULL,
   `role_des` text COMMENT '角色说明',
+  `role_scope` text COMMENT '角色权限列表',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES ('1', '超级管理员', '系统后台管理');
-INSERT INTO `role` VALUES ('2', '生产部管理员', '主要Pad上操作，上传位置、pad上查看流程等');
-INSERT INTO `role` VALUES ('3', '安装组长', '安装前后扫描机器');
-INSERT INTO `role` VALUES ('4', '生产部经理', '订单审批');
-INSERT INTO `role` VALUES ('5', '普通员工', '浏览一般网页信息');
-INSERT INTO `role` VALUES ('6', '总经理', '订单审核等其他可配置权限');
-INSERT INTO `role` VALUES ('7', '销售部经理', '订单审批');
-INSERT INTO `role` VALUES ('8', '技术部经理', '订单审批');
-INSERT INTO `role` VALUES ('9', '销售员', '录入订单');
-INSERT INTO `role` VALUES ('10', '技术员', '上传装车单，联系单');
-INSERT INTO `role` VALUES ('11', '质检员', 'pad上操作');
+INSERT INTO `role` VALUES ('1', '超级管理员', '系统后台管理', '');
+INSERT INTO `role` VALUES ('2', '生产部管理员', '主要Pad上操作，上传位置、pad上查看流程等', '{\"order\":[\"/home/order/order_sign\",\"/home/order/order_manage\"],\"plan\":[],\"abnormal\":[],\"task\":[\"/home/task/process_manage\"],\"system\":[]}');
+INSERT INTO `role` VALUES ('3', '安装组长', '安装前后扫描机器', null);
+INSERT INTO `role` VALUES ('4', '生产部经理', '订单审批', null);
+INSERT INTO `role` VALUES ('5', '普通员工', '浏览一般网页信息', null);
+INSERT INTO `role` VALUES ('6', '总经理', '订单审核等其他可配置权限', null);
+INSERT INTO `role` VALUES ('7', '销售部经理', '订单审批', null);
+INSERT INTO `role` VALUES ('8', '技术部经理', '订单审批', null);
+INSERT INTO `role` VALUES ('9', '销售员', '录入订单', null);
+INSERT INTO `role` VALUES ('10', '技术员', '上传装车单，联系单', null);
+INSERT INTO `role` VALUES ('11', '质检员', 'pad上操作', null);
 
 -- ----------------------------
 -- Table structure for `task`
@@ -674,12 +675,12 @@ CREATE TABLE `user` (
   KEY `fk_user_group_id` (`group_id`),
   CONSTRAINT `fk_user_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`),
   CONSTRAINT `fk_user_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'sinsim', '胡通', '1', 'sinsim', null, '1');
+INSERT INTO `user` VALUES ('1', 'admin', '胡通', '1', 'sinsim', null, '1');
 INSERT INTO `user` VALUES ('2', 'sinsim22', 'user李四-by_update', '2', 'sinsim-by-update', '1', '1');
 INSERT INTO `user` VALUES ('3', 'sinsim33', 'user王五', '4', 'sinsim', '2', '1');
 INSERT INTO `user` VALUES ('4', 'sinsim555', 'user李四555', '2', 'sinsim555', '1', '1');
@@ -688,3 +689,5 @@ INSERT INTO `user` VALUES ('6', 'QAer1', 'user李四555', '11', 'pppwd', null, '
 INSERT INTO `user` VALUES ('7', 'sss', 'saaa_user', '3', 'sinsim', '2', '1');
 INSERT INTO `user` VALUES ('9', 'sinsimAAA', 'user999', '1', 'sinsim', '1', '1');
 INSERT INTO `user` VALUES ('10', 'account22', 'user10', '2', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('11', 'hutong', '胡通', '3', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('12', 'test', '张三', '5', 'sinsim', null, '1');
