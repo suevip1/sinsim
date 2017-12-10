@@ -2,6 +2,7 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.order_loading_list.OrderLoadingList;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
@@ -93,7 +94,7 @@ public class TaskRecordController {
     }
 
     /**
-     * 根据  taskRecord.id 返回processRecord, machine信息，machine order信息。
+     * 根据  taskRecord.id 返回processRecord, machine，machine order,order_loading_list 信息。
      * @param taskRecordId
      * @return
      */
@@ -103,4 +104,4 @@ public class TaskRecordController {
         return ResultGenerator.genSuccessResult(taskRecordDetail);
     }
 
-}
+ }

@@ -12,4 +12,42 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
   </resultMap>
+
+  <resultMap id="TaskQualityRecordDetailResultMap" type="com.eservice.api.model.task_quality_record.TaskQualityRecordDetail">
+    <id column="id" property="id" />
+    <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+    <association property="qualityRecordImage" javaType="com.eservice.api.model.quality_record_image.QualityRecordImage">
+      <id column="quality_record_image_id" property="id" />
+      <result column="task_quality_record_id" jdbcType="INTEGER" property="taskQualityRecordId" />
+      <result column="image" jdbcType="VARCHAR" property="image" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </association>
+    <association property="taskRecord" javaType="com.eservice.api.model.task_record.TaskRecord">
+      <id column="task_record_id2"  property="id" />
+      <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+      <result column="process_record_id" jdbcType="INTEGER" property="processRecordId" />
+      <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
+      <result column="leader" jdbcType="VARCHAR" property="leader" />
+      <result column="status" jdbcType="TINYINT" property="status" />
+      <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
+      <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+      <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
+    </association>
+  </resultMap>
+
+  <select id="selectTaskQualityRecordDetails" resultMap="TaskQualityRecordDetailResultMap">
+    SELECT
+    qri.id quality_record_image_id, qri.task_quality_record_id, qri.image, qri.create_time,
+    tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status, tr.begin_time, tr.end_time,
+    tqr.*
+    FROM
+    task_quality_record tqr
+    JOIN task_record tr on tr.id = tqr.task_record_id
+    JOIN quality_record_image qri on qri.task_quality_record_id = tqr.id
+    where tr.id = #{taskRecordId}
+  </select>
 </mapper>

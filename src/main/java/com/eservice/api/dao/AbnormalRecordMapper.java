@@ -4,6 +4,8 @@ import com.eservice.api.core.Mapper;
 import com.eservice.api.model.abnormal_record.AbnormalRecord;
 import com.eservice.api.model.abnormal_record.AbnormalRecordDetail;
 
+import java.util.List;
+
 public interface AbnormalRecordMapper extends Mapper<AbnormalRecord> {
-    public AbnormalRecordDetail selectAbnormalRecordDetail(Integer taskRecordId);
+    public List<AbnormalRecordDetail> selectAbnormalRecordDetails(Integer taskRecordId);
 }

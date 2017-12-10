@@ -66,9 +66,12 @@ public class AbnormalRecordController {
      * @param taskRecordId
      * @return
      */
-    @PostMapping("/selectAbnormalRecordDetail")
-    public Result selectAbnormalRecord(@RequestParam Integer taskRecordId) {
-        AbnormalRecordDetail abnormalRecordDetail = abnormalRecordService.selectAbnormalRecordDetail(taskRecordId);
-        return ResultGenerator.genSuccessResult(abnormalRecordDetail);
+    @PostMapping("/selectAbnormalRecordDetails")
+    public Result selectAbnormalRecord(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                       @RequestParam Integer taskRecordId) {
+        PageHelper.startPage(page, size);
+        List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetails(taskRecordId);
+        PageInfo pageInfo = new PageInfo(abnormalRecordDetailList);
+        return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

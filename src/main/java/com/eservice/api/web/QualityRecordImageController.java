@@ -2,8 +2,8 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
-import com.eservice.api.model.order_loading_list.OrderLoadingList;
-import com.eservice.api.service.OrderLoadingListService;
+import com.eservice.api.model.quality_record_image.QualityRecordImage;
+import com.eservice.api.service.QualityRecordImageService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,44 +17,44 @@ import java.util.List;
 /**
 * Class Description: xxx
 * @author Wilson Hu
-* @date 2017/11/14.
+* @date 2017/12/06.
 */
 @RestController
-@RequestMapping("/order/loading/list")
-public class OrderLoadingListController {
+@RequestMapping("/quality/record/image")
+public class QualityRecordImageController {
     @Resource
-    private OrderLoadingListService orderLoadingListService;
+    private QualityRecordImageService qualityRecordImageService;
 
     @PostMapping("/add")
-    public Result add(String orderLoadingList) {
-        OrderLoadingList orderLoadingList1 = JSON.parseObject(orderLoadingList,OrderLoadingList.class);
-        orderLoadingListService.save(orderLoadingList1);
+    public Result add(String qualityRecordImage) {
+        QualityRecordImage qualityRecordImage1 = JSON.parseObject(qualityRecordImage, QualityRecordImage.class);
+        qualityRecordImageService.save(qualityRecordImage1);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/delete")
     public Result delete(@RequestParam Integer id) {
-        orderLoadingListService.deleteById(id);
+        qualityRecordImageService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/update")
-    public Result update(String orderLoadingList) {
-        OrderLoadingList orderLoadingList1 = JSON.parseObject(orderLoadingList,OrderLoadingList.class);
-        orderLoadingListService.update(orderLoadingList1);
+    public Result update(String qualityRecordImage) {
+        QualityRecordImage qualityRecordImage1 = JSON.parseObject(qualityRecordImage, QualityRecordImage.class);
+        qualityRecordImageService.update(qualityRecordImage1);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/detail")
     public Result detail(@RequestParam Integer id) {
-        OrderLoadingList orderLoadingList = orderLoadingListService.findById(id);
-        return ResultGenerator.genSuccessResult(orderLoadingList);
+        QualityRecordImage qualityRecordImage = qualityRecordImageService.findById(id);
+        return ResultGenerator.genSuccessResult(qualityRecordImage);
     }
 
     @PostMapping("/list")
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
-        List<OrderLoadingList> list = orderLoadingListService.findAll();
+        List<QualityRecordImage> list = qualityRecordImageService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

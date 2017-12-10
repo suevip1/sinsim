@@ -2,10 +2,11 @@ package com.eservice.api.model.abnormal_record;
 
 import com.eservice.api.model.abnormal.Abnormal;
 import com.eservice.api.model.abnormal_image.AbnormalImage;
+import com.eservice.api.model.task_record.TaskRecord;
 
 import javax.persistence.*;
 
-@Table(name = "abnormal_record")
+//@Table(name = "abnormal_record")
 public class AbnormalRecordDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +46,13 @@ public class AbnormalRecordDetail {
      */
     private String solution;
 
+    /**
+     * abnormal,abnormal_image,task_record作为 abnormalRecordDetail的构成
+     * 在根据 taskRecord的ID查询时一并返回
+     */
     private Abnormal abnormal;
     private AbnormalImage abnormalImage;
+    private TaskRecord taskRecord;
 
     /**
      * @return id
@@ -174,4 +180,6 @@ public class AbnormalRecordDetail {
     public void setAbnormal(Abnormal abnormal){ this.abnormal = abnormal;}
     public AbnormalImage getAbnormalImage() { return  this.abnormalImage;}
     public void setAbnormalImage(AbnormalImage abnormalImage) { this.abnormalImage = abnormalImage;}
+    public TaskRecord getTaskRecord() { return  this.taskRecord; }
+    public void setTaskRecord(TaskRecord taskRecord) { this.taskRecord = taskRecord; }
 }

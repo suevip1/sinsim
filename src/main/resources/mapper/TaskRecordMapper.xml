@@ -101,17 +101,26 @@
       <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
       <result column="mark" jdbcType="LONGVARCHAR" property="mark" />
     </association>
+    <association javaType="com.eservice.api.model.order_loading_list.OrderLoadingList" property="orderLoadingList">
+      <id column="order_loading_list_id"  property="id" />
+      <result column="order_id" jdbcType="INTEGER" property="orderId" />
+      <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+      <result column="type" jdbcType="TINYINT" property="type" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </association>
 
   </resultMap>
   <!--根据 taskId查task record, process record, machine, machine_order-->
   <select id="selectTaskRecordDetail" resultMap="TaskRecordDetail">
     SELECT tr.*, pr.*,
-    m.id machine_id1, m.*, mo.id machine_order_id, mo.*
+    m.id machine_id1, m.*, mo.id machine_order_id, mo.*,
+    oll.*
     FROM
     task_record tr
     join process_record pr on tr.process_record_id = pr.id
     join machine m on m.id = pr.machine_id
     join machine_order mo on mo.id = m.order_id
-    where tr.id = #{taskId}
+    join order_loading_list oll on oll.order_id = mo.id
+    where tr.id = #{taskRecordId}
   </select>
 </mapper>

@@ -2,12 +2,14 @@ package com.eservice.api.service.impl;
 
 import com.eservice.api.dao.TaskQualityRecordMapper;
 import com.eservice.api.model.task_quality_record.TaskQualityRecord;
+import com.eservice.api.model.task_quality_record.TaskQualityRecordDetail;
 import com.eservice.api.service.TaskQualityRecordService;
 import com.eservice.api.core.AbstractService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -21,4 +23,7 @@ public class TaskQualityRecordServiceImpl extends AbstractService<TaskQualityRec
     @Resource
     private TaskQualityRecordMapper taskQualityRecordMapper;
 
+    public List<TaskQualityRecordDetail> selectTaskQualityRecordDetails(Integer taskRecordId ){
+        return taskQualityRecordMapper.selectTaskQualityRecordDetails(taskRecordId);
+    }
 }

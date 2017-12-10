@@ -10,5 +10,5 @@ import java.util.List;
 public interface TaskRecordMapper extends Mapper<TaskRecord> {
     List<TaskRecord> selectTaskReocords(@Param("userAccount") String userAccount);
     List<TaskRecord> selectTaskPlans(@Param("taskId") Integer taskRecordId);
-    TaskRecordDetail selectTaskRecordDetail(@Param("taskId") Integer taskRecordId);
+    TaskRecordDetail selectTaskRecordDetail(@Param("taskRecordId") Integer taskRecordId);
 }

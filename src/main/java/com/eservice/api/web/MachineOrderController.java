@@ -64,8 +64,9 @@ public class MachineOrderController {
     }
 
     @PostMapping("/update")
-    public Result update(MachineOrder machineOrder) {
-        machineOrderService.update(machineOrder);
+    public Result update(String machineOrder) {
+        MachineOrder machineOrder1 = JSON.parseObject(machineOrder,MachineOrder.class);
+        machineOrderService.update(machineOrder1);
         return ResultGenerator.genSuccessResult();
     }
 

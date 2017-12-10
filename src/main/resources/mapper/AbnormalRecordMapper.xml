@@ -22,23 +22,40 @@
     <result column="solution_user" jdbcType="INTEGER" property="solutionUser" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
     <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
+    <association javaType="com.eservice.api.model.task_record.TaskRecord" property="taskRecord">
+      <id column="task_record_id2"  property="id" />
+      <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+      <result column="process_record_id" jdbcType="INTEGER" property="processRecordId" />
+      <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
+      <result column="leader" jdbcType="VARCHAR" property="leader" />
+      <result column="status" jdbcType="TINYINT" property="status" />
+      <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
+      <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+      <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
+    </association>
     <association javaType="com.eservice.api.model.abnormal.Abnormal" property="abnormal">
-      <id column="id"  property="id" />
+      <id column="abnormal_id"  property="id" />
       <result column="abnormal_name" jdbcType="VARCHAR" property="abnormalName" />
     </association>
     <association javaType="com.eservice.api.model.abnormal_image.AbnormalImage" property="abnormalImage">
-      <id column="id"  property="id" />
+      <id column="abnormal_image_id"  property="id" />
       <result column="abnormal_record_id" jdbcType="INTEGER" property="abnormalRecordId" />
       <result column="image" jdbcType="VARCHAR" property="image" />
       <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     </association>
   </resultMap>
 
-  <select id="selectAbnormalRecordDetail" resultMap="AbnormalRecordDetailResultMap">
-    SELECT *
+  <select id="selectAbnormalRecordDetails" resultMap="AbnormalRecordDetailResultMap">
+    SELECT
+    tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status, tr.begin_time, tr.end_time,
+    a.id abnormal_id, a.abnormal_name,
+    ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time,
+    ar.*
     FROM abnormal_record ar
+    JOIN task_record tr on tr.id = ar.task_record_id
     JOIN abnormal a on a.id = ar.abnormal_type
     JOIN abnormal_image ai on ai.abnormal_record_id = ar.id
-    where ar.id = #{taskRecordId}
+    where tr.id =#{taskRecordId}
+
   </select>
 </mapper>

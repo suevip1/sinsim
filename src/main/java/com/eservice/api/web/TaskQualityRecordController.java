@@ -1,8 +1,11 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.task_quality_record.TaskQualityRecord;
+import com.eservice.api.model.task_quality_record.TaskQualityRecordDetail;
 import com.eservice.api.service.TaskQualityRecordService;
+import com.eservice.api.service.impl.TaskQualityRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +25,12 @@ import java.util.List;
 @RequestMapping("/task/quality/record")
 public class TaskQualityRecordController {
     @Resource
-    private TaskQualityRecordService taskQualityRecordService;
+    private TaskQualityRecordServiceImpl taskQualityRecordService;
 
     @PostMapping("/add")
-    public Result add(TaskQualityRecord taskQualityRecord) {
-        taskQualityRecordService.save(taskQualityRecord);
+    public Result add(String taskQualityRecord) {
+        TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord,TaskQualityRecord.class);
+        taskQualityRecordService.save(taskQualityRecord1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -37,8 +41,9 @@ public class TaskQualityRecordController {
     }
 
     @PostMapping("/update")
-    public Result update(TaskQualityRecord taskQualityRecord) {
-        taskQualityRecordService.update(taskQualityRecord);
+    public Result update(String  taskQualityRecord) {
+        TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord,TaskQualityRecord.class);
+        taskQualityRecordService.update(taskQualityRecord1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -54,5 +59,22 @@ public class TaskQualityRecordController {
         List<TaskQualityRecord> list = taskQualityRecordService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     * 根据  task_record.id 返回QualityRecordDetail，包括 qurlity_record_image,task_quality_record等
+     * @param page
+     * @param size
+     * @param taskRecordId
+     * @return
+     */
+    @PostMapping("/selectTaskQualityRecordDetails")
+    public Result selectTaskQualityRecordDetail(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                       @RequestParam Integer taskRecordId) {
+        PageHelper.startPage(page, size);
+        List<TaskQualityRecordDetail> list = taskQualityRecordService.selectTaskQualityRecordDetails(taskRecordId);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+
     }
 }
