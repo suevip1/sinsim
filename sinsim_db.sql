@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : MyDB
-Source Server Version : 50547
+Source Server         : sinsim
+Source Server Version : 50505
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50547
+Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-12-09 15:25:41
+Date: 2017-12-12 01:19:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -543,13 +543,13 @@ CREATE TABLE `sign_process` (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sign_process
 -- ----------------------------
-INSERT INTO `sign_process` VALUES ('1', 'test', 'test123', '2017-12-09 15:05:09', '2017-12-09 15:05:16');
-INSERT INTO `sign_process` VALUES ('2', 'test', 'test5333', '2017-12-09 15:05:22', null);
+INSERT INTO `sign_process` VALUES ('4', '拆单签核流程', '[{\"number\":1,\"roleId\":7,\"signType\":\"合同签核\"},{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\"},{\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\"},{\"number\":4,\"roleId\":6,\"signType\":\"合同签核\"}]', '2017-12-12 01:14:40', null);
+INSERT INTO `sign_process` VALUES ('3', '正常签核流程', '[{\"number\":1,\"roleId\":1,\"signType\":\"合同签核\"},{\"number\":2,\"roleId\":6,\"signType\":\"合同签核\"}]', '2017-12-11 23:57:56', '2017-12-12 01:18:19');
 
 -- ----------------------------
 -- Table structure for `task`
