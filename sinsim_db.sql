@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : Local_sinsim
-Source Server Version : 50553
+Source Server         : MyDB
+Source Server Version : 50547
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50553
+Target Server Version : 50547
 File Encoding         : 65001
 
-Date: 2017-12-10 15:30:04
+Date: 2017-12-09 15:25:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -94,21 +94,6 @@ INSERT INTO `abnormal_record` VALUES ('5', '5', '1', '5', 'cmt5555', 'solustion5
 INSERT INTO `abnormal_record` VALUES ('6', '1', '1', '11', 'cmt6666', 'solution666', '12');
 
 -- ----------------------------
--- Table structure for `change_sign_process`
--- ----------------------------
-DROP TABLE IF EXISTS `change_sign_process`;
-CREATE TABLE `change_sign_process` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `number` tinyint(4) NOT NULL COMMENT '流程序列编号',
-  `role_id` int(10) unsigned NOT NULL COMMENT '签核流程的角色',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of change_sign_process
--- ----------------------------
-
--- ----------------------------
 -- Table structure for `contract`
 -- ----------------------------
 DROP TABLE IF EXISTS `contract`;
@@ -156,12 +141,13 @@ CREATE TABLE `device` (
   `name` varchar(255) NOT NULL COMMENT '设备名称',
   `meid` varchar(255) NOT NULL COMMENT 'MEID地址',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of device
 -- ----------------------------
 INSERT INTO `device` VALUES ('1', '上轴', '12:34:56:78:90');
+INSERT INTO `device` VALUES ('2', '下轴', '11:11:22:33:44');
 
 -- ----------------------------
 -- Table structure for `install_group`
@@ -280,24 +266,6 @@ INSERT INTO `machine_type` VALUES ('1', ' 平绣11');
 INSERT INTO `machine_type` VALUES ('2', '毛巾秀22');
 INSERT INTO `machine_type` VALUES ('3', '特种秀');
 INSERT INTO `machine_type` VALUES ('4', '11');
-
--- ----------------------------
--- Table structure for `normal_sign_process`
--- ----------------------------
-DROP TABLE IF EXISTS `normal_sign_process`;
-CREATE TABLE `normal_sign_process` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `number` tinyint(4) NOT NULL COMMENT '流程序列编号',
-  `role_id` int(10) unsigned NOT NULL COMMENT '签核流程的角色',
-  `type` tinyint(4) NOT NULL COMMENT '流程环节属于合同还是需求单',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of normal_sign_process
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for `order_cancel_record`
@@ -553,7 +521,7 @@ CREATE TABLE `role` (
 -- Records of role
 -- ----------------------------
 INSERT INTO `role` VALUES ('1', '超级管理员', '系统后台管理', '');
-INSERT INTO `role` VALUES ('2', '生产部管理员', '主要Pad上操作，上传位置、pad上查看流程等', '{\"order\":[\"/home/order/order_sign\",\"/home/order/order_manage\"],\"plan\":[],\"abnormal\":[],\"task\":[\"/home/task/process_manage\"],\"system\":[]}');
+INSERT INTO `role` VALUES ('2', '生产部管理员', '主要Pad上操作，上传位置、pad上查看流程等', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[\"/home/order/order_sign\",\"/home/order/order_manage\"],\"plan\":[],\"abnormal\":[],\"task\":[\"/home/task/process_manage\"],\"system\":[]}');
 INSERT INTO `role` VALUES ('3', '安装组长', '安装前后扫描机器', null);
 INSERT INTO `role` VALUES ('4', '生产部经理', '订单审批', null);
 INSERT INTO `role` VALUES ('5', '普通员工', '浏览一般网页信息', null);
@@ -563,6 +531,25 @@ INSERT INTO `role` VALUES ('8', '技术部经理', '订单审批', null);
 INSERT INTO `role` VALUES ('9', '销售员', '录入订单', null);
 INSERT INTO `role` VALUES ('10', '技术员', '上传装车单，联系单', null);
 INSERT INTO `role` VALUES ('11', '质检员', 'pad上操作', null);
+
+-- ----------------------------
+-- Table structure for `sign_process`
+-- ----------------------------
+DROP TABLE IF EXISTS `sign_process`;
+CREATE TABLE `sign_process` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `process_name` varchar(255) NOT NULL COMMENT '签核流程的名称',
+  `process_content` text NOT NULL COMMENT '签核流程内容，json格式，每一个step为序号和对应角色\r\n[\r\n    {"step":1, "role_id":1}.\r\n    {"step":2, "role_id":3}.\r\n]',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sign_process
+-- ----------------------------
+INSERT INTO `sign_process` VALUES ('1', 'test', 'test123', '2017-12-09 15:05:09', '2017-12-09 15:05:16');
+INSERT INTO `sign_process` VALUES ('2', 'test', 'test5333', '2017-12-09 15:05:22', null);
 
 -- ----------------------------
 -- Table structure for `task`

@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.device.Device;
@@ -25,8 +26,9 @@ public class DeviceController {
     private DeviceService deviceService;
 
     @PostMapping("/add")
-    public Result add(Device device) {
-        deviceService.save(device);
+    public Result add(String device) {
+        Device device1 = JSON.parseObject(device, Device.class);
+        deviceService.save(device1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -37,8 +39,9 @@ public class DeviceController {
     }
 
     @PostMapping("/update")
-    public Result update(Device device) {
-        deviceService.update(device);
+    public Result update(String device) {
+        Device device1 = JSON.parseObject(device, Device.class);
+        deviceService.update(device1);
         return ResultGenerator.genSuccessResult();
     }
 

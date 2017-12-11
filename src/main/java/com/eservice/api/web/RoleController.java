@@ -34,12 +34,14 @@ public class RoleController {
 
     @PostMapping("/delete")
     public Result delete(@RequestParam Integer id) {
+        //TODO:检查签核流程中（sign_process）是否有该角色，否则无法删除
         roleService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/update")
     public Result update(String role) {
+        //TODO:检查签核流程中（sign_process）是否有该角色,否则无法修改
         Role role1 = JSONObject.parseObject(role, Role.class);
         roleService.update(role1);
         return ResultGenerator.genSuccessResult();
