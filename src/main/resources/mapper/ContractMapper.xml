@@ -11,4 +11,25 @@
     <result column="sellman" jdbcType="VARCHAR" property="sellman" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
+
+  <resultMap id="ContractDetailMap" type="com.eservice.api.model.contract.ContractDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="contract_num" jdbcType="VARCHAR" property="contractNum" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="sellman" jdbcType="VARCHAR" property="sellman" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+    <result column="current_step" jdbcType="VARCHAR" property="currentStep" />
+  </resultMap>
+
+  <select id="selectContracts" resultMap="ContractDetailMap">
+    SELECT c.*,GROUP_CONCAT(mo.id) as order_list, COUNT(c.id) as order_num, cs.current_step FROM contract c
+    LEFT JOIN machine_order mo ON mo.contract_id = c.id
+    LEFT JOIN contract_sign cs ON cs.contract_id = c.id
+    WHERE mo.status != 1
+    GROUP BY c.id
+  </select>
 </mapper>

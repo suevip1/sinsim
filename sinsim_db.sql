@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-12-12 01:19:32
+Date: 2017-12-14 02:19:34
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -104,12 +104,13 @@ CREATE TABLE `contract` (
   `sellman` varchar(255) NOT NULL COMMENT '销售人员',
   `create_time` datetime NOT NULL COMMENT '填表时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of contract
 -- ----------------------------
-INSERT INTO `contract` VALUES ('2', 'ss123456', '', '', '0000-00-00 00:00:00');
+INSERT INTO `contract` VALUES ('2', 'ss123456', '迪立普', '张三', '2017-12-13 23:10:22');
+INSERT INTO `contract` VALUES ('3', 'test123', '胡通', '李四', '2017-12-14 01:02:11');
 
 -- ----------------------------
 -- Table structure for `contract_sign`
@@ -126,11 +127,13 @@ CREATE TABLE `contract_sign` (
   PRIMARY KEY (`id`),
   KEY `fk_cs_contract_id` (`contract_id`),
   CONSTRAINT `fk_cs_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `contract` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of contract_sign
 -- ----------------------------
+INSERT INTO `contract_sign` VALUES ('1', '2', '{\"role_id\": 1, \"role_name\":\"销售经理\"，“person”：“张三”，”comment“: \"同意\"， ”update_time“:\"2017-11-05 12:08:55\"}', '销售经理', '1', '2017-12-14 01:37:58', '2017-12-15 01:38:24');
+INSERT INTO `contract_sign` VALUES ('2', '2', '{\"role_id\": 1, \"role_name\":\"销售经理\"，“person”：“张三”，”comment“: \"同意\"， ”update_time“:\"2017-11-05 12:08:55\"}', '技术经理', '0', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- ----------------------------
 -- Table structure for `device`
@@ -236,7 +239,7 @@ CREATE TABLE `machine_order` (
 -- ----------------------------
 -- Records of machine_order
 -- ----------------------------
-INSERT INTO `machine_order` VALUES ('1', '1', '2', '1', '1', 'cn', 'SINSIM', '22', '3', '22', '33', '44', '22', '22', '22', '5566', '2017-10-27', '2017-11-30', 'mm', 'alice', '1', '2017-11-21 11:45:23', '2017-11-27 13:36:44', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('1', null, '2', '1', '1', 'cn', 'SINSIM', '22', '3', '22', '33', '44', '22', '22', '22', '5566', '2017-10-27', '2017-11-30', 'mm', 'alice', '1', '2017-11-21 11:45:23', '2017-11-27 13:36:44', '2017-12-01 13:36:48');
 INSERT INTO `machine_order` VALUES ('2', '12', '2', '2', '2', 'fr', 'SINSIM', '55', '2', '22', '22', '224', '11', '22', '33', '333', '2017-11-28', '2017-12-09', 'eee', 'bob', '1', '2017-11-24 11:45:23', '2017-11-29 11:45:28', '2017-11-30 11:45:33');
 INSERT INTO `machine_order` VALUES ('3', '1', '2', '2', '66', 'fr', 'SINSIM', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
 INSERT INTO `machine_order` VALUES ('4', '4', '2', '1', '3', 'contr1', 'SINSIM', '4', '1', '1', '1', '2', '3', '3', '3', '4', '2017-11-28', '2017-12-07', 'm', 'Dim', '1', '2017-11-29 14:24:37', '2017-11-29 14:24:42', '2017-12-10 14:24:48');
@@ -246,8 +249,8 @@ INSERT INTO `machine_order` VALUES ('13', '1', '2', '30', '66', 'fr', 'SINSIM-ad
 INSERT INTO `machine_order` VALUES ('14', '1', '2', '31', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
 INSERT INTO `machine_order` VALUES ('15', '1', '2', '32', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
 INSERT INTO `machine_order` VALUES ('16', '1', '2', '33', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('18', '1', '2', '35', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('20', '1', '2', '27', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('18', '1', '3', '35', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
+INSERT INTO `machine_order` VALUES ('20', '1', '3', '27', '66', 'fr', 'SINSIM-add-by-interface', '22', '2', '22', '22', '33', '13', '22', '22', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
 
 -- ----------------------------
 -- Table structure for `machine_type`

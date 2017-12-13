@@ -2,7 +2,9 @@ package com.eservice.api.web;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract.Contract;
+import com.eservice.api.model.contract.ContractDetail;
 import com.eservice.api.service.ContractService;
+import com.eservice.api.service.impl.ContractServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +24,7 @@ import java.util.List;
 @RequestMapping("/contract")
 public class ContractController {
     @Resource
-    private ContractService contractService;
+    private ContractServiceImpl contractService;
 
     @PostMapping("/add")
     public Result add(Contract contract) {
@@ -55,4 +57,13 @@ public class ContractController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    @PostMapping("/selectContracts")
+    public Result selectContracts(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+        PageHelper.startPage(page, size);
+        List<ContractDetail> list = contractService.selectContracts();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 }
