@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.machine.Machine;
@@ -25,8 +26,9 @@ public class MachineController {
     private MachineService machineService;
 
     @PostMapping("/add")
-    public Result add(Machine machine) {
-        machineService.save(machine);
+    public Result add(String machine) {
+        Machine machine1 = JSON.parseObject(machine,Machine.class);
+        machineService.save(machine1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -37,8 +39,9 @@ public class MachineController {
     }
 
     @PostMapping("/update")
-    public Result update(Machine machine) {
-        machineService.update(machine);
+    public Result update(String machine) {
+        Machine machine1 = JSON.parseObject(machine,Machine.class);
+        machineService.update(machine1);
         return ResultGenerator.genSuccessResult();
     }
 

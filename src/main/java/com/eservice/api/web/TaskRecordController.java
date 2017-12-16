@@ -104,4 +104,27 @@ public class TaskRecordController {
         return ResultGenerator.genSuccessResult(taskRecordDetail);
     }
 
- }
+    /**
+     * 给生产部管理员返回所有detail，其中不限于包括：
+     * {
+     "machine_id":"",
+     "task_name":"",
+     "status":"",
+     "交货日期":"",
+     "计划日期":"",
+     }
+     * @param page
+     * @param size
+     * @return
+     */
+    @PostMapping("selectAllTaskRecordDetail")
+    public Result selectAllTaskRecordDetail(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size
+                                           ) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> ListTaskRecordDetail = taskRecordService.selectAllTaskRecordDetail();
+        PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+
+}

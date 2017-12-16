@@ -123,4 +123,20 @@
     join order_loading_list oll on oll.order_id = mo.id
     where tr.id = #{taskRecordId}
   </select>
+
+  <select id="selectAllTaskRecordDetail" resultMap="TaskRecordDetail">
+    SELECT
+--     m.machine_id,tr.task_name,tr.status,mo.contract_ship_date,mo.plan_ship_date
+    tr.*, pr.*,
+    m.id machine_id1, m.*, mo.id machine_order_id, mo.*,
+    oll.*
+    FROM
+    task_record tr
+    join process_record pr on tr.process_record_id = pr.id
+    join machine m on m.id = pr.machine_id
+    join machine_order mo on mo.id = m.order_id
+    join order_loading_list oll on oll.order_id = mo.id
+
+  </select>
+
 </mapper>
