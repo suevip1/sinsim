@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract.Contract;
@@ -27,8 +28,16 @@ public class ContractController {
     private ContractServiceImpl contractService;
 
     @PostMapping("/add")
-    public Result add(Contract contract) {
-        contractService.save(contract);
+    public Result add(String contract, String requisitionForms) {
+        if(contract == null || "".equals(contract)) {
+            ResultGenerator.genFailResult("合同信息为空！");
+        }
+        if(requisitionForms == null || "".equals(requisitionForms)) {
+            ResultGenerator.genFailResult("订单信息为空！");
+        }
+        Contract contract1 = JSONObject.parseObject(contract, Contract.class);
+        contractService.save(contract1);
+
         return ResultGenerator.genSuccessResult();
     }
 
