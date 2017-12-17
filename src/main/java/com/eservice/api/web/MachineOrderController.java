@@ -97,8 +97,8 @@ public class MachineOrderController {
     @PostMapping("/selectOrders")
     public Result selectOrders(
             @RequestParam(defaultValue = "0") Integer page,@RequestParam(defaultValue = "0") Integer size,
-
             Integer id,
+            String order_num,
             String contract_num,
             Integer status,
             String sellman,
@@ -108,7 +108,7 @@ public class MachineOrderController {
             String machine_name,
             @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page,size);
-        List<MachineOrderDetail> list = machineOrderService.selectOrder(id, contract_num, status,sellman,customer,query_start_time,query_finish_time,machine_name,is_fuzzy);
+        List<MachineOrderDetail> list = machineOrderService.selectOrder(id, order_num, contract_num, status,sellman,customer,query_start_time,query_finish_time,machine_name,is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

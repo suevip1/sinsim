@@ -26,7 +26,7 @@
   </resultMap>
 
   <select id="selectContracts" resultMap="ContractDetailMap">
-    SELECT c.*,GROUP_CONCAT(mo.id) as order_list, COUNT(c.id) as order_num, cs.current_step FROM contract c
+    SELECT c.*, COUNT(DISTINCT mo.id) as order_num, cs.current_step FROM contract c
     LEFT JOIN machine_order mo ON mo.contract_id = c.id
     LEFT JOIN contract_sign cs ON cs.contract_id = c.id
     WHERE mo.status != 1

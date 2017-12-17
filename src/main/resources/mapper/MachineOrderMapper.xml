@@ -6,6 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
     <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId" />
     <result column="contract_id" jdbcType="INTEGER" property="contractId" />
     <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId" />
@@ -34,6 +35,7 @@
   <resultMap id="MachineOrderDetailMap" type="com.eservice.api.model.machine_order.MachineOrderDetail">
     <!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
     <id column="id" property="id" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
     <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId" />
     <result column="contract_id" jdbcType="INTEGER" property="contractId" />
     <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId" />
@@ -124,6 +126,9 @@
     <if test="id != null and id != ''">
      and mo.id=#{id}
     </if>
+    <if test="order_num != null and order_num != ''">
+      and mo.order_num like CONCAT('%','${order_num}','%' )
+    </if>
     <if test="contract_num != null and contract_num != ''">
       and con.contract_num like CONCAT('%','${contract_num}','%' )
     </if>
@@ -159,6 +164,9 @@
     where 1=1
     <if test="id != null and id != ''">
       and mo.id=#{id}
+    </if>
+    <if test="order_num != null and order_num != ''">
+      and mo.order_num like CONCAT('%','${order_num}','%' )
     </if>
     <if test="contract_num != null and contract_num != ''">
       and con.contract_num = CONCAT('%','${contract_num}','%' )

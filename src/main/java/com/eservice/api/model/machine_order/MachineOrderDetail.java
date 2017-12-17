@@ -13,6 +13,12 @@ public class MachineOrderDetail {
     private Integer id;
 
     /**
+     * 订单编号
+     */
+    @Column(name = "order_num")
+    private String orderNum;
+
+    /**
      * 在改单/拆单情况发生时，原订单无效，为了做到数据恢复和订单原始记录，需要记录
      */
     @Column(name = "original_order_id")
@@ -181,6 +187,14 @@ public class MachineOrderDetail {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(String orderNum) {
+        this.orderNum = orderNum;
     }
 
     /**
