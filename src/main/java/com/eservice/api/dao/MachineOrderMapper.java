@@ -28,4 +28,6 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
                                    @Param("query_start_time") String query_start_time,
                                    @Param("query_finish_time") String query_finish_time,
                                    @Param("machine_name") String machine_name);
+
+    void saveAndGetID(MachineOrder machineOrder);
 }

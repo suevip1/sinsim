@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ContractMapper extends Mapper<Contract> {
     List<ContractDetail> selectContracts();
+    void saveAndGetID(Contract contract);
 }

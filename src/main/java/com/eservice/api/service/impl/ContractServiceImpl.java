@@ -27,4 +27,8 @@ public class ContractServiceImpl extends AbstractService<Contract> implements Co
         return contractMapper.selectContracts();
     }
 
+    public void saveAndGetID(Contract contract) {
+        contractMapper.saveAndGetID(contract);
+    }
+
 }

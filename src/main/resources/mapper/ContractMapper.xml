@@ -9,6 +9,9 @@
     <result column="contract_num" jdbcType="VARCHAR" property="contractNum" />
     <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
     <result column="sellman" jdbcType="VARCHAR" property="sellman" />
+    <result column="pay_method" jdbcType="VARCHAR" property="payMethod" />
+    <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
+    <result column="mark" jdbcType="LONGVARCHAR" property="mark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
 
@@ -20,6 +23,9 @@
     <result column="contract_num" jdbcType="VARCHAR" property="contractNum" />
     <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
     <result column="sellman" jdbcType="VARCHAR" property="sellman" />
+    <result column="pay_method" jdbcType="VARCHAR" property="payMethod" />
+    <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
+    <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
     <result column="current_step" jdbcType="VARCHAR" property="currentStep" />
@@ -29,7 +35,15 @@
     SELECT c.*, COUNT(DISTINCT mo.id) as order_num, cs.current_step FROM contract c
     LEFT JOIN machine_order mo ON mo.contract_id = c.id
     LEFT JOIN contract_sign cs ON cs.contract_id = c.id
-    WHERE mo.status != 1
+--     WHERE mo.status != 1
     GROUP BY c.id
   </select>
+
+    <insert id="saveAndGetID"   useGeneratedKeys="true"  parameterType="com.eservice.api.model.contract.Contract" keyProperty="id">
+        insert into
+        contract(contract_num, customer_name, sellman, contract_ship_date, pay_method, mark, create_time)
+        values(
+        #{contractNum},#{customerName},#{sellman},#{contractShipDate},#{payMethod},#{mark},#{createTime})
+    </insert>
+
 </mapper>

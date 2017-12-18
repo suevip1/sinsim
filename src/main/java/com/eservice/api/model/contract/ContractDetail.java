@@ -39,21 +39,23 @@ public class ContractDetail {
      */
     private String currentStep;
 
-    public Integer getOrderNum() {
-        return orderNum;
-    }
+    /**
+     * 合同备注，由填表人员填入
+     */
+    @Column(name="mark")
+    private String mark;
 
-    public void setOrderNum(Integer orderNum) {
-        this.orderNum = orderNum;
-    }
+    /**
+     * 合同支付方式
+     */
+    @Column(name="pay_method")
+    private String payMethod;
 
-    public String getCurrentStep() {
-        return currentStep;
-    }
-
-    public void setCurrentStep(String currentStep) {
-        this.currentStep = currentStep;
-    }
+    /**
+     * 合同交货时间
+     */
+    @Column(name="contract_ship_date")
+    private Date contractShipDate;
 
     /**
      * 填表时间
@@ -127,6 +129,47 @@ public class ContractDetail {
      */
     public void setSellman(String sellman) {
         this.sellman = sellman;
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public String getCurrentStep() {
+        return currentStep;
+    }
+
+    public void setCurrentStep(String currentStep) {
+        this.currentStep = currentStep;
+    }
+
+
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
+    }
+
+    public String getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(String payMethod) {
+        this.payMethod = payMethod;
+    }
+
+    public Date getContractShipDate() {
+        return contractShipDate;
+    }
+
+    public void setContractShipDate(Date contractShipDate) {
+        this.contractShipDate = contractShipDate;
     }
 
     /**

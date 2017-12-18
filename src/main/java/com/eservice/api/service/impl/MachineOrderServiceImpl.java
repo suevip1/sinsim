@@ -34,4 +34,8 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
             return  machineOrderMapper.selectOrder(id, order_num, contract_num, status, sellman, customer, query_start_time, query_finish_time, machine_name);
         }
     }
+
+    public void saveAndGetID(MachineOrder machineOrder){
+        machineOrderMapper.saveAndGetID(machineOrder);
+    }
 }
