@@ -2,6 +2,7 @@ package com.eservice.api.model.abnormal_record;
 
 import com.eservice.api.model.abnormal.Abnormal;
 import com.eservice.api.model.abnormal_image.AbnormalImage;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.task_record.TaskRecord;
 
 import javax.persistence.*;
@@ -53,6 +54,10 @@ public class AbnormalRecordDetail {
     private Abnormal abnormal;
     private AbnormalImage abnormalImage;
     private TaskRecord taskRecord;
+    /**
+     * 安装小组需要上传安装错误信息包含的机器信息
+     */
+    private Machine machine;
 
     /**
      * @return id
@@ -182,4 +187,6 @@ public class AbnormalRecordDetail {
     public void setAbnormalImage(AbnormalImage abnormalImage) { this.abnormalImage = abnormalImage;}
     public TaskRecord getTaskRecord() { return  this.taskRecord; }
     public void setTaskRecord(TaskRecord taskRecord) { this.taskRecord = taskRecord; }
+    public Machine getMachine() {return this.machine; }
+    public void setMachine(Machine machine) { this.machine = machine; }
 }
