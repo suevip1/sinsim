@@ -14,6 +14,12 @@ public class Task {
     private String taskName;
 
     /**
+     * 质检用户的ID
+     */
+    @Column(name = "quality_user_id")
+    private Integer qualityUserId;
+
+    /**
      * 安装小组id
      */
     @Column(name = "group_id")
@@ -54,6 +60,24 @@ public class Task {
      */
     public void setTaskName(String taskName) {
         this.taskName = taskName;
+    }
+
+    /**
+     * 获取质检用户的ID
+     *
+     * @return quality_user_id - 质检用户的ID
+     */
+    public Integer getQualityUserId() {
+        return qualityUserId;
+    }
+
+    /**
+     * 设置质检用户的ID
+     *
+     * @param qualityUserId 质检用户的ID
+     */
+    public void setQualityUserId(Integer qualityUserId) {
+        this.qualityUserId = qualityUserId;
     }
 
     /**

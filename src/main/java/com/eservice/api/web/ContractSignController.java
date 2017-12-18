@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract_sign.ContractSign;
@@ -25,8 +26,9 @@ public class ContractSignController {
     private ContractSignService contractSignService;
 
     @PostMapping("/add")
-    public Result add(ContractSign contractSign) {
-        contractSignService.save(contractSign);
+    public Result add(String contractSign) {
+        ContractSign contractSign1 = JSON.parseObject(contractSign, ContractSign.class);
+        contractSignService.save(contractSign1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -37,8 +39,9 @@ public class ContractSignController {
     }
 
     @PostMapping("/update")
-    public Result update(ContractSign contractSign) {
-        contractSignService.update(contractSign);
+    public Result update(String contractSign) {
+        ContractSign contractSign1 = JSON.parseObject(contractSign,ContractSign.class);
+        contractSignService.update(contractSign1);
         return ResultGenerator.genSuccessResult();
     }
 
