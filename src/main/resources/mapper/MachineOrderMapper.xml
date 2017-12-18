@@ -104,6 +104,14 @@
       <id column="machineTypeID" property="id" />
       <result column="name" jdbcType="VARCHAR" property="name" />
     </association>
+    <association javaType="com.eservice.api.model.order_sign.OrderSign" property="orderSign">
+      <id column="order_sign_id" property="id" />
+      <result column="order_id" jdbcType="INTEGER" property="orderId" />
+      <result column="os_status" jdbcType="TINYINT" property="status" />
+      <result column="os_create_time" jdbcType="TIMESTAMP" property="createTime" />
+      <result column="os_update_time" jdbcType="TIMESTAMP" property="updateTime" />
+      <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
+    </association>
 
   </resultMap>
 
@@ -126,8 +134,9 @@
   </select>
 
   <select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
+    select mo.*, od.*, os.id order_sign_id, os.order_id, os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
     from machine_order mo
+    LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
     join machine_type mt on mo.machine_type=mt.id
     join contract con on mo.contract_id = con.id
@@ -168,8 +177,9 @@
 
 
   <select id="selectOrder" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
+    select mo.*, od.*, os.id order_sign_id, os.order_id,os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
     from machine_order mo
+    JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
     join machine_type mt on mo.machine_type=mt.id
     join contract con on mo.contract_id = con.id

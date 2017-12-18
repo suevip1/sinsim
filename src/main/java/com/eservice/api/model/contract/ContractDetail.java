@@ -35,9 +35,14 @@ public class ContractDetail {
     private Integer orderNum;
 
     /**
-     * 当前订单审核进度
+     * 当前合同审核进度
      */
     private String currentStep;
+
+    /**
+     * 当前合同审核进度
+     */
+    private Integer status;
 
     /**
      * 合同备注，由填表人员填入
@@ -147,6 +152,13 @@ public class ContractDetail {
         this.currentStep = currentStep;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public String getMark() {
         return mark;

@@ -15,6 +15,6 @@
   </resultMap>
 
   <select id="detailByContractId" resultMap="BaseResultMap">
-    SELECT * FROM contract_sign WHERE contract_id = ${contractId}
+    SELECT * FROM contract_sign WHERE contract_id = ${contractId} AND status &lt; 4 ORDER BY create_time DESC LIMIT 1
   </select>
 </mapper>

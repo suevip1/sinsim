@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : MyDB
-Source Server Version : 50547
+Source Server         : sinsim
+Source Server Version : 50505
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50547
+Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-12-18 16:56:42
+Date: 2017-12-19 00:32:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -125,7 +125,7 @@ CREATE TABLE `contract_sign` (
   `contract_id` int(10) unsigned NOT NULL COMMENT '合同ID',
   `sign_content` text NOT NULL COMMENT '签核内容，以json格式的数组形式存放, 所有项完成后更新status为完成.[ \r\n    {"step_number":1, "role_id": 1, "role_name":"销售经理"，“person”：“张三”，”comment“: "同意"，"resolved":1,”update_time“:"2017-11-05 12:08:55"},\r\n    {"step_number":1,"role_id":2, "role_name":"财务部"，“person”：“李四”，”comment“: "同意，但是部分配件需要新设计"，"resolved":0, ”update_time“:"2017-11-06 12:08:55"}\r\n]',
   `current_step` varchar(255) NOT NULL COMMENT '当前进行中的签核环节（来至于role_name）',
-  `status` tinyint(4) NOT NULL COMMENT '签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，“4”==>改单，“5”==>拆单，该条记录在驳回后停止修改，会新创建签核记录',
+  `status` tinyint(4) NOT NULL COMMENT '签核状态：“0”==>初始化状态，填单员已编辑未提交审核；“1”==>签核中， “2”==>签核完成，“3”==>改单，“4”==>拆单，“5”==>驳回，“6”==>取消； 该条记录在驳回后停止修改，会新创建签核记录',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -422,7 +422,7 @@ CREATE TABLE `order_sign` (
 -- ----------------------------
 -- Records of order_sign
 -- ----------------------------
-INSERT INTO `order_sign` VALUES ('1', '28', '[{\"date\":\"\",\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"},{\"date\":\"\",\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"},{\"date\":\"\",\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"}]', '0', '2017-12-18 16:55:14', null);
+INSERT INTO `order_sign` VALUES ('1', '28', '[{\"date\":\"\",\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"},{\"date\":\"\",\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"},{\"date\":\"\",\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"}]', '0', '2017-12-18 16:55:14', '0000-00-00 00:00:00');
 
 -- ----------------------------
 -- Table structure for `order_split_record`

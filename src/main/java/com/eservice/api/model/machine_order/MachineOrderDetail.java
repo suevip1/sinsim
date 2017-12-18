@@ -2,6 +2,7 @@ package com.eservice.api.model.machine_order;
 
 import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.order_detail.OrderDetail;
+import com.eservice.api.model.order_sign.OrderSign;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -24,19 +25,10 @@ public class MachineOrderDetail {
     @Column(name = "original_order_id")
     private Integer originalOrderId;
 
-
     /**
      * 合同对应的数据库ID
      */
     private Integer contractId;
-
-    public Integer getContractId() {
-        return contractId;
-    }
-
-    public void setContractId(Integer contractId) {
-        this.contractId = contractId;
-    }
 
     /**
      * Order详细信息，通过它来多表关联
@@ -170,6 +162,12 @@ public class MachineOrderDetail {
      */
     private OrderDetail orderDetail;
 
+
+    /**
+     * 订单签核情况
+     */
+    private OrderSign orderSign;
+
 //    /*
 //    机器类型，和machine_type关联
 //     */
@@ -195,6 +193,22 @@ public class MachineOrderDetail {
 
     public void setOrderNum(String orderNum) {
         this.orderNum = orderNum;
+    }
+
+    public Integer getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(Integer contractId) {
+        this.contractId = contractId;
+    }
+
+    public OrderSign getOrderSign() {
+        return orderSign;
+    }
+
+    public void setOrderSign(OrderSign orderSign) {
+        this.orderSign = orderSign;
     }
 
     /**

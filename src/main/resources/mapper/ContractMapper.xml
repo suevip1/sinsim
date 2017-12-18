@@ -28,11 +28,11 @@
     <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
-    <result column="current_step" jdbcType="VARCHAR" property="currentStep" />
+    <result column="status" jdbcType="TINYINT" property="status" />
   </resultMap>
 
   <select id="selectContracts" resultMap="ContractDetailMap">
-    SELECT c.*, COUNT(DISTINCT mo.id) as order_num, cs.current_step FROM contract c
+    SELECT c.*, COUNT(DISTINCT mo.id) as order_num, cs.status, cs.current_step FROM contract c
     LEFT JOIN machine_order mo ON mo.contract_id = c.id
     LEFT JOIN contract_sign cs ON cs.contract_id = c.id
 --     WHERE mo.status != 1
