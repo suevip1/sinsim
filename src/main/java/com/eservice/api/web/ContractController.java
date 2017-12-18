@@ -10,10 +10,7 @@ import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.service.ContractService;
-import com.eservice.api.service.impl.ContractServiceImpl;
-import com.eservice.api.service.impl.ContractSignServiceImpl;
-import com.eservice.api.service.impl.MachineOrderServiceImpl;
-import com.eservice.api.service.impl.OrderDetailServiceImpl;
+import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +40,8 @@ public class ContractController {
     private MachineOrderServiceImpl machineOrderService;
     @Resource
     private OrderDetailServiceImpl orderDetailService;
+    @Resource
+    private OrderSignServiceImpl orderSignService;
 
     @PostMapping("/add")
     @Transactional(rollbackFor = Exception.class)
@@ -92,6 +91,7 @@ public class ContractController {
                 orderSign.setOrderId(orderTemp.getId());
                 orderSign.setCreateTime(new Date());
                 orderSign.setStatus(Byte.parseByte("0"));
+                orderSignService.save(orderSign);
             }
         }else {
             //手动回滚事务
