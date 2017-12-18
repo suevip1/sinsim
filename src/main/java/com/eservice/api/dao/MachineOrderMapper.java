@@ -11,6 +11,7 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
 
     MachineOrderDetail getOrderAllDetail(@Param("id") Integer id);
     List<MachineOrderDetail> selectOrderFuzzy(@Param("id") Integer id,
+                                              @Param("contract_id") Integer contract_id,
                                                @Param("order_num") String order_num,
                                                @Param("contract_num") String contract_num,
                                                @Param("status") Integer status,
@@ -20,6 +21,7 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
                                                @Param("query_finish_time") String query_finish_time,
                                                @Param("machine_name") String machine_name);
     List<MachineOrderDetail>  selectOrder(@Param("id") Integer id,
+                                   @Param("contract_id") Integer contract_id,
                                    @Param("order_num") String order_num,
                                    @Param("contract_num") String contract_num,
                                    @Param("status") Integer status,

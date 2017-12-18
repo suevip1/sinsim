@@ -13,4 +13,8 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
   </resultMap>
+
+  <select id="detailByContractId" resultMap="BaseResultMap">
+    SELECT * FROM contract_sign WHERE contract_id = ${contractId}
+  </select>
 </mapper>

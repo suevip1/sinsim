@@ -4,6 +4,7 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.service.ContractSignService;
+import com.eservice.api.service.impl.ContractSignServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ import java.util.List;
 @RequestMapping("/contract/sign")
 public class ContractSignController {
     @Resource
-    private ContractSignService contractSignService;
+    private ContractSignServiceImpl contractSignService;
 
     @PostMapping("/add")
     public Result add(String contractSign) {
@@ -48,6 +49,12 @@ public class ContractSignController {
     @PostMapping("/detail")
     public Result detail(@RequestParam Integer id) {
         ContractSign contractSign = contractSignService.findById(id);
+        return ResultGenerator.genSuccessResult(contractSign);
+    }
+
+    @PostMapping("/detailByContractId")
+    public Result detailByContractNum(@RequestParam String contractId) {
+        ContractSign contractSign = contractSignService.detailByContractId(contractId);
         return ResultGenerator.genSuccessResult(contractSign);
     }
 

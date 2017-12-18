@@ -135,6 +135,9 @@
     <if test="id != null and id != ''">
      and mo.id=#{id}
     </if>
+    <if test="contract_id != null and contract_id != ''">
+      and mo.contract_id=#{contract_id}
+    </if>
     <if test="order_num != null and order_num != ''">
       and mo.order_num like CONCAT('%','${order_num}','%' )
     </if>
@@ -173,6 +176,9 @@
     where 1=1
     <if test="id != null and id != ''">
       and mo.id=#{id}
+    </if>
+    <if test="contract_id != null and contract_id != ''">
+      and mo.contract_id=#{contract_id}
     </if>
     <if test="order_num != null and order_num != ''">
       and mo.order_num like CONCAT('%','${order_num}','%' )

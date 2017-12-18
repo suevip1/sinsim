@@ -21,4 +21,8 @@ public class ContractSignServiceImpl extends AbstractService<ContractSign> imple
     @Resource
     private ContractSignMapper contractSignMapper;
 
+    public ContractSign detailByContractId(String contractId) {
+        return contractSignMapper.detailByContractId(contractId);
+    }
+
 }
