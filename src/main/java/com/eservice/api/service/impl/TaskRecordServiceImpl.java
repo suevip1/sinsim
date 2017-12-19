@@ -35,5 +35,11 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
     public List<TaskRecordDetail> selectAllTaskRecordDetail() {
         return taskRecordMapper.selectAllTaskRecordDetail();
     }
+    public List<TaskRecordDetail> selectAllInstallTaskRecordDetailByUserAccount(String userAccount) {
+        return taskRecordMapper.selectAllInstallTaskRecordDetailByUserAccount(userAccount);
+    }
+    public List<TaskRecordDetail> selectAllQaTaskRecordDetailByUserAccount(String userAccount) {
+        return taskRecordMapper.selectAllQaTaskRecordDetailByUserAccount(userAccount);
+    }
 
 }

@@ -54,7 +54,7 @@
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
     <association javaType="com.eservice.api.model.process_record.ProcessRecord" property="processRecord" >
-    <id column="process_record_id"  property="id" />
+    <id column="process_record_id_in_association"  property="id" />
     <result column="machine_id" jdbcType="INTEGER" property="machineId" />
     <result column="process_id" jdbcType="INTEGER" property="processId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -112,9 +112,12 @@
   </resultMap>
   <!--根据 taskId查task record, process record, machine, machine_order-->
   <select id="selectTaskRecordDetail" resultMap="TaskRecordDetail">
-    SELECT tr.*, pr.*,
-    m.id machine_id1, m.*, mo.id machine_order_id, mo.*,
-    oll.*
+    SELECT
+    tr.*,
+    pr.id process_record_id_in_association, pr.*,
+    m.id machine_id1, m.*,
+    mo.id machine_order_id, mo.*,
+    oll.id order_loading_list_id,oll.*
     FROM
     task_record tr
     join process_record pr on tr.process_record_id = pr.id
@@ -126,10 +129,11 @@
 
   <select id="selectAllTaskRecordDetail" resultMap="TaskRecordDetail">
     SELECT
---     m.machine_id,tr.task_name,tr.status,mo.contract_ship_date,mo.plan_ship_date
-    tr.*, pr.*,
-    m.id machine_id1, m.*, mo.id machine_order_id, mo.*,
-    oll.*
+    tr.*,
+    pr.id process_record_id_in_association, pr.*,
+    m.id machine_id1, m.*,
+    mo.id machine_order_id, mo.*,
+    oll.id order_loading_list_id,oll.*
     FROM
     task_record tr
     join process_record pr on tr.process_record_id = pr.id
@@ -138,5 +142,43 @@
     join order_loading_list oll on oll.order_id = mo.id
 
   </select>
+
+  <select id="selectAllInstallTaskRecordDetailByUserAccount" resultMap = "TaskRecordDetail">
+    select
+    tr.*,
+    pr.id process_record_id_in_association, pr.*,
+    m.id machine_id1, m.*,
+    mo.id machine_order_id, mo.*,
+    oll.id order_loading_list_id,oll.*
+    from task_record tr
+    join process_record pr on tr.process_record_id = pr.id
+    join machine m on m.id = pr.machine_id
+    join machine_order mo on mo.id = m.order_id
+    join order_loading_list oll on oll.order_id = mo.id
+
+    join task on task.task_name = tr.task_name
+    join install_group  on install_group.id = task.group_id
+    join user on user.group_id = install_group.id
+    where user.account  = #{userAccount}
+  </select>
+
+  <select id="selectAllQaTaskRecordDetailByUserAccount" resultMap = "TaskRecordDetail">
+    select
+    tr.*,
+    pr.id process_record_id_in_association, pr.*,
+    m.id machine_id1, m.*,
+    mo.id machine_order_id, mo.*,
+    oll.id order_loading_list_id,oll.*
+    from task_record tr
+    join process_record pr on tr.process_record_id = pr.id
+    join machine m on m.id = pr.machine_id
+    join machine_order mo on mo.id = m.order_id
+    join order_loading_list oll on oll.order_id = mo.id
+
+    join task on task.task_name = tr.task_name
+    join user on user.id = task.quality_user_id
+    where user.account  = #{userAccount}
+  </select>
+
 
 </mapper>

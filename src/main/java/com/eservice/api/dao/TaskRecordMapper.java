@@ -12,5 +12,6 @@ public interface TaskRecordMapper extends Mapper<TaskRecord> {
     List<TaskRecord> selectTaskPlans(@Param("taskId") Integer taskRecordId);
     TaskRecordDetail selectTaskRecordDetail(@Param("taskRecordId") Integer taskRecordId);
     List<TaskRecordDetail> selectAllTaskRecordDetail();
-
+    List<TaskRecordDetail> selectAllInstallTaskRecordDetailByUserAccount(@Param("userAccount") String userAccount);
+    List<TaskRecordDetail> selectAllQaTaskRecordDetailByUserAccount(@Param("userAccount") String userAccount);
 }

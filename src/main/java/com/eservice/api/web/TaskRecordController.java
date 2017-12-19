@@ -5,7 +5,9 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.order_loading_list.OrderLoadingList;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
+import com.eservice.api.model.user.User;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
+import com.eservice.api.service.impl.UserServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,8 @@ import java.util.List;
 public class TaskRecordController {
     @Resource
     private TaskRecordServiceImpl taskRecordService;
+    @Resource
+    private UserServiceImpl userService;
 
     @PostMapping("/add")
     public Result add(String taskRecord) {
@@ -126,5 +130,43 @@ public class TaskRecordController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    /**
+     * 根据用户返回所有安装组detail，其中不限于包括：
+     "machine_id":"", 	-->machine.machine_id
+     "task_name":"",	-->task_record.task_name
+     "status":"",		-->task_record.status
+     "交货日期":"",		-->machine_order.contract_ship_date
+     "计划日期":"",		-->machine_order.plan_ship_date
+     * @param userAccount
+     * @return
+     */
+    @PostMapping("selectAllInstallTaskRecordDetailByUserAccount")
+    public Result selectAllInstallTaskRecordDetailByUserAccount(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                                         @RequestParam String userAccount) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> ListTaskRecordDetail = taskRecordService.selectAllInstallTaskRecordDetailByUserAccount(userAccount);
+        PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 
+    /**
+     *  根据用户返回所有检测员detail，其中不限于包括：
+     "machine_id":"", 	-->machine.machine_id
+     "task_name":"",	-->task_record.task_name
+     "status":"",		-->task_record.status
+     "交货日期":"",		-->machine_order.contract_ship_date
+     "计划日期":"",		-->machine_order.plan_ship_date
+     * @param page
+     * @param size
+     * @param userAccount
+     * @return
+     */
+    @PostMapping("selectAllQaTaskRecordDetailByUserAccount")
+    public Result selectAllQaTaskRecordDetailByUserAccount(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                                                @RequestParam String userAccount) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> ListTaskRecordDetail = taskRecordService.selectAllQaTaskRecordDetailByUserAccount(userAccount);
+        PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }
