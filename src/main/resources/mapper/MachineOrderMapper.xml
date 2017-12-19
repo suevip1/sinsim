@@ -63,7 +63,7 @@
     <result column="mark" jdbcType="LONGVARCHAR" property="mark" />
     <association javaType="com.eservice.api.model.order_detail.OrderDetail" property="orderDetail">
       <!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
-      <id column="id" property="id" />
+      <id column="order_detail_id" property="id" />
       <result column="special_towel_color" jdbcType="VARCHAR" property="specialTowelColor" />
       <result column="special_towel_daxle" jdbcType="VARCHAR" property="specialTowelDaxle" />
       <result column="special_towel_haxle" jdbcType="VARCHAR" property="specialTowelHaxle" />
@@ -125,7 +125,7 @@
   </insert>
 
   <select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
-    select  mo.*, od.*, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
+    select  mo.*, od.*, od.id order_detail_id, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
     from machine_order mo
      join order_detail od  on mo.order_detail_id=od.id
      join machine_type mt  on mo.machine_type=mt.id
@@ -134,7 +134,7 @@
   </select>
 
   <select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*, os.id order_sign_id, os.order_id, os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
+    select mo.*, od.*,od.id order_detail_id, os.id order_sign_id, os.order_id, os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
     from machine_order mo
     LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
@@ -177,7 +177,7 @@
 
 
   <select id="selectOrder" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*, os.id order_sign_id, os.order_id,os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
+    select mo.*, od.*, od.id order_detail_id,os.id order_sign_id, os.order_id,os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
     from machine_order mo
     JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id

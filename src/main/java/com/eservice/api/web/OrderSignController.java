@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.order_sign.OrderSign;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,8 +39,17 @@ public class OrderSignController {
     }
 
     @PostMapping("/update")
-    public Result update(OrderSign orderSign) {
-        orderSignService.update(orderSign);
+    public Result update(String orderSign) {
+        if(orderSign == null || "".equals(orderSign)) {
+            ResultGenerator.genFailResult("签核信息为空！");
+        }
+        OrderSign orderSign1 = JSONObject.parseObject(orderSign, OrderSign.class);
+        if(orderSign1 == null) {
+            ResultGenerator.genFailResult("签核信息JSON解析失败！");
+        }else {
+            orderSign1.setUpdateTime(new Date());
+            orderSignService.update(orderSign1);
+        }
         return ResultGenerator.genSuccessResult();
     }
 

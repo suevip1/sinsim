@@ -109,8 +109,12 @@ public class ContractController {
     }
 
     @PostMapping("/update")
-    public Result update(Contract contract) {
-        contractService.update(contract);
+    @Transactional(rollbackFor = Exception.class)
+    public Result update(String contract,  String requisitionForms) {
+        Contract contract1 = JSONObject.parseObject(contract, Contract.class);
+        List<MachineOrderWapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms,MachineOrderWapper.class );
+
+        //contractService.update(contract1);
         return ResultGenerator.genSuccessResult();
     }
 
