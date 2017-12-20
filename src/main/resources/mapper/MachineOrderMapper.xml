@@ -179,7 +179,7 @@
   <select id="selectOrder" resultMap="MachineOrderDetailMap">
     select mo.*, od.*, od.id order_detail_id,os.id order_sign_id, os.order_id,os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
     from machine_order mo
-    JOIN order_sign os on mo.id = os.order_id
+    LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
     join machine_type mt on mo.machine_type=mt.id
     join contract con on mo.contract_id = con.id

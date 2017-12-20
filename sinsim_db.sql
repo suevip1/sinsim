@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-12-19 00:32:21
+Date: 2017-12-21 00:03:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -29,7 +29,7 @@ CREATE TABLE `abnormal` (
 -- Records of abnormal
 -- ----------------------------
 INSERT INTO `abnormal` VALUES ('1', 'abnormalName111');
-INSERT INTO `abnormal` VALUES ('2', 'abn_222-by-updateAbnormalRecordDetail-testTransactionOK');
+INSERT INTO `abnormal` VALUES ('2', 'abn_222');
 INSERT INTO `abnormal` VALUES ('3', 'abn333-by-update');
 INSERT INTO `abnormal` VALUES ('4', 'abnABC');
 INSERT INTO `abnormal` VALUES ('5', 'abn333-by-add');
@@ -107,7 +107,7 @@ CREATE TABLE `contract` (
   `mark` text COMMENT '合同备注信息，有填单员上填入',
   `create_time` datetime NOT NULL COMMENT '填表时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of contract
@@ -131,7 +131,7 @@ CREATE TABLE `contract_sign` (
   PRIMARY KEY (`id`),
   KEY `fk_cs_contract_id` (`contract_id`),
   CONSTRAINT `fk_cs_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `contract` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of contract_sign
@@ -199,9 +199,9 @@ CREATE TABLE `machine` (
 -- ----------------------------
 -- Records of machine
 -- ----------------------------
-INSERT INTO `machine` VALUES ('1', '1', 'machien_machhineID111', 'nnn', 'loca111', '1', '2017-11-30 10:54:59', '2017-11-30 10:55:03', '2017-12-01 10:55:09', '2017-12-23 10:55:14');
-INSERT INTO `machine` VALUES ('2', '2', 'machien_machhineID222', 'nnnnn', 'loca222', '1', '2017-11-30 10:56:01', '2017-11-30 10:56:05', '2017-12-07 10:56:10', '2017-12-22 10:56:16');
-INSERT INTO `machine` VALUES ('3', '4', 'machien_machhineID2333', 'nnnme', 'loca333', '2', '2017-11-30 11:11:16', '2017-11-30 11:11:19', '2017-12-01 11:11:29', '2017-12-07 11:11:36');
+INSERT INTO `machine` VALUES ('1', '22', 'machien_machhineID111', 'nnn', 'loca111', '1', '2017-11-30 10:54:59', '2017-11-30 10:55:03', '2017-12-01 10:55:09', '2017-12-23 10:55:14');
+INSERT INTO `machine` VALUES ('2', '22', 'machien_machhineID222', 'nnnnn', 'loca222', '1', '2017-11-30 10:56:01', '2017-11-30 10:56:05', '2017-12-07 10:56:10', '2017-12-22 10:56:16');
+INSERT INTO `machine` VALUES ('3', '22', 'machien_machhineID2333', 'nnnme', 'loca333', '2', '2017-11-30 11:11:16', '2017-11-30 11:11:19', '2017-12-01 11:11:29', '2017-12-07 11:11:36');
 
 -- ----------------------------
 -- Table structure for `machine_order`
@@ -240,28 +240,17 @@ CREATE TABLE `machine_order` (
   CONSTRAINT `fk_o_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `contract` (`id`),
   CONSTRAINT `fk_o_machine_type` FOREIGN KEY (`machine_type`) REFERENCES `machine_type` (`id`),
   CONSTRAINT `fk_o_order_detail_id` FOREIGN KEY (`order_detail_id`) REFERENCES `order_detail` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of machine_order
 -- ----------------------------
-INSERT INTO `machine_order` VALUES ('1', 'xs-120701', null, '2', '1', '1', '英语', 'SINSIM电脑绣花机', '22', '3', '22', '33', '44', '22', '22', '单机', '5566', '2017-10-27', '2017-11-30', 'mm', 'alice', '1', '2017-11-21 11:45:23', '2017-11-27 13:36:44', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('2', 'xs-120704', '12', '2', '2', '2', '英语', 'SINSIM电脑绣花机', '55', '2', '22', '22', '224', '11', '22', '单机', '333', '2017-11-28', '2017-12-09', 'eee', 'bob', '1', '2017-11-24 11:45:23', '2017-11-29 11:45:28', '2017-11-30 11:45:33');
-INSERT INTO `machine_order` VALUES ('3', 'xs-110701', '1', '2', '2', '66', '英语', 'SINSIM电脑绣花机', '22', '2', '22', '22', '33', '13', '22', '单机', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('4', 'xs-120710', '4', '2', '1', '3', '英语', 'SINSIM电脑绣花机', '4', '1', '1', '1', '2', '3', '3', '单机', '4', '2017-11-28', '2017-12-07', 'm', 'Dim', '1', '2017-11-29 14:24:37', '2017-11-29 14:24:42', '2017-12-10 14:24:48');
-INSERT INTO `machine_order` VALUES ('11', 'xs-120711', '1', '2', '28', '66', '英语', 'SINSIM电脑绣花机', '22', '2', '22', '22', '33', '13', '22', '单机', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('12', 'xs-120777', '1', '2', '29', '66', '英语', 'SINSIM电脑绣花机', '22', '2', '22', '22', '33', '13', '22', '单机', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('13', 'xs-120780', '1', '2', '30', '66', '英语', 'SINSIM电脑绣花机', '22', '1', '22', '22', '33', '13', '22', '单机', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('14', 'xs-120788', '1', '2', '31', '66', '英语', 'SINSIM电脑绣花机', '22', '2', '22', '22', '33', '13', '22', '单机', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('15', 'xs-120790', '1', '3', '32', '66', '英语', 'SINSIM电脑绣花机', '22', '2', '22', '22', '33', '13', '22', '单机', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('16', 'xs-120799', '1', '3', '33', '66', '英语', 'SINSIM电脑绣花机', '22', '2', '22', '22', '33', '13', '22', '单机', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('18', '20171201', '1', '6', '35', '66', '英语', 'SINSIM电脑绣花机', '22', '2', '22', '22', '33', '13', '22', '单机', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
-INSERT INTO `machine_order` VALUES ('20', '20171202', '1', '6', '27', '66', '英语', 'SINSIM电脑绣花机', '22', '2', '22', '22', '33', '13', '22', '单机', '223', '2017-11-28', '2017-12-08', 'fff', 'bob', '22', '2017-11-24 11:45:23', '2017-11-28 11:51:39', '2017-12-01 13:36:48');
 INSERT INTO `machine_order` VALUES ('22', '0712007', null, '30', '50', '1', '英语', 'SINSIM电脑绣花机', '3', '1', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-18 00:00:00', null, null);
-INSERT INTO `machine_order` VALUES ('23', '0712007', null, '31', '51', '1', '英语', 'SINSIM电脑绣花机', '3', '1', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-18 00:00:00', null, null);
-INSERT INTO `machine_order` VALUES ('24', '0712008', null, '31', '52', '1', '英语', 'SINSIM电脑绣花机', '1', '1', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-18 00:00:00', null, null);
-INSERT INTO `machine_order` VALUES ('25', '0712009', null, '31', '53', '1', '英语', 'SINSIM电脑绣花机', '2', '1', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-18 00:00:00', null, null);
-INSERT INTO `machine_order` VALUES ('28', '0712001', null, '40', '62', '1', '英语', 'SINSIM电脑绣花机', '3', '1', '20', '10', '5', '100', '200', '叠机', '30000', '2017-12-31', '2017-12-25', null, '李四', '0', '2017-12-18 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('23', '0712007', '0', '31', '51', '1', '英语', 'SINSIM电脑绣花机', '3', '1', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-18 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('28', '0712001', '0', '40', '62', '1', '英语', 'SINSIM电脑绣花机', '3', '1', '20', '10', '5', '100', '200', '叠机', '30000', '2017-12-31', '2017-12-25', '', '李四', '0', '2017-12-18 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('37', '0712002', '0', '40', '71', '1', '英语', 'SINSIM电脑绣花机', '4', '11', '20', '10', '5', '100', '200', '叠机', '30000', '2017-12-31', '2017-12-25', '', '李四', '0', '2017-12-20 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('38', '0712002', '0', '40', '72', '1', '英语', 'SINSIM电脑绣花机', '2', '8', '20', '10', '5', '100', '200', '叠机', '30000', '2017-12-31', '2017-12-25', '', '李四', '0', '2017-12-20 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('39', '0712008', '0', '31', '73', '1', '英语', 'SINSIM电脑绣花机', '3', '4', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-20 00:00:00', null, null);
 
 -- ----------------------------
 -- Table structure for `machine_type`
@@ -374,7 +363,7 @@ CREATE TABLE `order_detail` (
   `driver_vertical_num` tinyint(4) DEFAULT NULL COMMENT '驱动：直档数量',
   `driver_reel` varchar(255) DEFAULT NULL COMMENT '驱动：绷架',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_detail
@@ -391,10 +380,11 @@ INSERT INTO `order_detail` VALUES ('33', 'blue--add-by-interface', '33', 'aa', '
 INSERT INTO `order_detail` VALUES ('34', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
 INSERT INTO `order_detail` VALUES ('35', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
 INSERT INTO `order_detail` VALUES ('50', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', null, '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('51', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', null, '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('52', '6色', '集中', '集中', '大豪', '冠军独立', '18', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', null, '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('53', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', null, '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('62', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', null, '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('51', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('62', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('71', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('72', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('73', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
 
 -- ----------------------------
 -- Table structure for `order_loading_list`
@@ -414,12 +404,6 @@ CREATE TABLE `order_loading_list` (
 -- ----------------------------
 -- Records of order_loading_list
 -- ----------------------------
-INSERT INTO `order_loading_list` VALUES ('1', '1', 'file_name1111', '1', '2017-12-10 10:00:52');
-INSERT INTO `order_loading_list` VALUES ('2', '2', 'fielName2222', '2', '2017-12-10 10:01:13');
-INSERT INTO `order_loading_list` VALUES ('3', '4', 'file_name1111-by-add', '1', '2017-12-10 10:00:52');
-INSERT INTO `order_loading_list` VALUES ('4', '18', 'file_name1111-by-add', '1', '2017-12-10 10:00:52');
-INSERT INTO `order_loading_list` VALUES ('5', '20', 'file_name1111-by-add', '1', '2017-12-10 10:00:52');
-INSERT INTO `order_loading_list` VALUES ('6', '3', 'file_name1111-by-add', '1', '2017-12-10 10:00:52');
 
 -- ----------------------------
 -- Table structure for `order_sign`
@@ -435,12 +419,15 @@ CREATE TABLE `order_sign` (
   PRIMARY KEY (`id`),
   KEY `fk_os_order_id` (`order_id`),
   CONSTRAINT `fk_os_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_sign
 -- ----------------------------
 INSERT INTO `order_sign` VALUES ('1', '28', '[{\"date\":\"\",\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"},{\"date\":\"\",\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"},{\"date\":\"\",\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"}]', '0', '2017-12-18 16:55:14', '0000-00-00 00:00:00');
+INSERT INTO `order_sign` VALUES ('5', '37', '[{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"}]', '0', '2017-12-20 23:21:43', null);
+INSERT INTO `order_sign` VALUES ('6', '38', '[{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"}]', '0', '2017-12-20 23:51:25', null);
+INSERT INTO `order_sign` VALUES ('7', '39', '[{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"}]', '0', '2017-12-21 00:00:08', null);
 
 -- ----------------------------
 -- Table structure for `order_split_record`
@@ -552,7 +539,7 @@ INSERT INTO `role` VALUES ('2', '生产部管理员', '主要Pad上操作，上�
 INSERT INTO `role` VALUES ('3', '安装组长', '安装前后扫描机器', null);
 INSERT INTO `role` VALUES ('4', '生产部经理', '订单审批', null);
 INSERT INTO `role` VALUES ('5', '普通员工', '浏览一般网页信息', null);
-INSERT INTO `role` VALUES ('6', '总经理', '订单审核等其他可配置权限', null);
+INSERT INTO `role` VALUES ('6', '总经理', '订单审核等其他可配置权限', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[\"/home/order/order_sign\",\"/home/order/order_manage\"],\"plan\":[],\"abnormal\":[],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":[]}');
 INSERT INTO `role` VALUES ('7', '销售部经理', '订单审批', null);
 INSERT INTO `role` VALUES ('8', '技术部经理', '订单审批', null);
 INSERT INTO `role` VALUES ('9', '销售员', '录入订单', null);
@@ -589,26 +576,25 @@ DROP TABLE IF EXISTS `task`;
 CREATE TABLE `task` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `task_name` varchar(255) NOT NULL COMMENT '安装作业项的名称',
-  `quality_user_id` int(10) unsigned DEFAULT NULL COMMENT '质检用户的ID',
-  `group_id` int(10) unsigned DEFAULT NULL COMMENT '安装小组id',
+  `quality_user_id` int(10) unsigned NOT NULL COMMENT '质检用户的ID',
+  `group_id` int(10) unsigned NOT NULL COMMENT '安装小组id',
   `guidance` text COMMENT '作业指导，后续可能会需要（一般是html格式）',
   PRIMARY KEY (`id`),
   KEY `fk_t_group_id` (`group_id`),
   KEY `task_name` (`task_name`),
   KEY `fk_t_quality_user_id` (`quality_user_id`),
-  CONSTRAINT `fk_t_quality_user_id` FOREIGN KEY (`quality_user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `fk_t_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_t_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`),
+  CONSTRAINT `fk_t_quality_user_id` FOREIGN KEY (`quality_user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES ('1', 'tsk111', null, '1', 'guidance111');
-INSERT INTO `task` VALUES ('2', 'tskName222Have', null, '2', 'guidance2222');
-INSERT INTO `task` VALUES ('3', 'tskName333Have', null, '2', 'guidance3333');
-INSERT INTO `task` VALUES ('4', 'tsk44', null, '4', 'guidance444');
-INSERT INTO `task` VALUES ('5', 'tskAbc', null, '3', 'guidanceAAA');
-INSERT INTO `task` VALUES ('6', 'tskName666_QA', '6', null, 'guidQA66');
+INSERT INTO `task` VALUES ('1', 'tsk111', '1', '1', 'guidance111');
+INSERT INTO `task` VALUES ('2', 'tskName222Have', '1', '2', 'guidance2222');
+INSERT INTO `task` VALUES ('3', 'tskName333Have', '1', '2', 'guidance3333');
+INSERT INTO `task` VALUES ('4', 'tsk44', '1', '4', 'guidance444');
+INSERT INTO `task` VALUES ('5', 'tskAbc', '1', '3', 'guidanceAAA');
 
 -- ----------------------------
 -- Table structure for `task_plan`
@@ -680,7 +666,7 @@ CREATE TABLE `task_record` (
   KEY `fk_tr_task_name` (`task_name`),
   CONSTRAINT `fk_tr_process_record_id` FOREIGN KEY (`process_record_id`) REFERENCES `process_record` (`id`),
   CONSTRAINT `fk_tr_task_name` FOREIGN KEY (`task_name`) REFERENCES `task` (`task_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task_record
@@ -691,7 +677,6 @@ INSERT INTO `task_record` VALUES ('3', 'tsk111', '1', '44', 'leader33', 'worker1
 INSERT INTO `task_record` VALUES ('4', 'tsk111', '2', '127', 'lead33', 'wk111', '2', '2017-12-05 11:42:47', '2017-12-05 11:42:50');
 INSERT INTO `task_record` VALUES ('5', 'tsk44', '2', '127', 'lead444', 'wk11,wk33', '1', '2017-12-05 11:45:39', '2017-12-05 11:45:44');
 INSERT INTO `task_record` VALUES ('7', 'tskName333Have', '3', '33', 'lead555', 'wokerAA,wokerB', '2', '2017-12-05 11:40:42', '2017-12-29 11:40:48');
-INSERT INTO `task_record` VALUES ('8', 'tskName666_QA', '4', '33', 'leadQA88', 'workerQA88', '1', '2017-12-19 08:57:11', '2017-12-19 08:57:14');
 
 -- ----------------------------
 -- Table structure for `user`

@@ -2,6 +2,7 @@ package com.eservice.api.model.contract;
 
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_detail.OrderDetail;
+import com.eservice.api.model.order_sign.OrderSign;
 
 /**
  * Class Description:用于处理从前端submit增加合同时候，需求单相关的数据
@@ -15,14 +16,14 @@ public class MachineOrderWapper {
 
     private OrderDetail orderDetail;
 
-    private String orderSignData;
+    private OrderSign orderSign;
 
-    public String getOrderSignData() {
-        return orderSignData;
+    public OrderSign getOrderSign(){
+        return orderSign;
     }
 
-    public void setOrderSignData(String orderSignData) {
-        this.orderSignData = orderSignData;
+    public void setOrderSign(OrderSign orderSign) {
+        this.orderSign = orderSign;
     }
 
     public MachineOrder getMachineOrder() {

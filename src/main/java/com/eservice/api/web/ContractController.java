@@ -7,6 +7,7 @@ import com.eservice.api.model.contract.ContractDetail;
 import com.eservice.api.model.contract.MachineOrderWapper;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.service.ContractService;
@@ -85,9 +86,9 @@ public class ContractController {
                 machineOrderService.saveAndGetID(orderTemp);
 
                 //初始化需求单审核记录
-                String signData = machineOrderWapperList.get(i).getOrderSignData();
+                OrderSign orderSignData = machineOrderWapperList.get(i).getOrderSign();
                 OrderSign orderSign = new OrderSign();
-                orderSign.setSignContent(signData);
+                orderSign.setSignContent(orderSignData.getSignContent());
                 orderSign.setOrderId(orderTemp.getId());
                 orderSign.setCreateTime(new Date());
                 orderSign.setStatus(Byte.parseByte("0"));
@@ -113,8 +114,59 @@ public class ContractController {
     public Result update(String contract,  String requisitionForms) {
         Contract contract1 = JSONObject.parseObject(contract, Contract.class);
         List<MachineOrderWapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms,MachineOrderWapper.class );
+        //先获取当前合同的所有订单
+        List<MachineOrderDetail> originalOrderList =  machineOrderService.selectOrder(null, contract1.getId(), null, null, null,
+                null, null, null,null, null, false);
+        ///删除该合同下，不在本次保存范围内的需求单
+        for (MachineOrderDetail item: originalOrderList) {
+            boolean exist = false;
+            for (MachineOrderWapper wapperItem: machineOrderWapperlist) {
+                if(wapperItem.getMachineOrder().getId().equals(item.getId())) {
+                    exist = true;
+                    break;
+                }
+            }
+            if(!exist) {
+                //删除需求单审核记录
+                OrderSign orderSign = orderSignService.findBy("orderId", item.getId());
+                if(orderSign != null) {
+                    orderSignService.deleteById(orderSign.getId());
+                }
+                //删除需求单
+                machineOrderService.deleteById(item.getId());
+                //删除detail
+                orderDetailService.deleteById(item.getOrderDetailId());
+            }
+        }
 
-        //contractService.update(contract1);
+        for (MachineOrderWapper item: machineOrderWapperlist) {
+            if(item.getMachineOrder().getId() != null) {
+                //更新
+                OrderDetail temp = item.getOrderDetail();
+                MachineOrder orderTemp = item.getMachineOrder();
+                orderDetailService.update(temp);
+                machineOrderService.update(orderTemp);
+            }else {
+                //新增
+                OrderDetail temp = item.getOrderDetail();
+                MachineOrder orderTemp = item.getMachineOrder();
+                orderDetailService.saveAndGetID(temp);
+                orderTemp.setOrderDetailId(temp.getId());
+                orderTemp.setContractId(contract1.getId());
+                orderTemp.setStatus(Byte.parseByte("0"));
+                machineOrderService.saveAndGetID(orderTemp);
+
+                //初始化需求单审核记录
+                OrderSign orderSignData = item.getOrderSign();
+                OrderSign orderSign = new OrderSign();
+                orderSign.setSignContent(orderSignData.getSignContent());
+                orderSign.setOrderId(orderTemp.getId());
+                orderSign.setCreateTime(new Date());
+                orderSign.setStatus(Byte.parseByte("0"));
+                orderSignService.save(orderSign);
+            }
+        }
+
         return ResultGenerator.genSuccessResult();
     }
 
