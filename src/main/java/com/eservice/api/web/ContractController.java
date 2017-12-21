@@ -15,15 +15,16 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,9 @@ public class ContractController {
     private OrderDetailServiceImpl orderDetailService;
     @Resource
     private OrderSignServiceImpl orderSignService;
+
+    @Value("${contract_excel_output_dir}")
+    private String contractOutputDir;
 
     @PostMapping("/add")
     @Transactional(rollbackFor = Exception.class)
@@ -205,12 +209,13 @@ public class ContractController {
      */
     @PostMapping("/buildContractExcel")
     public Result buildContractExcel(@RequestParam Integer contractId) {
-        FileInputStream fs = null;
+        InputStream fs = null;
         POIFSFileSystem pfs = null;
         HSSFWorkbook wb = null;
         FileOutputStream out = null;
         try{
-            fs = new FileInputStream("D:\\empty_contract.xls");
+            ClassPathResource resource = new ClassPathResource("empty_contract.xls");
+            fs = resource.getInputStream();
             pfs=new POIFSFileSystem(fs);
             wb = new HSSFWorkbook(pfs);
 
@@ -235,14 +240,19 @@ public class ContractController {
 
             //读取了模板内所有sheet内容
             HSSFSheet sheet1 = wb.getSheetAt(0);
-            //在相应的单元格进行赋值
-            HSSFCell cell = sheet1.getRow(1).getCell((short) 0);//A2
+            //在相应的单元格进行赋值(A2)
+            HSSFCell cell = sheet1.getRow(1).getCell((short) 0);
             cell.setCellValue(new HSSFRichTextString( "合 同 号：" + contract.getContractNum() ));
-
-            cell = sheet1.getRow(1).getCell((short) 3);//D2
-            cell.setCellValue(new HSSFRichTextString(new Date().toString()));
-
-            cell = sheet1.getRow(2).getCell((short) 1);//B3
+            //D2
+            cell = sheet1.getRow(1).getCell((short) 3);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = formatter.format(contract.getCreateTime());
+            CellStyle style = cell.getCellStyle();
+            style.setWrapText(true);
+            cell.setCellStyle(style);
+            cell.setCellValue(new HSSFRichTextString(dateString));
+            //B3
+            cell = sheet1.getRow(2).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contract.getCustomerName()));
 
             //N个需求单，插入N行
@@ -288,20 +298,22 @@ public class ContractController {
             cell.setCellValue(new HSSFRichTextString( contract.getPayMethod() ));
 
             // 合同交货日期
-            cell = sheet1.getRow(locationRow++).getCell((short) 1); ;
-            cell.setCellValue(new HSSFRichTextString( contract.getContractShipDate().toString()));
+            SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
+            String dateTimeString = formatter.format(contract.getContractShipDate());
+            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell.setCellValue(new HSSFRichTextString(dateTimeString));
 
             // 备注
-            cell = sheet1.getRow(locationRow++).getCell((short) 0); ;
+            cell = sheet1.getRow(locationRow++).getCell((short) 0);
             cell.setCellValue(new HSSFRichTextString( contract.getMark()));
 
             // 销售员
             locationRow = locationRow+6;
-            cell = sheet1.getRow(locationRow++).getCell((short) 1); ;
+            cell = sheet1.getRow(locationRow++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString( contract.getSellman()));
 
             //修改模板内容导出新模板
-            out = new FileOutputStream("D:/filled_contract.xls");
+            out = new FileOutputStream(contractOutputDir + contract.getContractNum() + ".xls");
             wb.write(out);
             out.close();
 
@@ -320,7 +332,7 @@ public class ContractController {
         return ResultGenerator.genSuccessResult("build OK");
     }
 
-    public  void insertRow(HSSFWorkbook wb, HSSFSheet sheet, int starRow,int rows) {
+    private void insertRow(HSSFWorkbook wb, HSSFSheet sheet, int starRow,int rows) {
         sheet.shiftRows(starRow + 1, sheet.getLastRowNum(), rows,true,false);
         starRow = starRow - 1;
 
