@@ -12,4 +12,11 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
   </resultMap>
+
+  <select id="getOrderSignListByContractId" resultMap="BaseResultMap">
+    SELECT os.* from order_sign os
+    JOIN machine_order mo on mo.id = os.order_id
+    JOIN contract c on c.id = mo.contract_id
+    WHERE c.id =  #{contractId} AND mo.status &lt; 4
+  </select>
 </mapper>
