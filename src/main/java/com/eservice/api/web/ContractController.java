@@ -213,6 +213,7 @@ public class ContractController {
         POIFSFileSystem pfs = null;
         HSSFWorkbook wb = null;
         FileOutputStream out = null;
+        String downloadPath = "";
         try{
             ClassPathResource resource = new ClassPathResource("empty_contract.xls");
             fs = resource.getInputStream();
@@ -312,8 +313,9 @@ public class ContractController {
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString( contract.getSellman()));
 
-            //修改模板内容导出新模板
-            out = new FileOutputStream(contractOutputDir + contract.getContractNum() + ".xls");
+            //修改模板内容导出新模板,生成路径供前端下载
+            downloadPath = contractOutputDir + contract.getContractNum() + ".xls";
+            out = new FileOutputStream(downloadPath);
             wb.write(out);
             out.close();
 
@@ -328,8 +330,11 @@ public class ContractController {
                 e.printStackTrace();
             }
         }
-
-        return ResultGenerator.genSuccessResult("build OK");
+        if("".equals(downloadPath)) {
+            return ResultGenerator.genFailResult("生成合同文件失败!");
+        }else {
+            return ResultGenerator.genSuccessResult(downloadPath);
+        }
     }
 
     private void insertRow(HSSFWorkbook wb, HSSFSheet sheet, int starRow,int rows) {
