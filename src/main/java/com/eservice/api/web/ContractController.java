@@ -10,10 +10,14 @@ import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
-import com.eservice.api.service.ContractService;
 import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -192,4 +198,103 @@ public class ContractController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+
+    /**
+     * 根据 contract_id，创建EXCEL表格，“合同评审单”+“客户需求单” 等sheet。
+     * 具体内容来自 contract, contract_sign,machine_order,order_detail
+     * TODO: ...
+     * @param contractId
+     * @return
+     */
+    @PostMapping("/buildContractExcel")
+    public Result buildContractExcel(@RequestParam Integer contractId) {
+
+        File fi=new File("D:\\empty_contract.xls");
+        POIFSFileSystem fs = null;
+        try {
+            fs = new POIFSFileSystem(new FileInputStream(fi));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        HSSFWorkbook wb = null;
+        try {
+            wb = new HSSFWorkbook(fs);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //一个合同对应多个签核
+        Contract contract = contractService.findById(contractId);
+        List<Integer> contractSignIdList =  new ArrayList<Integer>();
+        ContractSign contractSign;
+        for (int i = 0; i <contractSignService.findAll().size() ; i++) {
+            contractSign = contractSignService.findAll().get(i);
+            contractSignIdList.add(contractSign.getContractId());
+        }
+        //一个合同可能对应多个需求单
+        List<Integer> machineOrderIdList = new ArrayList<Integer>();
+        MachineOrder mo;
+        for (int i =0; i<machineOrderService.findAll().size() ; i++){
+            mo = machineOrderService.findAll().get(i);
+            if(mo.getContractId().equals(contractId)){
+                machineOrderIdList.add(mo.getId());
+            }
+        }
+        MachineOrderDetail machineOrderDetail;
+
+
+        //读取了模板内所有sheet内容
+        HSSFSheet sheet1 = wb.getSheetAt(0);
+        //在相应的单元格进行赋值
+        HSSFCell cell = sheet1.getRow(1).getCell((short) 0);//A2
+        cell.setCellValue(new HSSFRichTextString( "合 同 号：" + contract.getContractNum() ));
+
+        cell = sheet1.getRow(1).getCell((short) 5);//F2
+        cell.setCellValue(new HSSFRichTextString(new Date().toString()));
+
+        cell = sheet1.getRow(2).getCell((short) 1);//B3
+        cell.setCellValue(new HSSFRichTextString(contract.getCustomerName()));
+
+        //N个需求单， TODO：复制插入行
+        Integer machineOrderCount = machineOrderIdList.size();
+        for(int i=0; i<machineOrderCount;i++){
+            cell = sheet1.getRow(5+i).getCell((short) 0);//A5,A6,A7,...
+            cell.setCellValue(new HSSFRichTextString(machineOrderService.findAll().get(i).getBrand()));
+
+            cell = sheet1.getRow(5+i).getCell((short) 1);//B5,B6,B7,...
+            machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
+            cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineType().getName()));
+
+            cell = sheet1.getRow(5+i).getCell((short) 2);//C5,C6,C7,...
+            machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
+            cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineNum().toString()));
+
+            cell = sheet1.getRow(5+i).getCell((short) 3);//D5,D6,D7,...
+            machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
+            cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachinePrice()));
+
+        }
+
+        cell = sheet1.getRow(7+machineOrderCount).getCell((short) 1);//B11
+        cell.setCellValue(new HSSFRichTextString( contract.getPayMethod()));
+
+        cell = sheet1.getRow(8+machineOrderCount).getCell((short) 1);//B12
+        cell.setCellValue(new HSSFRichTextString( contract.getContractShipDate().toString()));
+
+        cell = sheet1.getRow(9+machineOrderCount).getCell((short) 0);//A13
+        cell.setCellValue(new HSSFRichTextString( contract.getMark()));
+
+        //修改模板内容导出新模板
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream("D:/filled_contract.xls");
+            wb.write(out);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResultGenerator.genSuccessResult("build OK");
+    }
 }
