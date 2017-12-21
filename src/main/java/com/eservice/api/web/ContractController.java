@@ -13,10 +13,7 @@ import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -208,93 +205,148 @@ public class ContractController {
      */
     @PostMapping("/buildContractExcel")
     public Result buildContractExcel(@RequestParam Integer contractId) {
-
-        File fi=new File("D:\\empty_contract.xls");
-        POIFSFileSystem fs = null;
-        try {
-            fs = new POIFSFileSystem(new FileInputStream(fi));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FileInputStream fs = null;
+        POIFSFileSystem pfs = null;
         HSSFWorkbook wb = null;
-        try {
-            wb = new HSSFWorkbook(fs);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //一个合同对应多个签核
-        Contract contract = contractService.findById(contractId);
-        List<Integer> contractSignIdList =  new ArrayList<Integer>();
-        ContractSign contractSign;
-        for (int i = 0; i <contractSignService.findAll().size() ; i++) {
-            contractSign = contractSignService.findAll().get(i);
-            contractSignIdList.add(contractSign.getContractId());
-        }
-        //一个合同可能对应多个需求单
-        List<Integer> machineOrderIdList = new ArrayList<Integer>();
-        MachineOrder mo;
-        for (int i =0; i<machineOrderService.findAll().size() ; i++){
-            mo = machineOrderService.findAll().get(i);
-            if(mo.getContractId().equals(contractId)){
-                machineOrderIdList.add(mo.getId());
-            }
-        }
-        MachineOrderDetail machineOrderDetail;
-
-
-        //读取了模板内所有sheet内容
-        HSSFSheet sheet1 = wb.getSheetAt(0);
-        //在相应的单元格进行赋值
-        HSSFCell cell = sheet1.getRow(1).getCell((short) 0);//A2
-        cell.setCellValue(new HSSFRichTextString( "合 同 号：" + contract.getContractNum() ));
-
-        cell = sheet1.getRow(1).getCell((short) 5);//F2
-        cell.setCellValue(new HSSFRichTextString(new Date().toString()));
-
-        cell = sheet1.getRow(2).getCell((short) 1);//B3
-        cell.setCellValue(new HSSFRichTextString(contract.getCustomerName()));
-
-        //N个需求单， TODO：复制插入行
-        Integer machineOrderCount = machineOrderIdList.size();
-        for(int i=0; i<machineOrderCount;i++){
-            cell = sheet1.getRow(5+i).getCell((short) 0);//A5,A6,A7,...
-            cell.setCellValue(new HSSFRichTextString(machineOrderService.findAll().get(i).getBrand()));
-
-            cell = sheet1.getRow(5+i).getCell((short) 1);//B5,B6,B7,...
-            machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
-            cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineType().getName()));
-
-            cell = sheet1.getRow(5+i).getCell((short) 2);//C5,C6,C7,...
-            machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
-            cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineNum().toString()));
-
-            cell = sheet1.getRow(5+i).getCell((short) 3);//D5,D6,D7,...
-            machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
-            cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachinePrice()));
-
-        }
-
-        cell = sheet1.getRow(7+machineOrderCount).getCell((short) 1);//B11
-        cell.setCellValue(new HSSFRichTextString( contract.getPayMethod()));
-
-        cell = sheet1.getRow(8+machineOrderCount).getCell((short) 1);//B12
-        cell.setCellValue(new HSSFRichTextString( contract.getContractShipDate().toString()));
-
-        cell = sheet1.getRow(9+machineOrderCount).getCell((short) 0);//A13
-        cell.setCellValue(new HSSFRichTextString( contract.getMark()));
-
-        //修改模板内容导出新模板
         FileOutputStream out = null;
-        try {
+        try{
+            fs = new FileInputStream("D:\\empty_contract.xls");
+            pfs=new POIFSFileSystem(fs);
+            wb = new HSSFWorkbook(pfs);
+
+            //一个合同对应多个签核
+            Contract contract = contractService.findById(contractId);
+            List<Integer> contractSignIdList =  new ArrayList<Integer>();
+            ContractSign contractSign;
+            for (int i = 0; i <contractSignService.findAll().size() ; i++) {
+                contractSign = contractSignService.findAll().get(i);
+                contractSignIdList.add(contractSign.getContractId());
+            }
+            //一个合同可能对应多个需求单
+            List<Integer> machineOrderIdList = new ArrayList<Integer>();
+            MachineOrder mo;
+            for (int i =0; i<machineOrderService.findAll().size() ; i++){
+                mo = machineOrderService.findAll().get(i);
+                if(mo.getContractId().equals(contractId)){
+                    machineOrderIdList.add(mo.getId());
+                }
+            }
+            MachineOrderDetail machineOrderDetail;
+
+            //读取了模板内所有sheet内容
+            HSSFSheet sheet1 = wb.getSheetAt(0);
+            //在相应的单元格进行赋值
+            HSSFCell cell = sheet1.getRow(1).getCell((short) 0);//A2
+            cell.setCellValue(new HSSFRichTextString( "合 同 号：" + contract.getContractNum() ));
+
+            cell = sheet1.getRow(1).getCell((short) 3);//D2
+            cell.setCellValue(new HSSFRichTextString(new Date().toString()));
+
+            cell = sheet1.getRow(2).getCell((short) 1);//B3
+            cell.setCellValue(new HSSFRichTextString(contract.getCustomerName()));
+
+            //N个需求单，插入N行
+            Integer machineOrderCount = machineOrderIdList.size();
+            insertRow(wb,sheet1,5,machineOrderCount);
+
+            System.out.println("======== machineOrderCount: " + machineOrderCount );
+            Integer allSum = 0;
+            for(int i=0; i<machineOrderCount;i++){
+
+                machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
+                //A5,A6,A7,...品牌
+                cell = sheet1.getRow(5+i).getCell((short) 0);
+                cell.setCellValue(new HSSFRichTextString(machineOrderService.findAll().get(i).getBrand()));
+
+                //B5,B6,B7,...机型
+                cell = sheet1.getRow(5+i).getCell((short) 1);
+                cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineType().getName()));
+
+                //C5,C6,C7,...数量
+                cell = sheet1.getRow(5+i).getCell((short) 2);
+                cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineNum().toString()));
+
+                //D5,D6,D7,...单价
+                cell = sheet1.getRow(5+i).getCell((short) 3);
+                cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachinePrice()));
+
+                //E5,E6,E7...总价
+                cell = sheet1.getRow(5+i).getCell((short) 4);
+                Integer sum = Integer.parseInt(machineOrderDetail.getMachinePrice()) *  machineOrderDetail.getMachineNum();
+                allSum = allSum + sum;
+                cell.setCellValue(new HSSFRichTextString( sum.toString() ));
+            }
+
+            Integer locationRow = 6 + machineOrderCount;
+            // 总计
+            cell = sheet1.getRow(locationRow++).getCell((short) 4);
+            cell.setCellValue(new HSSFRichTextString( allSum.toString()));
+
+
+            // 付款方式
+            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell.setCellValue(new HSSFRichTextString( contract.getPayMethod() ));
+
+            // 合同交货日期
+            cell = sheet1.getRow(locationRow++).getCell((short) 1); ;
+            cell.setCellValue(new HSSFRichTextString( contract.getContractShipDate().toString()));
+
+            // 备注
+            cell = sheet1.getRow(locationRow++).getCell((short) 0); ;
+            cell.setCellValue(new HSSFRichTextString( contract.getMark()));
+
+            // 销售员
+            locationRow = locationRow+6;
+            cell = sheet1.getRow(locationRow++).getCell((short) 1); ;
+            cell.setCellValue(new HSSFRichTextString( contract.getSellman()));
+
+            //修改模板内容导出新模板
             out = new FileOutputStream("D:/filled_contract.xls");
             wb.write(out);
             out.close();
-        } catch (FileNotFoundException e) {
+
+        }  catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                fs.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
         return ResultGenerator.genSuccessResult("build OK");
     }
+
+    public  void insertRow(HSSFWorkbook wb, HSSFSheet sheet, int starRow,int rows) {
+        sheet.shiftRows(starRow + 1, sheet.getLastRowNum(), rows,true,false);
+        starRow = starRow - 1;
+
+        //创建 多 行
+        for (int i = 0; i <rows; i++) {
+            HSSFRow sourceRow = null;
+            HSSFRow targetRow = null;
+            HSSFCell sourceCell = null;
+            HSSFCell targetCell = null;
+            short m;
+            starRow = starRow + 1;
+            sourceRow = sheet.getRow(starRow);
+            targetRow = sheet.createRow(starRow + 1);
+            targetRow.setHeight(sourceRow.getHeight());
+
+            //创建多列
+            System.out.println(" rows: " + rows );
+            for (m = sourceRow.getFirstCellNum(); m <5; m++) {
+
+                targetCell = targetRow.createCell(m);
+                sourceCell = sourceRow.getCell(m);
+                targetCell.setCellStyle(sourceCell.getCellStyle());
+                targetCell.setCellType(sourceCell.getCellType());
+                System.out.println("========i: " + i +" ---------m: " + m);
+            }
+        }
+    }
+
 }

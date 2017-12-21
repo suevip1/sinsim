@@ -4,6 +4,7 @@ import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_loading_list.OrderLoadingList;
 import com.eservice.api.model.process_record.ProcessRecord;
+import com.eservice.api.model.task_plan.TaskPlan;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -66,6 +67,8 @@ public class TaskRecordDetail {
         OrderLoadingList里包括装车单(联系单已经不需要了，在改单流程里体现了联系单）
      */
     private OrderLoadingList orderLoadingList;
+    // 安装组需要plan信息
+    private TaskPlan taskPlan;
 
     /**
      * @return id
@@ -229,8 +232,11 @@ public class TaskRecordDetail {
      * 设置Task_record的机器信息
      */
     public void setMachine(Machine machine) { this.machine = machine; }
+
     public MachineOrder getMachineOrder() { return machineOrder; }
     public void setMachineOrder(MachineOrder machineOrder) { this.machineOrder = machineOrder; }
     public OrderLoadingList getOrderLoadingList() { return this.orderLoadingList;}
     public void setOrderLoadingList(OrderLoadingList orderLoadingList) { this.orderLoadingList = orderLoadingList; }
+    public TaskPlan getTaskPlan() {return this.taskPlan; }
+    public void setTaskPlan(TaskPlan taskPlan) {this.taskPlan = taskPlan;}
 }

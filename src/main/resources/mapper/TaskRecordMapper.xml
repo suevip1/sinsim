@@ -108,6 +108,14 @@
       <result column="type" jdbcType="TINYINT" property="type" />
       <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     </association>
+    <association javaType="com.eservice.api.model.task_plan.TaskPlan" property="taskPlan">
+      <id column="task_plan_id" jdbcType="INTEGER" property="id" />
+      <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
+      <result column="plan_time" jdbcType="TIMESTAMP" property="planTime" />
+      <result column="user_id" jdbcType="INTEGER" property="userId" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </association>
 
   </resultMap>
   <!--根据 taskId查task record, process record, machine, machine_order-->
@@ -149,8 +157,11 @@
     pr.id process_record_id_in_association, pr.*,
     m.id machine_id1, m.*,
     mo.id machine_order_id, mo.*,
-    oll.id order_loading_list_id,oll.*
+    oll.id order_loading_list_id,oll.*,
+    tp.id task_plan_id,tp.*
+
     from task_record tr
+    join task_plan tp on tp.task_record_id = tr.id
     join process_record pr on tr.process_record_id = pr.id
     join machine m on m.id = pr.machine_id
     join machine_order mo on mo.id = m.order_id
