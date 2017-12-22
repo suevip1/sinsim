@@ -2,10 +2,17 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.order_sign.OrderSign;
+import com.eservice.api.service.ContractService;
+import com.eservice.api.service.ContractSignService;
 import com.eservice.api.service.OrderSignService;
+import com.eservice.api.service.common.CommonService;
+import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.impl.ContractSignServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +32,10 @@ import java.util.List;
 public class OrderSignController {
     @Resource
     private OrderSignService orderSignService;
+    @Resource
+    private CommonService commonService;
+    @Resource
+    private ContractSignServiceImpl contractSignService;
 
     @PostMapping("/add")
     public Result add(OrderSign orderSign) {
@@ -39,9 +50,13 @@ public class OrderSignController {
     }
 
     @PostMapping("/update")
-    public Result update(String orderSign) {
+    @Transactional(rollbackFor = Exception.class)
+    public Result update(Integer contractId, String orderSign) {
         if(orderSign == null || "".equals(orderSign)) {
             ResultGenerator.genFailResult("签核信息为空！");
+        }
+        if(contractId == null || contractId <=0) {
+            ResultGenerator.genFailResult("合同ID不存在或者无效！");
         }
         OrderSign orderSign1 = JSONObject.parseObject(orderSign, OrderSign.class);
         if(orderSign1 == null) {
@@ -49,6 +64,16 @@ public class OrderSignController {
         }else {
             orderSign1.setUpdateTime(new Date());
             orderSignService.update(orderSign1);
+            String step = commonService.getCurrentSignStep(contractId);
+            ContractSign contractSign = contractSignService.detailByContractId(String.valueOf(contractId));
+            if(step == null || contractSign == null) {
+                throw new RuntimeException();
+            }else if(step.equals(Constant.SIGN_FINISHED)) {
+                //表示签核已经完成
+                contractSign.setStatus(Byte.parseByte("2"));
+            }
+            contractSign.setCurrentStep(step);
+            contractSignService.update(contractSign);
         }
         return ResultGenerator.genSuccessResult();
     }

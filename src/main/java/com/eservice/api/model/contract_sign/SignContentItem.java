@@ -18,6 +18,17 @@ public class SignContentItem {
     private Integer roleId;
 
     /**
+     * 签核的人
+     */
+    private String user;
+
+    /**
+
+     * 签核意见
+     */
+    private String comment;
+
+    /**
      * 签核的类型（合同签核/需求单签核）
      */
     private String signType;
@@ -44,5 +55,21 @@ public class SignContentItem {
 
     public void setSignType(String signType) {
         this.signType = signType;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

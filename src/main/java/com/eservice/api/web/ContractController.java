@@ -10,6 +10,8 @@ import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
+import com.eservice.api.service.common.CommonService;
+import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -47,6 +49,8 @@ public class ContractController {
     private OrderDetailServiceImpl orderDetailService;
     @Resource
     private OrderSignServiceImpl orderSignService;
+    @Resource
+    private CommonService commonService;
 
     @Value("${contract_excel_output_dir}")
     private String contractOutputDir;
@@ -199,6 +203,29 @@ public class ContractController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    @PostMapping("/startSign")
+    public Result startSign(@RequestParam Integer contractId) {
+        if(contractId == null) {
+            ResultGenerator.genFailResult("合同ID为空！");
+        }else {
+            ContractSign contractSign = contractSignService.findBy("contractId", contractId);
+            if(contractSign == null) {
+                return ResultGenerator.genFailResult("根据合同号获取合同签核信息失败！");
+            }else {
+                contractSign.setUpdateTime(new Date());
+                //开始签核流程
+                contractSign.setStatus(Byte.parseByte("1"));
+                String currentStep =  commonService.getCurrentSignStep(contractId);
+                if(currentStep == null) {
+                    return ResultGenerator.genFailResult("获取当前签核steps失败！");
+                }
+                contractSign.setCurrentStep(currentStep);
+                //设置完状态后更新签核记录
+                contractSignService.update(contractSign);
+            }
+        }
+        return ResultGenerator.genSuccessResult();
+    }
 
     /**
      * 根据 contract_id，创建EXCEL表格，“合同评审单”+“客户需求单” 等sheet。
