@@ -11,7 +11,6 @@ import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.service.common.CommonService;
-import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -248,6 +247,10 @@ public class ContractController {
 
             //一个合同对应多个签核
             Contract contract = contractService.findById(contractId);
+            if(contract == null){
+                return ResultGenerator.genFailResult("contractID not exist!");
+            }
+
             List<Integer> contractSignIdList =  new ArrayList<Integer>();
             ContractSign contractSign;
             for (int i = 0; i <contractSignService.findAll().size() ; i++) {
@@ -338,154 +341,203 @@ public class ContractController {
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString( contract.getSellman()));
 
+            //需求单
+            //根据实际需求单数量，动态复制生成新的sheet;
+            for(int i=0; i<machineOrderCount-1;i++) {
+                // clone已经包含copy+paste
+                wb.cloneSheet(1);
+            }
+            //调整sheet位置
+            Integer sheetCount = wb.getNumberOfSheets();
+            wb.setSheetOrder("Sheet3",sheetCount-1);
 
             //sheet2，sheet3...,第1,2,...个需求单
-            //TODO:根据实际需求单数量，动态复制生成新的sheet;...
             for(int i=0; i<machineOrderCount;i++) {
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
 
-                HSSFSheet sheet2 = wb.getSheetAt(1);
+                HSSFSheet sheetX = wb.getSheetAt(1+i);
                 //在相应的单元格进行赋值(C2)
-                HSSFCell cell2 = sheet2.getRow(1).getCell((short) 2);
+                HSSFCell cell2 = sheetX.getRow(1).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( contract.getContractNum() ));
                 //E2
-                cell2 = sheet2.getRow(1).getCell((short) 4);
+                cell2 = sheetX.getRow(1).getCell((short) 4);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderNum() ));
                 //H2
-                cell2 = sheet2.getRow(1).getCell((short) 7);
+                cell2 = sheetX.getRow(1).getCell((short) 7);
                 style.setWrapText(true);
                 cell2.setCellStyle(style);
                 cell2.setCellValue(new HSSFRichTextString(dateString));
 
                 //C3
-                cell2 = sheet2.getRow(2).getCell((short) 2);
+                cell2 = sheetX.getRow(2).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getCustomer()));
                 //E3
-                cell2 = sheet2.getRow(2).getCell((short) 4);
+                cell2 = sheetX.getRow(2).getCell((short) 4);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getBrand() ));
                 //H3
-                cell2 = sheet2.getRow(2).getCell((short) 7);
+                cell2 = sheetX.getRow(2).getCell((short) 7);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineType().getName() ));
 
                 //C4
-                cell2 = sheet2.getRow(3).getCell((short) 2);
+                cell2 = sheetX.getRow(3).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getHeadNum().toString()));
                 //E4
-                cell2 = sheet2.getRow(3).getCell((short) 4);
+                cell2 = sheetX.getRow(3).getCell((short) 4);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getHeadNum().toString()));
                 //H4
-                cell2 = sheet2.getRow(3).getCell((short) 7);
+                cell2 = sheetX.getRow(3).getCell((short) 7);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getxDistance()));
 
                 //H5
-                cell2 = sheet2.getRow(4).getCell((short) 7);
+                cell2 = sheetX.getRow(4).getCell((short) 7);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getyDistance()));
 
                 //D6
-                cell2 = sheet2.getRow(5).getCell((short) 3);
+                cell2 = sheetX.getRow(5).getCell((short) 3);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTowelColor()));
                 //F6
-                cell2 = sheet2.getRow(5).getCell((short) 5);
+                cell2 = sheetX.getRow(5).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTowelDaxle()));
                 //H6
-                cell2 = sheet2.getRow(5).getCell((short) 7);
+                cell2 = sheetX.getRow(5).getCell((short) 7);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTowelHaxle()));
                 //K6
-                cell2 = sheet2.getRow(5).getCell((short) 10);
+                cell2 = sheetX.getRow(5).getCell((short) 10);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTowelMotor()));
 
                 //D7
-                cell2 = sheet2.getRow(6).getCell((short) 3);
+                cell2 = sheetX.getRow(6).getCell((short) 3);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTapingHead()));
                 //H7
-                cell2 = sheet2.getRow(6).getCell((short) 7);
+                cell2 = sheetX.getRow(6).getCell((short) 7);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTowelNeedle()));
 
                 //C8
-                cell2 = sheet2.getRow(7).getCell((short) 2);
+                cell2 = sheetX.getRow(7).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricPc()));
                 //D8
-                cell2 = sheet2.getRow(7).getCell((short) 3);
+                cell2 = sheetX.getRow(7).getCell((short) 3);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getCountry()));
                 //F8
-                cell2 = sheet2.getRow(7).getCell((short) 5);
+                cell2 = sheetX.getRow(7).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricMotor()));
                 //I8
-                cell2 = sheet2.getRow(7).getCell((short) 8);
+                cell2 = sheetX.getRow(7).getCell((short) 8);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricMotorXy()));
 
                 //C9
-                cell2 = sheet2.getRow(8).getCell((short) 2);
+                cell2 = sheetX.getRow(8).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricTrim()));
                 //F9
-                cell2 = sheet2.getRow(8).getCell((short) 5);
+                cell2 = sheetX.getRow(8).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricPower()));
                 //I9
-                cell2 = sheet2.getRow(8).getCell((short) 8);
+                cell2 = sheetX.getRow(8).getCell((short) 8);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricSwitch()));
 
                 //C10
-                cell2 = sheet2.getRow(9).getCell((short) 2);
+                cell2 = sheetX.getRow(9).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricOil()));
 
                 //C11
-                cell2 = sheet2.getRow(10).getCell((short) 2);
+                cell2 = sheetX.getRow(10).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleSplit()));
                 //F11
-                cell2 = sheet2.getRow(10).getCell((short) 5);
+                cell2 = sheetX.getRow(10).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxlePanel()));
                 //i11
-                cell2 = sheet2.getRow(10).getCell((short) 8);
+                cell2 = sheetX.getRow(10).getCell((short) 8);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleNeedle()));
 
                 //C12
-                cell2 = sheet2.getRow(11).getCell((short) 2);
+                cell2 = sheetX.getRow(11).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleRail()));
                 //f12
-                cell2 = sheet2.getRow(11).getCell((short) 5);
+                cell2 = sheetX.getRow(11).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleDownCheck()));
                 //i12
-                cell2 = sheet2.getRow(11).getCell((short) 8);
+                cell2 = sheetX.getRow(11).getCell((short) 8);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleHook()));
 
                 //C13
-                cell2 = sheet2.getRow(12).getCell((short) 2);
+                cell2 = sheetX.getRow(12).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleJump()));
                 //F13
-                cell2 = sheet2.getRow(12).getCell((short) 5);
+                cell2 = sheetX.getRow(12).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleUpperThread()));
 
                 //C14
-                cell2 = sheet2.getRow(13).getCell((short) 2);
+                cell2 = sheetX.getRow(13).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleAddition()));
 
                 //C15
-                cell2 = sheet2.getRow(14).getCell((short) 2);
+                cell2 = sheetX.getRow(14).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkColor()));
                 //f15
-                cell2 = sheet2.getRow(14).getCell((short) 5);
+                cell2 = sheetX.getRow(14).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkPlaten()));
                 //i15
-                cell2 = sheet2.getRow(14).getCell((short) 8);
+                cell2 = sheetX.getRow(14).getCell((short) 8);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkRing()));
 
                 //C16
-                cell2 = sheet2.getRow(15).getCell((short) 2);
+                cell2 = sheetX.getRow(15).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkBracket()));
                 //f16
-                cell2 = sheet2.getRow(15).getCell((short) 5);
+                cell2 = sheetX.getRow(15).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkStop()));
                 //i16
-                cell2 = sheet2.getRow(15).getCell((short) 8);
+                cell2 = sheetX.getRow(15).getCell((short) 8);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkLight()));
+
+                //C17
+                cell2 = sheetX.getRow(16).getCell((short) 2);
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getDriverType()));
+                //f17
+                cell2 = sheetX.getRow(16).getCell((short) 5);
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getDriverMethod()));
+                //i17 数据库缺少字段？
+
+                //C18
+                cell2 = sheetX.getRow(17).getCell((short) 2);
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getDriverHorizonNum().toString()));
+                //C19
+                cell2 = sheetX.getRow(18).getCell((short) 2);
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getDriverVerticalNum().toString()));
+                //C20
+                cell2 = sheetX.getRow(19).getCell((short) 2);
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getPackageMethod()));
+
+                //C21
+                cell2 = sheetX.getRow(20).getCell((short) 2);
+                cell2.setCellValue(new HSSFRichTextString(contract.getContractShipDate().toString()));
+                cell2.setCellValue(new HSSFRichTextString(dateTimeString));
+                //F21 订机数量
+                cell2 = sheetX.getRow(20).getCell((short) 5);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineNum().toString()));
+
+                //i21 单价
+                cell2 = sheetX.getRow(20).getCell((short) 8);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachinePrice()));
+
+                //C22
+                cell2 = sheetX.getRow(21).getCell((short) 2);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getPlanShipDate().toString()));
+                cell2.setCellValue(new HSSFRichTextString(dateTimeString));
+                //i22 总价
+                cell2 = sheetX.getRow(21).getCell((short) 8);
+                Integer machineOrderSum = Integer.parseInt(machineOrderDetail.getMachinePrice())*machineOrderDetail.getMachineNum();
+                cell2.setCellValue(new HSSFRichTextString(machineOrderSum.toString()));
+
+                //A23
+                cell2 = sheetX.getRow(22).getCell((short) 0);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMark()));
+
+                //C30
+                cell2 = sheetX.getRow(29).getCell((short) 2);
+                cell2.setCellValue(new HSSFRichTextString(contract.getSellman()));
             }
-
-
-
-
-
-
-
+  
             //修改模板内容导出新模板,生成路径供前端下载
             downloadPath = contractOutputDir + contract.getContractNum() + ".xls";
             out = new FileOutputStream(downloadPath);
