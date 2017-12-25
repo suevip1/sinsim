@@ -1,6 +1,7 @@
 package com.eservice.api.model.contract;
 
 import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
 
@@ -17,6 +18,16 @@ public class MachineOrderWapper {
     private OrderDetail orderDetail;
 
     private OrderSign orderSign;
+
+    private OrderChangeRecord orderChangeRecord;
+
+    public OrderChangeRecord getOrderChangeRecord() {
+        return orderChangeRecord;
+    }
+
+    public void setOrderChangeRecord(OrderChangeRecord orderChangeRecord) {
+        this.orderChangeRecord = orderChangeRecord;
+    }
 
     public OrderSign getOrderSign(){
         return orderSign;

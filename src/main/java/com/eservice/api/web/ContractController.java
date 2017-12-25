@@ -179,6 +179,46 @@ public class ContractController {
         return ResultGenerator.genSuccessResult();
     }
 
+    @PostMapping("/changeOrder")
+    @Transactional(rollbackFor = Exception.class)
+    public Result changeOrder(String contract, String contractSign, String requisitionForms) {
+        if(contract == null || "".equals(contract)) {
+            return ResultGenerator.genFailResult("合同信息为空！");
+        }
+        if(contractSign == null || "".equals(contractSign)) {
+            return ResultGenerator.genFailResult("合同审核初始化信息为空！");
+        }
+        if(requisitionForms == null || "".equals(requisitionForms)) {
+            return ResultGenerator.genFailResult("订单信息为空！");
+        }
+        Contract contract1 = JSONObject.parseObject(contract, Contract.class);
+        if(contract1 == null) {
+            return ResultGenerator.genFailResult("Contract对象JSON解析失败！");
+        }
+
+        Integer contractId = contract1.getId();
+        ///获取拆单前最新的签核记录，并设置其为改单状态
+        ContractSign originalContractSign = contractSignService.detailByContractId(String.valueOf(contractId));
+        originalContractSign.setStatus(Byte.parseByte("3"));
+        originalContractSign.setUpdateTime(new Date());
+//        contractSignService.update(originalContractSign);
+
+        ///插入新的contract审核记录
+        ContractSign contractSignObj = new ContractSign();
+        contractSignObj.setContractId(contractId);
+        contractSignObj.setCreateTime(new Date());
+        contractSignObj.setSignContent(contractSign);
+        ///新增合同签核记录时，插入空值
+        contractSignObj.setCurrentStep("");
+        contractSignObj.setStatus(Byte.parseByte("0"));
+//        contractSignService.save(contractSignObj);
+
+        List<MachineOrderWapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms,MachineOrderWapper.class);
+
+        return ResultGenerator.genSuccessResult();
+
+    }
+
     @PostMapping("/detail")
     public Result detail(@RequestParam Integer id) {
         Contract contract = contractService.findById(id);
