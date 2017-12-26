@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : MyDB
-Source Server Version : 50547
+Source Server         : sinsim
+Source Server Version : 50505
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50547
+Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-12-26 16:19:04
+Date: 2017-12-27 01:19:18
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -123,7 +123,7 @@ CREATE TABLE `contract_sign` (
 -- ----------------------------
 -- Records of contract_sign
 -- ----------------------------
-INSERT INTO `contract_sign` VALUES ('18', '30', '[{\"number\":1,\"roleId\":7,\"signType\":\"合同签核\",\"date\":\"2017-12-26 09:15:14\",\"user\":\"张三\",\"comment\":\"approve\"},{\"number\":4,\"roleId\":13,\"signType\":\"合同签核\",\"date\":\"\",\"user\":\"李四\",\"comment\":\"approve\"},{\"number\":5,\"roleId\":14,\"signType\":\"合同签核\",\"date\":\"\",\"user\":\"王五\",\"comment\":\"approve\"},{\"number\":6,\"roleId\":6,\"signType\":\"合同签核\",\"date\":\"2017-12-26 11:29:14\",\"user\":\"王总\",\"comment\":\"approve\"}]', '签核完成', '2', '2017-12-18 15:32:25', '2017-12-26 11:29:14');
+INSERT INTO `contract_sign` VALUES ('18', '30', '[{\"number\":1,\"roleId\":7,\"signType\":\"合同签核\",\"date\":\"2017-12-26 09:15:14\",\"user\":\"张三\",\"comment\":\"approve\"},{\"number\":4,\"roleId\":13,\"signType\":\"合同签核\",\"date\":\"\",\"user\":\"李四\",\"comment\":\"approve\"},{\"number\":5,\"roleId\":14,\"signType\":\"合同签核\",\"date\":\"\",\"user\":\"王五\",\"comment\":\"approve\"},{\"number\":6,\"roleId\":6,\"signType\":\"合同签核\",\"date\":\"2017-12-26 11:29:14\",\"user\":\"王总\",\"comment\":\"approve\"}]', '签核完成', '3', '2017-12-18 15:32:25', '2017-12-27 01:11:12');
 INSERT INTO `contract_sign` VALUES ('19', '31', '[{\"number\":1,\"roleId\":7,\"signType\":\"合同签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":4,\"roleId\":13,\"signType\":\"合同签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":5,\"roleId\":14,\"signType\":\"合同签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":6,\"roleId\":6,\"signType\":\"合同签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"}]', '', '0', '2017-12-18 15:57:06', null);
 INSERT INTO `contract_sign` VALUES ('28', '40', '[{\"number\":1,\"roleId\":7,\"signType\":\"合同签核\",\"date\":\"2017-12-22 14:24:28\",\"user\":\"科比\",\"comment\":\"同意\"},{\"number\":4,\"roleId\":13,\"signType\":\"合同签核\",\"date\":\"2017-12-26 09:12:32\",\"user\":\"艾弗森\",\"comment\":\"同意\"},{\"number\":5,\"roleId\":14,\"signType\":\"合同签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":6,\"roleId\":6,\"signType\":\"合同签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"}]', '财务经理', '1', '2017-12-18 16:55:14', '2017-12-26 09:12:37');
 
@@ -189,9 +189,9 @@ CREATE TABLE `machine` (
 -- ----------------------------
 -- Records of machine
 -- ----------------------------
-INSERT INTO `machine` VALUES ('16', '22', 'ABP112914371', null, null, '0', '1', '2017-12-26 11:29:14', null, null, null);
-INSERT INTO `machine` VALUES ('17', '22', 'ABP112914752', null, null, '0', '1', '2017-12-26 11:29:14', null, null, null);
-INSERT INTO `machine` VALUES ('18', '22', 'ABP112914563', null, null, '0', '1', '2017-12-26 11:29:14', null, null, null);
+INSERT INTO `machine` VALUES ('16', '22', 'ABP112914371', null, null, '0', '1', '2017-12-26 11:29:14', '2017-12-27 01:11:28', null, null);
+INSERT INTO `machine` VALUES ('17', '22', 'ABP112914752', null, null, '0', '1', '2017-12-26 11:29:14', '2017-12-27 01:11:28', null, null);
+INSERT INTO `machine` VALUES ('18', '22', 'ABP112914563', null, null, '0', '1', '2017-12-26 11:29:14', '2017-12-27 01:11:28', null, null);
 
 -- ----------------------------
 -- Table structure for `machine_order`
@@ -230,16 +230,18 @@ CREATE TABLE `machine_order` (
   CONSTRAINT `fk_o_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `contract` (`id`),
   CONSTRAINT `fk_o_machine_type` FOREIGN KEY (`machine_type`) REFERENCES `machine_type` (`id`),
   CONSTRAINT `fk_o_order_detail_id` FOREIGN KEY (`order_detail_id`) REFERENCES `order_detail` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of machine_order
 -- ----------------------------
-INSERT INTO `machine_order` VALUES ('22', '0712007', null, '30', '50', '1', '英语', 'SINSIM电脑绣花机', '3', '1', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-18 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('22', '0712007', '0', '30', '50', '1', '英语', 'SINSIM电脑绣花机', '3', '1', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '3', '2017-12-18 00:00:00', null, null);
 INSERT INTO `machine_order` VALUES ('23', '0712007', '0', '31', '51', '1', '英语', 'SINSIM电脑绣花机', '3', '1', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-18 00:00:00', null, null);
 INSERT INTO `machine_order` VALUES ('28', '0712001', '0', '40', '62', '1', '英语', 'SINSIM电脑绣花机', '3', '1', '20', '10', '5', '100', '200', '叠机', '30000', '2017-12-31', '2017-12-25', '', '李四', '0', '2017-12-18 00:00:00', null, null);
 INSERT INTO `machine_order` VALUES ('37', '0712002', '0', '40', '71', '1', '英语', 'SINSIM电脑绣花机', '4', '12', '20', '10', '5', '100', '200', '叠机', '30000', '2017-12-31', '2017-12-25', '', '李四', '0', '2017-12-20 00:00:00', null, null);
 INSERT INTO `machine_order` VALUES ('39', '0712008', '0', '31', '73', '1', '英语', 'SINSIM电脑绣花机', '3', '4', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-20 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('47', '0712007-1', '22', '30', '81', '1', '英语', 'SINSIM电脑绣花机', '4', '1', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-27 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('48', '0712007-1', '22', '30', '82', '1', '英语', 'SINSIM电脑绣花机', '4', '1', '11', '1', '10', '100', '200', '单机', '50000', '2017-12-31', '2017-12-31', '无', '王五', '0', '2017-12-27 00:00:00', null, null);
 
 -- ----------------------------
 -- Table structure for `machine_type`
@@ -294,7 +296,7 @@ CREATE TABLE `order_cancel_record` (
 -- ----------------------------
 DROP TABLE IF EXISTS `order_change_record`;
 CREATE TABLE `order_change_record` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` int(10) unsigned NOT NULL COMMENT '订单编号',
   `change_reason` text NOT NULL COMMENT '更改原因',
   `user_id` int(10) unsigned NOT NULL COMMENT '修改订单操作的用户ID，只有创建订单的销售员可以修改订单，或者销售经理',
@@ -304,11 +306,13 @@ CREATE TABLE `order_change_record` (
   KEY `fk_oc_user_id` (`user_id`),
   CONSTRAINT `order_change_record_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`),
   CONSTRAINT `order_change_record_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_change_record
 -- ----------------------------
+INSERT INTO `order_change_record` VALUES ('1', '22', '增加机器数至5台', '1', '2017-12-27 01:11:13');
+INSERT INTO `order_change_record` VALUES ('2', '22', '增加机器数至5台', '1', '2017-12-27 01:11:29');
 
 -- ----------------------------
 -- Table structure for `order_detail`
@@ -352,7 +356,7 @@ CREATE TABLE `order_detail` (
   `driver_vertical_num` tinyint(4) DEFAULT NULL COMMENT '驱动：直档数量',
   `driver_reel` varchar(255) DEFAULT NULL COMMENT '驱动：绷架',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_detail
@@ -373,6 +377,8 @@ INSERT INTO `order_detail` VALUES ('51', '6色', '集中', '集中', '大豪', '
 INSERT INTO `order_detail` VALUES ('62', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
 INSERT INTO `order_detail` VALUES ('71', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
 INSERT INTO `order_detail` VALUES ('73', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('81', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('82', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
 
 -- ----------------------------
 -- Table structure for `order_loading_list`
@@ -407,7 +413,7 @@ CREATE TABLE `order_sign` (
   PRIMARY KEY (`id`),
   KEY `fk_os_order_id` (`order_id`),
   CONSTRAINT `fk_os_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_sign
@@ -415,6 +421,8 @@ CREATE TABLE `order_sign` (
 INSERT INTO `order_sign` VALUES ('1', '28', '[{\"date\":\"2017-12-22 14:57:25\",\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"comment\":\"同意\",\"user\":\"奥尼尔\"},{\"date\":\"2017-12-26 09:13:29\",\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"comment\":\"同意\",\"user\":\"姚明\"},{\"date\":\"\",\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"}]', '0', '2017-12-18 16:55:14', '2017-12-26 09:13:31');
 INSERT INTO `order_sign` VALUES ('5', '37', '[{\"date\":\"2017-12-22 14:58:22\",\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"comment\":\"同意\",\"user\":\"奥尼尔\"},{\"date\":\"2017-12-26 09:11:31\",\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"comment\":\"同意\",\"user\":\"姚明\"},{\"date\":\"\",\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"comment\":\"\",\"user\":\"\"}]', '0', '2017-12-20 23:21:43', '2017-12-26 09:11:40');
 INSERT INTO `order_sign` VALUES ('7', '39', '[{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"}]', '0', '2017-12-21 00:00:08', null);
+INSERT INTO `order_sign` VALUES ('15', '47', '[{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"}]', '0', '2017-12-27 01:11:11', null);
+INSERT INTO `order_sign` VALUES ('16', '48', '[{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"},{\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\",\"date\":\"\",\"user\":\"\",\"comment\":\"\"}]', '0', '2017-12-27 01:11:29', null);
 
 -- ----------------------------
 -- Table structure for `order_split_record`

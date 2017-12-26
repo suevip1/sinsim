@@ -7,14 +7,13 @@ import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract.ContractDetail;
 import com.eservice.api.model.contract.MachineOrderWrapper;
 import com.eservice.api.model.contract_sign.ContractSign;
-import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.contract_sign.SignContentItem;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
-import com.eservice.api.service.MachineService;
 import com.eservice.api.service.OrderChangeRecordService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
@@ -27,11 +26,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,7 +63,7 @@ public class ContractController {
     @Resource
     private CommonService commonService;
     @Resource
-    private OrderChangeRecordService orderChangeRecordService;
+    private OrderChangeRecordServiceImpl orderChangeRecordService;
     @Resource
     private MachineServiceImpl machineService;
 
@@ -258,21 +263,46 @@ public class ContractController {
                 }
             }else {
                 //设置被改单的需求单状态(machine_order/order_sign)
-                if(machineOrder.getStatus() == 3) {
+                if(machineOrder.getStatus() == Constant.ORDER_CHANGED) {
                     machineOrderService.update(machineOrder);
                     OrderSign orderSign = orderItem.getOrderSign();
-                    orderSign.setUpdateTime(new Date());
-                    orderSign.setStatus(Byte.parseByte("3"));
-                    orderSignService.update(orderSign);
-
+                    if(orderSign != null) {
+                        orderSign.setUpdateTime(new Date());
+                        orderSign.setStatus(Byte.parseByte("3"));
+                        orderSignService.update(orderSign);
+                    }
                     //获取被改单对应机器，设置改单状态(machine)
                     Condition tempCondition = new Condition(Machine.class);
                     tempCondition.createCriteria().andCondition("order_id = ", machineOrder.getId());
                     List<Machine> machineList = machineService.findByCondition(tempCondition);
-                    for (Machine machine: machineList) {
-                        machine.setStatus(Byte.parseByte("3"));
-                        machine.setUpdateTime(new Date());
-                        machineService.update(machine);
+                    //寻找对应新需求单，比较机器数
+                    MachineOrder newOrder = null;
+                    for (MachineOrderWrapper wrapper: machineOrderWapperlist) {
+                        if(wrapper.getMachineOrder().getOriginalOrderId().equals(machineOrder.getId())) {
+                            newOrder = wrapper.getMachineOrder();
+                            break;
+                        }
+                    }
+                    if(newOrder != null) {
+                        ///改单前后机器数相等或者大于原需求单数中对应的机器数;多出部分机器在审核完成以后自动添加
+                        if(newOrder.getMachineNum() >= machineOrder.getMachineNum()) {
+                            for (Machine machine: machineList) {
+                                ///初始化状态，直接将机器的上的需求单号直接绑定到新需求单
+                                if(machine.getStatus() == Constant.MACHINE_INITIAL) {
+                                    machine.setOrderId(newOrder.getId());
+                                }else {
+                                    machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                                }
+                                machine.setUpdateTime(new Date());
+                                machineService.update(machine);
+                            }
+                        }else {
+
+
+                        }
+                    }else {
+                        ///在同一个合同中没有找到新的需求单,抛出异常
+                        throw new RuntimeException();
                     }
                 }
             }

@@ -10,7 +10,6 @@ import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.model.role.Role;
 import com.eservice.api.service.impl.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
@@ -124,7 +123,7 @@ public class CommonService {
         List<MachineOrder> orderList = machineOrderService.findByCondition(condition);
         for (MachineOrder orderItem: orderList) {
             //选取有效需求单，无效需求单对应的机器数不cover在内
-            if(orderItem.getStatus() < 3) {
+            if(orderItem.getStatus() < Constant.ORDER_CHANGED) {
                 Condition tempCondition = new Condition(Machine.class);
                 tempCondition.createCriteria().andCondition("order_id = ", orderItem.getId());
                 List<Machine> machineExistList = machineService.findByCondition(tempCondition);
@@ -134,7 +133,7 @@ public class CommonService {
                     Machine machine = new Machine();
                     machine.setMachineId(Utils.createMachineBasicId() + i);
                     machine.setOrderId(orderItem.getId());
-                    machine.setStatus(Byte.parseByte("0"));
+                    machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_INITIAL)));
                     machine.setCreateTime(new Date());
                     machineService.save(machine);
                     i++;
