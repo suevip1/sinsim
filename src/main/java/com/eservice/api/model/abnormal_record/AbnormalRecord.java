@@ -1,5 +1,6 @@
 package com.eservice.api.model.abnormal_record;
 
+import java.util.Date;
 import javax.persistence.*;
 
 @Table(name = "abnormal_record")
@@ -31,6 +32,9 @@ public class AbnormalRecord {
      */
     @Column(name = "solution_user")
     private Integer solutionUser;
+
+    @Column(name = "create_time")
+    private Date createTime;
 
     /**
      * 异常备注
@@ -126,6 +130,20 @@ public class AbnormalRecord {
      */
     public void setSolutionUser(Integer solutionUser) {
         this.solutionUser = solutionUser;
+    }
+
+    /**
+     * @return create_time
+     */
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    /**
+     * @param createTime
+     */
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     /**
