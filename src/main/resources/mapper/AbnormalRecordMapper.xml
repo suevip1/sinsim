@@ -10,6 +10,7 @@
     <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
     <result column="submit_user" jdbcType="INTEGER" property="submitUser" />
     <result column="solution_user" jdbcType="INTEGER" property="solutionUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
     <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
   </resultMap>
