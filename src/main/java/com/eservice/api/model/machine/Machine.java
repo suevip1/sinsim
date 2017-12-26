@@ -35,6 +35,9 @@ public class Machine {
      */
     private Byte status;
 
+    @Column(name = "machine_type")
+    private Integer machineType;
+
     /**
      * 创建时间
      */
@@ -161,6 +164,20 @@ public class Machine {
      */
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    /**
+     * @return machine_type
+     */
+    public Integer getMachineType() {
+        return machineType;
+    }
+
+    /**
+     * @param machineType
+     */
+    public void setMachineType(Integer machineType) {
+        this.machineType = machineType;
     }
 
     /**

@@ -5,6 +5,9 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.order_sign.OrderSign;
+import com.eservice.api.service.ContractService;
+import com.eservice.api.service.ContractSignService;
+import com.eservice.api.service.OrderSignService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.ContractSignServiceImpl;
@@ -71,6 +74,8 @@ public class OrderSignController {
             }else if(step.equals(Constant.SIGN_FINISHED)) {
                 //表示签核已经完成
                 contractSign.setStatus(Byte.parseByte("2"));
+                //根据合同中的需求单进行机器添加, 在需求单签核、合同签核都加上是因为最后一步审核可能是需求单，也可能是合同
+                commonService.createMachineByContractId(contractSign.getContractId());
             }
             contractSign.setCurrentStep(step);
             contractSignService.update(contractSign);

@@ -4,13 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
+import com.eservice.api.model.machine.Machine;
+import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.model.role.Role;
-import com.eservice.api.service.impl.ContractSignServiceImpl;
-import com.eservice.api.service.impl.OrderSignServiceImpl;
-import com.eservice.api.service.impl.RoleServiceImpl;
+import com.eservice.api.service.impl.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -29,6 +30,10 @@ public class CommonService {
     private OrderSignServiceImpl orderSignService;
     @Resource
     private RoleServiceImpl roleService;
+    @Resource
+    private MachineOrderServiceImpl machineOrderService;
+    @Resource
+    private MachineServiceImpl machineService;
 
     /**
      * 用于返回对应合同的所有签核记录，每一次提交审核以后，都需要通过该API获取所有审核内容，再设置审核状态
@@ -107,5 +112,34 @@ public class CommonService {
         }
 
         return result;
+    }
+
+    /**
+     * 根据合同编号对应的需求单的机器
+     * @param contractId
+     */
+    public void createMachineByContractId(Integer contractId) {
+        Condition condition = new Condition(MachineOrder.class);
+        condition.createCriteria().andCondition("contract_id = ", contractId);
+        List<MachineOrder> orderList = machineOrderService.findByCondition(condition);
+        for (MachineOrder orderItem: orderList) {
+            //选取有效需求单，无效需求单对应的机器数不cover在内
+            if(orderItem.getStatus() < 3) {
+                Condition tempCondition = new Condition(Machine.class);
+                tempCondition.createCriteria().andCondition("order_id = ", orderItem.getId());
+                List<Machine> machineExistList = machineService.findByCondition(tempCondition);
+                int haveToCreate = orderItem.getMachineNum() - machineExistList.size();
+                int i=1;
+                while (i <= haveToCreate) {
+                    Machine machine = new Machine();
+                    machine.setMachineId(Utils.createMachineBasicId() + i);
+                    machine.setOrderId(orderItem.getId());
+                    machine.setStatus(Byte.parseByte("0"));
+                    machine.setCreateTime(new Date());
+                    machineService.save(machine);
+                    i++;
+                }
+            }
+        }
     }
 }

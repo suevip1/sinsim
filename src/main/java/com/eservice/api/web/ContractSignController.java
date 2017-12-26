@@ -2,11 +2,18 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract_sign.ContractSign;
+import com.eservice.api.model.machine.Machine;
+import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.service.ContractSignService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.common.Utils;
 import com.eservice.api.service.impl.ContractSignServiceImpl;
+import com.eservice.api.service.impl.MachineOrderServiceImpl;
+import com.eservice.api.service.impl.MachineServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -58,6 +66,8 @@ public class ContractSignController {
         }else if(step.equals(Constant.SIGN_FINISHED)) {
             //表示签核已经完成
             contractSign1.setStatus(Byte.parseByte("2"));
+            //根据合同中的需求单进行机器添加
+            commonService.createMachineByContractId(contractSign1.getContractId());
         }
         contractSign1.setCurrentStep(step);
         contractSignService.update(contractSign1);

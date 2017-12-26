@@ -11,7 +11,7 @@ import com.eservice.api.model.order_sign.OrderSign;
  * @author Wilson Hu
  * @date 18/12/2017
  */
-public class MachineOrderWapper {
+public class MachineOrderWrapper {
 
     private MachineOrder machineOrder;
 

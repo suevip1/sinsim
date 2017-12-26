@@ -5,13 +5,17 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract.ContractDetail;
-import com.eservice.api.model.contract.MachineOrderWapper;
+import com.eservice.api.model.contract.MachineOrderWrapper;
 import com.eservice.api.model.contract_sign.ContractSign;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
+import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
+import com.eservice.api.service.MachineService;
+import com.eservice.api.service.OrderChangeRecordService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
@@ -24,6 +28,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -52,6 +57,10 @@ public class ContractController {
     private OrderSignServiceImpl orderSignService;
     @Resource
     private CommonService commonService;
+    @Resource
+    private OrderChangeRecordService orderChangeRecordService;
+    @Resource
+    private MachineServiceImpl machineService;
 
     @Value("${contract_excel_output_dir}")
     private String contractOutputDir;
@@ -86,7 +95,7 @@ public class ContractController {
         contractSignService.save(contractSignObj);
 
         //插入需求单记录
-        List<MachineOrderWapper> machineOrderWapperList = JSONObject.parseArray(requisitionForms, MachineOrderWapper.class);
+        List<MachineOrderWrapper> machineOrderWapperList = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
         if(machineOrderWapperList != null) {
             for (int i = 0; i <machineOrderWapperList.size() ; i++) {
                 OrderDetail temp = machineOrderWapperList.get(i).getOrderDetail();
@@ -125,14 +134,14 @@ public class ContractController {
     @Transactional(rollbackFor = Exception.class)
     public Result update(String contract,  String requisitionForms) {
         Contract contract1 = JSONObject.parseObject(contract, Contract.class);
-        List<MachineOrderWapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms,MachineOrderWapper.class );
+        List<MachineOrderWrapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class );
         //先获取当前合同的所有订单
         List<MachineOrderDetail> originalOrderList =  machineOrderService.selectOrder(null, contract1.getId(), null, null, null,
                 null, null, null,null, null, false);
         ///删除该合同下，不在本次保存范围内的需求单
         for (MachineOrderDetail item: originalOrderList) {
             boolean exist = false;
-            for (MachineOrderWapper wapperItem: machineOrderWapperlist) {
+            for (MachineOrderWrapper wapperItem: machineOrderWapperlist) {
                 if(wapperItem.getMachineOrder().getId().equals(item.getId())) {
                     exist = true;
                     break;
@@ -151,7 +160,7 @@ public class ContractController {
             }
         }
 
-        for (MachineOrderWapper item: machineOrderWapperlist) {
+        for (MachineOrderWrapper item: machineOrderWapperlist) {
             if(item.getMachineOrder().getId() != null) {
                 //更新
                 OrderDetail temp = item.getOrderDetail();
@@ -200,11 +209,11 @@ public class ContractController {
         }
 
         Integer contractId = contract1.getId();
-        ///获取拆单前最新的签核记录，并设置其为改单状态
+        ///获取改单前最新的签核记录，并设置其为改单状态
         ContractSign originalContractSign = contractSignService.detailByContractId(String.valueOf(contractId));
         originalContractSign.setStatus(Byte.parseByte("3"));
         originalContractSign.setUpdateTime(new Date());
-//        contractSignService.update(originalContractSign);
+        contractSignService.update(originalContractSign);
 
         ///插入新的contract审核记录
         ContractSign contractSignObj = new ContractSign();
@@ -214,9 +223,60 @@ public class ContractController {
         ///新增合同签核记录时，插入空值
         contractSignObj.setCurrentStep("");
         contractSignObj.setStatus(Byte.parseByte("0"));
-//        contractSignService.save(contractSignObj);
 
-        List<MachineOrderWapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms,MachineOrderWapper.class);
+
+        //新增的改单处理
+        List<MachineOrderWrapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class);
+        for (MachineOrderWrapper orderItem: machineOrderWapperlist) {
+            MachineOrder machineOrder = orderItem.getMachineOrder();
+            if(machineOrder.getOrderDetailId() != null && machineOrder.getOriginalOrderId() != 0) {
+                //插入新增改单项的detail
+                OrderDetail temp = orderItem.getOrderDetail();
+                orderDetailService.saveAndGetID(temp);
+                machineOrder.setOrderDetailId(temp.getId());
+                machineOrder.setContractId(contract1.getId());
+                machineOrder.setStatus(Byte.parseByte("0"));
+                machineOrderService.saveAndGetID(machineOrder);
+
+                //初始化需求单审核记录
+                OrderSign orderSignData = orderItem.getOrderSign();
+                OrderSign orderSign = new OrderSign();
+                orderSign.setSignContent(orderSignData.getSignContent());
+                orderSign.setOrderId(machineOrder.getId());
+                orderSign.setCreateTime(new Date());
+                orderSign.setStatus(Byte.parseByte("0"));
+                orderSignService.save(orderSign);
+
+                //改单记录(插入或者修改)
+                OrderChangeRecord changeRecord = orderItem.getOrderChangeRecord();
+                if(changeRecord.getId() == null) {
+                    changeRecord.setChangeTime(new Date());
+                    orderChangeRecordService.save(changeRecord);
+                }else {
+                    changeRecord.setChangeTime(new Date());
+                    orderChangeRecordService.update(changeRecord);
+                }
+            }else {
+                //设置被改单的需求单状态(machine_order/order_sign)
+                if(machineOrder.getStatus() == 3) {
+                    machineOrderService.update(machineOrder);
+                    OrderSign orderSign = orderItem.getOrderSign();
+                    orderSign.setUpdateTime(new Date());
+                    orderSign.setStatus(Byte.parseByte("3"));
+                    orderSignService.update(orderSign);
+
+                    //获取被改单对应机器，设置改单状态(machine)
+                    Condition tempCondition = new Condition(Machine.class);
+                    tempCondition.createCriteria().andCondition("order_id = ", machineOrder.getId());
+                    List<Machine> machineList = machineService.findByCondition(tempCondition);
+                    for (Machine machine: machineList) {
+                        machine.setStatus(Byte.parseByte("3"));
+                        machine.setUpdateTime(new Date());
+                        machineService.update(machine);
+                    }
+                }
+            }
+        }
 
         return ResultGenerator.genSuccessResult();
 
@@ -293,6 +353,12 @@ public class ContractController {
                 return ResultGenerator.genFailResult("contractID not exist!");
             }
 
+            List<Integer> contractSignIdList =  new ArrayList<Integer>();
+            ContractSign contractSign;
+            for (int i = 0; i <contractSignService.findAll().size() ; i++) {
+                contractSign = contractSignService.findAll().get(i);
+                contractSignIdList.add(contractSign.getContractId());
+            }
             //一个合同可能对应多个需求单
             List<Integer> machineOrderIdList = new ArrayList<Integer>();
             MachineOrder mo;
@@ -381,7 +447,7 @@ public class ContractController {
             cell.setCellValue(new HSSFRichTextString( contract.getSellman()));
 
             //一个合同对应多个签核 TODO:多个签核时如何选择，contractSignService.detailByContractId 可能要改。
-            ContractSign contractSign;
+            //ContractSign contractSign;
             // 合同审核信息，来自 contract_sign
             contractSign = contractSignService.detailByContractId(contractId.toString());
             SignContentItem signContentItem;

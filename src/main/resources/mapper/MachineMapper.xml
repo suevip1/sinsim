@@ -11,6 +11,7 @@
     <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
     <result column="location" jdbcType="VARCHAR" property="location" />
     <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="machine_type" jdbcType="INTEGER" property="machineType" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime" />
