@@ -1,15 +1,14 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.order_sign.OrderSign;
-import com.eservice.api.service.ContractService;
-import com.eservice.api.service.ContractSignService;
-import com.eservice.api.service.OrderSignService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.ContractSignServiceImpl;
+import com.eservice.api.service.impl.OrderSignServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,15 +30,16 @@ import java.util.List;
 @RequestMapping("/order/sign")
 public class OrderSignController {
     @Resource
-    private OrderSignService orderSignService;
+    private OrderSignServiceImpl orderSignService;
     @Resource
     private CommonService commonService;
     @Resource
     private ContractSignServiceImpl contractSignService;
 
     @PostMapping("/add")
-    public Result add(OrderSign orderSign) {
-        orderSignService.save(orderSign);
+    public Result add(String orderSign) {
+        OrderSign orderSign1 = JSON.parseObject(orderSign,OrderSign.class);
+        orderSignService.save(orderSign1);
         return ResultGenerator.genSuccessResult();
     }
 
@@ -91,4 +91,21 @@ public class OrderSignController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 根据orderId获取签核信息
+     * @param page
+     * @param size
+     * @param orderId
+     * @return
+     */
+    @PostMapping("/getOrderSignListByOrderId")
+    public Result getOrderSignListByOrderId(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                            @RequestParam Integer orderId) {
+        PageHelper.startPage(page, size);
+        List<OrderSign> list = orderSignService.getOrderSignListByOrderId(orderId);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 }

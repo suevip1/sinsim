@@ -26,5 +26,10 @@ public class OrderSignServiceImpl extends AbstractService<OrderSign> implements 
     public List<OrderSign> getOrderSignListByContractId(Integer contractId) {
         return orderSignMapper.getOrderSignListByContractId(contractId);
     }
-
+    /**
+     *根据需求单ID，查找需求单签核
+     */
+    public List<OrderSign> getOrderSignListByOrderId(Integer orderId){
+        return  orderSignMapper.getOrderSignListByOrderId(orderId);
+    }
 }

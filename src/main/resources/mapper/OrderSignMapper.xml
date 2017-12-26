@@ -19,4 +19,10 @@
     JOIN contract c on c.id = mo.contract_id
     WHERE c.id =  #{contractId} AND mo.status &lt; 4
   </select>
+  
+  <select id="getOrderSignListByOrderId" resultMap="BaseResultMap">
+    SELECT os.*
+    FROM order_sign os
+    WHERE os.order_id = #{orderId}
+  </select>
 </mapper>

@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
@@ -6,11 +7,13 @@ import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract.ContractDetail;
 import com.eservice.api.model.contract.MachineOrderWapper;
 import com.eservice.api.model.contract_sign.ContractSign;
+import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.service.common.CommonService;
+import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -285,18 +288,11 @@ public class ContractController {
             pfs=new POIFSFileSystem(fs);
             wb = new HSSFWorkbook(pfs);
 
-            //一个合同对应多个签核
             Contract contract = contractService.findById(contractId);
             if(contract == null){
                 return ResultGenerator.genFailResult("contractID not exist!");
             }
 
-            List<Integer> contractSignIdList =  new ArrayList<Integer>();
-            ContractSign contractSign;
-            for (int i = 0; i <contractSignService.findAll().size() ; i++) {
-                contractSign = contractSignService.findAll().get(i);
-                contractSignIdList.add(contractSign.getContractId());
-            }
             //一个合同可能对应多个需求单
             List<Integer> machineOrderIdList = new ArrayList<Integer>();
             MachineOrder mo;
@@ -306,7 +302,10 @@ public class ContractController {
                     machineOrderIdList.add(mo.getId());
                 }
             }
+            MachineOrder machineOrder;
             MachineOrderDetail machineOrderDetail;
+            //需求单签核,一个需求单对应0个或多个签核
+            List<OrderSign> orderSignList ;
 
             //读取了模板内所有sheet1内容
             HSSFSheet sheet1 = wb.getSheetAt(0);
@@ -332,7 +331,7 @@ public class ContractController {
             System.out.println("======== machineOrderCount: " + machineOrderCount );
             Integer allSum = 0;
             for(int i=0; i<machineOrderCount;i++){
-
+                machineOrder = machineOrderService.findById(contractId);
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
                 //A5,A6,A7,...品牌
                 cell = sheet1.getRow(5+i).getCell((short) 0);
@@ -380,6 +379,72 @@ public class ContractController {
             locationRow = locationRow+6;
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString( contract.getSellman()));
+
+            //一个合同对应多个签核 TODO:多个签核时如何选择，contractSignService.detailByContractId 可能要改。
+            ContractSign contractSign;
+            // 合同审核信息，来自 contract_sign
+            contractSign = contractSignService.detailByContractId(contractId.toString());
+            SignContentItem signContentItem;
+            String contractSignCommentBySalesDep = "";
+            String contractSignCommentByCostAccount = "";
+            String contractSignCommentByFinancialDepRuleCheck = "";
+            String contractSignCommentByGM = "";
+            String contractSignUserBySaleDep = "";
+            String contractSignUserByCostAccount = "";
+            String contractSignUserByFinancialDepRuleCheck = "";
+            String contractSignUserByGM = "";
+            List<SignContentItem> signContentItemList = JSON.parseArray(contractSign.getSignContent(), SignContentItem.class);
+
+            OrderSign orderSign = null;
+            // 合同审核信息，来自 contract_sign
+            String OderSignCommentByTechDep = "";
+            String OrderSignCommentByPMC = "";
+            String OrderSignCommentByFinancialDeposit = "";
+
+            String orderSignUserByTechDep = "";
+            String orderSignUserByPMC = "";
+            String orderSignUserByFinancialDeposit = "";
+
+            for ( int i=0;i<signContentItemList.size();i++ ) {
+                signContentItem = signContentItemList.get(i);
+                if(Constant.SALES_DEP_STEP.equals( signContentItem.getNumber())){
+                    //销售部签核顺位
+                    contractSignCommentBySalesDep = signContentItem.getComment();
+                    contractSignUserBySaleDep = signContentItem.getUser();
+                } else if(Constant.COST_ACCOUNT_STEP.equals( signContentItem.getNumber()) ) {
+                    //成本核算
+                    contractSignCommentByCostAccount = signContentItem.getComment();
+                    contractSignUserByCostAccount = signContentItem.getUser();
+                } else if(Constant.FINANCIAL_DEP_RULE_STEP.equals( signContentItem.getNumber()) ) {
+                    //财务rule审核
+                    contractSignCommentByFinancialDepRuleCheck = signContentItem.getComment();
+                    contractSignUserByFinancialDepRuleCheck = signContentItem.getUser();
+                } else if(Constant.GENERAL_MANAGER_STEP.equals( signContentItem.getNumber()) ) {
+                    //总经理审核
+                    contractSignCommentByGM = signContentItem.getComment();
+                    contractSignUserByGM = signContentItem.getUser();
+                }
+            }
+            cell = sheet1.getRow(locationRow).getCell((short) 4);
+            cell.setCellValue(new HSSFRichTextString(contractSignCommentBySalesDep));
+            cell = sheet1.getRow(locationRow++).getCell((short)1);
+            cell.setCellValue(new HSSFRichTextString(contractSignUserBySaleDep));
+
+            locationRow = locationRow + 2;
+            cell = sheet1.getRow(locationRow).getCell((short) 4);
+            cell.setCellValue(new HSSFRichTextString(contractSignCommentByCostAccount));
+            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell.setCellValue(new HSSFRichTextString(contractSignUserByCostAccount));
+
+            cell = sheet1.getRow(locationRow).getCell((short) 4);
+            cell.setCellValue(new HSSFRichTextString(contractSignCommentByFinancialDepRuleCheck));
+            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell.setCellValue(new HSSFRichTextString(contractSignUserByFinancialDepRuleCheck));
+
+            cell = sheet1.getRow(locationRow).getCell((short) 4);
+            cell.setCellValue(new HSSFRichTextString(contractSignCommentByGM));
+            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell.setCellValue(new HSSFRichTextString(contractSignUserByGM));
 
             //需求单
             //根据实际需求单数量，动态复制生成新的sheet;
@@ -576,6 +641,54 @@ public class ContractController {
                 //C30
                 cell2 = sheetX.getRow(29).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(contract.getSellman()));
+
+                //需求单审核信息，来自 order_sign
+                orderSignList = orderSignService.getOrderSignListByOrderId(machineOrderIdList.get(i));
+
+                if(orderSignList.size() > 0) {
+                    //取最后一次的签核，后续看是否需要根据时间来取最新
+                    orderSign = orderSignList.get(orderSignList.size()-1);
+
+                    signContentItemList = JSON.parseArray(orderSign.getSignContent(), SignContentItem.class);
+
+                    for ( int j=0;j<signContentItemList.size();j++ ) {
+                        signContentItem = signContentItemList.get(j);
+                        if(Constant.TECH_DEP_STEP.equals( signContentItem.getNumber())){
+                            //技术部签核顺位
+                            OderSignCommentByTechDep = signContentItem.getComment();
+                            orderSignUserByTechDep = signContentItem.getUser();
+                        } else if(Constant.PMC_STEP.equals( signContentItem.getNumber()) ) {
+                            //PMC
+                            OrderSignCommentByPMC = signContentItem.getComment();
+                            orderSignUserByPMC = signContentItem.getUser();
+                        } else if(Constant.FINANCIAL_DEP_DEPOSIT_STEP.equals( signContentItem.getNumber()) ) {
+                            //财务 定金审核
+                            OrderSignCommentByFinancialDeposit = signContentItem.getComment();
+                            orderSignUserByFinancialDeposit = signContentItem.getUser();
+                        }
+                    }
+
+                    //C33 技术部评审
+                    cell2 = sheetX.getRow(32).getCell((short) 2);
+                    cell2.setCellValue(new HSSFRichTextString(orderSignUserByTechDep));
+                    //G33
+                    cell2 = sheetX.getRow(32).getCell((short) 6);
+                    cell2.setCellValue(new HSSFRichTextString(OderSignCommentByTechDep));
+
+                    //C34
+                    cell2 = sheetX.getRow(33).getCell((short)2);
+                    cell2.setCellValue(new HSSFRichTextString(orderSignUserByPMC));
+                    //G34
+                    cell2 = sheetX.getRow(33).getCell((short) 6);
+                    cell2.setCellValue(new HSSFRichTextString(OrderSignCommentByPMC));
+
+                    //C38
+                    cell2 = sheetX.getRow(37).getCell((short)2);
+                    cell2.setCellValue(new HSSFRichTextString(orderSignUserByFinancialDeposit));
+                    //G38
+                    cell2 = sheetX.getRow(37).getCell((short)6);
+                    cell2.setCellValue(new HSSFRichTextString(OrderSignCommentByFinancialDeposit));
+                }
             }
   
             //修改模板内容导出新模板,生成路径供前端下载
