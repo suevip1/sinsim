@@ -11,6 +11,7 @@
     <result column="submit_user" jdbcType="INTEGER" property="submitUser" />
     <result column="solution_user" jdbcType="INTEGER" property="solutionUser" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
     <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
   </resultMap>

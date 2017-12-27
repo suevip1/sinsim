@@ -36,6 +36,9 @@ public class AbnormalRecord {
     @Column(name = "create_time")
     private Date createTime;
 
+    @Column(name = "solve_time")
+    private Date solveTime;
+
     /**
      * 异常备注
      */
@@ -144,6 +147,20 @@ public class AbnormalRecord {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    /**
+     * @return solve_time
+     */
+    public Date getSolveTime() {
+        return solveTime;
+    }
+
+    /**
+     * @param solveTime
+     */
+    public void setSolveTime(Date solveTime) {
+        this.solveTime = solveTime;
     }
 
     /**

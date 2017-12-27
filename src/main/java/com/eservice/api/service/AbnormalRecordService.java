@@ -5,7 +5,7 @@ import com.eservice.api.core.Service;
 /**
 * Class Description: xxx
 * @author Wilson Hu
-* @date 2017/12/26.
+* @date 2017/12/27.
 */
 public interface AbnormalRecordService extends Service<AbnormalRecord> {
 
