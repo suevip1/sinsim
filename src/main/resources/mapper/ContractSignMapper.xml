@@ -17,6 +17,6 @@
 
   <!--默认只有status小于4的合同审核记录时是有效的-->
   <select id="detailByContractId" resultMap="BaseResultMap">
-    SELECT * FROM contract_sign WHERE contract_id = ${contractId} AND status &lt; 4 ORDER BY create_time DESC LIMIT 1
+    SELECT * FROM contract_sign WHERE contract_id = ${contractId} AND status &lt; 3 ORDER BY create_time DESC LIMIT 1
   </select>
 </mapper>

@@ -14,6 +14,7 @@ import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
+import com.eservice.api.service.OrderChangeRecordService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
@@ -21,15 +22,22 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -218,14 +226,14 @@ public class ContractController {
         contractSignObj.setContractId(contractId);
         contractSignObj.setCreateTime(new Date());
         contractSignObj.setSignContent(contractSign);
-        ///新增合同签核记录时，插入空值
+        ///插入空值
         contractSignObj.setCurrentStep("");
         contractSignObj.setStatus(Byte.parseByte("0"));
-
+        contractSignService.save(contractSignObj);
 
         //新增的改单处理
-        List<MachineOrderWrapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class);
-        for (MachineOrderWrapper orderItem: machineOrderWapperlist) {
+        List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class);
+        for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
             if(machineOrder.getOrderDetailId() != null && machineOrder.getOriginalOrderId() != 0) {
                 //插入新增改单项的detail
@@ -254,49 +262,96 @@ public class ContractController {
                     changeRecord.setChangeTime(new Date());
                     orderChangeRecordService.update(changeRecord);
                 }
-            }else {
-                //设置被改单的需求单状态(machine_order/order_sign)
-                if(machineOrder.getStatus() == Constant.ORDER_CHANGED) {
-                    machineOrderService.update(machineOrder);
-                    OrderSign orderSign = orderItem.getOrderSign();
-                    if(orderSign != null) {
-                        orderSign.setUpdateTime(new Date());
-                        orderSign.setStatus(Byte.parseByte("3"));
-                        orderSignService.update(orderSign);
+            }
+        }
+
+        for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
+            MachineOrder machineOrder = orderItem.getMachineOrder();
+            //设置被改单的需求单状态(machine_order/order_sign)
+            if (machineOrder.getStatus() == Constant.ORDER_CHANGED) {
+                machineOrderService.update(machineOrder);
+                OrderSign orderSign = orderItem.getOrderSign();
+                if (orderSign != null) {
+                    orderSign.setUpdateTime(new Date());
+                    orderSign.setStatus(Byte.parseByte("3"));
+                    orderSignService.update(orderSign);
+                }
+                //获取被改单对应机器，设置改单状态(machine)
+                Condition tempCondition = new Condition(Machine.class);
+                tempCondition.createCriteria().andCondition("order_id = ", machineOrder.getId());
+                List<Machine> machineList = machineService.findByCondition(tempCondition);
+                //寻找对应新需求单，比较机器数
+                MachineOrder newOrder = null;
+                for (MachineOrderWrapper wrapper : machineOrderWrapperList) {
+                    if (wrapper.getMachineOrder().getOriginalOrderId().equals(machineOrder.getId())) {
+                        newOrder = wrapper.getMachineOrder();
+                        break;
                     }
-                    //获取被改单对应机器，设置改单状态(machine)
-                    Condition tempCondition = new Condition(Machine.class);
-                    tempCondition.createCriteria().andCondition("order_id = ", machineOrder.getId());
-                    List<Machine> machineList = machineService.findByCondition(tempCondition);
-                    //寻找对应新需求单，比较机器数
-                    MachineOrder newOrder = null;
-                    for (MachineOrderWrapper wrapper: machineOrderWapperlist) {
-                        if(wrapper.getMachineOrder().getOriginalOrderId().equals(machineOrder.getId())) {
-                            newOrder = wrapper.getMachineOrder();
-                            break;
-                        }
-                    }
-                    if(newOrder != null) {
-                        ///改单前后机器数相等或者大于原需求单数中对应的机器数;多出部分机器在审核完成以后自动添加
-                        if(newOrder.getMachineNum() >= machineOrder.getMachineNum()) {
-                            for (Machine machine: machineList) {
-                                ///初始化状态，直接将机器的上的需求单号直接绑定到新需求单
-                                if(machine.getStatus() == Constant.MACHINE_INITIAL) {
-                                    machine.setOrderId(newOrder.getId());
-                                }else {
-                                    machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
-                                }
-                                machine.setUpdateTime(new Date());
-                                machineService.update(machine);
+                }
+                if (newOrder != null) {
+                    ///改单前后机器数相等或者大于原需求单数中对应的机器数;多出部分机器在审核完成以后自动添加
+                    if (newOrder.getMachineNum() >= machineOrder.getMachineNum()) {
+                        for (Machine machine : machineList) {
+                            ///初始化状态，直接将机器的上的需求单号直接绑定到新需求单
+                            if (machine.getStatus() == Constant.MACHINE_INITIAL) {
+                                machine.setOrderId(newOrder.getId());
+                            } else {
+                                machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
                             }
-                        }else {
-
-
+                            machine.setUpdateTime(new Date());
+                            machineService.update(machine);
                         }
-                    }else {
-                        ///在同一个合同中没有找到新的需求单,抛出异常
-                        throw new RuntimeException();
+                    } else {
+                        List<Machine> originalInitialMachine = new ArrayList<>();
+                        List<Machine> originalInitialedMachine = new ArrayList<>();
+                        List<Machine> originalOtherMachine = new ArrayList<>();
+                        for (Machine machine : machineList) {
+                            ///查找计划中、生产中、生产完成的机器
+                            if (machine.getStatus() == Constant.MACHINE_PLANING
+                                    || machine.getStatus() == Constant.MACHINE_INSTALLING
+                                    || machine.getStatus() == Constant.MACHINE_INSTALLED) {
+                                originalInitialedMachine.add(machine);
+                            } else if (machine.getStatus() == Constant.MACHINE_INITIAL) {
+                                originalInitialMachine.add(machine);
+                            } else {
+                                originalOtherMachine.add(machine);
+                            }
+                        }
+                        int addedNum = 0;
+                        for (int i = 0; i < originalInitialedMachine.size(); i++) {
+                            if (addedNum < machineOrder.getMachineNum()) {
+                                originalInitialedMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                                addedNum++;
+                            } else {
+                                originalInitialedMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CANCELED)));
+                            }
+                            //更新
+                            machineService.update(originalInitialedMachine.get(i));
+                        }
+                        for (int i = 0; i < originalInitialMachine.size(); i++) {
+                            if (addedNum < machineOrder.getMachineNum()) {
+                                originalInitialMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                                addedNum++;
+                                machineService.update(originalInitialMachine.get(i));
+                            } else {
+                                //删除
+                                machineService.deleteById(originalInitialMachine.get(i).getId());
+                            }
+                        }
+                        for (int i = 0; i < originalOtherMachine.size(); i++) {
+                            if (addedNum < machineOrder.getMachineNum()) {
+                                originalOtherMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                                machineService.update(originalInitialMachine.get(i));
+                                addedNum++;
+                            } else {
+                                originalOtherMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CANCELED)));
+                                machineService.update(originalInitialMachine.get(i));
+                            }
+                        }
                     }
+                } else {
+                    ///在同一个合同中没有找到新的需求单,抛出异常
+                    throw new RuntimeException();
                 }
             }
         }
@@ -376,6 +431,12 @@ public class ContractController {
                 return ResultGenerator.genFailResult("contractID not exist!");
             }
 
+            List<Integer> contractSignIdList =  new ArrayList<Integer>();
+            ContractSign contractSign;
+            for (int i = 0; i <contractSignService.findAll().size() ; i++) {
+                contractSign = contractSignService.findAll().get(i);
+                contractSignIdList.add(contractSign.getContractId());
+            }
             //一个合同可能对应多个需求单
             List<Integer> machineOrderIdList = new ArrayList<Integer>();
             MachineOrder mo;
@@ -398,7 +459,6 @@ public class ContractController {
             //D2
             cell = sheet1.getRow(1).getCell((short) 3);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy/MM/dd");
             String dateString = formatter.format(contract.getCreateTime());
             HSSFCellStyle style = cell.getCellStyle();
             style.setWrapText(true);
@@ -450,6 +510,7 @@ public class ContractController {
             cell.setCellValue(new HSSFRichTextString( contract.getPayMethod() ));
 
             // 合同交货日期
+            SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
             String dateTimeString = formatter.format(contract.getContractShipDate());
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(dateTimeString));
@@ -464,7 +525,7 @@ public class ContractController {
             cell.setCellValue(new HSSFRichTextString( contract.getSellman()));
 
             //一个合同对应多个签核 TODO:多个签核时如何选择，contractSignService.detailByContractId 可能要改。
-            ContractSign contractSign;
+            //ContractSign contractSign;
             // 合同审核信息，来自 contract_sign
             contractSign = contractSignService.detailByContractId(contractId.toString());
             SignContentItem signContentItem;
@@ -476,10 +537,6 @@ public class ContractController {
             String contractSignUserByCostAccount = "";
             String contractSignUserByFinancialDepRuleCheck = "";
             String contractSignUserByGM = "";
-            String contractSignDateBySalesDep = "";
-            String contractSignDateByCostAccount = "";
-            String contractSignDateByFinancialDepRuleCheck = "";
-            String contractSignDateByGM = "";
             List<SignContentItem> signContentItemList = JSON.parseArray(contractSign.getSignContent(), SignContentItem.class);
 
             OrderSign orderSign = null;
@@ -491,9 +548,6 @@ public class ContractController {
             String orderSignUserByTechDep = "";
             String orderSignUserByPMC = "";
             String orderSignUserByFinancialDeposit = "";
-            String orderSignDateByTechDep ="";
-            String orderSignDateByPMC ="";
-            String orderSignDateByFinancialDeposit ="";
 
             for ( int i=0;i<signContentItemList.size();i++ ) {
                 signContentItem = signContentItemList.get(i);
@@ -501,63 +555,40 @@ public class ContractController {
                     //销售部签核顺位
                     contractSignCommentBySalesDep = signContentItem.getComment();
                     contractSignUserBySaleDep = signContentItem.getUser();
-                    if(signContentItem.getDate() != null) {
-                        contractSignDateBySalesDep = formatter2.format(signContentItem.getDate());
-                    }
                 } else if(Constant.COST_ACCOUNT_STEP.equals( signContentItem.getNumber()) ) {
                     //成本核算
                     contractSignCommentByCostAccount = signContentItem.getComment();
                     contractSignUserByCostAccount = signContentItem.getUser();
-                    if(signContentItem.getDate() != null) {
-                        contractSignDateByCostAccount = formatter2.format(signContentItem.getDate());
-                    }
                 } else if(Constant.FINANCIAL_DEP_RULE_STEP.equals( signContentItem.getNumber()) ) {
                     //财务rule审核
                     contractSignCommentByFinancialDepRuleCheck = signContentItem.getComment();
                     contractSignUserByFinancialDepRuleCheck = signContentItem.getUser();
-                    if(signContentItem.getDate() != null) {
-                        contractSignDateByFinancialDepRuleCheck = formatter2.format(signContentItem.getDate());
-                    }
                 } else if(Constant.GENERAL_MANAGER_STEP.equals( signContentItem.getNumber()) ) {
                     //总经理审核
                     contractSignCommentByGM = signContentItem.getComment();
                     contractSignUserByGM = signContentItem.getUser();
-                    if(signContentItem.getDate() != null) {
-                        contractSignDateByGM = formatter2.format(signContentItem.getDate());
-                    }
                 }
             }
-            //销售部
             cell = sheet1.getRow(locationRow).getCell((short) 4);
             cell.setCellValue(new HSSFRichTextString(contractSignCommentBySalesDep));
-            cell = sheet1.getRow(locationRow).getCell((short)1);
+            cell = sheet1.getRow(locationRow++).getCell((short)1);
             cell.setCellValue(new HSSFRichTextString(contractSignUserBySaleDep));
-            cell = sheet1.getRow(locationRow++).getCell((short)2);
-            cell.setCellValue(new HSSFRichTextString(contractSignDateBySalesDep));
 
-            //成本审核
+            locationRow = locationRow + 2;
             cell = sheet1.getRow(locationRow).getCell((short) 4);
             cell.setCellValue(new HSSFRichTextString(contractSignCommentByCostAccount));
-            cell = sheet1.getRow(locationRow).getCell((short) 1);
+            cell = sheet1.getRow(locationRow++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contractSignUserByCostAccount));
-            cell = sheet1.getRow(locationRow++).getCell((short)2);
-            cell.setCellValue(new HSSFRichTextString(contractSignDateByCostAccount));
 
-            //财务审核
             cell = sheet1.getRow(locationRow).getCell((short) 4);
             cell.setCellValue(new HSSFRichTextString(contractSignCommentByFinancialDepRuleCheck));
-            cell = sheet1.getRow(locationRow).getCell((short) 1);
+            cell = sheet1.getRow(locationRow++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contractSignUserByFinancialDepRuleCheck));
-            cell = sheet1.getRow(locationRow++).getCell((short)2);
-            cell.setCellValue(new HSSFRichTextString(contractSignDateByFinancialDepRuleCheck));
 
-            //总经理
             cell = sheet1.getRow(locationRow).getCell((short) 4);
             cell.setCellValue(new HSSFRichTextString(contractSignCommentByGM));
-            cell = sheet1.getRow(locationRow).getCell((short) 1);
+            cell = sheet1.getRow(locationRow++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contractSignUserByGM));
-            cell = sheet1.getRow(locationRow++).getCell((short)2);
-            cell.setCellValue(new HSSFRichTextString(contractSignDateByGM));
 
             //需求单
             //根据实际需求单数量，动态复制生成新的sheet;
@@ -770,54 +801,36 @@ public class ContractController {
                             //技术部签核顺位
                             OderSignCommentByTechDep = signContentItem.getComment();
                             orderSignUserByTechDep = signContentItem.getUser();
-                            if(signContentItem.getDate() != null){
-                                orderSignDateByTechDep = formatter2.format(signContentItem.getDate());
-                            }
                         } else if(Constant.PMC_STEP.equals( signContentItem.getNumber()) ) {
                             //PMC
                             OrderSignCommentByPMC = signContentItem.getComment();
                             orderSignUserByPMC = signContentItem.getUser();
-                            if(signContentItem.getDate() !=null){
-                                orderSignDateByPMC = formatter2.format(signContentItem.getDate());
-                            }
                         } else if(Constant.FINANCIAL_DEP_DEPOSIT_STEP.equals( signContentItem.getNumber()) ) {
                             //财务 定金审核
                             OrderSignCommentByFinancialDeposit = signContentItem.getComment();
                             orderSignUserByFinancialDeposit = signContentItem.getUser();
-                            if (signContentItem.getDate() != null) {
-                                orderSignDateByFinancialDeposit = formatter2.format(signContentItem.getDate());
-                            }
                         }
                     }
 
-                    //C32 技术部评审
-                    cell2 = sheetX.getRow(31).getCell((short) 2);
+                    //C33 技术部评审
+                    cell2 = sheetX.getRow(32).getCell((short) 2);
                     cell2.setCellValue(new HSSFRichTextString(orderSignUserByTechDep));
-                    //D32
-                    cell2 = sheetX.getRow(31).getCell((short) 3);
-                    cell2.setCellValue(new HSSFRichTextString(orderSignDateByTechDep));
-                    //G32
-                    cell2 = sheetX.getRow(31).getCell((short) 6);
-                    cell2.setCellValue(new HSSFRichTextString(OderSignCommentByTechDep));
-
-                    //C33
-                    cell2 = sheetX.getRow(32).getCell((short)2);
-                    cell2.setCellValue(new HSSFRichTextString(orderSignUserByPMC));
-                    //D33
-                    cell2 = sheetX.getRow(32).getCell((short) 3);
-                    cell2.setCellValue(new HSSFRichTextString(orderSignDateByPMC));
                     //G33
                     cell2 = sheetX.getRow(32).getCell((short) 6);
+                    cell2.setCellValue(new HSSFRichTextString(OderSignCommentByTechDep));
+
+                    //C34
+                    cell2 = sheetX.getRow(33).getCell((short)2);
+                    cell2.setCellValue(new HSSFRichTextString(orderSignUserByPMC));
+                    //G34
+                    cell2 = sheetX.getRow(33).getCell((short) 6);
                     cell2.setCellValue(new HSSFRichTextString(OrderSignCommentByPMC));
 
-                    //C35
-                    cell2 = sheetX.getRow(34).getCell((short)2);
+                    //C38
+                    cell2 = sheetX.getRow(37).getCell((short)2);
                     cell2.setCellValue(new HSSFRichTextString(orderSignUserByFinancialDeposit));
-                    //D35
-                    cell2 = sheetX.getRow(34).getCell((short) 3);
-                    cell2.setCellValue(new HSSFRichTextString(orderSignDateByFinancialDeposit));
-                    //G35
-                    cell2 = sheetX.getRow(34).getCell((short)6);
+                    //G38
+                    cell2 = sheetX.getRow(37).getCell((short)6);
                     cell2.setCellValue(new HSSFRichTextString(OrderSignCommentByFinancialDeposit));
                 }
             }

@@ -32,10 +32,10 @@
   </resultMap>
 
   <select id="selectContracts" resultMap="ContractDetailMap">
-    SELECT c.*, COUNT(DISTINCT mo.id) as order_num, cs.status, cs.current_step FROM contract c
+    select cs.status, cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
+    LEFT JOIN contract c ON c.id = cs.contract_id
     LEFT JOIN machine_order mo ON mo.contract_id = c.id
-    LEFT JOIN contract_sign cs ON cs.contract_id = c.id
---     WHERE mo.status != 1
+    WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
     GROUP BY c.id
   </select>
 

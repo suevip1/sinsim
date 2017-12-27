@@ -133,6 +133,7 @@ public class CommonService {
                     Machine machine = new Machine();
                     machine.setMachineId(Utils.createMachineBasicId() + i);
                     machine.setOrderId(orderItem.getId());
+                    machine.setMachineType(orderItem.getMachineType());
                     machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_INITIAL)));
                     machine.setCreateTime(new Date());
                     machineService.save(machine);
