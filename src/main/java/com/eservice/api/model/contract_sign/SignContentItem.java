@@ -1,5 +1,7 @@
 package com.eservice.api.model.contract_sign;
 
+import java.util.Date;
+
 /**
  * Class Description:
  *
@@ -32,6 +34,11 @@ public class SignContentItem {
      * 签核的类型（合同签核/需求单签核）
      */
     private String signType;
+
+    /**
+     * 签核时间
+     */
+    private Date date;
 
     public Integer getNumber() {
         return number;
@@ -72,4 +79,6 @@ public class SignContentItem {
     public void setComment(String comment) {
         this.comment = comment;
     }
+    public Date getDate(){ return this.date; }
+    public void setDate(Date date) {this.date = date; }
 }
