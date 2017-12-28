@@ -104,6 +104,13 @@
       <id column="machineTypeID" property="id" />
       <result column="name" jdbcType="VARCHAR" property="name" />
     </association>
+    <association javaType="com.eservice.api.model.order_change_record.OrderChangeRecord" property="orderChangeRecord">
+      <id column="changeRecordId" jdbcType="INTEGER" property="id" />
+      <result column="order_id" jdbcType="INTEGER" property="orderId" />
+      <result column="user_id" jdbcType="INTEGER" property="userId" />
+      <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
+      <result column="change_reason" jdbcType="LONGVARCHAR" property="changeReason" />
+    </association>
     <association javaType="com.eservice.api.model.order_sign.OrderSign" property="orderSign">
       <id column="order_sign_id" property="id" />
       <result column="order_id" jdbcType="INTEGER" property="orderId" />
@@ -134,12 +141,13 @@
   </select>
 
   <select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*,od.id order_detail_id, os.id order_sign_id, os.order_id, os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
+    select mo.*, od.*,od.id order_detail_id, os.id order_sign_id, os.order_id, os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId
     from machine_order mo
     LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
     join machine_type mt on mo.machine_type=mt.id
     join contract con on mo.contract_id = con.id
+    LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
     where 1=1
     <if test="id != null and id != ''">
      and mo.id=#{id}
@@ -177,12 +185,13 @@
 
 
   <select id="selectOrder" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*, od.id order_detail_id,os.id order_sign_id, os.order_id,os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
+    select mo.*, od.*, od.id order_detail_id,os.id order_sign_id, os.order_id,os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId
     from machine_order mo
     LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
     join machine_type mt on mo.machine_type=mt.id
     join contract con on mo.contract_id = con.id
+    LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
     where 1=1
     <if test="id != null and id != ''">
       and mo.id=#{id}

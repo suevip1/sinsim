@@ -1,6 +1,7 @@
 package com.eservice.api.model.machine_order;
 
 import com.eservice.api.model.machine_type.MachineType;
+import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
 
@@ -168,7 +169,20 @@ public class MachineOrderDetail {
      */
     private OrderSign orderSign;
 
-//    /*
+    /**
+     * 改单记录
+     */
+    private OrderChangeRecord orderChangeRecord;
+
+    public OrderChangeRecord getOrderChangeRecord() {
+        return orderChangeRecord;
+    }
+
+    public void setOrderChangeRecord(OrderChangeRecord orderChangeRecord) {
+        this.orderChangeRecord = orderChangeRecord;
+    }
+
+    //    /*
 //    机器类型，和machine_type关联
 //     */
 //    private MachineType machineType;
