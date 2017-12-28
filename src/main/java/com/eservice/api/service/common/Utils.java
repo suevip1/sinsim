@@ -36,10 +36,12 @@ public class Utils {
         builder.append(year[(calendar.get(Calendar.YEAR)- 2017)%26]);
         builder.append(month[(calendar.get(Calendar.MONTH))]);
         builder.append(date[calendar.get(Calendar.DATE) -1]);
-        builder.append(String.format("%2d",calendar.get(Calendar.HOUR)));
-        builder.append(String.format("%2d",calendar.get(Calendar.MINUTE)));
-        builder.append(String.format("%2d",calendar.get(Calendar.SECOND)));
-        builder.append(String.format("%2d", new Random().nextInt(99)));
+        //24小时制
+        builder.append(String.format("%2d",calendar.get(Calendar.HOUR_OF_DAY)));
+        builder.append(calendar.get(Calendar.MINUTE) <= 9 ? "0" + calendar.get(Calendar.MINUTE) : calendar.get(Calendar.MINUTE) + "");
+        builder.append(calendar.get(Calendar.SECOND) <= 9 ? "0" + calendar.get(Calendar.SECOND) : calendar.get(Calendar.SECOND) + "");
+        int randomValue = new Random().nextInt(99);
+        builder.append(randomValue < 9 ? "0" + randomValue : randomValue + "");
         return builder.toString();
     }
 }

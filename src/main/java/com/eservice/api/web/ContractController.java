@@ -14,6 +14,7 @@ import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
+import com.eservice.api.service.OrderChangeRecordService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
@@ -21,15 +22,22 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -218,14 +226,14 @@ public class ContractController {
         contractSignObj.setContractId(contractId);
         contractSignObj.setCreateTime(new Date());
         contractSignObj.setSignContent(contractSign);
-        ///新增合同签核记录时，插入空值
+        ///插入空值
         contractSignObj.setCurrentStep("");
         contractSignObj.setStatus(Byte.parseByte("0"));
-
+        contractSignService.save(contractSignObj);
 
         //新增的改单处理
-        List<MachineOrderWrapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class);
-        for (MachineOrderWrapper orderItem: machineOrderWapperlist) {
+        List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class);
+        for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
             if(machineOrder.getOrderDetailId() != null && machineOrder.getOriginalOrderId() != 0) {
                 //插入新增改单项的detail
@@ -254,49 +262,96 @@ public class ContractController {
                     changeRecord.setChangeTime(new Date());
                     orderChangeRecordService.update(changeRecord);
                 }
-            }else {
-                //设置被改单的需求单状态(machine_order/order_sign)
-                if(machineOrder.getStatus() == Constant.ORDER_CHANGED) {
-                    machineOrderService.update(machineOrder);
-                    OrderSign orderSign = orderItem.getOrderSign();
-                    if(orderSign != null) {
-                        orderSign.setUpdateTime(new Date());
-                        orderSign.setStatus(Byte.parseByte("3"));
-                        orderSignService.update(orderSign);
+            }
+        }
+
+        for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
+            MachineOrder machineOrder = orderItem.getMachineOrder();
+            //设置被改单的需求单状态(machine_order/order_sign)
+            if (machineOrder.getStatus() == Constant.ORDER_CHANGED) {
+                machineOrderService.update(machineOrder);
+                OrderSign orderSign = orderItem.getOrderSign();
+                if (orderSign != null) {
+                    orderSign.setUpdateTime(new Date());
+                    orderSign.setStatus(Byte.parseByte("3"));
+                    orderSignService.update(orderSign);
+                }
+                //获取被改单对应机器，设置改单状态(machine)
+                Condition tempCondition = new Condition(Machine.class);
+                tempCondition.createCriteria().andCondition("order_id = ", machineOrder.getId());
+                List<Machine> machineList = machineService.findByCondition(tempCondition);
+                //寻找对应新需求单，比较机器数
+                MachineOrder newOrder = null;
+                for (MachineOrderWrapper wrapper : machineOrderWrapperList) {
+                    if (wrapper.getMachineOrder().getOriginalOrderId().equals(machineOrder.getId())) {
+                        newOrder = wrapper.getMachineOrder();
+                        break;
                     }
-                    //获取被改单对应机器，设置改单状态(machine)
-                    Condition tempCondition = new Condition(Machine.class);
-                    tempCondition.createCriteria().andCondition("order_id = ", machineOrder.getId());
-                    List<Machine> machineList = machineService.findByCondition(tempCondition);
-                    //寻找对应新需求单，比较机器数
-                    MachineOrder newOrder = null;
-                    for (MachineOrderWrapper wrapper: machineOrderWapperlist) {
-                        if(wrapper.getMachineOrder().getOriginalOrderId().equals(machineOrder.getId())) {
-                            newOrder = wrapper.getMachineOrder();
-                            break;
-                        }
-                    }
-                    if(newOrder != null) {
-                        ///改单前后机器数相等或者大于原需求单数中对应的机器数;多出部分机器在审核完成以后自动添加
-                        if(newOrder.getMachineNum() >= machineOrder.getMachineNum()) {
-                            for (Machine machine: machineList) {
-                                ///初始化状态，直接将机器的上的需求单号直接绑定到新需求单
-                                if(machine.getStatus() == Constant.MACHINE_INITIAL) {
-                                    machine.setOrderId(newOrder.getId());
-                                }else {
-                                    machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
-                                }
-                                machine.setUpdateTime(new Date());
-                                machineService.update(machine);
+                }
+                if (newOrder != null) {
+                    ///改单前后机器数相等或者大于原需求单数中对应的机器数;多出部分机器在审核完成以后自动添加
+                    if (newOrder.getMachineNum() >= machineOrder.getMachineNum()) {
+                        for (Machine machine : machineList) {
+                            ///初始化状态，直接将机器的上的需求单号直接绑定到新需求单
+                            if (machine.getStatus() == Constant.MACHINE_INITIAL) {
+                                machine.setOrderId(newOrder.getId());
+                            } else {
+                                machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
                             }
-                        }else {
-
-
+                            machine.setUpdateTime(new Date());
+                            machineService.update(machine);
                         }
-                    }else {
-                        ///在同一个合同中没有找到新的需求单,抛出异常
-                        throw new RuntimeException();
+                    } else {
+                        List<Machine> originalInitialMachine = new ArrayList<>();
+                        List<Machine> originalInitialedMachine = new ArrayList<>();
+                        List<Machine> originalOtherMachine = new ArrayList<>();
+                        for (Machine machine : machineList) {
+                            ///查找计划中、生产中、生产完成的机器
+                            if (machine.getStatus() == Constant.MACHINE_PLANING
+                                    || machine.getStatus() == Constant.MACHINE_INSTALLING
+                                    || machine.getStatus() == Constant.MACHINE_INSTALLED) {
+                                originalInitialedMachine.add(machine);
+                            } else if (machine.getStatus() == Constant.MACHINE_INITIAL) {
+                                originalInitialMachine.add(machine);
+                            } else {
+                                originalOtherMachine.add(machine);
+                            }
+                        }
+                        int addedNum = 0;
+                        for (int i = 0; i < originalInitialedMachine.size(); i++) {
+                            if (addedNum < machineOrder.getMachineNum()) {
+                                originalInitialedMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                                addedNum++;
+                            } else {
+                                originalInitialedMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CANCELED)));
+                            }
+                            //更新
+                            machineService.update(originalInitialedMachine.get(i));
+                        }
+                        for (int i = 0; i < originalInitialMachine.size(); i++) {
+                            if (addedNum < machineOrder.getMachineNum()) {
+                                originalInitialMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                                addedNum++;
+                                machineService.update(originalInitialMachine.get(i));
+                            } else {
+                                //删除
+                                machineService.deleteById(originalInitialMachine.get(i).getId());
+                            }
+                        }
+                        for (int i = 0; i < originalOtherMachine.size(); i++) {
+                            if (addedNum < machineOrder.getMachineNum()) {
+                                originalOtherMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                                machineService.update(originalInitialMachine.get(i));
+                                addedNum++;
+                            } else {
+                                originalOtherMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CANCELED)));
+                                machineService.update(originalInitialMachine.get(i));
+                            }
+                        }
                     }
+                } else {
+                    ///在同一个合同中没有找到新的需求单,抛出异常
+                    throw new RuntimeException();
                 }
             }
         }
