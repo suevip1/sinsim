@@ -431,12 +431,6 @@ public class ContractController {
                 return ResultGenerator.genFailResult("contractID not exist!");
             }
 
-            List<Integer> contractSignIdList =  new ArrayList<Integer>();
-            ContractSign contractSign;
-            for (int i = 0; i <contractSignService.findAll().size() ; i++) {
-                contractSign = contractSignService.findAll().get(i);
-                contractSignIdList.add(contractSign.getContractId());
-            }
             //一个合同可能对应多个需求单
             List<Integer> machineOrderIdList = new ArrayList<Integer>();
             MachineOrder mo;
@@ -459,6 +453,7 @@ public class ContractController {
             //D2
             cell = sheet1.getRow(1).getCell((short) 3);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy/MM/dd");
             String dateString = formatter.format(contract.getCreateTime());
             HSSFCellStyle style = cell.getCellStyle();
             style.setWrapText(true);
@@ -510,7 +505,6 @@ public class ContractController {
             cell.setCellValue(new HSSFRichTextString( contract.getPayMethod() ));
 
             // 合同交货日期
-            SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
             String dateTimeString = formatter.format(contract.getContractShipDate());
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(dateTimeString));
@@ -525,7 +519,7 @@ public class ContractController {
             cell.setCellValue(new HSSFRichTextString( contract.getSellman()));
 
             //一个合同对应多个签核 TODO:多个签核时如何选择，contractSignService.detailByContractId 可能要改。
-            //ContractSign contractSign;
+            ContractSign contractSign;
             // 合同审核信息，来自 contract_sign
             contractSign = contractSignService.detailByContractId(contractId.toString());
             SignContentItem signContentItem;
@@ -537,6 +531,10 @@ public class ContractController {
             String contractSignUserByCostAccount = "";
             String contractSignUserByFinancialDepRuleCheck = "";
             String contractSignUserByGM = "";
+            String contractSignDateBySalesDep = "";
+            String contractSignDateByCostAccount = "";
+            String contractSignDateByFinancialDepRuleCheck = "";
+            String contractSignDateByGM = "";
             List<SignContentItem> signContentItemList = JSON.parseArray(contractSign.getSignContent(), SignContentItem.class);
 
             OrderSign orderSign = null;
@@ -548,6 +546,9 @@ public class ContractController {
             String orderSignUserByTechDep = "";
             String orderSignUserByPMC = "";
             String orderSignUserByFinancialDeposit = "";
+            String orderSignDateByTechDep ="";
+            String orderSignDateByPMC ="";
+            String orderSignDateByFinancialDeposit ="";
 
             for ( int i=0;i<signContentItemList.size();i++ ) {
                 signContentItem = signContentItemList.get(i);
@@ -555,40 +556,63 @@ public class ContractController {
                     //销售部签核顺位
                     contractSignCommentBySalesDep = signContentItem.getComment();
                     contractSignUserBySaleDep = signContentItem.getUser();
+                    if(signContentItem.getDate() != null) {
+                        contractSignDateBySalesDep = formatter2.format(signContentItem.getDate());
+                    }
                 } else if(Constant.COST_ACCOUNT_STEP.equals( signContentItem.getNumber()) ) {
                     //成本核算
                     contractSignCommentByCostAccount = signContentItem.getComment();
                     contractSignUserByCostAccount = signContentItem.getUser();
+                    if(signContentItem.getDate() != null) {
+                        contractSignDateByCostAccount = formatter2.format(signContentItem.getDate());
+                    }
                 } else if(Constant.FINANCIAL_DEP_RULE_STEP.equals( signContentItem.getNumber()) ) {
                     //财务rule审核
                     contractSignCommentByFinancialDepRuleCheck = signContentItem.getComment();
                     contractSignUserByFinancialDepRuleCheck = signContentItem.getUser();
+                    if(signContentItem.getDate() != null) {
+                        contractSignDateByFinancialDepRuleCheck = formatter2.format(signContentItem.getDate());
+                    }
                 } else if(Constant.GENERAL_MANAGER_STEP.equals( signContentItem.getNumber()) ) {
                     //总经理审核
                     contractSignCommentByGM = signContentItem.getComment();
                     contractSignUserByGM = signContentItem.getUser();
+                    if(signContentItem.getDate() != null) {
+                        contractSignDateByGM = formatter2.format(signContentItem.getDate());
+                    }
                 }
             }
+            //销售部
             cell = sheet1.getRow(locationRow).getCell((short) 4);
             cell.setCellValue(new HSSFRichTextString(contractSignCommentBySalesDep));
-            cell = sheet1.getRow(locationRow++).getCell((short)1);
+            cell = sheet1.getRow(locationRow).getCell((short)1);
             cell.setCellValue(new HSSFRichTextString(contractSignUserBySaleDep));
+            cell = sheet1.getRow(locationRow++).getCell((short)2);
+            cell.setCellValue(new HSSFRichTextString(contractSignDateBySalesDep));
 
-            locationRow = locationRow + 2;
+            //成本审核
             cell = sheet1.getRow(locationRow).getCell((short) 4);
             cell.setCellValue(new HSSFRichTextString(contractSignCommentByCostAccount));
-            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell = sheet1.getRow(locationRow).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contractSignUserByCostAccount));
+            cell = sheet1.getRow(locationRow++).getCell((short)2);
+            cell.setCellValue(new HSSFRichTextString(contractSignDateByCostAccount));
 
+            //财务审核
             cell = sheet1.getRow(locationRow).getCell((short) 4);
             cell.setCellValue(new HSSFRichTextString(contractSignCommentByFinancialDepRuleCheck));
-            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell = sheet1.getRow(locationRow).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contractSignUserByFinancialDepRuleCheck));
+            cell = sheet1.getRow(locationRow++).getCell((short)2);
+            cell.setCellValue(new HSSFRichTextString(contractSignDateByFinancialDepRuleCheck));
 
+            //总经理
             cell = sheet1.getRow(locationRow).getCell((short) 4);
             cell.setCellValue(new HSSFRichTextString(contractSignCommentByGM));
-            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell = sheet1.getRow(locationRow).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contractSignUserByGM));
+            cell = sheet1.getRow(locationRow++).getCell((short)2);
+            cell.setCellValue(new HSSFRichTextString(contractSignDateByGM));
 
             //需求单
             //根据实际需求单数量，动态复制生成新的sheet;
@@ -801,36 +825,54 @@ public class ContractController {
                             //技术部签核顺位
                             OderSignCommentByTechDep = signContentItem.getComment();
                             orderSignUserByTechDep = signContentItem.getUser();
+                            if(signContentItem.getDate() != null){
+                                orderSignDateByTechDep = formatter2.format(signContentItem.getDate());
+                            }
                         } else if(Constant.PMC_STEP.equals( signContentItem.getNumber()) ) {
                             //PMC
                             OrderSignCommentByPMC = signContentItem.getComment();
                             orderSignUserByPMC = signContentItem.getUser();
+                            if(signContentItem.getDate() !=null){
+                                orderSignDateByPMC = formatter2.format(signContentItem.getDate());
+                            }
                         } else if(Constant.FINANCIAL_DEP_DEPOSIT_STEP.equals( signContentItem.getNumber()) ) {
                             //财务 定金审核
                             OrderSignCommentByFinancialDeposit = signContentItem.getComment();
                             orderSignUserByFinancialDeposit = signContentItem.getUser();
+                            if (signContentItem.getDate() != null) {
+                                orderSignDateByFinancialDeposit = formatter2.format(signContentItem.getDate());
+                            }
                         }
                     }
 
-                    //C33 技术部评审
-                    cell2 = sheetX.getRow(32).getCell((short) 2);
+                    //C32 技术部评审
+                    cell2 = sheetX.getRow(31).getCell((short) 2);
                     cell2.setCellValue(new HSSFRichTextString(orderSignUserByTechDep));
-                    //G33
-                    cell2 = sheetX.getRow(32).getCell((short) 6);
+                    //D32
+                    cell2 = sheetX.getRow(31).getCell((short) 3);
+                    cell2.setCellValue(new HSSFRichTextString(orderSignDateByTechDep));
+                    //G32
+                    cell2 = sheetX.getRow(31).getCell((short) 6);
                     cell2.setCellValue(new HSSFRichTextString(OderSignCommentByTechDep));
 
-                    //C34
-                    cell2 = sheetX.getRow(33).getCell((short)2);
+                    //C33
+                    cell2 = sheetX.getRow(32).getCell((short)2);
                     cell2.setCellValue(new HSSFRichTextString(orderSignUserByPMC));
-                    //G34
-                    cell2 = sheetX.getRow(33).getCell((short) 6);
+                    //D33
+                    cell2 = sheetX.getRow(32).getCell((short) 3);
+                    cell2.setCellValue(new HSSFRichTextString(orderSignDateByPMC));
+                    //G33
+                    cell2 = sheetX.getRow(32).getCell((short) 6);
                     cell2.setCellValue(new HSSFRichTextString(OrderSignCommentByPMC));
 
-                    //C38
-                    cell2 = sheetX.getRow(37).getCell((short)2);
+                    //C35
+                    cell2 = sheetX.getRow(34).getCell((short)2);
                     cell2.setCellValue(new HSSFRichTextString(orderSignUserByFinancialDeposit));
-                    //G38
-                    cell2 = sheetX.getRow(37).getCell((short)6);
+                    //D35
+                    cell2 = sheetX.getRow(34).getCell((short) 3);
+                    cell2.setCellValue(new HSSFRichTextString(orderSignDateByFinancialDeposit));
+                    //G35
+                    cell2 = sheetX.getRow(34).getCell((short)6);
                     cell2.setCellValue(new HSSFRichTextString(OrderSignCommentByFinancialDeposit));
                 }
             }
