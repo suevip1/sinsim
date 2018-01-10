@@ -2,7 +2,6 @@ package com.eservice.api.service.common;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine.Machine;
@@ -16,6 +15,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -149,10 +149,12 @@ public class CommonService {
     /**
      * @param path 保存文件的总路径
      * @param file 文件名称
+     * @param machineID 机器的具体ID
      * @param type 文件类型 （不同类型文件名生成规则不同）
+     * 最终生成类似：machineID123_Abnormal_2018-01-10-11-15-56.png
      * @return 文件路径
      */
-    public String saveFile(String path, MultipartFile file, int type) {
+    public String saveFile(String path, MultipartFile file, String machineID, int type) {
         String targetFileName = null;
         if(path != null) {
             if (!file.isEmpty()) {
@@ -161,8 +163,27 @@ public class CommonService {
                     // 实际项目中，文件需要输出到指定位置，需要在增加代码处理。
                     // 还有关于文件格式限制、文件大小限制，详见：中配置。
                     //TODO：根据几种不同类型的文件（异常、质检、装车单），用不同的规则产生文件名
-                    String fileName = "xxxx";
-                    targetFileName = path + fileName;
+
+                    //取后缀名
+                    String fileName = file.getOriginalFilename();
+                    String suffixName = fileName.substring(fileName.lastIndexOf("."));
+
+                    Date date = new Date();
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+                    String dateStr = formatter.format(date);
+
+                    String fileType ;
+                    if(Constant.ABNORMAL_IMAGE == type){
+                        fileType = "Abnormal";
+                    } else if(Constant.QUALITY_IMAGE == type) {
+                        fileType = "Quality";
+                    } else if(Constant.LOADING_FILE == type) {
+                        fileType = "LoadingFile";
+                    } else {
+                        fileType = "";//return targetFileName;//"UnknownFileTypeError";
+                    }
+
+                    targetFileName = path + machineID + "_" + fileType + "_" + dateStr + suffixName;
                     BufferedOutputStream out = new BufferedOutputStream(
                             new FileOutputStream(new File(targetFileName)));
                     out.write(file.getBytes());
@@ -171,8 +192,10 @@ public class CommonService {
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                    return null;
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return null;
                 }
             }
         }

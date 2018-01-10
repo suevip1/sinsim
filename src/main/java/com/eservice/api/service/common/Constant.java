@@ -58,4 +58,11 @@ public class Constant {
     public static final int MACHINE_SPLITED = 5;
     //取消
     public static final int MACHINE_CANCELED = 6;
+
+    /**
+     * 保存文件的类型
+     */
+    public static final int ABNORMAL_IMAGE = 0;//异常、
+    public static final int QUALITY_IMAGE = 1;// 质检、
+    public static final int LOADING_FILE = 2;// 装车单
 }

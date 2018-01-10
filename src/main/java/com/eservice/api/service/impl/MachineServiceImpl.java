@@ -20,5 +20,7 @@ import javax.annotation.Resource;
 public class MachineServiceImpl extends AbstractService<Machine> implements MachineService {
     @Resource
     private MachineMapper machineMapper;
-
+    public Machine searchMachineByAbnormalRecordId( Integer abnormalRecordId ){
+        return machineMapper.searchMachineByAbnormalRecordId(abnormalRecordId);
+    }
 }
