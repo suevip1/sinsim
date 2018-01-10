@@ -162,7 +162,6 @@ public class CommonService {
                     // 这里只是简单例子，文件直接输出到path路径下。
                     // 实际项目中，文件需要输出到指定位置，需要在增加代码处理。
                     // 还有关于文件格式限制、文件大小限制，详见：中配置。
-                    //TODO：根据几种不同类型的文件（异常、质检、装车单），用不同的规则产生文件名
 
                     //取后缀名
                     String fileName = file.getOriginalFilename();

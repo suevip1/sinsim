@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2017-12-26 18:11:59
+Date: 2018-01-10 16:00:19
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,7 +32,7 @@ INSERT INTO `abnormal` VALUES ('1', 'abnormalName111');
 INSERT INTO `abnormal` VALUES ('2', 'abn_222');
 INSERT INTO `abnormal` VALUES ('3', 'abn333-by-update');
 INSERT INTO `abnormal` VALUES ('4', 'abnABC');
-INSERT INTO `abnormal` VALUES ('5', 'abn333-by-add');
+INSERT INTO `abnormal` VALUES ('5', 'abn333-by-add-by-updateAbnormalRecordDetail');
 
 -- ----------------------------
 -- Table structure for `abnormal_image`
@@ -41,24 +41,30 @@ DROP TABLE IF EXISTS `abnormal_image`;
 CREATE TABLE `abnormal_image` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `abnormal_record_id` int(10) unsigned NOT NULL,
-  `image` varchar(255) NOT NULL COMMENT '异常图片名称（包含路径）,以后这部分数据是最大的，首先pad上传时候时候需要压缩，以后硬盘扩展的话，可以把几几年的图片放置到另外一个硬盘，然后pad端响应升级（根据时间加上图片的路径）',
+  `image` varchar(255) DEFAULT NULL COMMENT '异常图片名称（包含路径）,以后这部分数据是最大的，首先pad上传时候时候需要压缩，以后硬盘扩展的话，可以把几几年的图片放置到另外一个硬盘，然后pad端响应升级（根据时间加上图片的路径）',
   `create_time` datetime NOT NULL COMMENT '上传异常图片的时间',
   PRIMARY KEY (`id`),
   KEY `fk_ai_abnormal_record_id` (`abnormal_record_id`),
   CONSTRAINT `fk_ai_abnormal_record_id` FOREIGN KEY (`abnormal_record_id`) REFERENCES `abnormal_record` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of abnormal_image
 -- ----------------------------
-INSERT INTO `abnormal_image` VALUES ('1', '1', 'img1111', '2017-12-05 13:34:56');
+INSERT INTO `abnormal_image` VALUES ('1', '1', 'img111-byUpdate0105', '2017-12-05 13:34:56');
 INSERT INTO `abnormal_image` VALUES ('2', '2', 'img22-by-update', '2017-12-05 13:35:42');
 INSERT INTO `abnormal_image` VALUES ('3', '2', 'img333', '2017-12-05 13:35:42');
 INSERT INTO `abnormal_image` VALUES ('4', '2', 'img444-by-add', '2017-12-05 13:35:42');
 INSERT INTO `abnormal_image` VALUES ('5', '3', 'img555', '2017-12-05 14:45:26');
 INSERT INTO `abnormal_image` VALUES ('6', '4', 'img666', '2017-12-05 14:45:42');
-INSERT INTO `abnormal_image` VALUES ('7', '5', 'img7777', '2017-12-10 10:38:58');
+INSERT INTO `abnormal_image` VALUES ('7', '5', 'imgByupdateAbnormalRecordDetail', '2017-12-10 10:38:58');
 INSERT INTO `abnormal_image` VALUES ('8', '6', 'img888', '2017-12-10 11:05:48');
+INSERT INTO `abnormal_image` VALUES ('47', '2', 'img111-byUpdate0110-3', '2017-12-05 13:34:56');
+INSERT INTO `abnormal_image` VALUES ('50', '2', 'machineIDaaa111_Abnormal_2018-01-10-14-43-01.txt', '2017-12-05 13:34:56');
+INSERT INTO `abnormal_image` VALUES ('51', '2', 'machineIDaaa111_Abnormal_2018-01-10-15-03-43.txt', '2017-12-05 13:34:56');
+INSERT INTO `abnormal_image` VALUES ('52', '2', 'D:/images/machineIDaaa111_Abnormal_2018-01-10-15-48-22.png', '2017-12-05 13:34:56');
+INSERT INTO `abnormal_image` VALUES ('53', '2', 'D:/images/machineIDaaa111_Abnormal_2018-01-10-15-50-51.png', '2017-12-05 13:34:56');
+INSERT INTO `abnormal_image` VALUES ('54', '2', 'D:/images/machineIDaaa111_Abnormal_2018-01-10-15-59-53.png', '2017-12-05 13:34:56');
 
 -- ----------------------------
 -- Table structure for `abnormal_record`
@@ -92,9 +98,9 @@ INSERT INTO `abnormal_record` VALUES ('1', '1', '3', '4', 'cmtAaa', 'solutionAAA
 INSERT INTO `abnormal_record` VALUES ('2', '2', '4', '5', 'cmt111-by-update', 'solu3333-by-update', '7', '2017-12-26 15:52:00', null);
 INSERT INTO `abnormal_record` VALUES ('3', '1', '3', '4', 'cmtAaa-byUpdate1226', 'solutionAAA', '6', '2017-12-26 15:51:56', null);
 INSERT INTO `abnormal_record` VALUES ('4', '2', '4', '5', 'cmt111-by-Add', 'solu3333-by_add', '7', '2017-12-26 15:52:07', null);
-INSERT INTO `abnormal_record` VALUES ('5', '5', '1', '5', 'cmt5555', 'solustion555', '5', '2017-12-26 15:52:12', null);
+INSERT INTO `abnormal_record` VALUES ('5', '5', '1', '5', 'cmtByUpdateAbnormalRecordDetail', 'solustion555ByupdateAbnormalRecordDetail', '5', '2017-12-26 15:52:12', null);
 INSERT INTO `abnormal_record` VALUES ('6', '1', '1', '11', 'cmt6666', 'solution666', '12', '2017-12-26 15:52:16', null);
-INSERT INTO `abnormal_record` VALUES ('7', '1', '3', '4', 'cmtAaabyAdd1226', 'solutionAAA', '6', '2017-12-26 15:51:56', null);
+INSERT INTO `abnormal_record` VALUES ('7', '1', '7', '4', 'cmtAaabyAdd1226', 'solutionAAA', '6', '2017-12-26 15:51:56', null);
 
 -- ----------------------------
 -- Table structure for `contract`
@@ -207,7 +213,9 @@ CREATE TABLE `machine` (
 -- ----------------------------
 -- Records of machine
 -- ----------------------------
-INSERT INTO `machine` VALUES ('16', '22', 'ABP112914371', null, null, '0', '1', '2017-12-26 11:29:14', '2017-12-27 01:11:28', null, null);
+INSERT INTO `machine` VALUES ('1', '1', '1', '', 'updateAbnormalRecordDetail', '1', '4', '2017-12-10 10:38:58', '2018-01-03 16:39:30', null, '2018-01-03 16:39:36');
+INSERT INTO `machine` VALUES ('2', '2', 'machineIDaaa111', null, 'loc222', '1', '2', '2018-01-10 10:24:25', '2018-01-10 10:59:50', '2018-01-10 11:00:07', '2018-01-17 11:00:10');
+INSERT INTO `machine` VALUES ('16', '22', 'ABP112914371', '', 'byUpdate0103', '0', '1', '2017-12-26 11:29:14', '2017-12-27 01:11:28', null, null);
 INSERT INTO `machine` VALUES ('17', '22', 'ABP112914752', null, null, '0', '1', '2017-12-26 11:29:14', '2017-12-27 01:11:28', null, null);
 INSERT INTO `machine` VALUES ('18', '22', 'ABP112914563', null, null, '0', '1', '2017-12-26 11:29:14', '2017-12-27 01:11:28', null, null);
 
@@ -678,7 +686,7 @@ CREATE TABLE `task_quality_record` (
 -- ----------------------------
 -- Records of task_quality_record
 -- ----------------------------
-INSERT INTO `task_quality_record` VALUES ('1', '1', 'QAer111', '1', 'passOK', '2017-12-05 13:23:02');
+INSERT INTO `task_quality_record` VALUES ('1', '1', 'QAer111', '1', 'passOK-by-updateTaskQualityRecordDetail0103', '2017-12-05 13:25:31');
 INSERT INTO `task_quality_record` VALUES ('2', '7', 'CheckerBob', '0', 'NoPass', '2017-12-05 13:23:57');
 INSERT INTO `task_quality_record` VALUES ('3', '3', 'QAer333', '1', 'Passed', '2017-12-05 13:24:42');
 INSERT INTO `task_quality_record` VALUES ('4', '1', 'QA444', '2', 'cmtOKK444', '2017-12-10 14:05:44');
@@ -707,7 +715,7 @@ CREATE TABLE `task_record` (
 -- ----------------------------
 -- Records of task_record
 -- ----------------------------
-INSERT INTO `task_record` VALUES ('1', 'tskAbc', '1', '111', 'bob111', 'worder1,w2,w3,wworder4', '1', '2017-11-30 11:04:40', '2017-12-08 11:04:43');
+INSERT INTO `task_record` VALUES ('1', 'tskAbc', '1', '111', 'bobByupdateAbnormalRecordDetail', 'worder1,w2,w3,wworder4', '1', '2017-11-30 11:04:40', '2017-12-08 11:04:43');
 INSERT INTO `task_record` VALUES ('2', 'tskName222Have', '4', '32', 'zhang222-by-update', 'worder1,r,2,w3,worder22-by-update', '2', '2017-11-30 11:05:43', '2017-11-30 11:05:48');
 INSERT INTO `task_record` VALUES ('3', 'tsk111', '1', '44', 'leader33', 'worker11,woker33_of_tsk3', '3', '2017-11-30 11:08:54', '2017-11-30 22:08:58');
 INSERT INTO `task_record` VALUES ('4', 'tsk111', '2', '127', 'lead33', 'wk111', '2', '2017-12-05 11:42:47', '2017-12-05 11:42:50');

@@ -10,7 +10,7 @@ import com.eservice.api.service.impl.AbnormalImageServiceImpl;
 import com.eservice.api.service.impl.MachineServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -34,9 +35,11 @@ public class AbnormalImageController {
     private CommonService commonService;
     @Resource
     private MachineServiceImpl machineService;
+    @Value("${images_saved_dir}")
+    private String imagesSavedDir;
 
     /**
-     * 增加abnormalImage时，也保存了图片，目前放在工程跟目录下。
+     * 增加abnormalImage时，也保存了图片。
      * @param abnormalImage
      * @param file1
      * @return
@@ -44,14 +47,17 @@ public class AbnormalImageController {
     @PostMapping("/add")
     public Result add(String abnormalImage,MultipartFile file1) {
         AbnormalImage abnormalImage1 = JSON.parseObject(abnormalImage,AbnormalImage.class);
-        ClassPathResource resource = new ClassPathResource("");
-        String path = resource.getPath();
         Integer abnormalRecordId = abnormalImage1.getAbnormalRecordId();
+        File dir = new File(imagesSavedDir);
+        if(!dir.exists()){
+            dir.mkdir();
+        }
         String machineID = searchMachineByAbnormalRecordId(abnormalRecordId);
-        String result = commonService.saveFile(path,file1,machineID, Constant.ABNORMAL_IMAGE);
-        if (result == null){
+        String resultPath = commonService.saveFile(imagesSavedDir,file1,machineID, Constant.ABNORMAL_IMAGE);
+        if (resultPath == null){
             return ResultGenerator.genFailResult("failed to save file, no records saved");
         } else {
+            abnormalImage1.setImage(resultPath);
             abnormalImageService.save(abnormalImage1);
         }
 
