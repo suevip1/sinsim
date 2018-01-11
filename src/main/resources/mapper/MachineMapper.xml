@@ -28,4 +28,14 @@
     join machine m on m.id = pr.machine_id
     where ar.id = #{abnormalRecordId}
   </select>
+  <select id="searchMachineByTaskQualityRecordId" resultMap="BaseResultMap">
+     select m.*, count(distinct m.id)
+     from quality_record_image qri
+     join task_quality_record tqr on tqr.id = qri.task_quality_record_id
+	 join task_record tr on tr.id = tqr.task_record_id
+	 join process_record pr on pr.id = tr.process_record_id
+	 join machine m on m.id = pr.machine_id
+     where qri.task_quality_record_id = #{taskQualityRecordId}
+  </select>
+
 </mapper>

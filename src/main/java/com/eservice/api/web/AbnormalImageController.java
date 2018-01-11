@@ -35,7 +35,7 @@ public class AbnormalImageController {
     private CommonService commonService;
     @Resource
     private MachineServiceImpl machineService;
-    @Value("${images_saved_dir}")
+    @Value("${abnormal_images_saved_dir}")
     private String imagesSavedDir;
 
     /**
@@ -53,6 +53,9 @@ public class AbnormalImageController {
             dir.mkdir();
         }
         String machineID = searchMachineByAbnormalRecordId(abnormalRecordId);
+        if (machineID == null){
+            return ResultGenerator.genFailResult("Error: no machine found by the abnormalRecordId, no records saved");
+        }
         String resultPath = commonService.saveFile(imagesSavedDir,file1,machineID, Constant.ABNORMAL_IMAGE);
         if (resultPath == null){
             return ResultGenerator.genFailResult("failed to save file, no records saved");
@@ -73,7 +76,11 @@ public class AbnormalImageController {
     @PostMapping("/searchMachineByAbnormalRecordId")
     public String searchMachineByAbnormalRecordId(@RequestParam Integer abnormalRecordId ) {
         Machine machine = machineService.searchMachineByAbnormalRecordId(abnormalRecordId);
-        return machine.getMachineId();
+        if(machine != null) {
+            return machine.getMachineId();
+        }else {
+            return null;
+        }
     }
 
     @PostMapping("/delete")

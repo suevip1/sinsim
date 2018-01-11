@@ -2,16 +2,23 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.quality_record_image.QualityRecordImage;
 import com.eservice.api.service.QualityRecordImageService;
+import com.eservice.api.service.common.CommonService;
+import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.impl.MachineServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -24,14 +31,48 @@ import java.util.List;
 public class QualityRecordImageController {
     @Resource
     private QualityRecordImageService qualityRecordImageService;
+    @Resource
+    private CommonService commonService;
+    @Resource
+    private MachineServiceImpl machineService;
+    @Value("${quality_images_saved_dir}")
+    private String imagesSavedDir;
 
     @PostMapping("/add")
-    public Result add(String qualityRecordImage) {
+    public Result add(String qualityRecordImage,MultipartFile file1) {
         QualityRecordImage qualityRecordImage1 = JSON.parseObject(qualityRecordImage, QualityRecordImage.class);
-        qualityRecordImageService.save(qualityRecordImage1);
+        Integer taskQualityRecordId = qualityRecordImage1.getTaskQualityRecordId();
+        File dir = new File(imagesSavedDir);
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+        String machineID = searchMachineByTaskQualityRecordId(taskQualityRecordId);
+        if(null == machineID){
+            return ResultGenerator.genFailResult("Error: no machine found by the taskQualityRecordId, no records saved");
+        }
+        String resultPath = commonService.saveFile(imagesSavedDir,file1,machineID, Constant.QUALITY_IMAGE);
+        if(null == resultPath){
+            return ResultGenerator.genFailResult("failed to save quality file, no records saved");
+        } else {
+            qualityRecordImage1.setImage(resultPath);
+            qualityRecordImageService.save(qualityRecordImage1);
+        }
         return ResultGenerator.genSuccessResult();
     }
-
+    /**
+     *根据taskQualityRecordId查找machineID
+     * @param taskQualityRecordId
+     * @return
+     */
+    @PostMapping("/searchMachineByTaskQualityRecordId")
+    public String searchMachineByTaskQualityRecordId(@RequestParam Integer taskQualityRecordId ) {
+        Machine machine = machineService.searchMachineByTaskQualityRecordId(taskQualityRecordId);
+        if(machine != null) {
+            return machine.getMachineId();
+        }else {
+            return null;
+        }
+    }
     @PostMapping("/delete")
     public Result delete(@RequestParam Integer id) {
         qualityRecordImageService.deleteById(id);

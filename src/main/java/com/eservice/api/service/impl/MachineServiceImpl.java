@@ -23,4 +23,7 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
     public Machine searchMachineByAbnormalRecordId( Integer abnormalRecordId ){
         return machineMapper.searchMachineByAbnormalRecordId(abnormalRecordId);
     }
+    public Machine searchMachineByTaskQualityRecordId( Integer taskQualityRecordId ){
+        return machineMapper.searchMachineByTaskQualityRecordId(taskQualityRecordId);
+    }
 }
