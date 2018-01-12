@@ -7,6 +7,7 @@ import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
+import com.eservice.api.service.ContractService;
 import com.eservice.api.service.ContractSignService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
@@ -87,9 +88,17 @@ public class ContractSignController {
     }
 
     @PostMapping("/list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size, @RequestParam(defaultValue = "0") Integer contractId) {
         PageHelper.startPage(page, size);
-        List<ContractSign> list = contractSignService.findAll();
+        List<ContractSign> list;
+        if(contractId == 0) {
+            list = contractSignService.findAll();
+        }else {
+            //获取摸个合同号对应的全部签核记录
+            Condition tempCondition = new Condition(ContractSign.class);
+            tempCondition.createCriteria().andCondition("contract_id = ", contractId);
+            list = contractSignService.findByCondition(tempCondition);
+        }
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

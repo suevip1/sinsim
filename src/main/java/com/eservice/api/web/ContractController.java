@@ -387,7 +387,7 @@ public class ContractController {
         if(contractId == null) {
             ResultGenerator.genFailResult("合同ID为空！");
         }else {
-            ContractSign contractSign = contractSignService.findBy("contractId", contractId);
+            ContractSign contractSign = contractSignService.detailByContractId(String.valueOf(contractId));
             if(contractSign == null) {
                 return ResultGenerator.genFailResult("根据合同号获取合同签核信息失败！");
             }else {
