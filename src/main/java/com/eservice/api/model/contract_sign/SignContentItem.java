@@ -36,6 +36,14 @@ public class SignContentItem {
     private String signType;
 
     /**
+     * 签核结果
+     * "0" --> "初始化"
+     * "1" --> "同意"
+     * "2" --> "拒绝"
+     */
+    private Integer result;
+
+    /**
      * 签核时间
      */
     private Date date;
@@ -79,6 +87,16 @@ public class SignContentItem {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public Integer getResult() {
+        return result;
+    }
+
+    public void setResult(Integer result) {
+        this.result = result;
+    }
+
     public Date getDate(){ return this.date; }
+
     public void setDate(Date date) {this.date = date; }
 }

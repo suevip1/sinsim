@@ -33,6 +33,12 @@ public class Contract {
     private String mark;
 
     /**
+     * 合同状态
+     */
+    @Column(name="status")
+    private Byte status;
+
+    /**
      * 合同支付方式
      */
     @Column(name="pay_method")
@@ -140,6 +146,14 @@ public class Contract {
 
     public void setContractShipDate(Date contractShipDate) {
         this.contractShipDate = contractShipDate;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
     }
 
     /**

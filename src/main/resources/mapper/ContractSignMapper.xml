@@ -8,7 +8,6 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="contract_id" jdbcType="INTEGER" property="contractId" />
     <result column="current_step" jdbcType="VARCHAR" property="currentStep" />
-    <result column="status" jdbcType="TINYINT" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
@@ -17,6 +16,6 @@
 
   <!--默认只有status小于4的合同审核记录时是有效的-->
   <select id="detailByContractId" resultMap="BaseResultMap">
-    SELECT * FROM contract_sign WHERE contract_id = ${contractId} AND status &lt; 3 ORDER BY create_time DESC LIMIT 1
+    SELECT * FROM contract_sign WHERE contract_id = ${contractId} ORDER BY create_time DESC LIMIT 1
   </select>
 </mapper>

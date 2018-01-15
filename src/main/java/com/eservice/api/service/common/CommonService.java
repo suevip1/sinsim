@@ -45,7 +45,7 @@ public class CommonService {
     public String getCurrentSignStep(Integer contractId) {
         String result = null;
 
-        //通过合同号找到有效的订单签核记录
+        //TODO:通过合同号找到有效的订单签核记录
         List<OrderSign> orderSignList = orderSignService.getOrderSignListByContractId(contractId);
         //找到有效的合同签核记录
         ContractSign contractSign1 = contractSignService.detailByContractId(String.valueOf(contractId));

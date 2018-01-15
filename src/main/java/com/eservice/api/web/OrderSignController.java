@@ -73,7 +73,8 @@ public class OrderSignController {
                 throw new RuntimeException();
             }else if(step.equals(Constant.SIGN_FINISHED)) {
                 //表示签核已经完成
-                contractSign.setStatus(Byte.parseByte("2"));
+                //TODO:
+//                contractSign.setStatus(Byte.parseByte("2"));
                 //根据合同中的需求单进行机器添加, 在需求单签核、合同签核都加上是因为最后一步审核可能是需求单，也可能是合同
                 commonService.createMachineByContractId(contractSign.getContractId());
             }

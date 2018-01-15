@@ -114,7 +114,6 @@
     <association javaType="com.eservice.api.model.order_sign.OrderSign" property="orderSign">
       <id column="order_sign_id" property="id" />
       <result column="order_id" jdbcType="INTEGER" property="orderId" />
-      <result column="os_status" jdbcType="TINYINT" property="status" />
       <result column="os_create_time" jdbcType="TIMESTAMP" property="createTime" />
       <result column="os_update_time" jdbcType="TIMESTAMP" property="updateTime" />
       <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
@@ -141,7 +140,7 @@
   </select>
 
   <select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*,od.id order_detail_id, os.id order_sign_id, os.order_id, os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId
+    select mo.*, od.*,od.id order_detail_id, os.id order_sign_id, os.order_id, os.sign_content, os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId
     from machine_order mo
     LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
@@ -162,7 +161,7 @@
       and con.contract_num like CONCAT('%','${contract_num}','%' )
     </if>
     <if test="status != null and status != ''">
-      and mo.id=${status}
+      and mo.status=${status}
     </if>
     <if test="sellman != null and sellman != '' ">
       and mo.sellman like CONCAT('%','${sellman}','%' )
@@ -181,11 +180,12 @@
     <if test="machine_name!=null and machine_name != '' ">
       and mt.name like CONCAT('%','${machine_name}','%' )
     </if>
+    ORDER By mo.create_time, mo.order_num
   </select>
 
 
   <select id="selectOrder" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*, od.id order_detail_id,os.id order_sign_id, os.order_id,os.sign_content, os.status os_status,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId
+    select mo.*, od.*, od.id order_detail_id,os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId
     from machine_order mo
     LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
@@ -206,7 +206,7 @@
       and con.contract_num = CONCAT('%','${contract_num}','%' )
     </if>
     <if test="status != null and status != ''">
-      and mo.id=${status}
+      and mo.status=${status}
     </if>
     <if test="sellman != null and sellman != '' ">
       and mo.sellman = CONCAT('%','${sellman}','%' )
@@ -225,6 +225,7 @@
     <if test="machine_name!=null and machine_name != '' ">
       and mt.name = CONCAT('%','${machine_name}','%' )
     </if>
+    ORDER By mo.create_time, mo.order_num
   </select>
 
 

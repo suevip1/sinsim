@@ -16,11 +16,6 @@ public class OrderSign {
     private Integer orderId;
 
     /**
-     * 签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，该条记录在驳回后停止修改，会新创建签核记录
-     */
-    private Byte status;
-
-    /**
      * 签核流程开始时间
      */
     @Column(name = "create_time")
@@ -72,24 +67,6 @@ public class OrderSign {
      */
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
-    }
-
-    /**
-     * 获取签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，该条记录在驳回后停止修改，会新创建签核记录
-     *
-     * @return status - 签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，该条记录在驳回后停止修改，会新创建签核记录
-     */
-    public Byte getStatus() {
-        return status;
-    }
-
-    /**
-     * 设置签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，该条记录在驳回后停止修改，会新创建签核记录
-     *
-     * @param status 签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，该条记录在驳回后停止修改，会新创建签核记录
-     */
-    public void setStatus(Byte status) {
-        this.status = status;
     }
 
     /**

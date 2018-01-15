@@ -10,6 +10,7 @@
     <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
     <result column="sellman" jdbcType="VARCHAR" property="sellman" />
     <result column="pay_method" jdbcType="VARCHAR" property="payMethod" />
+    <result column="status" jdbcType="TINYINT" property="status" />
     <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
     <result column="mark" jdbcType="LONGVARCHAR" property="mark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -32,7 +33,7 @@
   </resultMap>
 
   <select id="selectContracts" resultMap="ContractDetailMap">
-    select cs.status, cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
+    select cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
     LEFT JOIN contract c ON c.id = cs.contract_id
     LEFT JOIN machine_order mo ON mo.contract_id = c.id
     WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
@@ -41,9 +42,9 @@
 
     <insert id="saveAndGetID"   useGeneratedKeys="true"  parameterType="com.eservice.api.model.contract.Contract" keyProperty="id">
         insert into
-        contract(contract_num, customer_name, sellman, contract_ship_date, pay_method, mark, create_time)
+        contract(contract_num, customer_name, sellman, status, contract_ship_date, pay_method, mark, create_time)
         values(
-        #{contractNum},#{customerName},#{sellman},#{contractShipDate},#{payMethod},#{mark},#{createTime})
+        #{contractNum},#{customerName},#{sellman},#{status},#{contractShipDate},#{payMethod},#{mark},#{createTime})
     </insert>
 
 </mapper>

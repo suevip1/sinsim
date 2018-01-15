@@ -22,12 +22,6 @@ public class ContractSign {
     private String currentStep;
 
     /**
-     * 签核状态：“0”==>初始化状态，填单员已编辑未提交审核；“1”==>签核中， “2”==>签核完成，“3”==>改单，“4”==>拆单，“5”==>驳回，“6”==>取消；
-     * 该条记录在驳回后停止修改，会新创建签核记录
-     */
-    private Byte status;
-
-    /**
      * 创建时间
      */
     @Column(name = "create_time")
@@ -97,24 +91,6 @@ public class ContractSign {
      */
     public void setCurrentStep(String currentStep) {
         this.currentStep = currentStep;
-    }
-
-    /**
-     * 获取签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，“4”==>改单，“5”==>拆单，该条记录在驳回后停止修改，会新创建签核记录
-     *
-     * @return status - 签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，“4”==>改单，“5”==>拆单，该条记录在驳回后停止修改，会新创建签核记录
-     */
-    public Byte getStatus() {
-        return status;
-    }
-
-    /**
-     * 设置签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，“4”==>改单，“5”==>拆单，该条记录在驳回后停止修改，会新创建签核记录
-     *
-     * @param status 签核状态：“1”==>签核中， “2”==>签核完成， “3”==>驳回，“4”==>改单，“5”==>拆单，该条记录在驳回后停止修改，会新创建签核记录
-     */
-    public void setStatus(Byte status) {
-        this.status = status;
     }
 
     /**

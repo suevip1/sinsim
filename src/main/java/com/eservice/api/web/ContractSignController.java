@@ -66,7 +66,8 @@ public class ContractSignController {
             throw new RuntimeException();
         }else if(step.equals(Constant.SIGN_FINISHED)) {
             //表示签核已经完成
-            contractSign1.setStatus(Byte.parseByte("2"));
+            //TODO:
+//            contractSign1.setStatus(Byte.parseByte("2"));
             //根据合同中的需求单进行机器添加
             commonService.createMachineByContractId(contractSign1.getContractId());
         }

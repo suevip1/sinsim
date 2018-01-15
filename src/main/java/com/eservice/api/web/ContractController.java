@@ -97,7 +97,6 @@ public class ContractController {
         contractSignObj.setSignContent(contractSign);
         ///新增合同签核记录时，插入空值
         contractSignObj.setCurrentStep("");
-        contractSignObj.setStatus(Byte.parseByte("0"));
         contractSignService.save(contractSignObj);
 
         //插入需求单记录
@@ -109,7 +108,7 @@ public class ContractController {
                 orderDetailService.saveAndGetID(temp);
                 orderTemp.setOrderDetailId(temp.getId());
                 orderTemp.setContractId(contractId);
-                orderTemp.setStatus(Byte.parseByte("0"));
+                orderTemp.setStatus(Constant.ORDER_INITIAL);
                 machineOrderService.saveAndGetID(orderTemp);
 
                 //初始化需求单审核记录
@@ -118,7 +117,6 @@ public class ContractController {
                 orderSign.setSignContent(orderSignData.getSignContent());
                 orderSign.setOrderId(orderTemp.getId());
                 orderSign.setCreateTime(new Date());
-                orderSign.setStatus(Byte.parseByte("0"));
                 orderSignService.save(orderSign);
             }
         }else {
@@ -180,7 +178,7 @@ public class ContractController {
                 orderDetailService.saveAndGetID(temp);
                 orderTemp.setOrderDetailId(temp.getId());
                 orderTemp.setContractId(contract1.getId());
-                orderTemp.setStatus(Byte.parseByte("0"));
+                orderTemp.setStatus(Constant.ORDER_INITIAL);
                 machineOrderService.saveAndGetID(orderTemp);
 
                 //初始化需求单审核记录
@@ -189,7 +187,6 @@ public class ContractController {
                 orderSign.setSignContent(orderSignData.getSignContent());
                 orderSign.setOrderId(orderTemp.getId());
                 orderSign.setCreateTime(new Date());
-                orderSign.setStatus(Byte.parseByte("0"));
                 orderSignService.save(orderSign);
             }
         }
@@ -214,13 +211,10 @@ public class ContractController {
             return ResultGenerator.genFailResult("Contract对象JSON解析失败！");
         }
 
-        Integer contractId = contract1.getId();
-        ///获取改单前最新的签核记录，并设置其为改单状态
-        ContractSign originalContractSign = contractSignService.detailByContractId(String.valueOf(contractId));
-        originalContractSign.setStatus(Byte.parseByte("3"));
-        originalContractSign.setUpdateTime(new Date());
-        contractSignService.update(originalContractSign);
 
+        //更改合同的状态为“改单”
+        contract1.setStatus(Constant.CONTRACT_CHANGED);
+        Integer contractId = contract1.getId();
         ///插入新的contract审核记录
         ContractSign contractSignObj = new ContractSign();
         contractSignObj.setContractId(contractId);
@@ -228,7 +222,6 @@ public class ContractController {
         contractSignObj.setSignContent(contractSign);
         ///插入空值
         contractSignObj.setCurrentStep("");
-        contractSignObj.setStatus(Byte.parseByte("0"));
         contractSignService.save(contractSignObj);
 
         //新增的改单处理
@@ -241,7 +234,7 @@ public class ContractController {
                 orderDetailService.saveAndGetID(temp);
                 machineOrder.setOrderDetailId(temp.getId());
                 machineOrder.setContractId(contract1.getId());
-                machineOrder.setStatus(Byte.parseByte("0"));
+                machineOrder.setStatus(Constant.ORDER_INITIAL);
                 machineOrderService.saveAndGetID(machineOrder);
 
                 //初始化需求单审核记录
@@ -250,7 +243,6 @@ public class ContractController {
                 orderSign.setSignContent(orderSignData.getSignContent());
                 orderSign.setOrderId(machineOrder.getId());
                 orderSign.setCreateTime(new Date());
-                orderSign.setStatus(Byte.parseByte("0"));
                 orderSignService.save(orderSign);
 
                 //改单记录(插入或者修改)
@@ -268,14 +260,9 @@ public class ContractController {
         for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
             //设置被改单的需求单状态(machine_order/order_sign)
-            if (machineOrder.getStatus() == Constant.ORDER_CHANGED) {
+            if (machineOrder.getStatus().equals(Constant.ORDER_CHANGED)) {
+                //更新了被改的需求单为“改单”，持久化至数据库
                 machineOrderService.update(machineOrder);
-                OrderSign orderSign = orderItem.getOrderSign();
-                if (orderSign != null) {
-                    orderSign.setUpdateTime(new Date());
-                    orderSign.setStatus(Byte.parseByte("3"));
-                    orderSignService.update(orderSign);
-                }
                 //获取被改单对应机器，设置改单状态(machine)
                 Condition tempCondition = new Condition(Machine.class);
                 tempCondition.createCriteria().andCondition("order_id = ", machineOrder.getId());
@@ -293,7 +280,7 @@ public class ContractController {
                     if (newOrder.getMachineNum() >= machineOrder.getMachineNum()) {
                         for (Machine machine : machineList) {
                             ///初始化状态，直接将机器的上的需求单号直接绑定到新需求单
-                            if (machine.getStatus() == Constant.MACHINE_INITIAL) {
+                            if (machine.getStatus().equals(Constant.MACHINE_INITIAL)) {
                                 machine.setOrderId(newOrder.getId());
                             } else {
                                 machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
@@ -307,11 +294,11 @@ public class ContractController {
                         List<Machine> originalOtherMachine = new ArrayList<>();
                         for (Machine machine : machineList) {
                             ///查找计划中、生产中、生产完成的机器
-                            if (machine.getStatus() == Constant.MACHINE_PLANING
-                                    || machine.getStatus() == Constant.MACHINE_INSTALLING
-                                    || machine.getStatus() == Constant.MACHINE_INSTALLED) {
+                            if (machine.getStatus().equals(Constant.MACHINE_PLANING)
+                                    || machine.getStatus().equals( Constant.MACHINE_INSTALLING)
+                                    || machine.getStatus().equals(Constant.MACHINE_INSTALLED)) {
                                 originalInitialedMachine.add(machine);
-                            } else if (machine.getStatus() == Constant.MACHINE_INITIAL) {
+                            } else if (machine.getStatus().equals(Constant.MACHINE_INITIAL)) {
                                 originalInitialMachine.add(machine);
                             } else {
                                 originalOtherMachine.add(machine);
@@ -383,6 +370,7 @@ public class ContractController {
     }
 
     @PostMapping("/startSign")
+    @Transactional(rollbackFor = Exception.class)
     public Result startSign(@RequestParam Integer contractId) {
         if(contractId == null) {
             ResultGenerator.genFailResult("合同ID为空！");
@@ -391,9 +379,17 @@ public class ContractController {
             if(contractSign == null) {
                 return ResultGenerator.genFailResult("根据合同号获取合同签核信息失败！");
             }else {
+                //更新合同状态为“签核中”
+                Contract contract = contractService.findById(contractId);
+                if(contract == null) {
+                    return ResultGenerator.genFailResult("合同编号ID无效");
+                }else {
+                    contract.setStatus(Constant.CONTRACT_CHECKING);
+                    contractService.update(contract);
+                }
+
+                //更新签核记录
                 contractSign.setUpdateTime(new Date());
-                //开始签核流程
-                contractSign.setStatus(Byte.parseByte("1"));
                 String currentStep =  commonService.getCurrentSignStep(contractId);
                 if(currentStep == null) {
                     return ResultGenerator.genFailResult("获取当前签核steps失败！");
