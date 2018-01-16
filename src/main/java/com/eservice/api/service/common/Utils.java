@@ -33,7 +33,7 @@ public class Utils {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         //一共15位订单号,同一秒内重复概率1/10000000,26年一次的循环
-        builder.append(year[(calendar.get(Calendar.YEAR)- 2017)%26]);
+        builder.append(year[(calendar.get(Calendar.YEAR)- 2018)%26]);
         builder.append(month[(calendar.get(Calendar.MONTH))]);
         builder.append(date[calendar.get(Calendar.DATE) -1]);
         //24小时制

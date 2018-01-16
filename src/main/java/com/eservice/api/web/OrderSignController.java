@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.service.ContractService;
@@ -10,6 +11,7 @@ import com.eservice.api.service.ContractSignService;
 import com.eservice.api.service.OrderSignService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.impl.ContractServiceImpl;
 import com.eservice.api.service.impl.ContractSignServiceImpl;
 import com.eservice.api.service.impl.OrderSignServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -38,6 +40,8 @@ public class OrderSignController {
     private CommonService commonService;
     @Resource
     private ContractSignServiceImpl contractSignService;
+    @Resource
+    private ContractServiceImpl contractService;
 
     @PostMapping("/add")
     public Result add(String orderSign) {
@@ -73,8 +77,8 @@ public class OrderSignController {
                 throw new RuntimeException();
             }else if(step.equals(Constant.SIGN_FINISHED)) {
                 //表示签核已经完成
-                //TODO:
-//                contractSign.setStatus(Byte.parseByte("2"));
+                Contract contract = contractService.findById(contractId);
+                contract.setStatus(Constant.CONTRACT_CHECKING_FINISHED);
                 //根据合同中的需求单进行机器添加, 在需求单签核、合同签核都加上是因为最后一步审核可能是需求单，也可能是合同
                 commonService.createMachineByContractId(contractSign.getContractId());
             }

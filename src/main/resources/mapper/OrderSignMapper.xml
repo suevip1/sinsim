@@ -12,11 +12,12 @@
     <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
   </resultMap>
 
-  <select id="getOrderSignListByContractId" resultMap="BaseResultMap">
+  <!--获取某个合同下，有效的需求单签核记录；当前"3"表示拆单，“6”表示取消，这些订单签核记录作为判断当前签核流程的基础内容-->
+  <select id="getValidOrderSigns" resultMap="BaseResultMap">
     SELECT os.* from order_sign os
     JOIN machine_order mo on mo.id = os.order_id
     JOIN contract c on c.id = mo.contract_id
-    WHERE c.id =  #{contractId}
+    WHERE c.id =  #{contractId} AND mo.status != 3 AND mo.status != 6
   </select>
   
   <select id="getOrderSignListByOrderId" resultMap="BaseResultMap">

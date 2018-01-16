@@ -12,6 +12,7 @@ import com.eservice.api.service.ContractSignService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.common.Utils;
+import com.eservice.api.service.impl.ContractServiceImpl;
 import com.eservice.api.service.impl.ContractSignServiceImpl;
 import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.eservice.api.service.impl.MachineServiceImpl;
@@ -38,6 +39,8 @@ import java.util.List;
 public class ContractSignController {
     @Resource
     private ContractSignServiceImpl contractSignService;
+    @Resource
+    private ContractServiceImpl contractService;
 
     @Resource
     private CommonService commonService;
@@ -66,8 +69,9 @@ public class ContractSignController {
             throw new RuntimeException();
         }else if(step.equals(Constant.SIGN_FINISHED)) {
             //表示签核已经完成
-            //TODO:
-//            contractSign1.setStatus(Byte.parseByte("2"));
+            Contract  contract = contractService.findById(contractSign1.getContractId());
+            contract.setStatus(Constant.CONTRACT_CHECKING_FINISHED);
+            contractService.update(contract);
             //根据合同中的需求单进行机器添加
             commonService.createMachineByContractId(contractSign1.getContractId());
         }

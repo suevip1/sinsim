@@ -46,7 +46,7 @@ public class CommonService {
         String result = null;
 
         //TODO:通过合同号找到有效的订单签核记录
-        List<OrderSign> orderSignList = orderSignService.getOrderSignListByContractId(contractId);
+        List<OrderSign> orderSignList = orderSignService.getValidOrderSigns(contractId);
         //找到有效的合同签核记录
         ContractSign contractSign1 = contractSignService.detailByContractId(String.valueOf(contractId));
         HashMap<Integer, List<SignContentItem>> signContentSortByNumberMap = new HashMap<>();
