@@ -30,7 +30,7 @@
       <result column="process_record_id" jdbcType="INTEGER" property="processRecordId" />
       <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
       <result column="leader" jdbcType="VARCHAR" property="leader" />
-      <result column="status" jdbcType="TINYINT" property="status" />
+      <result column="taskRecord_status" jdbcType="TINYINT" property="status" />
       <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
       <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
       <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
@@ -51,7 +51,7 @@
       <result column="machine_id" jdbcType="VARCHAR" property="machineId" />
       <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
       <result column="location" jdbcType="VARCHAR" property="location" />
-      <result column="status" jdbcType="TINYINT" property="status" />
+      <result column="machine_status" jdbcType="TINYINT" property="status" />
       <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
       <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
       <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime" />
@@ -61,12 +61,12 @@
 
   <select id="selectAbnormalRecordDetails" resultMap="AbnormalRecordDetailResultMap">
     SELECT
-    tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status, tr.begin_time, tr.end_time,
+    tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
     a.id abnormal_id, a.abnormal_name,
     ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time,
     ar.*,
     pr.*,
-    m.*
+    m.status machine_status, m.*
     FROM abnormal_record ar
     JOIN task_record tr on tr.id = ar.task_record_id
     JOIN abnormal a on a.id = ar.abnormal_type

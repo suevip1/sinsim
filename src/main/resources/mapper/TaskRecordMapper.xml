@@ -49,7 +49,7 @@
     <result column="process_record_id" jdbcType="INTEGER" property="processRecordId" />
     <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
     <result column="leader" jdbcType="VARCHAR" property="leader" />
-    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="taskRecord_status" jdbcType="TINYINT" property="status" />
     <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
@@ -68,7 +68,8 @@
     <result column="machine_id" jdbcType="VARCHAR" property="machineId" />
     <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
     <result column="location" jdbcType="VARCHAR" property="location" />
-    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="machine_status" jdbcType="TINYINT" property="status" />
+    <result column="machine_type" jdbcType="INTEGER" property="machineType" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime" />
@@ -83,7 +84,7 @@
       <result column="customer" jdbcType="VARCHAR" property="customer" />
       <result column="country" jdbcType="VARCHAR" property="country" />
       <result column="brand" jdbcType="VARCHAR" property="brand" />
-      <result column="machine_type" jdbcType="INTEGER" property="machineType" />
+      <result column="mo_machine_type" jdbcType="INTEGER" property="machineType" />
       <result column="needle_num" jdbcType="INTEGER" property="needleNum" />
       <result column="head_num" jdbcType="INTEGER" property="headNum" />
       <result column="head_distance" jdbcType="INTEGER" property="headDistance" />
@@ -95,7 +96,7 @@
       <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
       <result column="plan_ship_date" jdbcType="DATE" property="planShipDate" />
       <result column="sellman" jdbcType="VARCHAR" property="sellman" />
-      <result column="status" jdbcType="TINYINT" property="status" />
+      <result column="machineOrder_status" jdbcType="TINYINT" property="status" />
       <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
       <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
       <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
@@ -121,10 +122,10 @@
   <!--根据 taskId查task record, process record, machine, machine_order-->
   <select id="selectTaskRecordDetail" resultMap="TaskRecordDetail">
     SELECT
-    tr.*,
+    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
     pr.id process_record_id_in_association, pr.*,
-    m.id machine_id1, m.*,
-    mo.id machine_order_id, mo.*,
+    m.id machine_id1, m.status machine_status, m.*,
+    mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
     oll.id order_loading_list_id,oll.*
     FROM
     task_record tr
@@ -136,11 +137,11 @@
   </select>
 
   <select id="selectAllTaskRecordDetail" resultMap="TaskRecordDetail">
-    SELECT
-    tr.*,
+   SELECT
+    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
     pr.id process_record_id_in_association, pr.*,
-    m.id machine_id1, m.*,
-    mo.id machine_order_id, mo.*,
+    m.id machine_id1, m.status machine_status, m.*,
+    mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
     oll.id order_loading_list_id,oll.*
     FROM
     task_record tr
@@ -153,10 +154,10 @@
 
   <select id="selectAllInstallTaskRecordDetailByUserAccount" resultMap = "TaskRecordDetail">
     select
-    tr.*,
+    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
     pr.id process_record_id_in_association, pr.*,
-    m.id machine_id1, m.*,
-    mo.id machine_order_id, mo.*,
+    m.id machine_id1,m.status machine_status, m.*,
+    mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
     oll.id order_loading_list_id,oll.*,
     tp.id task_plan_id,tp.*
 
@@ -175,10 +176,10 @@
 
   <select id="selectAllQaTaskRecordDetailByUserAccount" resultMap = "TaskRecordDetail">
     select
-    tr.*,
+    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
     pr.id process_record_id_in_association, pr.*,
-    m.id machine_id1, m.*,
-    mo.id machine_order_id, mo.*,
+    m.id machine_id1, m.status machine_status, m.*,
+    mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
     oll.id order_loading_list_id,oll.*
     from task_record tr
     join process_record pr on tr.process_record_id = pr.id
@@ -188,7 +189,7 @@
 
     join task on task.task_name = tr.task_name
     join user on user.id = task.quality_user_id
-    where user.account  = #{userAccount}
+    where user.account = #{userAccount}
   </select>
 
 
