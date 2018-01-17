@@ -32,7 +32,7 @@
       <result column="process_record_id" jdbcType="INTEGER" property="processRecordId" />
       <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
       <result column="leader" jdbcType="VARCHAR" property="leader" />
-      <result column="status" jdbcType="TINYINT" property="status" />
+      <result column="taskRecord_status" jdbcType="TINYINT" property="status" />
       <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
       <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
       <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
@@ -42,7 +42,7 @@
   <select id="selectTaskQualityRecordDetails" resultMap="TaskQualityRecordDetailResultMap">
     SELECT
     qri.id quality_record_image_id, qri.task_quality_record_id, qri.image, qri.create_time,
-    tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status, tr.begin_time, tr.end_time,
+    tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
     tqr.*
     FROM
     task_quality_record tqr
