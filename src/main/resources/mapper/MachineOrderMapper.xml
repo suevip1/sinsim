@@ -13,7 +13,7 @@
     <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
     <result column="country" jdbcType="VARCHAR" property="country" />
     <result column="brand" jdbcType="VARCHAR" property="brand" />
-    <result column="machine_num" jdbcType="TINYINT" property="machineNum" />
+    <result column="machine_num" jdbcType="INTEGER" property="machineNum" />
     <result column="machine_type" jdbcType="INTEGER" property="machineType" />
     <result column="needle_num" jdbcType="INTEGER" property="needleNum" />
     <result column="head_num" jdbcType="INTEGER" property="headNum" />

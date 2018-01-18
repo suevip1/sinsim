@@ -53,7 +53,7 @@ public class MachineOrder {
      * 机器台数
      */
     @Column(name = "machine_num")
-    private Byte machineNum;
+    private Integer machineNum;
 
     /**
      * 机器类型
@@ -277,7 +277,7 @@ public class MachineOrder {
      *
      * @return machine_num - 机器台数
      */
-    public Byte getMachineNum() {
+    public Integer getMachineNum() {
         return machineNum;
     }
 
@@ -286,7 +286,7 @@ public class MachineOrder {
      *
      * @param machineNum 机器台数
      */
-    public void setMachineNum(Byte machineNum) {
+    public void setMachineNum(Integer machineNum) {
         this.machineNum = machineNum;
     }
 
