@@ -24,6 +24,13 @@ public class Constant {
     public static Integer FINANCIAL_DEP_DEPOSIT_STEP= 7;
 
     /**
+     * 签核结果：“0”-->初始化；“1”-->接受； “2”-->驳回
+     */
+    public static final Integer SIGN_INITIAL = 0;
+    public static final Integer SIGN_APPROVE = 1;
+    public static final Integer SIGN_REJECT = 2;
+
+    /**
      * 合同状态， 对应于contract表中的status
      */
     /**

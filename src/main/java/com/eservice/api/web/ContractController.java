@@ -379,13 +379,23 @@ public class ContractController {
             if(contractSign == null) {
                 return ResultGenerator.genFailResult("根据合同号获取合同签核信息失败！");
             }else {
-                //更新合同状态为“签核中”
+                //更新合同状态为“CONTRACT_CHECKING”
                 Contract contract = contractService.findById(contractId);
                 if(contract == null) {
                     return ResultGenerator.genFailResult("合同编号ID无效");
                 }else {
                     contract.setStatus(Constant.CONTRACT_CHECKING);
                     contractService.update(contract);
+                }
+
+                //设置该合同下的需求单状态，如果处于“ORDER_INITIAL”状态，则设置为“ORDER_CHECKING”
+                Condition tempCondition = new Condition(MachineOrder.class);
+                tempCondition.createCriteria().andCondition("contract_id = ", contractId);
+                tempCondition.createCriteria().andCondition("status = ", Constant.ORDER_INITIAL);
+                List<MachineOrder> orderList = machineOrderService.findByCondition(tempCondition);
+                for (MachineOrder orderItem: orderList) {
+                    orderItem.setStatus(Constant.ORDER_CHECKING);
+                    machineOrderService.update(orderItem);
                 }
 
                 //更新签核记录

@@ -96,7 +96,7 @@ public class CommonService {
             Integer key = entry.getKey();
             List<SignContentItem> value = entry.getValue();
             for (SignContentItem item: value) {
-                if(item.getComment() == null || "".equals(item.getComment())
+                if(item.getResult().equals(Constant.SIGN_REJECT) || item.getComment() == null || "".equals(item.getComment())
                         || item.getUser() == null || "".equals(item.getUser())) {
                     List<Role> roleList = roleService.findAll();
                     for (Role role: roleList) {
