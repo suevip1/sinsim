@@ -4,6 +4,7 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract_sign.ContractSign;
+import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
@@ -67,13 +68,31 @@ public class ContractSignController {
         String step = commonService.getCurrentSignStep(contractSign1.getContractId());
         if(step == null) {
             throw new RuntimeException();
-        }else if(step.equals(Constant.SIGN_FINISHED)) {
-            //表示签核已经完成
+        }else {
             Contract  contract = contractService.findById(contractSign1.getContractId());
-            contract.setStatus(Constant.CONTRACT_CHECKING_FINISHED);
+            if(step.equals(Constant.SIGN_FINISHED)){
+                //表示签核已经完成
+                contract.setStatus(Constant.CONTRACT_CHECKING_FINISHED);
+                //根据合同中的需求单进行机器添加
+                commonService.createMachineByContractId(contractSign1.getContractId());
+            }else {
+                //更新合同状态
+                List<SignContentItem> contractSignContentList = JSON.parseArray(contractSign1.getSignContent(), SignContentItem.class);
+                boolean haveReject = false;
+                for (SignContentItem item: contractSignContentList) {
+                    //如果签核内容中有“拒绝”状态的签核信息，需要将该
+                    if(item.getResult().equals(Constant.SIGN_REJECT)) {
+                        haveReject = true;
+                        break;
+                    }
+                }
+                if(haveReject) {
+                    contract.setStatus(Constant.CONTRACT_REJECTED);
+                }else if(contract.getStatus().equals(Constant.CONTRACT_REJECTED)) {
+                    contract.setStatus(Constant.CONTRACT_CHECKING);
+                }
+            }
             contractService.update(contract);
-            //根据合同中的需求单进行机器添加
-            commonService.createMachineByContractId(contractSign1.getContractId());
         }
         contractSign1.setCurrentStep(step);
         contractSignService.update(contractSign1);

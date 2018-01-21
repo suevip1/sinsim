@@ -45,9 +45,9 @@ public class CommonService {
     public String getCurrentSignStep(Integer contractId) {
         String result = null;
 
-        //TODO:通过合同号找到有效的订单签核记录
+        //通过合同号找到有效的订单签核记录
         List<OrderSign> orderSignList = orderSignService.getValidOrderSigns(contractId);
-        //找到有效的合同签核记录
+        //找到有效的合同签核记录，其实就是最新的合同簽和記錄
         ContractSign contractSign1 = contractSignService.detailByContractId(String.valueOf(contractId));
         HashMap<Integer, List<SignContentItem>> signContentSortByNumberMap = new HashMap<>();
         for (OrderSign os: orderSignList) {
@@ -96,8 +96,8 @@ public class CommonService {
             Integer key = entry.getKey();
             List<SignContentItem> value = entry.getValue();
             for (SignContentItem item: value) {
-                if(item.getResult().equals(Constant.SIGN_REJECT) || item.getComment() == null || "".equals(item.getComment())
-                        || item.getUser() == null || "".equals(item.getUser())) {
+                //根據簽和順序，找到最先的被拒絕或者未簽合的流程
+                if(item.getResult().equals(Constant.SIGN_REJECT) || item.getResult().equals(Constant.SIGN_INITIAL)) {
                     List<Role> roleList = roleService.findAll();
                     for (Role role: roleList) {
                         if(role.getId().equals(item.getRoleId())) {

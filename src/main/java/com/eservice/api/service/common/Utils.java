@@ -37,7 +37,7 @@ public class Utils {
         builder.append(month[(calendar.get(Calendar.MONTH))]);
         builder.append(date[calendar.get(Calendar.DATE) -1]);
         //24小时制
-        builder.append(String.format("%2d",calendar.get(Calendar.HOUR_OF_DAY)));
+        builder.append(calendar.get(Calendar.HOUR_OF_DAY) <= 9 ? "0" +calendar.get(Calendar.HOUR_OF_DAY) : calendar.get(Calendar.HOUR_OF_DAY) + "");
         builder.append(calendar.get(Calendar.MINUTE) <= 9 ? "0" + calendar.get(Calendar.MINUTE) : calendar.get(Calendar.MINUTE) + "");
         builder.append(calendar.get(Calendar.SECOND) <= 9 ? "0" + calendar.get(Calendar.SECOND) : calendar.get(Calendar.SECOND) + "");
         int randomValue = new Random().nextInt(99);

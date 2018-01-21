@@ -38,13 +38,14 @@
     LEFT JOIN machine_order mo ON mo.contract_id = c.id
     WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
     GROUP BY c.id
+    ORDER BY cs.create_time DESC
   </select>
 
-    <insert id="saveAndGetID"   useGeneratedKeys="true"  parameterType="com.eservice.api.model.contract.Contract" keyProperty="id">
-        insert into
-        contract(contract_num, customer_name, sellman, status, contract_ship_date, pay_method, mark, create_time)
-        values(
-        #{contractNum},#{customerName},#{sellman},#{status},#{contractShipDate},#{payMethod},#{mark},#{createTime})
-    </insert>
+  <insert id="saveAndGetID"   useGeneratedKeys="true"  parameterType="com.eservice.api.model.contract.Contract" keyProperty="id">
+      insert into
+      contract(contract_num, customer_name, sellman, status, contract_ship_date, pay_method, mark, create_time)
+      values(
+      #{contractNum},#{customerName},#{sellman},#{status},#{contractShipDate},#{payMethod},#{mark},#{createTime})
+  </insert>
 
 </mapper>
