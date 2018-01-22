@@ -413,8 +413,10 @@ public class ContractController {
                 tempCondition.createCriteria().andCondition("status = ", Constant.ORDER_INITIAL);
                 List<MachineOrder> orderList = machineOrderService.findByCondition(tempCondition);
                 for (MachineOrder orderItem: orderList) {
-                    orderItem.setStatus(Constant.ORDER_CHECKING);
-                    machineOrderService.update(orderItem);
+                    if(orderItem.getStatus().equals(Constant.ORDER_INITIAL)) {
+                        orderItem.setStatus(Constant.ORDER_CHECKING);
+                        machineOrderService.update(orderItem);
+                    }
                 }
 
                 //更新签核记录
