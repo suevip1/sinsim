@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -71,15 +72,15 @@ public class OrderSignController {
         if(contractId == null || contractId <=0) {
             ResultGenerator.genFailResult("合同ID不存在或者无效！");
         }
-        OrderSign orderSign1 = JSONObject.parseObject(orderSign, OrderSign.class);
-        if(orderSign1 == null) {
+        OrderSign orderSignObj = JSONObject.parseObject(orderSign, OrderSign.class);
+        if(orderSignObj == null) {
             ResultGenerator.genFailResult("签核信息JSON解析失败！");
         }else {
             //更新需求单签核记录
-            orderSign1.setUpdateTime(new Date());
-            orderSignService.update(orderSign1);
+            orderSignObj.setUpdateTime(new Date());
+            orderSignService.update(orderSignObj);
             //更新需求单状态
-            List<SignContentItem> orderSignContentList = JSON.parseArray(orderSign1.getSignContent(), SignContentItem.class);
+            List<SignContentItem> orderSignContentList = JSON.parseArray(orderSignObj.getSignContent(), SignContentItem.class);
             boolean haveReject = false;
             for (SignContentItem item: orderSignContentList) {
                 //如果签核内容中有“拒绝”状态的签核信息，需要将该
@@ -88,14 +89,34 @@ public class OrderSignController {
                     break;
                 }
             }
-            MachineOrder machineOrder = machineOrderService.findById(orderSign1.getOrderId());
+            MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
             if (haveReject) {
                 machineOrder.setStatus(Constant.ORDER_REJECTED);
-            }else {
-                if(machineOrder.getStatus().equals(Constant.ORDER_REJECTED)){
-                    machineOrder.setStatus(Constant.ORDER_CHECKING);
+                //需要把之前的签核状态result设置为初始状态“SIGN_INITIAL”，但是签核内容不变(contract & machineOrder)
+                //合同相关
+                ContractSign contractSignObj = contractSignService.detailByContractId(String.valueOf(contractId));
+                List<SignContentItem> contractSignList  = JSON.parseArray(contractSignObj.getSignContent(), SignContentItem.class);
+                for (SignContentItem item: contractSignList) {
+                    item.setResult(Constant.SIGN_INITIAL);
                 }
+                contractSignObj.setSignContent(JSONObject.toJSONString(contractSignList));
+                //当前审核步骤变成空
+                contractSignObj.setCurrentStep("");
+                contractSignService.update(contractSignObj);
+
+                //需求单相关，当前需求单审核变为初始化“SIGN_INITIAL”
+                for (SignContentItem item: orderSignContentList) {
+                    item.setResult(Constant.SIGN_INITIAL);
+                }
+                orderSignObj.setSignContent(JSONObject.toJSONString(orderSignContentList));
+                orderSignService.update(orderSignObj);
+
             }
+//            else {
+//                if(machineOrder.getStatus().equals(Constant.ORDER_REJECTED)){
+//                    machineOrder.setStatus(Constant.ORDER_CHECKING);
+//                }
+//            }
             machineOrderService.update(machineOrder);
 
             //更新合同签核记录
@@ -106,8 +127,20 @@ public class OrderSignController {
             }else {
                 Contract contract = contractService.findById(contractId);
                 if(step.equals(Constant.SIGN_FINISHED)) {
-                    //表示签核已经完成
+                    //表示签核已经完成，合同设置“CONTRACT_CHECKING_FINISHED”
                     contract.setStatus(Constant.CONTRACT_CHECKING_FINISHED);
+
+                    //需求单也需要设置为签核完成状态“ORDER_CHECKING_FINISHED”
+                    Condition tempCondition = new Condition(ContractSign.class);
+                    tempCondition.createCriteria().andCondition("contract_id = ", contractId);
+                    List<MachineOrder> machineOrderList = machineOrderService.findByCondition(tempCondition);
+                    for (MachineOrder item: machineOrderList) {
+                        if(item.getStatus().equals(Constant.ORDER_CHECKING)) {
+                            item.setStatus(Constant.ORDER_CHECKING_FINISHED);
+                        }
+                        machineOrderService.update(item);
+                    }
+
                     //根据合同中的需求单进行机器添加, 在需求单签核、合同签核都加上是因为最后一步审核可能是需求单，也可能是合同
                     commonService.createMachineByContractId(contractId);
                 }else {

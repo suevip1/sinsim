@@ -190,6 +190,9 @@ public class ContractController {
                 orderSignService.save(orderSign);
             }
         }
+        //前端只要操作了“保存”，合同的状态回到“CONTRACT_INITIAL”状态
+        contract1.setStatus(Constant.CONTRACT_INITIAL);
+        contractService.update(contract1);
 
         return ResultGenerator.genSuccessResult();
     }
@@ -281,10 +284,10 @@ public class ContractController {
                         for (Machine machine : machineList) {
                             ///初始化状态，直接将机器的上的需求单号直接绑定到新需求单
                             if (machine.getStatus().equals(Constant.MACHINE_INITIAL)) {
-                                machine.setOrderId(newOrder.getId());
                             } else {
                                 machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
                             }
+                            machine.setOrderId(newOrder.getId());
                             machine.setUpdateTime(new Date());
                             machineService.update(machine);
                         }
@@ -293,41 +296,51 @@ public class ContractController {
                         List<Machine> originalInitialedMachine = new ArrayList<>();
                         List<Machine> originalOtherMachine = new ArrayList<>();
                         for (Machine machine : machineList) {
-                            ///查找计划中、生产中、生产完成的机器
                             if (machine.getStatus().equals(Constant.MACHINE_PLANING)
                                     || machine.getStatus().equals( Constant.MACHINE_INSTALLING)
-                                    || machine.getStatus().equals(Constant.MACHINE_INSTALLED)) {
+                                    || machine.getStatus().equals(Constant.MACHINE_INSTALLED)
+                                    || machine.getStatus().equals(Constant.MACHINE_SPLITED)) {
+                                ///查找计划中、生产中、被拆单、生产完成的机器
                                 originalInitialedMachine.add(machine);
                             } else if (machine.getStatus().equals(Constant.MACHINE_INITIAL)) {
+                                ///初始化状态，未开始计划
                                 originalInitialMachine.add(machine);
                             } else {
                                 originalOtherMachine.add(machine);
                             }
                         }
                         int addedNum = 0;
+                        //生产中的机器优先处理
                         for (int i = 0; i < originalInitialedMachine.size(); i++) {
-                            if (addedNum < machineOrder.getMachineNum()) {
+                            if (addedNum < newOrder.getMachineNum()) {
                                 originalInitialedMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
                                 addedNum++;
                             } else {
                                 originalInitialedMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CANCELED)));
                             }
+                            originalInitialedMachine.get(i).setOrderId(newOrder.getId());
                             //更新
                             machineService.update(originalInitialedMachine.get(i));
                         }
+                        //未计划的机器其次处理
                         for (int i = 0; i < originalInitialMachine.size(); i++) {
-                            if (addedNum < machineOrder.getMachineNum()) {
-                                originalInitialMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                            if (addedNum < newOrder.getMachineNum()) {
+                                ///TODO：是否可以保持“MACHINE_INITIAL”状态不变，因为此时机器还没有计划，也就是说没有对其设置安装流程
+                                //originalInitialMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
                                 addedNum++;
+                                originalInitialMachine.get(i).setOrderId(newOrder.getId());
                                 machineService.update(originalInitialMachine.get(i));
                             } else {
                                 //删除
                                 machineService.deleteById(originalInitialMachine.get(i).getId());
                             }
                         }
+
+                        //目前只有删除状态的机器（MACHINE_CANCELED）
                         for (int i = 0; i < originalOtherMachine.size(); i++) {
-                            if (addedNum < machineOrder.getMachineNum()) {
+                            if (addedNum < newOrder.getMachineNum()) {
                                 originalOtherMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                                originalOtherMachine.get(i).setOrderId(newOrder.getId());
                                 machineService.update(originalInitialMachine.get(i));
                                 addedNum++;
                             } else {
