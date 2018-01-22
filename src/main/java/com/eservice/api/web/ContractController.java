@@ -217,6 +217,7 @@ public class ContractController {
 
         //更改合同的状态为“改单”
         contract1.setStatus(Constant.CONTRACT_CHANGED);
+        contractService.update(contract1);
         Integer contractId = contract1.getId();
         ///插入新的contract审核记录
         ContractSign contractSignObj = new ContractSign();
@@ -231,7 +232,7 @@ public class ContractController {
         List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class);
         for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
-            if(machineOrder.getOrderDetailId() != null && machineOrder.getOriginalOrderId() != 0) {
+            if(machineOrder.getId() == null && machineOrder.getOriginalOrderId() != 0) {
                 //插入新增改单项的detail
                 OrderDetail temp = orderItem.getOrderDetail();
                 orderDetailService.saveAndGetID(temp);
