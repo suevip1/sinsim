@@ -37,5 +37,73 @@
 	 join machine m on m.id = pr.machine_id
      where qri.task_quality_record_id = #{taskQualityRecordId}
   </select>
+  <select id="selectMachines" resultMap="BaseResultMap">
+    SELECT * FROM machine
+      where 1=1
+      <if test="id != null and id != ''">
+          and id=#{id}
+      </if>
+      <if test="machine_id != null and machine_id != ''">
+          and machine_id=#{machine_id}
+      </if>
+      <if test="order_id != null and order_id != ''">
+          and order_id=#{order_id}
+      </if>
+      <if test="nameplate != null and nameplate != ''">
+          and nameplate=#{nameplate}
+      </if>
+      <if test="location != null and location != ''">
+          and location=#{location}
+      </if>
+      <if test="status != null and status != ''">
+          and status=#{status}
+      </if>
+      <if test="machine_type != null and machine_type != ''">
+          and machine_type=#{machine_type}
+      </if>
+      <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+      <if test="query_start_time!=null and query_start_time != '' ">
+          and DATE_FORMAT(create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+      </if>
+      <if test="query_finish_time!=null and query_finish_time != '' ">
+          and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+      </if>
+      ORDER By create_time, ship_time DESC
+
+  </select>
+
+  <select id="selectMachinesFuzzy" resultMap="BaseResultMap">
+      SELECT * FROM machine
+      where 1=1
+      <if test="id != null and id != ''">
+          and id=#{id}
+      </if>
+      <if test="machine_id != null and machine_id != ''">
+          and machine_id like CONCAT('%','${machine_id}','%' )
+      </if>
+      <if test="order_id != null and order_id != ''">
+          and order_id like CONCAT('%','${order_id}','%' )
+      </if>
+      <if test="nameplate != null and nameplate != ''">
+          and nameplate like CONCAT('%','${nameplate}','%' )
+      </if>
+      <if test="location != null and location != ''">
+          and location=#{location}
+      </if>
+      <if test="status != null and status != ''">
+          and status=#{status}
+      </if>
+      <if test="machine_type != null and machine_type != ''">
+          and machine_type=#{machine_type}
+      </if>
+      <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+      <if test="query_start_time!=null and query_start_time != '' ">
+          and DATE_FORMAT(create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+      </if>
+      <if test="query_finish_time!=null and query_finish_time != '' ">
+          and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+      </if>
+      ORDER By create_time, ship_time DESC
+  </select>
 
 </mapper>

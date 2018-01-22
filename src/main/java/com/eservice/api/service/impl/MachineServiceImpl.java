@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -25,5 +26,24 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
     }
     public Machine searchMachineByTaskQualityRecordId( Integer taskQualityRecordId ){
         return machineMapper.searchMachineByTaskQualityRecordId(taskQualityRecordId);
+    }
+
+    public List<Machine> selectMachines( Integer page,
+                                        Integer size,
+                                        Integer id,
+                                        Integer order_id,
+                                        String machine_id,
+                                        String nameplate,
+                                        String location,
+                                        Byte status,
+                                        Integer machine_type,
+                                        String query_start_time,
+                                        String query_finish_time,
+                                        Boolean is_fuzzy) {
+        if(is_fuzzy) {
+            return machineMapper.selectMachinesFuzzy(id, order_id, machine_id, nameplate, location, status, machine_type, query_start_time, query_finish_time);
+        } else {
+            return machineMapper.selectMachines(id, order_id, machine_id, nameplate, location, status, machine_type, query_start_time, query_finish_time);
+        }
     }
 }

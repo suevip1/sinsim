@@ -347,6 +347,11 @@ public class ContractController {
                                 originalOtherMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CANCELED)));
                                 machineService.update(originalInitialMachine.get(i));
                             }
+                            ///对于删除状态的机器不做处理
+//                            else {
+//                                originalOtherMachine.get(i).setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CANCELED)));
+//                                machineService.update(originalInitialMachine.get(i));
+//                            }
                         }
                     }
                 } else {

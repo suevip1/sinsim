@@ -3,7 +3,7 @@ import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.machine.Machine;
-import com.eservice.api.service.MachineService;
+import com.eservice.api.service.impl.MachineServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping("/machine")
 public class MachineController {
     @Resource
-    private MachineService machineService;
+    private MachineServiceImpl machineService;
 
     @PostMapping("/add")
     public Result add(String machine) {
@@ -58,4 +58,24 @@ public class MachineController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    @PostMapping("/selectMachines")
+    public Result selectMachines(@RequestParam(defaultValue = "0") Integer page,
+                                 @RequestParam(defaultValue = "0") Integer size,
+                                 Integer id,
+                                 Integer order_id,
+                                 String machine_id,
+                                 String nameplate,
+                                 String location,
+                                 Byte status,
+                                 Integer machine_type,
+                                 String query_start_time,
+                                 String query_finish_time,
+                                 @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
+        PageHelper.startPage(page, size);
+        List<Machine> list = machineService.selectMachines(page, size, id, order_id, machine_id, nameplate, location, status, machine_type, query_start_time, query_finish_time, is_fuzzy);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 }
