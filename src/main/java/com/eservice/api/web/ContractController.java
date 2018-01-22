@@ -192,6 +192,7 @@ public class ContractController {
         }
         //前端只要操作了“保存”，合同的状态回到“CONTRACT_INITIAL”状态
         contract1.setStatus(Constant.CONTRACT_INITIAL);
+        contract1.setUpdateTime(new Date());
         contractService.update(contract1);
 
         return ResultGenerator.genSuccessResult();
@@ -217,6 +218,7 @@ public class ContractController {
 
         //更改合同的状态为“改单”
         contract1.setStatus(Constant.CONTRACT_CHANGED);
+        contract1.setUpdateTime(new Date());
         contractService.update(contract1);
         Integer contractId = contract1.getId();
         ///插入新的contract审核记录
@@ -404,6 +406,7 @@ public class ContractController {
                     return ResultGenerator.genFailResult("合同编号ID无效");
                 }else {
                     contract.setStatus(Constant.CONTRACT_CHECKING);
+                    contract.setUpdateTime(new Date());
                     contractService.update(contract);
                 }
 

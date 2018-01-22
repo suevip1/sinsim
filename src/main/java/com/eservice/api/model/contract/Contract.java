@@ -56,6 +56,9 @@ public class Contract {
     @Column(name = "create_time")
     private Date createTime;
 
+    @Column(name = "update_time")
+    private Date updateTime;
+
     /**
      * @return id
      */
@@ -154,6 +157,14 @@ public class Contract {
 
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     /**

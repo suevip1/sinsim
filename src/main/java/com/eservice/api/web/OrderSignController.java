@@ -150,6 +150,7 @@ public class OrderSignController {
                         contract.setStatus(Constant.CONTRACT_CHECKING);
                     }
                 }
+                contract.setUpdateTime(new Date());
                 contractService.update(contract);
             }
             contractSign.setCurrentStep(step);

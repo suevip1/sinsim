@@ -14,6 +14,7 @@
     <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
     <result column="mark" jdbcType="LONGVARCHAR" property="mark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
 
   <resultMap id="ContractDetailMap" type="com.eservice.api.model.contract.ContractDetail">
@@ -28,6 +29,7 @@
     <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
     <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
     <result column="status" jdbcType="TINYINT" property="status" />
   </resultMap>

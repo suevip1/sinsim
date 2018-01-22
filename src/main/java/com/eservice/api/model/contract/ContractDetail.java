@@ -69,6 +69,12 @@ public class ContractDetail {
     private Date createTime;
 
     /**
+     * 更新时间
+     */
+    @Column(name = "update_time")
+    private Date updateTime;
+
+    /**
      * @return id
      */
     public Integer getId() {
@@ -182,6 +188,14 @@ public class ContractDetail {
 
     public void setContractShipDate(Date contractShipDate) {
         this.contractShipDate = contractShipDate;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     /**

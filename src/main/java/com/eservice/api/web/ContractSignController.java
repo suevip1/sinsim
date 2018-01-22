@@ -134,6 +134,7 @@ public class ContractSignController {
 //                    contract.setStatus(Constant.CONTRACT_CHECKING);
 //                }
             }
+            contract.setUpdateTime(new Date());
             contractService.update(contract);
         }
         contractSignObj.setCurrentStep(step);
