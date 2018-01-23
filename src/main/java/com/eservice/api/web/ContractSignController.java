@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -159,7 +160,7 @@ public class ContractSignController {
         PageHelper.startPage(page, size);
         List<ContractSign> list;
         if(contractId == 0) {
-            list = contractSignService.findAll();
+            list = new ArrayList<>();
         }else {
             //获取摸个合同号对应的全部签核记录
             Condition tempCondition = new Condition(ContractSign.class);

@@ -55,7 +55,7 @@
       <if test="location != null and location != ''">
           and location=#{location}
       </if>
-      <if test="status != null and status != ''">
+      <if test="status != null">
           and status=#{status}
       </if>
       <if test="machine_type != null and machine_type != ''">
@@ -90,7 +90,7 @@
       <if test="location != null and location != ''">
           and location=#{location}
       </if>
-      <if test="status != null and status != ''">
+      <if test="status != null">
           and status=#{status}
       </if>
       <if test="machine_type != null and machine_type != ''">
