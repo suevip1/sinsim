@@ -111,6 +111,13 @@
       <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
       <result column="change_reason" jdbcType="LONGVARCHAR" property="changeReason" />
     </association>
+    <association javaType="com.eservice.api.model.order_split_record.OrderSplitRecord" property="orderSplitRecord">
+      <id column="splitRecordId" jdbcType="INTEGER" property="id" />
+      <result column="split_order_id" jdbcType="INTEGER" property="orderId" />
+      <result column="split_user_id" jdbcType="INTEGER" property="userId" />
+      <result column="split_time" jdbcType="TIMESTAMP" property="splitTime" />
+      <result column="split_reason" jdbcType="LONGVARCHAR" property="splitReason" />
+    </association>
     <association javaType="com.eservice.api.model.order_sign.OrderSign" property="orderSign">
       <id column="order_sign_id" property="id" />
       <result column="order_id" jdbcType="INTEGER" property="orderId" />
@@ -140,13 +147,16 @@
   </select>
 
   <select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*,od.id order_detail_id, os.id order_sign_id, os.order_id, os.sign_content, os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId
+    select mo.*, od.*,od.id order_detail_id, os.id order_sign_id, os.order_id, os.sign_content, os.create_time os_create_time, os.update_time os_create_time,
+           mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId,
+           osr.*, osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id
     from machine_order mo
     LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
     join machine_type mt on mo.machine_type=mt.id
     join contract con on mo.contract_id = con.id
     LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
+    LEFT JOIN order_split_record osr on osr.order_id = mo.original_order_id
     where 1=1
     <if test="id != null and id != ''">
      and mo.id=#{id}
@@ -185,13 +195,16 @@
 
 
   <select id="selectOrder" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*, od.id order_detail_id,os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_create_time, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId
+    select mo.*, od.*, od.id order_detail_id,os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_create_time,
+           mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId,
+           osr.*, osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id
     from machine_order mo
     LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
     join machine_type mt on mo.machine_type=mt.id
     join contract con on mo.contract_id = con.id
     LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
+    LEFT JOIN order_split_record osr on osr.order_id = mo.original_order_id
     where 1=1
     <if test="id != null and id != ''">
       and mo.id=#{id}

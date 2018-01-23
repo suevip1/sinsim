@@ -4,6 +4,7 @@ import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
+import com.eservice.api.model.order_split_record.OrderSplitRecord;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -180,6 +181,19 @@ public class MachineOrderDetail {
 
     public void setOrderChangeRecord(OrderChangeRecord orderChangeRecord) {
         this.orderChangeRecord = orderChangeRecord;
+    }
+
+    /**
+     * 拆单记录
+     */
+    private OrderSplitRecord orderSplitRecord;
+
+    public OrderSplitRecord getOrderSplitRecord() {
+        return orderSplitRecord;
+    }
+
+    public void setOrderSplitRecord(OrderSplitRecord orderSplitRecord) {
+        this.orderSplitRecord = orderSplitRecord;
     }
 
     //    /*

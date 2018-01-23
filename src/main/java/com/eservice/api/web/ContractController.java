@@ -14,6 +14,7 @@ import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
+import com.eservice.api.model.order_split_record.OrderSplitRecord;
 import com.eservice.api.service.OrderChangeRecordService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
@@ -65,6 +66,8 @@ public class ContractController {
     private CommonService commonService;
     @Resource
     private OrderChangeRecordServiceImpl orderChangeRecordService;
+    @Resource
+    private OrderSplitRecordServiceImpl orderSplitRecordService;
     @Resource
     private MachineServiceImpl machineService;
 
@@ -366,6 +369,97 @@ public class ContractController {
 
         return ResultGenerator.genSuccessResult();
 
+    }
+
+    @PostMapping("/splitOrder")
+    @Transactional(rollbackFor = Exception.class)
+    public Result splitOrder(String contract, String contractSign, String requisitionForms, String splitMachines) {
+        if(contract == null || "".equals(contract)) {
+            return ResultGenerator.genFailResult("合同信息为空！");
+        }
+        if(contractSign == null || "".equals(contractSign)) {
+            return ResultGenerator.genFailResult("合同审核初始化信息为空！");
+        }
+        if(requisitionForms == null || "".equals(requisitionForms)) {
+            return ResultGenerator.genFailResult("订单信息为空！");
+        }
+        if(splitMachines == null || "".equals(splitMachines)) {
+            return ResultGenerator.genFailResult("拆单机器信息为空！");
+        }
+
+        Contract contractObj = JSONObject.parseObject(contract, Contract.class);
+        if(contractObj == null || contractSign == null || requisitionForms == null || splitMachines == null) {
+            return ResultGenerator.genFailResult("JSON解析失败！");
+        }
+
+        //更改合同的状态为“拆单”
+        contractObj.setStatus(Constant.CONTRACT_SPLITED);
+        contractObj.setUpdateTime(new Date());
+        contractService.update(contractObj);
+        Integer contractId = contractObj.getId();
+        ///插入新的contract审核记录
+        ContractSign contractSignObj = new ContractSign();
+        contractSignObj.setContractId(contractId);
+        contractSignObj.setCreateTime(new Date());
+        contractSignObj.setSignContent(contractSign);
+        ///插入空值
+        contractSignObj.setCurrentStep("");
+        contractSignService.save(contractSignObj);
+
+        //新增的改单处理
+        List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class);
+        List<Machine> splitMachineList = JSONObject.parseArray(splitMachines, Machine.class);
+
+        for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
+            MachineOrder machineOrder = orderItem.getMachineOrder();
+            if(machineOrder.getId() == null && machineOrder.getOriginalOrderId() != 0) {
+                //插入新增改单项的detail
+                OrderDetail temp = orderItem.getOrderDetail();
+                orderDetailService.saveAndGetID(temp);
+                machineOrder.setOrderDetailId(temp.getId());
+                machineOrder.setContractId(contractObj.getId());
+                machineOrder.setStatus(Constant.ORDER_INITIAL);
+                machineOrderService.saveAndGetID(machineOrder);
+
+                //初始化需求单审核记录
+                OrderSign orderSignData = orderItem.getOrderSign();
+                OrderSign orderSign = new OrderSign();
+                orderSign.setSignContent(orderSignData.getSignContent());
+                orderSign.setOrderId(machineOrder.getId());
+                orderSign.setCreateTime(new Date());
+                orderSignService.save(orderSign);
+
+                //被拆分出来的机器绑定到新的需求单
+                for ( Machine splitMachine: splitMachineList ) {
+                    splitMachine.setOrderId(machineOrder.getId());
+                    splitMachine.setStatus(Constant.ORDER_SPLITED);
+                    splitMachine.setUpdateTime(new Date());
+                    machineService.update(splitMachine);
+                }
+
+                //拆单记录(插入或者修改)
+                OrderSplitRecord splitRecord = orderItem.getOrderSplitRecord();
+                if(splitRecord.getId() == null) {
+                    splitRecord.setSplitTime(new Date());
+                    orderSplitRecordService.save(splitRecord);
+                }else {
+                    splitRecord.setSplitTime(new Date());
+                    orderSplitRecordService.update(splitRecord);
+                }
+            }
+        }
+
+        //处于拆单状态的需求单，更新状态成“ORDER_SPLIT”
+        for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
+            MachineOrder machineOrder = orderItem.getMachineOrder();
+            //TODO:同一个合同中其他为“ORDER_SPLIT”状态的需求单也会被更新，需要完善
+            if(machineOrder.getStatus().equals(Constant.ORDER_SPLITED)) {
+                machineOrder.setUpdateTime(new Date());
+                machineOrderService.update(machineOrder);
+            }
+        }
+
+        return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/detail")

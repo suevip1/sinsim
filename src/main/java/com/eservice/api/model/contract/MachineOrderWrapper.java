@@ -4,6 +4,7 @@ import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
+import com.eservice.api.model.order_split_record.OrderSplitRecord;
 
 /**
  * Class Description:用于处理从前端submit增加合同时候，需求单相关的数据
@@ -20,6 +21,16 @@ public class MachineOrderWrapper {
     private OrderSign orderSign;
 
     private OrderChangeRecord orderChangeRecord;
+
+    private OrderSplitRecord orderSplitRecord;
+
+    public OrderSplitRecord getOrderSplitRecord() {
+        return orderSplitRecord;
+    }
+
+    public void setOrderSplitRecord(OrderSplitRecord orderSplitRecord) {
+        this.orderSplitRecord = orderSplitRecord;
+    }
 
     public OrderChangeRecord getOrderChangeRecord() {
         return orderChangeRecord;
