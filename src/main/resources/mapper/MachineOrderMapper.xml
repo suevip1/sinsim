@@ -63,7 +63,7 @@
     <result column="mark" jdbcType="LONGVARCHAR" property="mark" />
     <association javaType="com.eservice.api.model.order_detail.OrderDetail" property="orderDetail">
       <!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
-      <id column="order_detail_id" property="id" />
+      <id column="detail_id" property="id" />
       <result column="special_towel_color" jdbcType="VARCHAR" property="specialTowelColor" />
       <result column="special_towel_daxle" jdbcType="VARCHAR" property="specialTowelDaxle" />
       <result column="special_towel_haxle" jdbcType="VARCHAR" property="specialTowelHaxle" />
@@ -147,9 +147,9 @@
   </select>
 
   <select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*,od.id order_detail_id, os.id order_sign_id, os.order_id, os.sign_content, os.create_time os_create_time, os.update_time os_create_time,
-           mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId,
-           osr.*, osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id
+    select mo.*, od.id detail_id, os.id order_sign_id, os.order_id, os.sign_content, os.create_time os_create_time, os.update_time os_update_time,
+           mt.id machineTypeID, mt.name,con.contract_num, con.customer_name as customer, ocr.id changeRecordId,
+           osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id
     from machine_order mo
     LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
@@ -190,14 +190,15 @@
     <if test="machine_name!=null and machine_name != '' ">
       and mt.name like CONCAT('%','${machine_name}','%' )
     </if>
+    GROUP BY mo.id
     ORDER By mo.create_time, mo.order_num
   </select>
 
 
   <select id="selectOrder" resultMap="MachineOrderDetailMap">
-    select mo.*, od.*, od.id order_detail_id,os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_create_time,
-           mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer,ocr.*, ocr.id changeRecordId,
-           osr.*, osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id
+    select mo.*, od.id detail_id,os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
+           mt.id machineTypeID, mt.name, con.contract_num, con.customer_name as customer, ocr.id changeRecordId,
+            osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id
     from machine_order mo
     LEFT JOIN order_sign os on mo.id = os.order_id
     join order_detail od on mo.order_detail_id=od.id
@@ -238,6 +239,7 @@
     <if test="machine_name!=null and machine_name != '' ">
       and mt.name = CONCAT('%','${machine_name}','%' )
     </if>
+    GROUP BY mo.id
     ORDER By mo.create_time, mo.order_num
   </select>
 
