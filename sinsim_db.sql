@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : MyDB
-Source Server Version : 50547
+Source Server         : sinsim
+Source Server Version : 50505
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50547
+Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2018-01-23 15:01:18
+Date: 2018-01-25 23:50:53
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -237,7 +237,7 @@ INSERT INTO `machine` VALUES ('32', '52', 'A0M094156492', null, null, '0', '1', 
 INSERT INTO `machine` VALUES ('33', '52', 'A0M094156333', null, null, '0', '1', '2018-01-23 09:41:56', null, null, null);
 INSERT INTO `machine` VALUES ('34', '52', 'A0M094156074', null, null, '0', '1', '2018-01-23 09:41:56', null, null, null);
 INSERT INTO `machine` VALUES ('35', '52', 'A0M094156575', null, null, '0', '1', '2018-01-23 09:41:56', null, null, null);
-INSERT INTO `machine` VALUES ('36', '52', 'A0M094156526', null, null, '0', '1', '2018-01-23 09:41:56', null, null, null);
+INSERT INTO `machine` VALUES ('36', '52', 'A0M094156526', null, null, '1', '1', '2018-01-23 09:41:56', null, null, null);
 
 -- ----------------------------
 -- Table structure for `machine_order`
@@ -548,11 +548,12 @@ CREATE TABLE `process_record` (
   KEY `fk_pr_process_id` (`process_id`),
   CONSTRAINT `fk_pr_machine_id` FOREIGN KEY (`machine_id`) REFERENCES `machine` (`id`),
   CONSTRAINT `fk_pr_process_id` FOREIGN KEY (`process_id`) REFERENCES `process` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of process_record
 -- ----------------------------
+INSERT INTO `process_record` VALUES ('1', '36', '3', '', '', '2018-01-25 19:34:43', null);
 
 -- ----------------------------
 -- Table structure for `quality_record_image`
@@ -644,11 +645,11 @@ CREATE TABLE `task` (
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES ('1', 'tsk111', '1', '1', 'guidance111');
-INSERT INTO `task` VALUES ('2', 'tskName222Have', '1', '2', 'guidance2222');
-INSERT INTO `task` VALUES ('3', 'tskName333Have', '1', '2', 'guidance3333');
-INSERT INTO `task` VALUES ('4', 'tsk44', '1', '4', 'guidance444');
-INSERT INTO `task` VALUES ('5', 'tskAbc', '1', '3', 'guidanceAAA');
+INSERT INTO `task` VALUES ('1', '安裝主传动', '1', '1', 'guidance111');
+INSERT INTO `task` VALUES ('2', '安装电机', '2', '2', 'guidance2222');
+INSERT INTO `task` VALUES ('3', '喷油漆', '1', '2', 'guidance3333');
+INSERT INTO `task` VALUES ('4', '安装夹线器', '1', '4', 'guidance444');
+INSERT INTO `task` VALUES ('5', '调试电脑', '1', '3', 'guidanceAAA');
 
 -- ----------------------------
 -- Table structure for `task_plan`
@@ -711,11 +712,13 @@ CREATE TABLE `task_record` (
   KEY `fk_tr_task_name` (`task_name`),
   CONSTRAINT `fk_tr_process_record_id` FOREIGN KEY (`process_record_id`) REFERENCES `process_record` (`id`),
   CONSTRAINT `fk_tr_task_name` FOREIGN KEY (`task_name`) REFERENCES `task` (`task_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task_record
 -- ----------------------------
+INSERT INTO `task_record` VALUES ('3', '安裝主传动', '1', '0', null, null, '0', '2018-01-25 19:41:15', null);
+INSERT INTO `task_record` VALUES ('4', '喷油漆', '1', '0', null, null, '1', '2018-01-25 19:41:53', null);
 
 -- ----------------------------
 -- Table structure for `user`

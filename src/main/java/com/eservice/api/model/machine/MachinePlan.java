@@ -59,10 +59,20 @@ public class MachinePlan {
     private Date installedTime;
 
     /**
-     * 发货时间（如果分批交付，需要用到，否则已订单交付为准）
+     * 真实发货时间（如果分批交付，需要用到，否则已订单交付为准）
      */
     @Column(name = "ship_time")
     private Date shipTime;
+
+    /**
+     * 合同交货时间
+     */
+    private Date contractShipDate;
+
+    /**
+     * 计划交货时间
+     */
+    private Date planShipDate;
 
     /**
      * 总工序数
@@ -78,6 +88,22 @@ public class MachinePlan {
      * 已计划工序数
      */
     private Integer planedTaskNum;
+
+    public Date getContractShipDate() {
+        return contractShipDate;
+    }
+
+    public void setContractShipDate(Date contractShipDate) {
+        this.contractShipDate = contractShipDate;
+    }
+
+    public Date getPlanShipDate() {
+        return planShipDate;
+    }
+
+    public void setPlanShipDate(Date planShipDate) {
+        this.planShipDate = planShipDate;
+    }
 
     public String getOrderNum() {
         return orderNum;
