@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : sinsim
-Source Server Version : 50505
+Source Server         : MyDB
+Source Server Version : 50547
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50505
+Target Server Version : 50547
 File Encoding         : 65001
 
-Date: 2018-01-25 23:50:53
+Date: 2018-01-26 10:51:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -705,8 +705,10 @@ CREATE TABLE `task_record` (
   `leader` varchar(255) DEFAULT NULL COMMENT '扫描组长（名字）',
   `worker_list` text COMMENT '组长扫描结束之前，需要填入的工人名字,保存格式为string数组',
   `status` tinyint(4) unsigned NOT NULL COMMENT 'task状态，“1”==>未开始， “2”==>进行中，“3”==>完成， “4”==>异常',
-  `begin_time` datetime DEFAULT NULL COMMENT 'task开始时间',
-  `end_time` datetime DEFAULT NULL COMMENT 'task结束时间',
+  `install_begin_time` datetime DEFAULT NULL,
+  `install_end_time` datetime DEFAULT NULL,
+  `quality_begin_time` datetime DEFAULT NULL COMMENT 'task开始时间',
+  `quality_end_time` datetime DEFAULT NULL COMMENT 'task结束时间',
   PRIMARY KEY (`id`),
   KEY `fk_tr_process_record_id` (`process_record_id`),
   KEY `fk_tr_task_name` (`task_name`),
@@ -717,8 +719,8 @@ CREATE TABLE `task_record` (
 -- ----------------------------
 -- Records of task_record
 -- ----------------------------
-INSERT INTO `task_record` VALUES ('3', '安裝主传动', '1', '0', null, null, '0', '2018-01-25 19:41:15', null);
-INSERT INTO `task_record` VALUES ('4', '喷油漆', '1', '0', null, null, '1', '2018-01-25 19:41:53', null);
+INSERT INTO `task_record` VALUES ('3', '安裝主传动', '1', '0', null, null, '0', null, null, '2018-01-25 19:41:15', null);
+INSERT INTO `task_record` VALUES ('4', '喷油漆', '1', '0', null, null, '1', null, null, '2018-01-25 19:41:53', null);
 
 -- ----------------------------
 -- Table structure for `user`

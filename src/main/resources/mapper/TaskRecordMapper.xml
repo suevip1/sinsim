@@ -11,8 +11,10 @@
     <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
     <result column="leader" jdbcType="VARCHAR" property="leader" />
     <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime" />
+    <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime" />
+    <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime" />
+    <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime" />
     <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
   </resultMap>
 

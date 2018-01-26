@@ -152,19 +152,19 @@
       <if test="date_type != null and date_type == 1">
           <!-- 查询 建立时间contract_ship_date在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
           <if test="query_start_time!=null and query_start_time != '' ">
-              and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d %T') &gt;= #{query_start_time}
+              and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d') &gt;= #{query_start_time}
           </if>
           <if test="query_finish_time!=null and query_finish_time != '' ">
-              and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+              and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d') &lt;= #{query_finish_time}
           </if>
       </if>
       <if test="date_type != null and date_type == 2">
           <!-- 查询 建立时间plan_ship_date在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
           <if test="query_start_time!=null and query_start_time != '' ">
-              and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d %T') &gt;= #{query_start_time}
+              and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &gt;= #{query_start_time}
           </if>
           <if test="query_finish_time!=null and query_finish_time != '' ">
-              and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+              and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{query_finish_time}
           </if>
       </if>
       GROUP BY m.id
