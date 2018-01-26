@@ -32,16 +32,29 @@ public class TaskRecord {
     private Byte status;
 
     /**
-     * task开始时间
+     * task安装开始时间
      */
-    @Column(name = "begin_time")
-    private Date beginTime;
+    @Column(name = "install_begin_time")
+    private Date installBeginTime;
 
     /**
-     * task结束时间
+     * task安装结束时间
      */
-    @Column(name = "end_time")
-    private Date endTime;
+    @Column(name = "install_end_time")
+    private Date installEndTime;
+
+    /**
+     * task质检开始时间
+     */
+    @Column(name = "quality_begin_time")
+    private Date qualityBeginTime;
+
+    /**
+     * task质检结束时间
+     */
+    @Column(name = "quality_end_time")
+    private Date qualityEndTime;
+
 
     /**
      * 组长扫描结束之前，需要填入的工人名字,保存格式为string数组
@@ -145,40 +158,36 @@ public class TaskRecord {
         this.status = status;
     }
 
-    /**
-     * 获取task开始时间
-     *
-     * @return begin_time - task开始时间
-     */
-    public Date getBeginTime() {
-        return beginTime;
+    public Date getInstallBeginTime() {
+        return installBeginTime;
     }
 
-    /**
-     * 设置task开始时间
-     *
-     * @param beginTime task开始时间
-     */
-    public void setBeginTime(Date beginTime) {
-        this.beginTime = beginTime;
+    public void setInstallBeginTime(Date installBeginTime) {
+        this.installBeginTime = installBeginTime;
     }
 
-    /**
-     * 获取task结束时间
-     *
-     * @return end_time - task结束时间
-     */
-    public Date getEndTime() {
-        return endTime;
+    public Date getInstallEndTime() {
+        return installEndTime;
     }
 
-    /**
-     * 设置task结束时间
-     *
-     * @param endTime task结束时间
-     */
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setInstallEndTime(Date installEndTime) {
+        this.installEndTime = installEndTime;
+    }
+
+    public Date getQualityBeginTime() {
+        return qualityBeginTime;
+    }
+
+    public void setQualityBeginTime(Date qualityBeginTime) {
+        this.qualityBeginTime = qualityBeginTime;
+    }
+
+    public Date getQualityEndTime() {
+        return qualityEndTime;
+    }
+
+    public void setQualityEndTime(Date qualityEndTime) {
+        this.qualityEndTime = qualityEndTime;
     }
 
     /**
