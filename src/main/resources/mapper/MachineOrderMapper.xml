@@ -147,7 +147,16 @@
   </select>
 
   <select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
-    select mo.*, od.id detail_id, os.id order_sign_id, os.order_id, os.sign_content, os.create_time os_create_time, os.update_time os_update_time,
+    select mo.*,
+    od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
+    od.special_taping_head, od.special_towel_needle, od.electric_pc, od.electric_motor, od.electric_motor_xy,
+    od.electric_trim, od.electric_power, od.electric_switch, od.electric_oil, od.axle_split,
+    od.axle_panel, od.axle_needle, od.axle_rail, od.axle_down_check, od.axle_hook,
+    od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
+    od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
+    od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
+    od.driver_reel,
+    os.id order_sign_id, os.order_id, os.sign_content, os.create_time os_create_time, os.update_time os_update_time,
            mt.id machineTypeID, mt.name,con.contract_num, con.customer_name as customer, ocr.id changeRecordId,
            osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id
     from machine_order mo
@@ -196,7 +205,16 @@
 
 
   <select id="selectOrder" resultMap="MachineOrderDetailMap">
-    select mo.*, od.id detail_id,os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
+    select mo.*,
+    od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
+    od.special_taping_head, od.special_towel_needle, od.electric_pc, od.electric_motor, od.electric_motor_xy,
+    od.electric_trim, od.electric_power, od.electric_switch, od.electric_oil, od.axle_split,
+    od.axle_panel, od.axle_needle, od.axle_rail, od.axle_down_check, od.axle_hook,
+    od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
+    od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
+    od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
+    od.driver_reel,
+    os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
            mt.id machineTypeID, mt.name, con.contract_num, con.customer_name as customer, ocr.id changeRecordId,
             osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id
     from machine_order mo
