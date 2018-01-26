@@ -3,6 +3,7 @@ package com.eservice.api.service.impl;
 import com.eservice.api.dao.MachineMapper;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine.MachinePlan;
+import com.eservice.api.model.machine.MachineInfo;
 import com.eservice.api.service.MachineService;
 import com.eservice.api.core.AbstractService;
 import org.springframework.stereotype.Service;
@@ -63,5 +64,21 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
             return machineMapper.selectPlanningMachines(orderNum, machineId, nameplate, location, status, machineType,dateType, query_start_time, query_finish_time);
         }
 
+    }
+
+    //selectConfigMachine
+    public List<MachineInfo> selectConfigMachine(
+                                                 Integer order_id,
+                                                 String orderNum,
+                                                 String contractNum,
+                                                 String machine_id,
+                                                 String nameplate,
+                                                 String location,
+                                                 Byte status,
+                                                 String query_start_time,
+                                                 String query_finish_time,
+                                                 Integer configStatus
+    ) {
+        return machineMapper.selectConfigMachine(order_id, orderNum, contractNum, machine_id, nameplate, location, status, query_start_time, query_finish_time, configStatus);
     }
 }

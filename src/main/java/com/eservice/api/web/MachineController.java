@@ -1,9 +1,11 @@
 package com.eservice.api.web;
+
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine.MachinePlan;
+import com.eservice.api.model.machine.MachineInfo;
 import com.eservice.api.service.impl.MachineServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -94,6 +96,28 @@ public class MachineController {
                                          @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
         List<MachinePlan> list = machineService.selectPlanningMachines(orderNum, machineId, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time, is_fuzzy);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+	
+    //
+    @PostMapping("/selectConfigMachine")
+    public Result selectConfigMachine(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            Integer order_id,
+            String orderNum,
+            String contractNum,
+            String machine_id,
+            String nameplate,
+            String location,
+            Byte status,
+            String query_start_time,
+            String query_finish_time,
+            @RequestParam(defaultValue = "0") Integer configStatus
+    ) {
+        PageHelper.startPage(page, size);
+        List<MachineInfo> list = machineService.selectConfigMachine(order_id, orderNum, contractNum, machine_id, nameplate, location, status, query_start_time, query_finish_time,configStatus);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

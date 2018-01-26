@@ -33,6 +33,28 @@
     <result column="contract_ship_date" jdbcType="TIMESTAMP" property="contractShipDate" />
     <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
   </resultMap>
+    
+    
+    <resultMap id="MachineInfoMap" type="com.eservice.api.model.machine.MachineInfo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="order_id" jdbcType="INTEGER" property="orderId"/>
+        <result column="machine_id" jdbcType="VARCHAR" property="machineId"/>
+        <result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
+        <result column="location" jdbcType="VARCHAR" property="location"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="machine_type" jdbcType="INTEGER" property="machineType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
+        <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+        <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+        <result column="contract_id" jdbcType="INTEGER" property="contractId"/>
+        <result column="contract_Num" jdbcType="VARCHAR" property="contractNum"/>
+
+    </resultMap>
 
   <select id="searchMachineByAbnormalRecordId" resultMap="BaseResultMap">
 --  count(distinct m.id)是为了去重
@@ -219,5 +241,53 @@
       GROUP BY m.id
       ORDER By m.create_time, m.ship_time DESC
   </select>
+
+
+    <select id="selectConfigMachine" resultMap="MachineInfoMap">
+        SELECT * FROM
+        (SELECT m.*,mo.contract_id,mo.order_num,c.contract_num,pr.id as process_record_id FROM machine m
+        LEFT JOIN machine_order mo ON m.order_id=mo.id
+        LEFT JOIN contract c ON mo.contract_id=c.id
+        LEFT JOIN process_record pr ON m.id=pr.machine_id) V
+        WHERE 1=1
+
+        <!--还没有配置过流程的-->
+        <if test="configStatus==1">
+            and ISNULL(process_record_id)
+        </if>
+        <!--已配置过流程的-->
+        <if test="configStatus==2">
+            and process_record_id!=""
+        </if>
+        <if test="order_num != null and order_num != ''">
+            and order_num=#{order_num}
+        </if>
+        <if test="contract_num != null and contract_num != ''">
+            and contract_num=#{contract_num}
+        </if>
+        <if test="machine_id != null and machine_id != ''">
+            and machine_id=#{machine_id}
+        </if>
+        <if test="order_id != null and order_id != ''">
+            and order_id=#{order_id}
+        </if>
+        <if test="nameplate != null and nameplate != ''">
+            and nameplate=#{nameplate}
+        </if>
+        <if test="location != null and location != ''">
+            and location=#{location}
+        </if>
+        <if test="status != null and status != ''">
+            and status=#{status}
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+        </if>
+        ORDER By create_time, ship_time DESC
+    </select>
 
 </mapper>
