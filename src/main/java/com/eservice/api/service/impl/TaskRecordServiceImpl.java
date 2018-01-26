@@ -1,6 +1,7 @@
 package com.eservice.api.service.impl;
 
 import com.eservice.api.dao.TaskRecordMapper;
+import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.service.TaskRecordService;
@@ -26,7 +27,7 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
     public List<TaskRecord> selectTaskReocords(String userAccount) {
         return taskRecordMapper.selectTaskReocords(userAccount);
     }
-    public List<TaskRecord> selectTaskPlans(Integer taskRecordId) {
+    public List<TaskPlan> selectTaskPlans(Integer taskRecordId) {
         return taskRecordMapper.selectTaskPlans(taskRecordId);
     }
     public TaskRecordDetail selectTaskRecordDetail(Integer taskRecordId) {

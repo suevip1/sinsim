@@ -30,10 +30,13 @@
   </select>
 
   <resultMap id="taskPlanResultMap" type="com.eservice.api.model.task_plan.TaskPlan">
-    <id column="id"  property="id" />
-    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
-    <result column="group_id" jdbcType="INTEGER" property="groupId" />
-    <result column="guidance" jdbcType="LONGVARCHAR" property="guidance" />
+    <!--mybatis功能：数据库字段名称中下划线 转换为类中的驼峰大写，符合这个规则时不需要一一写明，只需要写不符合规则的那些。所以之前写错了也能返回OK的值-->
+    <!--<id column="id" jdbcType="INTEGER" property="id" />-->
+    <!--<result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />-->
+    <!--<result column="plan_time" jdbcType="TIMESTAMP" property="planTime" />-->
+    <!--<result column="user_id" jdbcType="INTEGER" property="userId" />-->
+    <!--<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />-->
+    <!--<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />-->
   </resultMap>
 
 <!--根据 taskId查task plan-->
@@ -42,7 +45,7 @@
     tp.*
     from task_plan tp
     join task_record  tr on tr.id = tp.task_record_id
-    where tr.id = #{taskId}
+    where tr.id = #{taskRecordId}
   </select>
 
   <resultMap id="TaskRecordDetail" type="com.eservice.api.model.task_record.TaskRecordDetail">

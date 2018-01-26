@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.order_loading_list.OrderLoadingList;
+import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.model.user.User;
@@ -89,10 +90,10 @@ public class TaskRecordController {
      * @return
      */
     @PostMapping("/selectTaskPlans")
-    public  Result selectTasks(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+    public  Result selectTaskPlans(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
                                @RequestParam Integer taskRecordId) {
         PageHelper.startPage(page, size);
-        List<TaskRecord> list = taskRecordService.selectTaskPlans(taskRecordId);
+        List<TaskPlan> list = taskRecordService.selectTaskPlans(taskRecordId);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
