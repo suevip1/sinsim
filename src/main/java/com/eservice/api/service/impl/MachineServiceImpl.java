@@ -4,13 +4,18 @@ import com.eservice.api.dao.MachineMapper;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine.MachinePlan;
 import com.eservice.api.model.machine.MachineInfo;
+import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.service.MachineService;
 import com.eservice.api.core.AbstractService;
+import com.eservice.api.service.common.Constant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -24,6 +29,10 @@ import java.util.List;
 public class MachineServiceImpl extends AbstractService<Machine> implements MachineService {
     @Resource
     private MachineMapper machineMapper;
+
+    @Resource
+    private TaskRecordServiceImpl taskRecordService;
+
     public Machine searchMachineByAbnormalRecordId( Integer abnormalRecordId ){
         return machineMapper.searchMachineByAbnormalRecordId(abnormalRecordId);
     }
@@ -58,11 +67,68 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                                      String query_start_time,
                                                      String query_finish_time,
                                                      Boolean is_fuzzy) {
+        List<MachinePlan> machinePlanList = new ArrayList<>();
         if(is_fuzzy) {
-            return machineMapper.selectPlanningMachinesFuzzy(orderNum, machineId, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time);
+            machinePlanList = machineMapper.selectPlanningMachinesFuzzy(orderNum, machineId, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time);
         } else {
-            return machineMapper.selectPlanningMachines(orderNum, machineId, nameplate, location, status, machineType,dateType, query_start_time, query_finish_time);
+            machinePlanList = machineMapper.selectPlanningMachines(orderNum, machineId, nameplate, location, status, machineType,dateType, query_start_time, query_finish_time);
         }
+        for (MachinePlan itemPlan: machinePlanList) {
+
+            //获取机器对应“已经开始”的task record,
+            Condition tempCondition = new Condition(TaskRecord.class);
+            tempCondition.createCriteria().andCondition("process_record_id = ", itemPlan.getProcessRecordID());
+            tempCondition.createCriteria().andGreaterThan("status", Constant.TASK_INITIAL);
+            List<TaskRecord> taskRecordList = taskRecordService.findByCondition(tempCondition);
+            HashMap<Byte, Integer> taskStatusMap = new HashMap<>();
+            for (TaskRecord record : taskRecordList) {
+                if(record.getStatus().equals(Constant.TASK_INSTALLING)) {
+                    if(taskStatusMap.get(Constant.TASK_INSTALLING) != null){
+                        taskStatusMap.put(Constant.TASK_INSTALLING, taskStatusMap.get(Constant.TASK_INSTALLING) + 1);
+                    }else{
+                        taskStatusMap.put(Constant.TASK_INSTALLING, 1);
+                    }
+                }else if(record.getStatus().equals(Constant.TASK_INSTALLED)){
+                    if(taskStatusMap.get(Constant.TASK_INSTALLED) != null){
+                        taskStatusMap.put(Constant.TASK_INSTALLED, taskStatusMap.get(Constant.TASK_INSTALLED) + 1);
+                    } else{
+                        taskStatusMap.put(Constant.TASK_INSTALLED, 1);
+                    }
+                }else if(record.getStatus().equals(Constant.TASK_QUALITY_DOING)){
+                    if(taskStatusMap.get(Constant.TASK_QUALITY_DOING) != null){
+                        taskStatusMap.put(Constant.TASK_QUALITY_DOING, taskStatusMap.get(Constant.TASK_QUALITY_DOING) + 1);
+                    }else{
+                        taskStatusMap.put(Constant.TASK_QUALITY_DOING, 1);
+                    }
+                }else if(record.getStatus().equals(Constant.TASK_QUALITY_DONE)){
+                    if(taskStatusMap.get(Constant.TASK_QUALITY_DONE) != null){
+                        taskStatusMap.put(Constant.TASK_QUALITY_DONE, taskStatusMap.get(Constant.TASK_QUALITY_DONE) + 1);
+                    }else{
+                        taskStatusMap.put(Constant.TASK_QUALITY_DONE, 1);
+                    }
+                }else if(record.getStatus().equals(Constant.TASK_INSTALL_ABNORMAL)){
+                    if(taskStatusMap.get(Constant.TASK_INSTALL_ABNORMAL) != null){
+                        taskStatusMap.put(Constant.TASK_INSTALL_ABNORMAL, taskStatusMap.get(Constant.TASK_INSTALL_ABNORMAL) + 1);
+                    }else{
+                        taskStatusMap.put(Constant.TASK_INSTALL_ABNORMAL, 1);
+                    }
+                }else if(record.getStatus().equals(Constant.TASK_QUALITY_ABNORMAL)){
+                    if(taskStatusMap.get(Constant.TASK_QUALITY_ABNORMAL) != null){
+                        taskStatusMap.put(Constant.TASK_QUALITY_ABNORMAL, taskStatusMap.get(Constant.TASK_QUALITY_ABNORMAL) + 1);
+                    }else{
+                        taskStatusMap.put(Constant.TASK_QUALITY_ABNORMAL, 1);
+                    }
+                }
+            }
+            itemPlan.setInstalledTaskNum(taskStatusMap.get(Constant.TASK_INSTALLED));
+            itemPlan.setInstallingTaskNum(taskStatusMap.get(Constant.TASK_INSTALLING));
+            itemPlan.setInstallAbnormalTaskNum(taskStatusMap.get(Constant.TASK_INSTALL_ABNORMAL));
+            itemPlan.setQualityDoingTaskNum(taskStatusMap.get(Constant.TASK_QUALITY_DOING));
+            itemPlan.setQualityDoneTaskNum(taskStatusMap.get(Constant.TASK_QUALITY_DONE));
+            itemPlan.setQualityAbnormalTaskNum(taskStatusMap.get(Constant.TASK_QUALITY_ABNORMAL));
+        }
+
+        return machinePlanList;
 
     }
 

@@ -115,6 +115,25 @@ public class Constant {
     public static final Byte MACHINE_CANCELED = 6;
 
     /**
+     * Task(工序)安装状态
+     * "0" --> 初始化状态
+     * "1" --> 开始安装
+     * "2" --> 安装完成
+     * "3" --> 质检中
+     * "4" --> 质检完成
+     * "5" --> 安装异常
+     * "6" --> 质检异常
+     */
+    public static final Byte TASK_INITIAL = 0;
+    public static final Byte TASK_INSTALLING = 1;
+    public static final Byte TASK_INSTALLED = 2;
+    public static final Byte TASK_QUALITY_DOING= 3;
+    public static final Byte TASK_QUALITY_DONE= 4;
+    public static final Byte TASK_INSTALL_ABNORMAL = 5;
+    public static final Byte TASK_QUALITY_ABNORMAL = 6;
+
+
+    /**
      * 保存文件的类型
      * "0" --> 异常
      * "1" --> 质检
