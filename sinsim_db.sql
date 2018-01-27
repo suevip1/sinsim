@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : MyDB
-Source Server Version : 50547
+Source Server         : sinsim
+Source Server Version : 50505
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50547
+Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2018-01-26 10:51:35
+Date: 2018-01-28 01:45:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -198,7 +198,7 @@ DROP TABLE IF EXISTS `machine`;
 CREATE TABLE `machine` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` int(10) unsigned NOT NULL COMMENT '对应的order id',
-  `machine_id` varchar(255) NOT NULL COMMENT '系统内部维护用的机器编号(年、月、类型、头数、针数、不大于台数的数字)',
+  `machine_strid` varchar(255) NOT NULL COMMENT '系统内部维护用的机器编号(年、月、类型、头数、针数、不大于台数的数字)',
   `nameplate` varchar(255) DEFAULT NULL COMMENT '技术部填入的机器编号（铭牌）',
   `location` varchar(255) DEFAULT NULL COMMENT '机器的位置，一般由生产部管理员上传',
   `status` tinyint(4) unsigned NOT NULL DEFAULT '1' COMMENT '机器状态（“1”==>"初始化"，“2”==>"开始安装"，“3”==>"安装完成"，“4”==>"无效"）',
@@ -658,7 +658,9 @@ DROP TABLE IF EXISTS `task_plan`;
 CREATE TABLE `task_plan` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `task_record_id` int(10) unsigned NOT NULL COMMENT '对应taskj记录的id',
-  `plan_time` datetime NOT NULL COMMENT 'task的计划完成时间',
+  `plan_type` tinyint(4) unsigned NOT NULL COMMENT '计划类型（日计划、弹性计划）',
+  `plan_time` datetime DEFAULT NULL COMMENT 'task的计划完成时间',
+  `deadline` datetime DEFAULT NULL COMMENT '在彈性模式下，完成的截止时间',
   `user_id` int(10) unsigned NOT NULL COMMENT '添加计划的人',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '上一次更改计划的时间',
@@ -667,11 +669,12 @@ CREATE TABLE `task_plan` (
   KEY `fk_tp_user_id` (`user_id`),
   CONSTRAINT `fk_tp_task_record_id` FOREIGN KEY (`task_record_id`) REFERENCES `task_record` (`id`),
   CONSTRAINT `fk_tp_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task_plan
 -- ----------------------------
+INSERT INTO `task_plan` VALUES ('4', '3', '1', '2018-01-28 01:24:24', null, '1', '2018-01-28 01:37:20', null);
 
 -- ----------------------------
 -- Table structure for `task_quality_record`

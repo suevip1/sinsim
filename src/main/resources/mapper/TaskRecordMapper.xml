@@ -70,7 +70,7 @@
     <association javaType="com.eservice.api.model.machine.Machine" property="machine">
     <id column="machine_id1"  property="id" />
     <result column="order_id"  property="orderId" />
-    <result column="machine_id" jdbcType="VARCHAR" property="machineId" />
+    <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId" />
     <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
     <result column="location" jdbcType="VARCHAR" property="location" />
     <result column="machine_status" jdbcType="TINYINT" property="status" />
@@ -196,6 +196,10 @@
     join user on user.id = task.quality_user_id
     where user.account = #{userAccount}
   </select>
-
+  <select id="selectNotPlanedTaskRecord" resultMap="BaseResultMap">
+    SELECT tr.* FROM task_record tr
+    LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
+    WHERE tr.process_record_id = #{process_record_id} AND tp.id IS null
+  </select>
 
 </mapper>

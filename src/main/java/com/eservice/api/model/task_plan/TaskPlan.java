@@ -16,10 +16,23 @@ public class TaskPlan {
     private Integer taskRecordId;
 
     /**
+     * 计划的类型
+     */
+    @Column(name = "plan_type")
+    private Byte planType;
+
+    /**
      * task的计划完成时间
      */
     @Column(name = "plan_time")
     private Date planTime;
+
+    /**
+     * 弹性计划task的计划完成截止时间
+     */
+    @Column(name = "deadline")
+    private Date deadline;
+
 
     /**
      * 添加计划的人
@@ -38,6 +51,22 @@ public class TaskPlan {
      */
     @Column(name = "update_time")
     private Date updateTime;
+
+    public Byte getPlanType() {
+        return planType;
+    }
+
+    public void setPlanType(Byte planType) {
+        this.planType = planType;
+    }
+
+    public Date getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
+    }
 
     /**
      * @return id

@@ -43,4 +43,9 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
         return taskRecordMapper.selectAllQaTaskRecordDetailByUserAccount(userAccount);
     }
 
+
+    public List<TaskRecord> selectNotPlanedTaskRecord(Integer processRecordID) {
+        return taskRecordMapper.selectNotPlanedTaskRecord(processRecordID);
+    }
+
 }

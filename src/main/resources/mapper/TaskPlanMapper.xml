@@ -7,6 +7,8 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
+    <result column="plan_type" jdbcType="TINYINT" property="planType" />
+    <result column="deadline" jdbcType="TIMESTAMP" property="deadline" />
     <result column="plan_time" jdbcType="TIMESTAMP" property="planTime" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

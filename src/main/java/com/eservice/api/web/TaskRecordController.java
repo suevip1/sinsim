@@ -170,4 +170,15 @@ public class TaskRecordController {
         PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    //根据机器的流程记录ID，返回未计划的作业任务（task plan）
+    @PostMapping("/selectNotPlanedTaskRecord")
+    public Result selectNotPlanedTaskRecord(  @RequestParam(defaultValue = "0") Integer page,
+                                              @RequestParam(defaultValue = "0") Integer size,
+                                              Integer processRecordID) {
+        PageHelper.startPage(page, size);
+        List<TaskRecord> list = taskRecordService.selectNotPlanedTaskRecord(processRecordID);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }

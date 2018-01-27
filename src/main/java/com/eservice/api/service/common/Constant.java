@@ -142,4 +142,10 @@ public class Constant {
     public static final int ABNORMAL_IMAGE = 0;
     public static final int QUALITY_IMAGE = 1;
     public static final int LOADING_FILE = 2;
+
+    /**
+     * 计划的方式："1"==>日计划， "2"==>弹性计划
+     */
+    public static final Byte DAILY_PLAN= 1;
+    public static final Byte FLEX_PLAN= 2;
 }

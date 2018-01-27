@@ -2,7 +2,7 @@ package com.eservice.api.web;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.task_plan.TaskPlan;
-import com.eservice.api.service.TaskPlanService;
+import com.eservice.api.service.impl.TaskPlanServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ import java.util.List;
 @RequestMapping("/task/plan")
 public class TaskPlanController {
     @Resource
-    private TaskPlanService taskPlanService;
+    private TaskPlanServiceImpl taskPlanService;
 
     @PostMapping("/add")
     public Result add(TaskPlan taskPlan) {
@@ -54,5 +55,19 @@ public class TaskPlanController {
         List<TaskPlan> list = taskPlanService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @PostMapping("/addTaskPlans")
+    public Result addTaskPlans(@RequestParam List<Integer> taskRecordIds, Integer planType, @RequestParam Date planDate, Integer userId){
+        if(taskRecordIds == null || planType == null || planDate == null || userId == null) {
+            return ResultGenerator.genFailResult("参数错误！");
+        }else {
+            boolean result = taskPlanService.addTaskPlans(taskRecordIds, planType, planDate, userId);
+            if(result) {
+                return ResultGenerator.genSuccessResult();
+            }else {
+                return ResultGenerator.genFailResult("作业可能已存在！");
+            }
+        }
     }
 }

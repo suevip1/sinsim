@@ -48,7 +48,7 @@
     <association property="machine" javaType="com.eservice.api.model.machine.Machine">
       <id column="machine_id"  property="id" />
       <result column="order_id" jdbcType="INTEGER" property="orderId" />
-      <result column="machine_id" jdbcType="VARCHAR" property="machineId" />
+      <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId" />
       <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
       <result column="location" jdbcType="VARCHAR" property="location" />
       <result column="machine_status" jdbcType="TINYINT" property="status" />
