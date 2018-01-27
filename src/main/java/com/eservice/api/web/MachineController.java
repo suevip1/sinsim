@@ -18,10 +18,11 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/12/26.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/12/26.
+ */
 @RestController
 @RequestMapping("/machine")
 public class MachineController {
@@ -30,7 +31,7 @@ public class MachineController {
 
     @PostMapping("/add")
     public Result add(String machine) {
-        Machine machine1 = JSON.parseObject(machine,Machine.class);
+        Machine machine1 = JSON.parseObject(machine, Machine.class);
         machineService.save(machine1);
         return ResultGenerator.genSuccessResult();
     }
@@ -43,7 +44,7 @@ public class MachineController {
 
     @PostMapping("/update")
     public Result update(String machine) {
-        Machine machine1 = JSON.parseObject(machine,Machine.class);
+        Machine machine1 = JSON.parseObject(machine, Machine.class);
         machineService.update(machine1);
         return ResultGenerator.genSuccessResult();
     }
@@ -67,7 +68,7 @@ public class MachineController {
                                  @RequestParam(defaultValue = "0") Integer size,
                                  Integer id,
                                  Integer order_id,
-                                 String machine_id,
+                                 String machine_strid,
                                  String nameplate,
                                  String location,
                                  Byte status,
@@ -76,16 +77,16 @@ public class MachineController {
                                  String query_finish_time,
                                  @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
-        List<Machine> list = machineService.selectMachines(id, order_id, machine_id, nameplate, location, status, machine_type, query_start_time, query_finish_time, is_fuzzy);
+        List<Machine> list = machineService.selectMachines(id, order_id, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
-    @PostMapping("/selectPlanningMachines")
+@PostMapping("/selectPlanningMachines")
     public Result selectPlanningMachines(@RequestParam(defaultValue = "0") Integer page,
                                          @RequestParam(defaultValue = "0") Integer size,
                                          String orderNum,
-                                         String machineId,
+                                         String machine_strid,
                                          String nameplate,
                                          String location,
                                          Byte status,
@@ -95,7 +96,7 @@ public class MachineController {
                                          String query_finish_time,
                                          @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
-        List<MachinePlan> list = machineService.selectPlanningMachines(orderNum, machineId, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time, is_fuzzy);
+        List<MachinePlan> list = machineService.selectPlanningMachines(orderNum, machine_strid, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
@@ -108,7 +109,7 @@ public class MachineController {
             Integer order_id,
             String orderNum,
             String contractNum,
-            String machine_id,
+            String machine_strid,
             String nameplate,
             String location,
             Byte status,
@@ -117,7 +118,7 @@ public class MachineController {
             @RequestParam(defaultValue = "0") Integer configStatus
     ) {
         PageHelper.startPage(page, size);
-        List<MachineInfo> list = machineService.selectConfigMachine(order_id, orderNum, contractNum, machine_id, nameplate, location, status, query_start_time, query_finish_time,configStatus);
+        List<MachineInfo> list = machineService.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time,configStatus);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

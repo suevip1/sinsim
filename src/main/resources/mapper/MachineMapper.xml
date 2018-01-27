@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eservice.api.dao.MachineMapper">
-  <resultMap id="BaseResultMap" type="com.eservice.api.model.machine.Machine">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_id" jdbcType="INTEGER" property="orderId" />
-    <result column="machine_id" jdbcType="VARCHAR" property="machineId" />
-    <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
-    <result column="location" jdbcType="VARCHAR" property="location" />
-    <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="machine_type" jdbcType="INTEGER" property="machineType" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime" />
-    <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
-  </resultMap>
-  <resultMap id="PlaningResultMap" type="com.eservice.api.model.machine.MachinePlan">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
-    <result column="machine_id" jdbcType="VARCHAR" property="machineId" />
-    <result column="process_record_id" jdbcType="INTEGER" property="processRecordID" />
-    <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
-    <result column="location" jdbcType="VARCHAR" property="location" />
-    <result column="total_task_num" jdbcType="INTEGER" property="totalTaskNum" />
-    <result column="installed_task_num" jdbcType="INTEGER" property="installedTaskNum" />
-    <result column="planed_task_num" jdbcType="INTEGER" property="planedTaskNum" />
-    <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="machine_type" jdbcType="INTEGER" property="machineType" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="plan_ship_date" jdbcType="TIMESTAMP" property="planShipDate" />
-    <result column="contract_ship_date" jdbcType="TIMESTAMP" property="contractShipDate" />
-    <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
-  </resultMap>
-    
-    
+    <resultMap id="BaseResultMap" type="com.eservice.api.model.machine.Machine">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="order_id" jdbcType="INTEGER" property="orderId"/>
+        <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId"/>
+        <result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
+        <result column="location" jdbcType="VARCHAR" property="location"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="machine_type" jdbcType="INTEGER" property="machineType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
+        <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+    </resultMap>
+    <resultMap id="PlaningResultMap" type="com.eservice.api.model.machine.MachinePlan">
+	    <id column="id" jdbcType="INTEGER" property="id" />
+	    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+	    <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId" />
+        <result column="process_record_id" jdbcType="INTEGER" property="processRecordID" />
+	    <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
+	    <result column="location" jdbcType="VARCHAR" property="location" />
+	    <result column="total_task_num" jdbcType="INTEGER" property="totalTaskNum" />
+	    <result column="installed_task_num" jdbcType="INTEGER" property="installedTaskNum" />
+	    <result column="planed_task_num" jdbcType="INTEGER" property="planedTaskNum" />
+	    <result column="status" jdbcType="TINYINT" property="status" />
+	    <result column="machine_type" jdbcType="INTEGER" property="machineType" />
+	    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	    <result column="plan_ship_date" jdbcType="TIMESTAMP" property="planShipDate" />
+    	    <result column="contract_ship_date" jdbcType="TIMESTAMP" property="contractShipDate" />
+	    <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
+    </resultMap>
     <resultMap id="MachineInfoMap" type="com.eservice.api.model.machine.MachineInfo">
         <!--
           WARNING - @mbg.generated
         -->
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="order_id" jdbcType="INTEGER" property="orderId"/>
-        <result column="machine_id" jdbcType="VARCHAR" property="machineId"/>
+        <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId"/>
         <result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
         <result column="location" jdbcType="VARCHAR" property="location"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
@@ -82,8 +80,8 @@
       <if test="id != null and id != ''">
           and id=#{id}
       </if>
-      <if test="machine_id != null and machine_id != ''">
-          and machine_id=#{machine_id}
+      <if test="machine_strid != null and machine_strid != ''">
+          and machine_strid=#{machine_strid}
       </if>
       <if test="order_id != null and order_id != ''">
           and order_id=#{order_id}
@@ -117,8 +115,8 @@
       <if test="id != null and id != ''">
           and id=#{id}
       </if>
-      <if test="machine_id != null and machine_id != ''">
-          and machine_id like CONCAT('%','${machine_id}','%' )
+      <if test="machine_strid != null and machine_strid != ''">
+          and machine_strid like CONCAT('%','${machine_strid}','%' )
       </if>
       <if test="order_id != null and order_id != ''">
           and order_id like CONCAT('%','${order_id}','%' )
@@ -153,8 +151,8 @@
       JOIN task_record tr ON pr.id = tr.process_record_id
       LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
       WHERE m.status &gt; 0 AND m.status &lt; 6
-      <if test="machine_id != null and machine_id != ''">
-          and m.machine_id=#{machine_id}
+      <if test="machine_strid != null and machine_strid != ''">
+          and machine_strid=#{machine_strid}
       </if>
       <if test="order_num != null and order_num != ''">
           and mo.order_num=#{order_num}
@@ -201,8 +199,8 @@
       JOIN task_record tr ON pr.id = tr.process_record_id
       LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
       WHERE m.status &gt; 0 AND m.status &lt; 6
-      <if test="machine_id != null and machine_id != ''">
-          and m.machine_id like CONCAT('%','${machine_id}','%' )
+      <if test="machine_strid != null and machine_strid != ''">
+          and machine_strid=#{machine_strid}
       </if>
       <if test="order_num != null and order_num != ''">
           and mo.order_num like CONCAT('%','${order_num}','%' )
@@ -266,8 +264,8 @@
         <if test="contract_num != null and contract_num != ''">
             and contract_num=#{contract_num}
         </if>
-        <if test="machine_id != null and machine_id != ''">
-            and machine_id=#{machine_id}
+        <if test="machine_strid != null and machine_strid != ''">
+            and machine_strid=#{machine_strid}
         </if>
         <if test="order_id != null and order_id != ''">
             and order_id=#{order_id}

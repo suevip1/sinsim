@@ -17,8 +17,8 @@ public class Machine {
     /**
      * 系统内部维护用的机器编号(年、月、类型、头数、针数、不大于台数的数字)
      */
-    @Column(name = "machine_id")
-    private String machineId;
+    @Column(name = "machine_strid")
+    private String machineStrId;
 
     /**
      * 技术部填入的机器编号（铭牌）
@@ -97,19 +97,19 @@ public class Machine {
     /**
      * 获取系统内部维护用的机器编号(年、月、类型、头数、针数、不大于台数的数字)
      *
-     * @return machine_id - 系统内部维护用的机器编号(年、月、类型、头数、针数、不大于台数的数字)
+     * @return machineStrId - 系统内部维护用的机器编号(年、月、类型、头数、针数、不大于台数的数字)
      */
-    public String getMachineId() {
-        return machineId;
+    public String getMachineStrId() {
+        return machineStrId;
     }
 
     /**
      * 设置系统内部维护用的机器编号(年、月、类型、头数、针数、不大于台数的数字)
      *
-     * @param machineId 系统内部维护用的机器编号(年、月、类型、头数、针数、不大于台数的数字)
+     * @param machineStrId 系统内部维护用的机器编号(年、月、类型、头数、针数、不大于台数的数字)
      */
-    public void setMachineId(String machineId) {
-        this.machineId = machineId;
+    public void setMachineStrId(String machineStrId) {
+        this.machineStrId = machineStrId;
     }
 
     /**

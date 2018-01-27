@@ -134,7 +134,7 @@ public class CommonService {
                 int i=1;
                 while (i <= haveToCreate) {
                     Machine machine = new Machine();
-                    machine.setMachineId(Utils.createMachineBasicId() + i);
+                    machine.setMachineStrId(Utils.createMachineBasicId() + i);
                     machine.setOrderId(orderItem.getId());
                     machine.setMachineType(orderItem.getMachineType());
                     machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_INITIAL)));

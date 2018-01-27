@@ -42,7 +42,7 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
 
     public List<Machine> selectMachines(Integer id,
                                         Integer order_id,
-                                        String machine_id,
+                                        String machine_strid,
                                         String nameplate,
                                         String location,
                                         Byte status,
@@ -50,15 +50,15 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                         String query_start_time,
                                         String query_finish_time,
                                         Boolean is_fuzzy) {
-        if(is_fuzzy) {
-            return machineMapper.selectMachinesFuzzy(id, order_id, machine_id, nameplate, location, status, machine_type, query_start_time, query_finish_time);
+        if (is_fuzzy) {
+            return machineMapper.selectMachinesFuzzy(id, order_id, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time);
         } else {
-            return machineMapper.selectMachines(id, order_id, machine_id, nameplate, location, status, machine_type, query_start_time, query_finish_time);
+            return machineMapper.selectMachines(id, order_id, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time);
         }
     }
-
+	
     public  List<MachinePlan> selectPlanningMachines(String orderNum,
-                                                     String machineId,
+                                                     String machine_strid,
                                                      String nameplate,
                                                      String location,
                                                      Byte status,
@@ -69,9 +69,9 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                                      Boolean is_fuzzy) {
         List<MachinePlan> machinePlanList = new ArrayList<>();
         if(is_fuzzy) {
-            machinePlanList = machineMapper.selectPlanningMachinesFuzzy(orderNum, machineId, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time);
+            machinePlanList = machineMapper.selectPlanningMachinesFuzzy(orderNum, machine_strid, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time);
         } else {
-            machinePlanList = machineMapper.selectPlanningMachines(orderNum, machineId, nameplate, location, status, machineType,dateType, query_start_time, query_finish_time);
+            machinePlanList = machineMapper.selectPlanningMachines(orderNum, machine_strid, nameplate, location, status, machineType,dateType, query_start_time, query_finish_time);
         }
         for (MachinePlan itemPlan: machinePlanList) {
 
@@ -137,7 +137,7 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                                  Integer order_id,
                                                  String orderNum,
                                                  String contractNum,
-                                                 String machine_id,
+                                                 String machine_strid,
                                                  String nameplate,
                                                  String location,
                                                  Byte status,
@@ -145,6 +145,6 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                                  String query_finish_time,
                                                  Integer configStatus
     ) {
-        return machineMapper.selectConfigMachine(order_id, orderNum, contractNum, machine_id, nameplate, location, status, query_start_time, query_finish_time, configStatus);
+        return machineMapper.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, configStatus);
     }
 }

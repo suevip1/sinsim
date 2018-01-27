@@ -68,7 +68,7 @@ public class QualityRecordImageController {
     public String searchMachineByTaskQualityRecordId(@RequestParam Integer taskQualityRecordId ) {
         Machine machine = machineService.searchMachineByTaskQualityRecordId(taskQualityRecordId);
         if(machine != null) {
-            return machine.getMachineId();
+            return machine.getMachineStrId();
         }else {
             return null;
         }

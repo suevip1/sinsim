@@ -77,7 +77,7 @@ public class AbnormalImageController {
     public String searchMachineByAbnormalRecordId(@RequestParam Integer abnormalRecordId ) {
         Machine machine = machineService.searchMachineByAbnormalRecordId(abnormalRecordId);
         if(machine != null) {
-            return machine.getMachineId();
+            return machine.getMachineStrId();
         }else {
             return null;
         }
