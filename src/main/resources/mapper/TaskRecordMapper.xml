@@ -123,9 +123,9 @@
       <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     </association>
 
-  </resultMap>
-  <!--根据 taskId查task record, process record, machine, machine_order-->
-  <select id="selectTaskRecordDetail" resultMap="TaskRecordDetail">
+    </resultMap>
+    <!--根据 taskId查task record, process record, machine, machine_order-->
+    <select id="selectTaskRecordDetail" resultMap="TaskRecordDetail">
     SELECT
     tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
     pr.id process_record_id_in_association, pr.*,
@@ -141,7 +141,7 @@
     where tr.id = #{taskRecordId}
   </select>
 
-  <select id="selectAllTaskRecordDetail" resultMap="TaskRecordDetail">
+    <select id="selectAllTaskRecordDetail" resultMap="TaskRecordDetail">
    SELECT
     tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
     pr.id process_record_id_in_association, pr.*,
@@ -157,7 +157,7 @@
 
   </select>
 
-  <select id="selectAllInstallTaskRecordDetailByUserAccount" resultMap = "TaskRecordDetail">
+    <select id="selectAllInstallTaskRecordDetailByUserAccount" resultMap="TaskRecordDetail">
     select
     tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
     pr.id process_record_id_in_association, pr.*,
@@ -179,7 +179,7 @@
     where user.account  = #{userAccount}
   </select>
 
-  <select id="selectAllQaTaskRecordDetailByUserAccount" resultMap = "TaskRecordDetail">
+    <select id="selectAllQaTaskRecordDetailByUserAccount" resultMap="TaskRecordDetail">
     select
     tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
     pr.id process_record_id_in_association, pr.*,
@@ -201,5 +201,19 @@
     LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
     WHERE tr.process_record_id = #{process_record_id} AND tp.id IS null
   </select>
+
+   <select id="getTaskRecordData" resultMap="BaseResultMap">
+        select
+        *
+        from task_record
+        WHERE 1=1
+        <if test="id != null and id != ''">
+            and id=#{id}
+        </if>
+
+        <if test="processRecordId != null and processRecordId != ''">
+            and process_record_id=#{processRecordId}
+        </if>
+    </select>
 
 </mapper>

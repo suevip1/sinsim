@@ -14,10 +14,11 @@ import java.util.List;
 
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/12/01.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/12/01.
+ */
 @Service
 @Transactional
 public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implements TaskRecordService {
@@ -27,18 +28,23 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
     public List<TaskRecord> selectTaskReocords(String userAccount) {
         return taskRecordMapper.selectTaskReocords(userAccount);
     }
+
     public List<TaskPlan> selectTaskPlans(Integer taskRecordId) {
         return taskRecordMapper.selectTaskPlans(taskRecordId);
     }
+
     public TaskRecordDetail selectTaskRecordDetail(Integer taskRecordId) {
         return taskRecordMapper.selectTaskRecordDetail(taskRecordId);
     }
+
     public List<TaskRecordDetail> selectAllTaskRecordDetail() {
         return taskRecordMapper.selectAllTaskRecordDetail();
     }
+
     public List<TaskRecordDetail> selectAllInstallTaskRecordDetailByUserAccount(String userAccount) {
         return taskRecordMapper.selectAllInstallTaskRecordDetailByUserAccount(userAccount);
     }
+
     public List<TaskRecordDetail> selectAllQaTaskRecordDetailByUserAccount(String userAccount) {
         return taskRecordMapper.selectAllQaTaskRecordDetailByUserAccount(userAccount);
     }
@@ -48,4 +54,7 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
         return taskRecordMapper.selectNotPlanedTaskRecord(processRecordID);
     }
 
+    public List<TaskRecord> getTaskRecordData(Integer id, Integer processRecordId) {
+        return taskRecordMapper.getTaskRecordData(id, processRecordId);
+    }
 }

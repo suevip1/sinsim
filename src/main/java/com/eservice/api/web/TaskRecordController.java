@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
@@ -20,10 +21,11 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/12/01.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/12/01.
+ */
 @RestController
 @RequestMapping("/task/record")
 public class TaskRecordController {
@@ -34,7 +36,7 @@ public class TaskRecordController {
 
     @PostMapping("/add")
     public Result add(String taskRecord) {
-        TaskRecord taskRecord1 = JSON.parseObject(taskRecord,TaskRecord.class);
+        TaskRecord taskRecord1 = JSON.parseObject(taskRecord, TaskRecord.class);
         taskRecordService.save(taskRecord1);
         return ResultGenerator.genSuccessResult();
     }
@@ -47,7 +49,7 @@ public class TaskRecordController {
 
     @PostMapping("/update")
     public Result update(String taskRecord) {
-        TaskRecord taskRecord1 = JSON.parseObject(taskRecord,TaskRecord.class);
+        TaskRecord taskRecord1 = JSON.parseObject(taskRecord, TaskRecord.class);
         taskRecordService.update(taskRecord1);
         return ResultGenerator.genSuccessResult();
     }
@@ -67,15 +69,16 @@ public class TaskRecordController {
     }
 
     /**
-     *  根据userAccount 返回该用户的 Tasks
+     * 根据userAccount 返回该用户的 Tasks
+     *
      * @param page
      * @param size
      * @param userAccount
      * @return 返回该用户的 Tasks
      */
     @PostMapping("/selectTaskReocords")
-    public  Result selectTaskReocords(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
-                               @RequestParam String userAccount) {
+    public Result selectTaskReocords(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                     @RequestParam String userAccount) {
         PageHelper.startPage(page, size);
         List<TaskRecord> list = taskRecordService.selectTaskReocords(userAccount);
         PageInfo pageInfo = new PageInfo(list);
@@ -83,15 +86,16 @@ public class TaskRecordController {
     }
 
     /**
-     *  根据 taskRecord.id 返回 task_plans
+     * 根据 taskRecord.id 返回 task_plans
+     *
      * @param page
      * @param size
      * @param taskRecordId
      * @return
      */
     @PostMapping("/selectTaskPlans")
-    public  Result selectTaskPlans(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
-                               @RequestParam Integer taskRecordId) {
+    public Result selectTaskPlans(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                  @RequestParam Integer taskRecordId) {
         PageHelper.startPage(page, size);
         List<TaskPlan> list = taskRecordService.selectTaskPlans(taskRecordId);
         PageInfo pageInfo = new PageInfo(list);
@@ -100,11 +104,12 @@ public class TaskRecordController {
 
     /**
      * 根据  taskRecord.id 返回processRecord, machine，machine order,order_loading_list 信息。
+     *
      * @param taskRecordId
      * @return
      */
     @PostMapping("selectTaskRecordDetail")
-    public Result selectTaskRecordDetail( @RequestParam Integer taskRecordId) {
+    public Result selectTaskRecordDetail(@RequestParam Integer taskRecordId) {
         TaskRecordDetail taskRecordDetail = taskRecordService.selectTaskRecordDetail(taskRecordId);
         return ResultGenerator.genSuccessResult(taskRecordDetail);
     }
@@ -112,19 +117,20 @@ public class TaskRecordController {
     /**
      * 给生产部管理员返回所有detail，其中不限于包括：
      * {
-     "machine_id":"",
-     "task_name":"",
-     "status":"",
-     "交货日期":"",
-     "计划日期":"",
-     }
+     * "machine_id":"",
+     * "task_name":"",
+     * "status":"",
+     * "交货日期":"",
+     * "计划日期":"",
+     * }
+     *
      * @param page
      * @param size
      * @return
      */
     @PostMapping("selectAllTaskRecordDetail")
     public Result selectAllTaskRecordDetail(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size
-                                           ) {
+    ) {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> ListTaskRecordDetail = taskRecordService.selectAllTaskRecordDetail();
         PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
@@ -133,17 +139,18 @@ public class TaskRecordController {
 
     /**
      * 根据用户返回所有安装组detail，其中不限于包括：
-     "machine_id":"", 	-->machine.machine_id
-     "task_name":"",	-->task_record.task_name
-     "status":"",		-->task_record.status
-     "交货日期":"",		-->machine_order.contract_ship_date
-     "计划日期":"",		-->machine_order.plan_ship_date
+     * "machine_id":"", 	-->machine.machine_id
+     * "task_name":"",	-->task_record.task_name
+     * "status":"",		-->task_record.status
+     * "交货日期":"",		-->machine_order.contract_ship_date
+     * "计划日期":"",		-->machine_order.plan_ship_date
+     *
      * @param userAccount
      * @return
      */
     @PostMapping("selectAllInstallTaskRecordDetailByUserAccount")
     public Result selectAllInstallTaskRecordDetailByUserAccount(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
-                                                         @RequestParam String userAccount) {
+                                                                @RequestParam String userAccount) {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> ListTaskRecordDetail = taskRecordService.selectAllInstallTaskRecordDetailByUserAccount(userAccount);
         PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
@@ -151,12 +158,13 @@ public class TaskRecordController {
     }
 
     /**
-     *  根据用户返回所有检测员detail，其中不限于包括：
-     "machine_id":"", 	-->machine.machine_id
-     "task_name":"",	-->task_record.task_name
-     "status":"",		-->task_record.status
-     "交货日期":"",		-->machine_order.contract_ship_date
-     "计划日期":"",		-->machine_order.plan_ship_date
+     * 根据用户返回所有检测员detail，其中不限于包括：
+     * "machine_id":"", 	-->machine.machine_id
+     * "task_name":"",	-->task_record.task_name
+     * "status":"",		-->task_record.status
+     * "交货日期":"",		-->machine_order.contract_ship_date
+     * "计划日期":"",		-->machine_order.plan_ship_date
+     *
      * @param page
      * @param size
      * @param userAccount
@@ -164,7 +172,7 @@ public class TaskRecordController {
      */
     @PostMapping("selectAllQaTaskRecordDetailByUserAccount")
     public Result selectAllQaTaskRecordDetailByUserAccount(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
-                                                                @RequestParam String userAccount) {
+                                                           @RequestParam String userAccount) {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> ListTaskRecordDetail = taskRecordService.selectAllQaTaskRecordDetailByUserAccount(userAccount);
         PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
@@ -178,6 +186,19 @@ public class TaskRecordController {
                                               Integer processRecordID) {
         PageHelper.startPage(page, size);
         List<TaskRecord> list = taskRecordService.selectNotPlanedTaskRecord(processRecordID);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+	
+	 @PostMapping("/getTaskRecordData")
+     public Result getTaskRecordData(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            @RequestParam(defaultValue = "0") Integer id,
+            @RequestParam(defaultValue = "0") Integer processRecordId
+            ) {
+        PageHelper.startPage(page, size);
+        List<TaskRecord> list = taskRecordService.getTaskRecordData(id,processRecordId);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

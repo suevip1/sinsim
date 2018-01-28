@@ -51,7 +51,7 @@
         <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
         <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
         <result column="contract_id" jdbcType="INTEGER" property="contractId"/>
-        <result column="contract_Num" jdbcType="VARCHAR" property="contractNum"/>
+        <result column="contract_num" jdbcType="VARCHAR" property="contractNum"/>
 
     </resultMap>
 
@@ -244,12 +244,12 @@
 
     <select id="selectConfigMachine" resultMap="MachineInfoMap">
         SELECT * FROM
-        (SELECT m.*,mo.contract_id,mo.order_num,c.contract_num,pr.id as process_record_id FROM machine m
+        (SELECT m.*,mo.contract_id,mo.order_num,c.contract_num,pr.id as process_record_id,pr.node_data,pr.link_data,pr.process_id
+        FROM machine m
         LEFT JOIN machine_order mo ON m.order_id=mo.id
         LEFT JOIN contract c ON mo.contract_id=c.id
         LEFT JOIN process_record pr ON m.id=pr.machine_id) V
         WHERE 1=1
-
         <!--还没有配置过流程的-->
         <if test="configStatus==1">
             and ISNULL(process_record_id)
