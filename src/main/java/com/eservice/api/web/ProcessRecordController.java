@@ -83,11 +83,31 @@ public class ProcessRecordController {
             return ResultGenerator.genFailResult("提交到服务端的JSON数据解析错误");
         }
 
-        pr.setCreateTime(new Date());
-        processRecordService.save(pr);
         Integer prId = pr.getId();
+        pr.setCreateTime(new Date());
+        try {
+            if (prId > 0) {//已经保存过配置流程的，需要更新
+                processRecordService.update(pr);
+                try {
+                    //删除旧的taskrecorder表中对应的任务,根据process_recorder_id删除
+                    taskRecordService.deleteTaskRecordByCondition(0, prId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return ResultGenerator.genFailResult("taskRecordService删除旧任务失败");
+                }
+
+            } else {
+                processRecordService.save(pr);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResultGenerator.genFailResult("processRecordService数据库操作失败");
+        }
+
         trList.forEach((item) -> {
-            item.setProcessRecordId(prId);
+            item.setProcessRecordId(pr.getId());
         });
         try {
 
@@ -110,5 +130,6 @@ public class ProcessRecordController {
             return ResultGenerator.genFailResult("machineService数据库操作失败");
         }
         return ResultGenerator.genSuccessResult();
+
     }
 }

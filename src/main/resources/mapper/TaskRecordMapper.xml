@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eservice.api.dao.TaskRecordMapper">
-  <resultMap id="BaseResultMap" type="com.eservice.api.model.task_record.TaskRecord">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
-    <result column="process_record_id" jdbcType="INTEGER" property="processRecordId" />
-    <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
-    <result column="leader" jdbcType="VARCHAR" property="leader" />
-    <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime" />
-    <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime" />
-    <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime" />
-    <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime" />
-    <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.eservice.api.model.task_record.TaskRecord">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+        <result column="process_record_id" jdbcType="INTEGER" property="processRecordId"/>
+        <result column="node_key" jdbcType="TINYINT" property="nodeKey"/>
+        <result column="leader" jdbcType="VARCHAR" property="leader"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime"/>
+        <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime"/>
+        <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime"/>
+        <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime"/>
+        <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
+    </resultMap>
 
-  <!--根据user.account查 task_record OK-->
-  <select id="selectTaskReocords" resultMap="BaseResultMap">
+    <!--根据user.account查 task_record OK-->
+    <select id="selectTaskReocords" resultMap="BaseResultMap">
   select
   tr.*
   from task_record tr
@@ -29,18 +29,18 @@
   where user.account  = #{userAccount}
   </select>
 
-  <resultMap id="taskPlanResultMap" type="com.eservice.api.model.task_plan.TaskPlan">
-    <!--mybatis功能：数据库字段名称中下划线 转换为类中的驼峰大写，符合这个规则时不需要一一写明，只需要写不符合规则的那些。所以之前写错了也能返回OK的值-->
-    <!--<id column="id" jdbcType="INTEGER" property="id" />-->
-    <!--<result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />-->
-    <!--<result column="plan_time" jdbcType="TIMESTAMP" property="planTime" />-->
-    <!--<result column="user_id" jdbcType="INTEGER" property="userId" />-->
-    <!--<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />-->
-    <!--<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />-->
-  </resultMap>
+    <resultMap id="taskPlanResultMap" type="com.eservice.api.model.task_plan.TaskPlan">
+        <!--mybatis功能：数据库字段名称中下划线 转换为类中的驼峰大写，符合这个规则时不需要一一写明，只需要写不符合规则的那些。所以之前写错了也能返回OK的值-->
+        <!--<id column="id" jdbcType="INTEGER" property="id" />-->
+        <!--<result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />-->
+        <!--<result column="plan_time" jdbcType="TIMESTAMP" property="planTime" />-->
+        <!--<result column="user_id" jdbcType="INTEGER" property="userId" />-->
+        <!--<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />-->
+        <!--<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />-->
+    </resultMap>
 
-<!--根据 taskId查task plan-->
-  <select id="selectTaskPlans" resultMap="taskPlanResultMap">
+    <!--根据 taskId查task plan-->
+    <select id="selectTaskPlans" resultMap="taskPlanResultMap">
     select
     tp.*
     from task_plan tp
@@ -48,82 +48,82 @@
     where tr.id = #{taskRecordId}
   </select>
 
-  <resultMap id="TaskRecordDetail" type="com.eservice.api.model.task_record.TaskRecordDetail">
-    <id column="id" property="id" />
-    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
-    <result column="process_record_id" jdbcType="INTEGER" property="processRecordId" />
-    <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
-    <result column="leader" jdbcType="VARCHAR" property="leader" />
-    <result column="taskRecord_status" jdbcType="TINYINT" property="status" />
-    <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime" />
-    <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime" />
-    <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime" />
-    <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime" />
-    <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
-    <association javaType="com.eservice.api.model.process_record.ProcessRecord" property="processRecord" >
-      <id column="process_record_id_in_association"  property="id" />
-      <result column="machine_id" jdbcType="INTEGER" property="machineId" />
-      <result column="process_id" jdbcType="INTEGER" property="processId" />
-      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-      <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-      <result column="link_data" jdbcType="LONGVARCHAR" property="linkData" />
-      <result column="node_data" jdbcType="LONGVARCHAR" property="nodeData" />
-    </association>
-    <association javaType="com.eservice.api.model.machine.Machine" property="machine">
-      <id column="machine_id1"  property="id" />
-      <result column="order_id"  property="orderId" />
-      <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId" />
-      <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
-      <result column="location" jdbcType="VARCHAR" property="location" />
-      <result column="machine_status" jdbcType="TINYINT" property="status" />
-      <result column="machine_type" jdbcType="INTEGER" property="machineType" />
-      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-      <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime" />
-      <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
-    </association>
-    <association javaType="com.eservice.api.model.machine_order.MachineOrder" property="machineOrder" >
-      <id column="machine_order_id" jdbcType="INTEGER" property="id" />
-      <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId" />
-      <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId" />
-      <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
-      <result column="contract_id" jdbcType="VARCHAR" property="contractId" />
-      <!--<result column="customer" jdbcType="VARCHAR" property="customer" />-->
-      <result column="country" jdbcType="VARCHAR" property="country" />
-      <result column="brand" jdbcType="VARCHAR" property="brand" />
-      <result column="mo_machine_type" jdbcType="INTEGER" property="machineType" />
-      <result column="needle_num" jdbcType="INTEGER" property="needleNum" />
-      <result column="head_num" jdbcType="INTEGER" property="headNum" />
-      <result column="head_distance" jdbcType="INTEGER" property="headDistance" />
-      <result column="x_distance" jdbcType="VARCHAR" property="xDistance" />
-      <result column="y_distance" jdbcType="VARCHAR" property="yDistance" />
-      <result column="package_method" jdbcType="VARCHAR" property="packageMethod" />
-      <result column="machine_num" jdbcType="TINYINT" property="machineNum" />
-      <result column="machine_price" jdbcType="VARCHAR" property="machinePrice" />
-      <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
-      <result column="plan_ship_date" jdbcType="DATE" property="planShipDate" />
-      <result column="sellman" jdbcType="VARCHAR" property="sellman" />
-      <result column="machineOrder_status" jdbcType="TINYINT" property="status" />
-      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-      <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-      <result column="mark" jdbcType="LONGVARCHAR" property="mark" />
-    </association>
-    <association javaType="com.eservice.api.model.order_loading_list.OrderLoadingList" property="orderLoadingList">
-      <id column="order_loading_list_id"  property="id" />
-      <result column="order_id" jdbcType="INTEGER" property="orderId" />
-      <result column="file_name" jdbcType="VARCHAR" property="fileName" />
-      <result column="type" jdbcType="TINYINT" property="type" />
-      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    </association>
-    <association javaType="com.eservice.api.model.task_plan.TaskPlan" property="taskPlan">
-      <id column="task_plan_id" jdbcType="INTEGER" property="id" />
-      <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
-      <result column="plan_time" jdbcType="TIMESTAMP" property="planTime" />
-      <result column="user_id" jdbcType="INTEGER" property="userId" />
-      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    </association>
+    <resultMap id="TaskRecordDetail" type="com.eservice.api.model.task_record.TaskRecordDetail">
+        <id column="id" property="id"/>
+        <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+        <result column="process_record_id" jdbcType="INTEGER" property="processRecordId"/>
+        <result column="node_key" jdbcType="TINYINT" property="nodeKey"/>
+        <result column="leader" jdbcType="VARCHAR" property="leader"/>
+        <result column="taskRecord_status" jdbcType="TINYINT" property="status"/>
+        <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime"/>
+        <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime"/>
+        <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime"/>
+        <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime"/>
+        <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
+        <association javaType="com.eservice.api.model.process_record.ProcessRecord" property="processRecord">
+            <id column="process_record_id_in_association" property="id"/>
+            <result column="machine_id" jdbcType="INTEGER" property="machineId"/>
+            <result column="process_id" jdbcType="INTEGER" property="processId"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+            <result column="link_data" jdbcType="LONGVARCHAR" property="linkData"/>
+            <result column="node_data" jdbcType="LONGVARCHAR" property="nodeData"/>
+        </association>
+        <association javaType="com.eservice.api.model.machine.Machine" property="machine">
+            <id column="machine_id1" property="id"/>
+            <result column="order_id" property="orderId"/>
+            <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId"/>
+            <result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
+            <result column="location" jdbcType="VARCHAR" property="location"/>
+            <result column="machine_status" jdbcType="TINYINT" property="status"/>
+            <result column="machine_type" jdbcType="INTEGER" property="machineType"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+            <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
+            <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+        </association>
+        <association javaType="com.eservice.api.model.machine_order.MachineOrder" property="machineOrder">
+            <id column="machine_order_id" jdbcType="INTEGER" property="id"/>
+            <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId"/>
+            <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId"/>
+            <result column="create_user_id" jdbcType="INTEGER" property="createUserId"/>
+            <result column="contract_id" jdbcType="VARCHAR" property="contractId"/>
+            <!--<result column="customer" jdbcType="VARCHAR" property="customer" />-->
+            <result column="country" jdbcType="VARCHAR" property="country"/>
+            <result column="brand" jdbcType="VARCHAR" property="brand"/>
+            <result column="mo_machine_type" jdbcType="INTEGER" property="machineType"/>
+            <result column="needle_num" jdbcType="INTEGER" property="needleNum"/>
+            <result column="head_num" jdbcType="INTEGER" property="headNum"/>
+            <result column="head_distance" jdbcType="INTEGER" property="headDistance"/>
+            <result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
+            <result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
+            <result column="package_method" jdbcType="VARCHAR" property="packageMethod"/>
+            <result column="machine_num" jdbcType="TINYINT" property="machineNum"/>
+            <result column="machine_price" jdbcType="VARCHAR" property="machinePrice"/>
+            <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
+            <result column="plan_ship_date" jdbcType="DATE" property="planShipDate"/>
+            <result column="sellman" jdbcType="VARCHAR" property="sellman"/>
+            <result column="machineOrder_status" jdbcType="TINYINT" property="status"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+            <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+            <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
+        </association>
+        <association javaType="com.eservice.api.model.order_loading_list.OrderLoadingList" property="orderLoadingList">
+            <id column="order_loading_list_id" property="id"/>
+            <result column="order_id" jdbcType="INTEGER" property="orderId"/>
+            <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+            <result column="type" jdbcType="TINYINT" property="type"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        </association>
+        <association javaType="com.eservice.api.model.task_plan.TaskPlan" property="taskPlan">
+            <id column="task_plan_id" jdbcType="INTEGER" property="id"/>
+            <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId"/>
+            <result column="plan_time" jdbcType="TIMESTAMP" property="planTime"/>
+            <result column="user_id" jdbcType="INTEGER" property="userId"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        </association>
 
     </resultMap>
     <!--根据 taskId查task record, process record, machine, machine_order-->
@@ -198,13 +198,13 @@
     join user on user.id = task.quality_user_id
     where user.account = #{userAccount}
   </select>
-  <select id="selectNotPlanedTaskRecord" resultMap="BaseResultMap">
+    <select id="selectNotPlanedTaskRecord" resultMap="BaseResultMap">
     SELECT tr.* FROM task_record tr
     LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
     WHERE tr.process_record_id = #{process_record_id} AND tp.id IS null
   </select>
 
-   <select id="getTaskRecordData" resultMap="BaseResultMap">
+    <select id="getTaskRecordData" resultMap="BaseResultMap">
         select
         *
         from task_record
@@ -217,5 +217,14 @@
             and process_record_id=#{processRecordId}
         </if>
     </select>
+
+    <delete id="deleteTaskRecordByCondition" parameterType="com.eservice.api.model.task_record.TaskRecord">
+        <if test="id != null and id != ''">
+            DELETE FROM task_record WHERE id=#{id}
+        </if>
+        <if test="processRecordId != null and processRecordId != ''">
+            DELETE FROM task_record WHERE process_record_id=#{processRecordId}
+        </if>
+    </delete>
 
 </mapper>

@@ -57,4 +57,8 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
     public List<TaskRecord> getTaskRecordData(Integer id, Integer processRecordId) {
         return taskRecordMapper.getTaskRecordData(id, processRecordId);
     }
+
+    public void deleteTaskRecordByCondition(Integer id, Integer processRecordId) {
+        taskRecordMapper.deleteTaskRecordByCondition(id, processRecordId);
+    }
 }
