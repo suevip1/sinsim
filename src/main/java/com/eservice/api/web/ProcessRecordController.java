@@ -3,8 +3,10 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.process_record.ProcessRecord;
 import com.eservice.api.model.task_record.TaskRecord;
+import com.eservice.api.service.impl.MachineServiceImpl;
 import com.eservice.api.service.impl.ProcessRecordServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -35,6 +37,8 @@ public class ProcessRecordController {
     private ProcessRecordServiceImpl processRecordService;
     @Resource
     private TaskRecordServiceImpl taskRecordService;
+    @Resource
+    private MachineServiceImpl machineService;
 
     @PostMapping("/add")
     public Result add(ProcessRecord processRecord) {
@@ -71,12 +75,12 @@ public class ProcessRecordController {
 
     @PostMapping("/addProcessForMachine")
     @Transactional(rollbackFor = Exception.class)
-    public Result addProcessForMachine(String taskRecords, String processRecord) {
+    public Result addProcessForMachine(String taskRecords, String processRecord, String machine) {
         ProcessRecord pr = JSON.parseObject(processRecord, ProcessRecord.class);
         List<TaskRecord> trList = JSON.parseArray(taskRecords, TaskRecord.class);
-
+        Machine machineObj = JSON.parseObject(machine, Machine.class);
         if (pr == null || trList == null) {
-            return ResultGenerator.genFailResult("�������JSON����ʧ�ܣ�");
+            return ResultGenerator.genFailResult("提交到服务端的JSON数据解析错误");
         }
 
         pr.setCreateTime(new Date());
@@ -92,7 +96,18 @@ public class ProcessRecordController {
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return ResultGenerator.genFailResult("����ʧ�ܣ�");
+            return ResultGenerator.genFailResult("taskRecordService数据库操作失败");
+        }
+        try {
+            machineObj.setStatus((byte) 1);
+            if (machineObj.getId() == 0) {
+                return ResultGenerator.genFailResult("机器Id为空，数据更新失败");
+            }
+            machineService.update(machineObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResultGenerator.genFailResult("machineService数据库操作失败");
         }
         return ResultGenerator.genSuccessResult();
     }
