@@ -33,8 +33,10 @@
       <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
       <result column="leader" jdbcType="VARCHAR" property="leader" />
       <result column="taskRecord_status" jdbcType="TINYINT" property="status" />
-      <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
-      <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+      <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime" />
+      <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime" />
+      <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime" />
+      <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime" />
       <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
     </association>
   </resultMap>
@@ -42,7 +44,7 @@
   <select id="selectTaskQualityRecordDetails" resultMap="TaskQualityRecordDetailResultMap">
     SELECT
     qri.id quality_record_image_id, qri.task_quality_record_id, qri.image, qri.create_time,
-    tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
+    tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
     tqr.*
     FROM
     task_quality_record tqr
