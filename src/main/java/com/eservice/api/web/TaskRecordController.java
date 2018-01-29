@@ -189,6 +189,28 @@ public class TaskRecordController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 获取已计划的task record
+     */
+    @PostMapping("/selectPlanedTaskRecords")
+    public Result selectPlanedTaskRecords(@RequestParam(defaultValue = "0") Integer page,
+                                          @RequestParam(defaultValue = "0") Integer size,
+                                          String orderNum,
+                                          String machineStrId,
+                                          String taskName,
+                                          String nameplate,
+                                          Integer installStatus,
+                                          Integer machineType,
+                                          String query_start_time,
+                                          String query_finish_time,
+                                          @RequestParam(defaultValue = "true") Boolean is_fuzzy){
+
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> list = taskRecordService.selectPlanedTaskRecords(orderNum, machineStrId, taskName, nameplate, installStatus, machineType, query_start_time, query_finish_time, is_fuzzy);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 	
 	 @PostMapping("/getTaskRecordData")
      public Result getTaskRecordData(

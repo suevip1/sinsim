@@ -6,10 +6,12 @@ import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.service.TaskRecordService;
 import com.eservice.api.core.AbstractService;
+import com.eservice.api.service.common.Constant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -60,5 +62,13 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
 
     public void deleteTaskRecordByCondition(Integer id, Integer processRecordId) {
         taskRecordMapper.deleteTaskRecordByCondition(id, processRecordId);
+    }
+
+    public List<TaskRecordDetail> selectPlanedTaskRecords(String orderNum, String machineStrId, String taskName, String nameplate, Integer installStatus, Integer machineType, String query_start_time, String query_finish_time, Boolean is_fuzzy){
+        if(is_fuzzy){
+            return taskRecordMapper.selectPlanedTaskRecordsByFuzzy(orderNum, machineStrId, taskName, nameplate,installStatus, machineType, query_start_time, query_finish_time);
+        }else {
+            return taskRecordMapper.selectPlanedTaskRecords(orderNum, machineStrId, taskName, nameplate,installStatus, machineType, query_start_time, query_finish_time);
+        }
     }
 }

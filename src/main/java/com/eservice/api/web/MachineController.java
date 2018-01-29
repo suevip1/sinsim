@@ -82,11 +82,11 @@ public class MachineController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
-@PostMapping("/selectPlanningMachines")
+    @PostMapping("/selectPlanningMachines")
     public Result selectPlanningMachines(@RequestParam(defaultValue = "0") Integer page,
                                          @RequestParam(defaultValue = "0") Integer size,
                                          String orderNum,
-                                         String machine_strid,
+                                         String machineStrId,
                                          String nameplate,
                                          String location,
                                          Byte status,
@@ -96,7 +96,7 @@ public class MachineController {
                                          String query_finish_time,
                                          @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
-        List<MachinePlan> list = machineService.selectPlanningMachines(orderNum, machine_strid, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time, is_fuzzy);
+        List<MachinePlan> list = machineService.selectPlanningMachines(orderNum, machineStrId, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

@@ -202,7 +202,7 @@
         LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
         WHERE m.status &gt; 0 AND m.status &lt; 6
         <if test="machine_strid != null and machine_strid != ''">
-            and machine_strid=#{machine_strid}
+            and m.machine_strid like CONCAT('%','${machine_strid}','%' )
         </if>
         <if test="order_num != null and order_num != ''">
             and mo.order_num like CONCAT('%','${order_num}','%' )

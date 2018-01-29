@@ -83,6 +83,7 @@
             <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
         </association>
         <association javaType="com.eservice.api.model.machine_order.MachineOrder" property="machineOrder">
+            <id column="order_num" jdbcType="VARCHAR" property="orderNum"/>
             <id column="machine_order_id" jdbcType="INTEGER" property="id"/>
             <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId"/>
             <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId"/>
@@ -120,6 +121,8 @@
             <id column="task_plan_id" jdbcType="INTEGER" property="id"/>
             <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId"/>
             <result column="plan_time" jdbcType="TIMESTAMP" property="planTime"/>
+            <result column="plan_type" jdbcType="TIMESTAMP" property="planType"/>
+            <result column="deadline" jdbcType="TIMESTAMP" property="deadline"/>
             <result column="user_id" jdbcType="INTEGER" property="userId"/>
             <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
             <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
@@ -226,5 +229,94 @@
             DELETE FROM task_record WHERE process_record_id=#{processRecordId}
         </if>
     </delete>
+
+    <select id="selectPlanedTaskRecordsByFuzzy" resultMap="TaskRecordDetail">
+        select
+        tr.id, tr.task_name,tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
+        m.machine_strid,m.nameplate,m.machine_type,
+        mo.order_num,mo.contract_ship_date, mo.plan_ship_date,
+        tp.plan_time, tp.plan_type, tp.deadline
+        from task_record tr
+        join process_record pr on tr.process_record_id = pr.id
+        join machine m on m.id = pr.machine_id
+        join machine_order mo on mo.id = m.order_id
+        JOIN task_plan tp on tr.id = tp.task_record_id
+        join task on task.task_name = tr.task_name
+        WHERE 1 = 1
+        <if test="machine_strid != null and machine_strid != ''">
+            and m.machine_strid like CONCAT('%','${machine_strid}','%' )
+        </if>
+        <if test="order_num != null and order_num != ''">
+            and mo.order_num like CONCAT('%','${order_num}','%' )
+        </if>
+        <if test="nameplate != null and nameplate != ''">
+            and m.nameplate like CONCAT('%','${nameplate}','%' )
+        </if>
+        <if test="install_status != null and install_status != ''">
+            <if test="install_status == 1">
+                and tr.status = 4
+            </if>
+            <if test="install_status == 2">
+                and tr.status != 4
+            </if>
+        </if>
+        <if test="task_name != null and task_name != ''">
+            and tr.task_name like CONCAT('%','${task_name}','%' )
+        </if>
+        <if test="machine_type != null and machine_type != ''">
+            and m.machine_type=#{machine_type}
+        </if>
+        <!-- 查询 建立时间plan_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(tp.plan_time,'%Y-%m-%d') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(tp.plan_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+        </if>
+    </select>
+    <select id="selectPlanedTaskRecords" resultMap="TaskRecordDetail">
+        select
+        tr.id, tr.task_name,tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
+        m.machine_strid,m.nameplate,m.machine_type,
+        mo.order_num,mo.contract_ship_date, mo.plan_ship_date,
+        tp.plan_time, tp.plan_type, tp.deadline
+        from task_record tr
+        join process_record pr on tr.process_record_id = pr.id
+        join machine m on m.id = pr.machine_id
+        join machine_order mo on mo.id = m.order_id
+        JOIN task_plan tp on tr.id = tp.task_record_id
+        join task on task.task_name = tr.task_name
+        WHERE 1 = 1
+        <if test="machine_strid != null and machine_strid != ''">
+            and m.machine_strid = #{machine_strid}
+        </if>
+        <if test="order_num != null and order_num != ''">
+            and mo.order_num = #{order_num}
+        </if>
+        <if test="nameplate != null and nameplate != ''">
+            and m.nameplate = #{nameplate}
+        </if>
+        <if test="install_status != null and install_status != ''">
+            <if test="install_status == 1">
+                and tr.status = 4
+            </if>
+            <if test="install_status == 2">
+                and tr.status != 4
+            </if>
+        </if>
+        <if test="task_name != null and task_name != ''">
+            and tr.task_name = #{task_name}
+        </if>
+        <if test="machine_type != null and machine_type != ''">
+            and m.machine_type = #{machine_type}
+        </if>
+        <!-- 查询 建立时间plan_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(tp.plan_time,'%Y-%m-%d') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(tp.plan_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+        </if>
+    </select>
 
 </mapper>
