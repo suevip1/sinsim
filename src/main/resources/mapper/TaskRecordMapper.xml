@@ -55,38 +55,40 @@
     <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
     <result column="leader" jdbcType="VARCHAR" property="leader" />
     <result column="taskRecord_status" jdbcType="TINYINT" property="status" />
-    <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime" />
+    <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime" />
+    <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime" />
+    <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime" />
     <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
     <association javaType="com.eservice.api.model.process_record.ProcessRecord" property="processRecord" >
-    <id column="process_record_id_in_association"  property="id" />
-    <result column="machine_id" jdbcType="INTEGER" property="machineId" />
-    <result column="process_id" jdbcType="INTEGER" property="processId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="link_data" jdbcType="LONGVARCHAR" property="linkData" />
-    <result column="node_data" jdbcType="LONGVARCHAR" property="nodeData" />
+      <id column="process_record_id_in_association"  property="id" />
+      <result column="machine_id" jdbcType="INTEGER" property="machineId" />
+      <result column="process_id" jdbcType="INTEGER" property="processId" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+      <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+      <result column="link_data" jdbcType="LONGVARCHAR" property="linkData" />
+      <result column="node_data" jdbcType="LONGVARCHAR" property="nodeData" />
     </association>
     <association javaType="com.eservice.api.model.machine.Machine" property="machine">
-    <id column="machine_id1"  property="id" />
-    <result column="order_id"  property="orderId" />
-    <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId" />
-    <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
-    <result column="location" jdbcType="VARCHAR" property="location" />
-    <result column="machine_status" jdbcType="TINYINT" property="status" />
-    <result column="machine_type" jdbcType="INTEGER" property="machineType" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime" />
-    <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
+      <id column="machine_id1"  property="id" />
+      <result column="order_id"  property="orderId" />
+      <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId" />
+      <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
+      <result column="location" jdbcType="VARCHAR" property="location" />
+      <result column="machine_status" jdbcType="TINYINT" property="status" />
+      <result column="machine_type" jdbcType="INTEGER" property="machineType" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+      <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime" />
+      <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
     </association>
     <association javaType="com.eservice.api.model.machine_order.MachineOrder" property="machineOrder" >
       <id column="machine_order_id" jdbcType="INTEGER" property="id" />
       <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId" />
       <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId" />
       <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
-      <result column="contract_num" jdbcType="VARCHAR" property="contractNum" />
-      <result column="customer" jdbcType="VARCHAR" property="customer" />
+      <result column="contract_id" jdbcType="VARCHAR" property="contractId" />
+      <!--<result column="customer" jdbcType="VARCHAR" property="customer" />-->
       <result column="country" jdbcType="VARCHAR" property="country" />
       <result column="brand" jdbcType="VARCHAR" property="brand" />
       <result column="mo_machine_type" jdbcType="INTEGER" property="machineType" />
@@ -127,7 +129,7 @@
     <!--根据 taskId查task record, process record, machine, machine_order-->
     <select id="selectTaskRecordDetail" resultMap="TaskRecordDetail">
     SELECT
-    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
+    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
     pr.id process_record_id_in_association, pr.*,
     m.id machine_id1, m.status machine_status, m.*,
     mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
@@ -137,13 +139,13 @@
     join process_record pr on tr.process_record_id = pr.id
     join machine m on m.id = pr.machine_id
     join machine_order mo on mo.id = m.order_id
-    join order_loading_list oll on oll.order_id = mo.id
+    left join order_loading_list oll on oll.order_id = mo.id
     where tr.id = #{taskRecordId}
   </select>
 
     <select id="selectAllTaskRecordDetail" resultMap="TaskRecordDetail">
    SELECT
-    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
+    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
     pr.id process_record_id_in_association, pr.*,
     m.id machine_id1, m.status machine_status, m.*,
     mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
@@ -153,13 +155,13 @@
     join process_record pr on tr.process_record_id = pr.id
     join machine m on m.id = pr.machine_id
     join machine_order mo on mo.id = m.order_id
-    join order_loading_list oll on oll.order_id = mo.id
+    left join order_loading_list oll on oll.order_id = mo.id
 
   </select>
 
     <select id="selectAllInstallTaskRecordDetailByUserAccount" resultMap="TaskRecordDetail">
     select
-    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
+    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
     pr.id process_record_id_in_association, pr.*,
     m.id machine_id1,m.status machine_status, m.*,
     mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
@@ -171,7 +173,7 @@
     join process_record pr on tr.process_record_id = pr.id
     join machine m on m.id = pr.machine_id
     join machine_order mo on mo.id = m.order_id
-    join order_loading_list oll on oll.order_id = mo.id
+    left join order_loading_list oll on oll.order_id = mo.id
 
     join task on task.task_name = tr.task_name
     join install_group  on install_group.id = task.group_id
@@ -181,7 +183,7 @@
 
     <select id="selectAllQaTaskRecordDetailByUserAccount" resultMap="TaskRecordDetail">
     select
-    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.begin_time, tr.end_time,
+    tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
     pr.id process_record_id_in_association, pr.*,
     m.id machine_id1, m.status machine_status, m.*,
     mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
@@ -190,7 +192,7 @@
     join process_record pr on tr.process_record_id = pr.id
     join machine m on m.id = pr.machine_id
     join machine_order mo on mo.id = m.order_id
-    join order_loading_list oll on oll.order_id = mo.id
+    left join order_loading_list oll on oll.order_id = mo.id
 
     join task on task.task_name = tr.task_name
     join user on user.id = task.quality_user_id
