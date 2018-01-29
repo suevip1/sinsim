@@ -115,10 +115,11 @@ public class MachineController {
             Byte status,
             String query_start_time,
             String query_finish_time,
-            @RequestParam(defaultValue = "0") Integer configStatus
+            @RequestParam(defaultValue = "0") Integer configStatus,
+            @RequestParam(defaultValue = "true") Boolean is_fuzzy
     ) {
         PageHelper.startPage(page, size);
-        List<MachineInfo> list = machineService.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time,configStatus);
+        List<MachineInfo> list = machineService.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time,configStatus,is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

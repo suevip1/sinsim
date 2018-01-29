@@ -143,8 +143,13 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                                  Byte status,
                                                  String query_start_time,
                                                  String query_finish_time,
-                                                 Integer configStatus
+                                                 Integer configStatus,
+                                                 Boolean is_fuzzy
     ) {
-        return machineMapper.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, configStatus);
+        if(is_fuzzy) {
+            return machineMapper.selectConfigMachineFuzzy(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, configStatus);
+        }else {
+            return machineMapper.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, configStatus);
+        }
     }
 }

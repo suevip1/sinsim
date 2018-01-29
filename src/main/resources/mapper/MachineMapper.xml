@@ -18,21 +18,21 @@
         <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
     </resultMap>
     <resultMap id="PlaningResultMap" type="com.eservice.api.model.machine.MachinePlan">
-	    <id column="id" jdbcType="INTEGER" property="id" />
-	    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
-	    <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId" />
-        <result column="process_record_id" jdbcType="INTEGER" property="processRecordID" />
-	    <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
-	    <result column="location" jdbcType="VARCHAR" property="location" />
-	    <result column="total_task_num" jdbcType="INTEGER" property="totalTaskNum" />
-	    <result column="installed_task_num" jdbcType="INTEGER" property="installedTaskNum" />
-	    <result column="planed_task_num" jdbcType="INTEGER" property="planedTaskNum" />
-	    <result column="status" jdbcType="TINYINT" property="status" />
-	    <result column="machine_type" jdbcType="INTEGER" property="machineType" />
-	    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-	    <result column="plan_ship_date" jdbcType="TIMESTAMP" property="planShipDate" />
-    	    <result column="contract_ship_date" jdbcType="TIMESTAMP" property="contractShipDate" />
-	    <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+        <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId"/>
+        <result column="process_record_id" jdbcType="INTEGER" property="processRecordID"/>
+        <result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
+        <result column="location" jdbcType="VARCHAR" property="location"/>
+        <result column="total_task_num" jdbcType="INTEGER" property="totalTaskNum"/>
+        <result column="installed_task_num" jdbcType="INTEGER" property="installedTaskNum"/>
+        <result column="planed_task_num" jdbcType="INTEGER" property="planedTaskNum"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="machine_type" jdbcType="INTEGER" property="machineType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="plan_ship_date" jdbcType="TIMESTAMP" property="planShipDate"/>
+        <result column="contract_ship_date" jdbcType="TIMESTAMP" property="contractShipDate"/>
+        <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
     </resultMap>
     <resultMap id="MachineInfoMap" type="com.eservice.api.model.machine.MachineInfo">
         <!--
@@ -55,7 +55,7 @@
 
     </resultMap>
 
-  <select id="searchMachineByAbnormalRecordId" resultMap="BaseResultMap">
+    <select id="searchMachineByAbnormalRecordId" resultMap="BaseResultMap">
 --  count(distinct m.id)是为了去重
     select m.*, count(distinct m.id)
     from abnormal_image ai
@@ -65,7 +65,7 @@
     join machine m on m.id = pr.machine_id
     where ar.id = #{abnormalRecordId}
   </select>
-  <select id="searchMachineByTaskQualityRecordId" resultMap="BaseResultMap">
+    <select id="searchMachineByTaskQualityRecordId" resultMap="BaseResultMap">
      select m.*, count(distinct m.id)
      from quality_record_image qri
      join task_quality_record tqr on tqr.id = qri.task_quality_record_id
@@ -74,177 +74,180 @@
 	 join machine m on m.id = pr.machine_id
      where qri.task_quality_record_id = #{taskQualityRecordId}
   </select>
-  <select id="selectMachines" resultMap="BaseResultMap">
-    SELECT * FROM machine
-      where 1=1
-      <if test="id != null and id != ''">
-          and id=#{id}
-      </if>
-      <if test="machine_strid != null and machine_strid != ''">
-          and machine_strid=#{machine_strid}
-      </if>
-      <if test="order_id != null and order_id != ''">
-          and order_id=#{order_id}
-      </if>
-      <if test="nameplate != null and nameplate != ''">
-          and nameplate=#{nameplate}
-      </if>
-      <if test="location != null and location != ''">
-          and location=#{location}
-      </if>
-      <if test="status != null">
-          and status=#{status}
-      </if>
-      <if test="machine_type != null and machine_type != ''">
-          and machine_type=#{machine_type}
-      </if>
-      <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-      <if test="query_start_time!=null and query_start_time != '' ">
-          and DATE_FORMAT(create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
-      </if>
-      <if test="query_finish_time!=null and query_finish_time != '' ">
-          and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
-      </if>
-      ORDER By create_time, ship_time DESC
+    <select id="selectMachines" resultMap="BaseResultMap">
+        SELECT * FROM machine
+        where 1=1
+        <if test="id != null and id != ''">
+            and id=#{id}
+        </if>
+        <if test="machine_strid != null and machine_strid != ''">
+            and machine_strid=#{machine_strid}
+        </if>
+        <if test="order_id != null and order_id != ''">
+            and order_id=#{order_id}
+        </if>
+        <if test="nameplate != null and nameplate != ''">
+            and nameplate=#{nameplate}
+        </if>
+        <if test="location != null and location != ''">
+            and location=#{location}
+        </if>
+        <if test="status != null">
+            and status=#{status}
+        </if>
+        <if test="machine_type != null and machine_type != ''">
+            and machine_type=#{machine_type}
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+        </if>
+        ORDER By create_time, ship_time DESC
 
-  </select>
+    </select>
 
-  <select id="selectMachinesFuzzy" resultMap="BaseResultMap">
-      SELECT * FROM machine
-      where 1=1
-      <if test="id != null and id != ''">
-          and id=#{id}
-      </if>
-      <if test="machine_strid != null and machine_strid != ''">
-          and machine_strid like CONCAT('%','${machine_strid}','%' )
-      </if>
-      <if test="order_id != null and order_id != ''">
-          and order_id like CONCAT('%','${order_id}','%' )
-      </if>
-      <if test="nameplate != null and nameplate != ''">
-          and nameplate like CONCAT('%','${nameplate}','%' )
-      </if>
-      <if test="location != null and location != ''">
-          and location=#{location}
-      </if>
-      <if test="status != null">
-          and status=#{status}
-      </if>
-      <if test="machine_type != null and machine_type != ''">
-          and machine_type=#{machine_type}
-      </if>
-      <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-      <if test="query_start_time!=null and query_start_time != '' ">
-          and DATE_FORMAT(create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
-      </if>
-      <if test="query_finish_time!=null and query_finish_time != '' ">
-          and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
-      </if>
-      ORDER By create_time, ship_time DESC
-  </select>
+    <select id="selectMachinesFuzzy" resultMap="BaseResultMap">
+        SELECT * FROM machine
+        where 1=1
+        <if test="id != null and id != ''">
+            and id=#{id}
+        </if>
+        <if test="machine_strid != null and machine_strid != ''">
+            and machine_strid like CONCAT('%','${machine_strid}','%' )
+        </if>
+        <if test="order_id != null and order_id != ''">
+            and order_id like CONCAT('%','${order_id}','%' )
+        </if>
+        <if test="nameplate != null and nameplate != ''">
+            and nameplate like CONCAT('%','${nameplate}','%' )
+        </if>
+        <if test="location != null and location != ''">
+            and location=#{location}
+        </if>
+        <if test="status != null">
+            and status=#{status}
+        </if>
+        <if test="machine_type != null and machine_type != ''">
+            and machine_type=#{machine_type}
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+        </if>
+        ORDER By create_time, ship_time DESC
+    </select>
 
-  <!-- 返回需要安排计划的机器-->
-  <select id="selectPlanningMachines" resultMap="PlaningResultMap">
-    SELECT m.*, mo.order_num,mo.plan_ship_date, mo.contract_ship_date, COUNT(tr.id) AS total_task_num, COUNT(tp.id) AS planed_task_num FROM machine m
-      JOIN machine_order mo ON m.order_id = mo.id
-      JOIN process_record pr ON m.id = pr.machine_id
-      JOIN task_record tr ON pr.id = tr.process_record_id
-      LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
-      WHERE m.status &gt; 0 AND m.status &lt; 6
-      <if test="machine_strid != null and machine_strid != ''">
-          and machine_strid=#{machine_strid}
-      </if>
-      <if test="order_num != null and order_num != ''">
-          and mo.order_num=#{order_num}
-      </if>
-      <if test="nameplate != null and nameplate != ''">
-          and m.nameplate=#{nameplate}
-      </if>
-      <if test="location != null and location != ''">
-          and m.location=#{location}
-      </if>
-      <if test="status != null">
-          and m.status=#{status}
-      </if>
-      <if test="machine_type != null and machine_type != ''">
-          and m.machine_type=#{machine_type}
-      </if>
+    <!-- 返回需要安排计划的机器-->
+    <select id="selectPlanningMachines" resultMap="PlaningResultMap">
+        SELECT m.*, mo.order_num,mo.plan_ship_date, mo.contract_ship_date, COUNT(tr.id) AS total_task_num, COUNT(tp.id)
+        AS planed_task_num FROM machine m
+        JOIN machine_order mo ON m.order_id = mo.id
+        JOIN process_record pr ON m.id = pr.machine_id
+        JOIN task_record tr ON pr.id = tr.process_record_id
+        LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
+        WHERE m.status &gt; 0 AND m.status &lt; 6
+        <if test="machine_strid != null and machine_strid != ''">
+            and machine_strid=#{machine_strid}
+        </if>
+        <if test="order_num != null and order_num != ''">
+            and mo.order_num=#{order_num}
+        </if>
+        <if test="nameplate != null and nameplate != ''">
+            and m.nameplate=#{nameplate}
+        </if>
+        <if test="location != null and location != ''">
+            and m.location=#{location}
+        </if>
+        <if test="status != null">
+            and m.status=#{status}
+        </if>
+        <if test="machine_type != null and machine_type != ''">
+            and m.machine_type=#{machine_type}
+        </if>
 
-      <if test="date_type != null and date_type == 1">
-          <!-- 查询 建立时间contract_ship_date在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-          <if test="query_start_time!=null and query_start_time != '' ">
-              and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d') &gt;= #{query_start_time}
-          </if>
-          <if test="query_finish_time!=null and query_finish_time != '' ">
-              and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d') &lt;= #{query_finish_time}
-          </if>
-      </if>
-      <if test="date_type != null and date_type == 2">
-          <!-- 查询 建立时间plan_ship_date在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-          <if test="query_start_time!=null and query_start_time != '' ">
-              and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &gt;= #{query_start_time}
-          </if>
-          <if test="query_finish_time!=null and query_finish_time != '' ">
-              and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{query_finish_time}
-          </if>
-      </if>
-      GROUP BY m.id
-      ORDER By m.create_time, m.ship_time DESC
-  </select>
+        <if test="date_type != null and date_type == 1">
+            <!-- 查询 建立时间contract_ship_date在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+            <if test="query_start_time!=null and query_start_time != '' ">
+                and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d') &gt;= #{query_start_time}
+            </if>
+            <if test="query_finish_time!=null and query_finish_time != '' ">
+                and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d') &lt;= #{query_finish_time}
+            </if>
+        </if>
+        <if test="date_type != null and date_type == 2">
+            <!-- 查询 建立时间plan_ship_date在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+            <if test="query_start_time!=null and query_start_time != '' ">
+                and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &gt;= #{query_start_time}
+            </if>
+            <if test="query_finish_time!=null and query_finish_time != '' ">
+                and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{query_finish_time}
+            </if>
+        </if>
+        GROUP BY m.id
+        ORDER By m.create_time, m.ship_time DESC
+    </select>
 
-  <select id="selectPlanningMachinesFuzzy" resultMap="PlaningResultMap">
-      SELECT m.*, mo.order_num, mo.plan_ship_date, pr.id AS process_record_id, mo.contract_ship_date, COUNT(tr.id) AS total_task_num, COUNT(tp.id) AS planed_task_num FROM machine m
-      JOIN machine_order mo ON m.order_id = mo.id
-      JOIN process_record pr ON m.id = pr.machine_id
-      JOIN task_record tr ON pr.id = tr.process_record_id
-      LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
-      WHERE m.status &gt; 0 AND m.status &lt; 6
-      <if test="machine_strid != null and machine_strid != ''">
-          and machine_strid=#{machine_strid}
-      </if>
-      <if test="order_num != null and order_num != ''">
-          and mo.order_num like CONCAT('%','${order_num}','%' )
-      </if>
-      <if test="nameplate != null and nameplate != ''">
-          and m.nameplate like CONCAT('%','${nameplate}','%' )
-      </if>
-      <if test="location != null and location != ''">
-          and m.location=#{location}
-      </if>
-      <if test="status != null">
-          and m.status=#{status}
-      </if>
-      <if test="machine_type != null and machine_type != ''">
-          and m.machine_type=#{machine_type}
-      </if>
+    <select id="selectPlanningMachinesFuzzy" resultMap="PlaningResultMap">
+        SELECT m.*, mo.order_num, mo.plan_ship_date, pr.id AS process_record_id, mo.contract_ship_date, COUNT(tr.id) AS
+        total_task_num, COUNT(tp.id) AS planed_task_num FROM machine m
+        JOIN machine_order mo ON m.order_id = mo.id
+        JOIN process_record pr ON m.id = pr.machine_id
+        JOIN task_record tr ON pr.id = tr.process_record_id
+        LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
+        WHERE m.status &gt; 0 AND m.status &lt; 6
+        <if test="machine_strid != null and machine_strid != ''">
+            and machine_strid=#{machine_strid}
+        </if>
+        <if test="order_num != null and order_num != ''">
+            and mo.order_num like CONCAT('%','${order_num}','%' )
+        </if>
+        <if test="nameplate != null and nameplate != ''">
+            and m.nameplate like CONCAT('%','${nameplate}','%' )
+        </if>
+        <if test="location != null and location != ''">
+            and m.location=#{location}
+        </if>
+        <if test="status != null">
+            and m.status=#{status}
+        </if>
+        <if test="machine_type != null and machine_type != ''">
+            and m.machine_type=#{machine_type}
+        </if>
 
-      <if test="date_type != null and date_type == 1">
-          <!-- 查询 建立时间contract_ship_date在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-          <if test="query_start_time!=null and query_start_time != '' ">
-              and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d') &gt;= #{query_start_time}
-          </if>
-          <if test="query_finish_time!=null and query_finish_time != '' ">
-              and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d') &lt;= #{query_finish_time}
-          </if>
-      </if>
-      <if test="date_type != null and date_type == 2">
-          <!-- 查询 建立时间plan_ship_date在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-          <if test="query_start_time!=null and query_start_time != '' ">
-              and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &gt;= #{query_start_time}
-          </if>
-          <if test="query_finish_time!=null and query_finish_time != '' ">
-              and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{query_finish_time}
-          </if>
-      </if>
+        <if test="date_type != null and date_type == 1">
+            <!-- 查询 建立时间contract_ship_date在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+            <if test="query_start_time!=null and query_start_time != '' ">
+                and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d') &gt;= #{query_start_time}
+            </if>
+            <if test="query_finish_time!=null and query_finish_time != '' ">
+                and DATE_FORMAT(mo.contract_ship_date,'%Y-%m-%d') &lt;= #{query_finish_time}
+            </if>
+        </if>
+        <if test="date_type != null and date_type == 2">
+            <!-- 查询 建立时间plan_ship_date在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+            <if test="query_start_time!=null and query_start_time != '' ">
+                and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &gt;= #{query_start_time}
+            </if>
+            <if test="query_finish_time!=null and query_finish_time != '' ">
+                and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{query_finish_time}
+            </if>
+        </if>
 
-      GROUP BY m.id
-      ORDER By m.create_time, m.ship_time DESC
-  </select>
+        GROUP BY m.id
+        ORDER By m.create_time, m.ship_time DESC
+    </select>
 
 
     <select id="selectConfigMachine" resultMap="MachineInfoMap">
         SELECT * FROM
-        (SELECT m.*,mo.contract_id,mo.order_num,c.contract_num,pr.id as process_record_id,pr.node_data,pr.link_data,pr.process_id
+        (SELECT m.*,mo.contract_id,mo.order_num,c.contract_num,pr.id as
+        process_record_id,pr.node_data,pr.link_data,pr.process_id
         FROM machine m
         LEFT JOIN machine_order mo ON m.order_id=mo.id
         LEFT JOIN contract c ON mo.contract_id=c.id
@@ -272,6 +275,54 @@
         </if>
         <if test="nameplate != null and nameplate != ''">
             and nameplate=#{nameplate}
+        </if>
+        <if test="location != null and location != ''">
+            and location=#{location}
+        </if>
+        <if test="status != null and status != ''">
+            and status=#{status}
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+        </if>
+        ORDER By create_time, ship_time DESC
+    </select>
+
+    <select id="selectConfigMachineFuzzy" resultMap="MachineInfoMap">
+        SELECT * FROM
+        (SELECT m.*,mo.contract_id,mo.order_num,c.contract_num,pr.id as
+        process_record_id,pr.node_data,pr.link_data,pr.process_id
+        FROM machine m
+        LEFT JOIN machine_order mo ON m.order_id=mo.id
+        LEFT JOIN contract c ON mo.contract_id=c.id
+        LEFT JOIN process_record pr ON m.id=pr.machine_id) V
+        WHERE 1=1
+        <!--还没有配置过流程的-->
+        <if test="configStatus==1">
+            and ISNULL(process_record_id)
+        </if>
+        <!--已配置过流程的-->
+        <if test="configStatus==2">
+            and process_record_id!=""
+        </if>
+        <if test="order_id != null and order_id != ''">
+            and order_id like #{order_id}
+        </if>
+        <if test="order_num != null and order_num != ''">
+            and order_num like CONCAT('%','${order_num}','%' )
+        </if>
+        <if test="contract_num != null and contract_num != ''">
+            and contract_num like CONCAT('%','${contract_num}','%' )
+        </if>
+        <if test="machine_strid != null and machine_strid != ''">
+            and machine_strid like CONCAT('%','${machine_strid}','%' )
+        </if>
+        <if test="nameplate != null and nameplate != ''">
+            and nameplate like CONCAT('%','${nameplate}','%' )
         </if>
         <if test="location != null and location != ''">
             and location=#{location}
