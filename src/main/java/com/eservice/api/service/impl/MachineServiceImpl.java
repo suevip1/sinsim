@@ -152,4 +152,24 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
             return machineMapper.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, configStatus);
         }
     }
+
+    //selectProcessMachine
+    public List<MachineInfo> selectProcessMachine(
+            Integer order_id,
+            String orderNum,
+            String contractNum,
+            String machine_strid,
+            String nameplate,
+            String location,
+            Byte status,
+            String query_start_time,
+            String query_finish_time,
+            Boolean is_fuzzy
+    ) {
+        if(is_fuzzy) {
+            return machineMapper.selectProcessMachineFuzzy(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time);
+        }else {
+            return machineMapper.selectProcessMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time);
+        }
+    }
 }

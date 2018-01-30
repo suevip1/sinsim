@@ -43,6 +43,13 @@ public class MachineInfo extends Machine {
     @Column(name = "node_data")
     private String nodeData;
 
+
+    @Column(name = "process_create_time")
+    private Date processCreateTime;
+
+    @Column(name = "process_end_time")
+    private Date processEndTime;
+
     /*
     gets sets orderNum
      */
@@ -132,5 +139,33 @@ public class MachineInfo extends Machine {
      */
     public void setNodeData(String nodeData) {
         this.nodeData = nodeData;
+    }
+
+    /**
+     * @return ProcessCreateTime
+     */
+    public Date getProcessCreateTime() {
+        return processCreateTime;
+    }
+
+    /**
+     * @param processCreateTime
+     */
+    public void setProcessCreateTime(Date processCreateTime) {
+        this.processCreateTime = processCreateTime;
+    }
+
+    /**
+     * @return processEndTime
+     */
+    public Date getProcessEndTime() {
+        return processEndTime;
+    }
+
+    /**
+     * @param processEndTime
+     */
+    public void setProcessEndTime(Date processEndTime) {
+        this.processEndTime = processEndTime;
     }
 }

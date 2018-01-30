@@ -52,7 +52,12 @@
         <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
         <result column="contract_id" jdbcType="INTEGER" property="contractId"/>
         <result column="contract_num" jdbcType="VARCHAR" property="contractNum"/>
-
+        <result column="process_record_id" jdbcType="VARCHAR" property="processRecordId"/>
+        <result column="process_id" jdbcType="VARCHAR" property="processId"/>
+        <result column="link_data" jdbcType="VARCHAR" property="linkData"/>
+        <result column="node_data" jdbcType="VARCHAR" property="nodeData"/>
+        <result column="process_create_time" jdbcType="VARCHAR" property="processCreateTime"/>
+        <result column="process_end_time" jdbcType="VARCHAR" property="processEndTime"/>
     </resultMap>
 
     <select id="searchMachineByAbnormalRecordId" resultMap="BaseResultMap">
@@ -282,7 +287,7 @@
         <if test="status != null and status != ''">
             and status=#{status}
         </if>
-        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
         <if test="query_start_time!=null and query_start_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
         </if>
@@ -330,7 +335,7 @@
         <if test="status != null and status != ''">
             and status=#{status}
         </if>
-        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time-->
         <if test="query_start_time!=null and query_start_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
         </if>
@@ -338,6 +343,90 @@
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
         ORDER By create_time, ship_time DESC
+    </select>
+
+    <!--selectProcessMachineFuzzy-->
+    <select id="selectProcessMachineFuzzy" resultMap="MachineInfoMap">
+        SELECT * FROM
+        (SELECT m.*,mo.contract_id,mo.order_num,c.contract_num,pr.id as
+        process_record_id,pr.node_data,pr.link_data,pr.process_id,
+        pr.create_time as process_create_time,pr.end_time as process_end_time
+        FROM machine m
+        LEFT JOIN machine_order mo ON m.order_id=mo.id
+        LEFT JOIN contract c ON mo.contract_id=c.id
+        LEFT JOIN process_record pr ON m.id=pr.machine_id) V
+        WHERE status &gt; 0
+        <if test="order_id != null and order_id != ''">
+            and order_id like #{order_id}
+        </if>
+        <if test="order_num != null and order_num != ''">
+            and order_num like CONCAT('%','${order_num}','%' )
+        </if>
+        <if test="contract_num != null and contract_num != ''">
+            and contract_num like CONCAT('%','${contract_num}','%' )
+        </if>
+        <if test="machine_strid != null and machine_strid != ''">
+            and machine_strid like CONCAT('%','${machine_strid}','%' )
+        </if>
+        <if test="nameplate != null and nameplate != ''">
+            and nameplate like CONCAT('%','${nameplate}','%' )
+        </if>
+        <if test="location != null and location != ''">
+            and location=#{location}
+        </if>
+        <if test="status != null and status != ''">
+            and status=#{status}
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(process_create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(process_create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+        </if>
+        ORDER By process_create_time, ship_time DESC
+    </select>
+
+    <!--selectProcessMachine-->
+    <select id="selectProcessMachine" resultMap="MachineInfoMap">
+        SELECT * FROM
+        (SELECT m.*,mo.contract_id,mo.order_num,c.contract_num,pr.id as
+        process_record_id,pr.node_data,pr.link_data,pr.process_id,
+        pr.create_time as process_create_time,pr.end_time as process_end_time
+        FROM machine m
+        LEFT JOIN machine_order mo ON m.order_id=mo.id
+        LEFT JOIN contract c ON mo.contract_id=c.id
+        LEFT JOIN process_record pr ON m.id=pr.machine_id) V
+        WHERE status &gt; 0
+        <if test="order_num != null and order_num != ''">
+            and order_num=#{order_num}
+        </if>
+        <if test="contract_num != null and contract_num != ''">
+            and contract_num=#{contract_num}
+        </if>
+        <if test="machine_strid != null and machine_strid != ''">
+            and machine_strid=#{machine_strid}
+        </if>
+        <if test="order_id != null and order_id != ''">
+            and order_id=#{order_id}
+        </if>
+        <if test="nameplate != null and nameplate != ''">
+            and nameplate=#{nameplate}
+        </if>
+        <if test="location != null and location != ''">
+            and location=#{location}
+        </if>
+        <if test="status != null and status != ''">
+            and status=#{status}
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(process_create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(process_create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+        </if>
+        ORDER By process_create_time, ship_time DESC
     </select>
 
 </mapper>

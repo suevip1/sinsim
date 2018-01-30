@@ -86,7 +86,7 @@ public class ProcessRecordController {
         Integer prId = pr.getId();
         pr.setCreateTime(new Date());
         try {
-            if (prId > 0) {//已经保存过配置流程的，需要更新
+            if (prId != null && prId > 0) {//已经保存过配置流程的，需要更新
                 processRecordService.update(pr);
                 try {
                     //删除旧的taskrecorder表中对应的任务,根据process_recorder_id删除

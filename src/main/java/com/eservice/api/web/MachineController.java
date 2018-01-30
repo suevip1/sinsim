@@ -124,4 +124,25 @@ public class MachineController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    @PostMapping("/selectProcessMachine")
+    public Result selectProcessMachine(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            Integer order_id,
+            String orderNum,
+            String contractNum,
+            String machine_strid,
+            String nameplate,
+            String location,
+            Byte status,
+            String query_start_time,
+            String query_finish_time,
+            @RequestParam(defaultValue = "true") Boolean is_fuzzy
+    ) {
+        PageHelper.startPage(page, size);
+        List<MachineInfo> list = machineService.selectProcessMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time,is_fuzzy);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 }
