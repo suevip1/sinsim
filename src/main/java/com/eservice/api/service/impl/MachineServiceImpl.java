@@ -80,14 +80,20 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                 //全部已计划,不在
 
             }else {
-                //获取机器对应“已经开始”的task record,
+                //获取机器对应task record,
                 Condition tempCondition = new Condition(TaskRecord.class);
                 tempCondition.createCriteria().andCondition("process_record_id = ", itemPlan.getProcessRecordID());
-                tempCondition.createCriteria().andGreaterThan("status", Constant.TASK_INITIAL);
+                tempCondition.createCriteria().andGreaterThanOrEqualTo("status", Constant.TASK_INITIAL);
                 List<TaskRecord> taskRecordList = taskRecordService.findByCondition(tempCondition);
                 HashMap<Byte, Integer> taskStatusMap = new HashMap<>();
                 for (TaskRecord record : taskRecordList) {
-                    if(record.getStatus().equals(Constant.TASK_INSTALLING)) {
+                    if(record.getStatus().equals(Constant.TASK_INITIAL)) {
+                        if(taskStatusMap.get(Constant.TASK_INITIAL) != null){
+                            taskStatusMap.put(Constant.TASK_INITIAL, taskStatusMap.get(Constant.TASK_INITIAL) + 1);
+                        }else{
+                            taskStatusMap.put(Constant.TASK_INITIAL, 1);
+                        }
+                    } else if(record.getStatus().equals(Constant.TASK_INSTALLING)) {
                         if(taskStatusMap.get(Constant.TASK_INSTALLING) != null){
                             taskStatusMap.put(Constant.TASK_INSTALLING, taskStatusMap.get(Constant.TASK_INSTALLING) + 1);
                         }else{
@@ -125,6 +131,7 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                         }
                     }
                 }
+                itemPlan.setInitialTaskNum(taskStatusMap.get(Constant.TASK_INITIAL));
                 itemPlan.setInstalledTaskNum(taskStatusMap.get(Constant.TASK_INSTALLED));
                 itemPlan.setInstallingTaskNum(taskStatusMap.get(Constant.TASK_INSTALLING));
                 itemPlan.setInstallAbnormalTaskNum(taskStatusMap.get(Constant.TASK_INSTALL_ABNORMAL));
