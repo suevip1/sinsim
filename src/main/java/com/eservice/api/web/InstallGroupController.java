@@ -1,4 +1,6 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.install_group.InstallGroup;
@@ -25,8 +27,13 @@ public class InstallGroupController {
     private InstallGroupService installGroupService;
 
     @PostMapping("/add")
-    public Result add(InstallGroup installGroup) {
-        installGroupService.save(installGroup);
+    public Result add(String installGroup) {
+        InstallGroup group = JSONObject.parseObject(installGroup, InstallGroup.class);
+        if(group != null) {
+            installGroupService.save(group);
+        }else {
+            return ResultGenerator.genFailResult("参数错误！");
+        }
         return ResultGenerator.genSuccessResult();
     }
 
@@ -37,8 +44,13 @@ public class InstallGroupController {
     }
 
     @PostMapping("/update")
-    public Result update(InstallGroup installGroup) {
-        installGroupService.update(installGroup);
+    public Result update(String installGroup) {
+        InstallGroup group = JSONObject.parseObject(installGroup, InstallGroup.class);
+        if(group != null && group.getId() != null) {
+            installGroupService.update(group);
+        }else {
+            return ResultGenerator.genFailResult("参数错误！");
+        }
         return ResultGenerator.genSuccessResult();
     }
 
