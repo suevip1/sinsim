@@ -119,7 +119,7 @@ public class ProcessRecordController {
             return ResultGenerator.genFailResult("taskRecordService数据库操作失败");
         }
         try {
-            machineObj.setStatus((byte) 1);
+            machineObj.setStatus((byte) 0);
             if (machineObj.getId() == 0) {
                 return ResultGenerator.genFailResult("机器Id为空，数据更新失败");
             }
