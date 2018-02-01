@@ -68,7 +68,6 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                                      String query_finish_time,
                                                      Boolean is_fuzzy) {
         List<MachinePlan> machinePlanList = new ArrayList<>();
-        List<MachinePlan> resultList = new ArrayList<>();
         if(is_fuzzy) {
             machinePlanList = machineMapper.selectPlanningMachinesFuzzy(orderNum, machine_strid, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time);
         } else {
@@ -76,10 +75,6 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
         }
         for (MachinePlan itemPlan: machinePlanList) {
 
-            if(itemPlan.getTotalTaskNum().equals(itemPlan.getPlanedTaskNum())) {
-                //全部已计划,不在
-
-            }else {
                 //获取机器对应task record,
                 Condition tempCondition = new Condition(TaskRecord.class);
                 tempCondition.createCriteria().andCondition("process_record_id = ", itemPlan.getProcessRecordID());
@@ -138,12 +133,10 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                 itemPlan.setQualityDoingTaskNum(taskStatusMap.get(Constant.TASK_QUALITY_DOING));
                 itemPlan.setQualityDoneTaskNum(taskStatusMap.get(Constant.TASK_QUALITY_DONE));
                 itemPlan.setQualityAbnormalTaskNum(taskStatusMap.get(Constant.TASK_QUALITY_ABNORMAL));
-                resultList.add(itemPlan);
-            }
 
         }
 
-        return resultList;
+        return machinePlanList;
 
     }
 
