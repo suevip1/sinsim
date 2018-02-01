@@ -34,11 +34,58 @@
     <result column="status" jdbcType="TINYINT" property="status" />
   </resultMap>
 
+  <select id="selectContractsByFuzzy" resultMap="ContractDetailMap">
+    select cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
+    LEFT JOIN contract c ON c.id = cs.contract_id
+    LEFT JOIN machine_order mo ON mo.contract_id = c.id
+    WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
+    <if test="contract_num != null and contract_num != ''">
+      and c.contract_num like CONCAT('%','${contract_num}','%' )
+    </if>
+    <if test="status != null">
+      and c.status=${status}
+    </if>
+    <if test="sellman != null and sellman != '' ">
+      and c.sellman like CONCAT('%','${sellman}','%' )
+    </if>
+    <if test="role_name!=null and role_name != '' ">
+      and cs.current_step like CONCAT('%','${role_name}','%' )
+    </if>
+    <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+    <if test="query_start_time!=null and query_start_time != '' ">
+      and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+    </if>
+    <if test="query_finish_time!=null and query_finish_time != '' ">
+      and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+    </if>
+    GROUP BY c.id
+    ORDER BY cs.create_time DESC
+  </select>
+
   <select id="selectContracts" resultMap="ContractDetailMap">
     select cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
     LEFT JOIN contract c ON c.id = cs.contract_id
     LEFT JOIN machine_order mo ON mo.contract_id = c.id
     WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
+    <if test="contract_num != null and contract_num != ''">
+      and c.contract_num = CONCAT('%','${contract_num}','%' )
+    </if>
+    <if test="status != null">
+      and c.status=${status}
+    </if>
+    <if test="sellman != null and sellman != '' ">
+      and c.sellman = CONCAT('%','${sellman}','%' )
+    </if>
+    <if test="role_name!=null and role_name != '' ">
+      and cs.current_step = CONCAT('%','${role_name}','%' )
+    </if>
+    <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+    <if test="query_start_time!=null and query_start_time != '' ">
+      and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+    </if>
+    <if test="query_finish_time!=null and query_finish_time != '' ">
+      and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+    </if>
     GROUP BY c.id
     ORDER BY cs.create_time DESC
   </select>

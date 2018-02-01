@@ -477,9 +477,17 @@ public class ContractController {
     }
 
     @PostMapping("/selectContracts")
-    public Result selectContracts(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+    public Result selectContracts( @RequestParam(defaultValue = "0") Integer page,
+                                   @RequestParam(defaultValue = "0") Integer size,
+                                  String contractNum,
+                                  Integer status,
+                                  String sellman,
+                                  String roleName,
+                                  String query_start_time,
+                                  String query_finish_time,
+                                  @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
-        List<ContractDetail> list = contractService.selectContracts();
+        List<ContractDetail> list = contractService.selectContracts(contractNum, status, sellman, roleName, query_start_time, query_finish_time, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

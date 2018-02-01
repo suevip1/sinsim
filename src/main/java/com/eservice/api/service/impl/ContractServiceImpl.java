@@ -13,6 +13,7 @@ import com.eservice.api.service.ContractService;
 import com.eservice.api.core.AbstractService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -29,8 +30,18 @@ public class ContractServiceImpl extends AbstractService<Contract> implements Co
     @Resource
     private ContractMapper contractMapper;
 
-    public List<ContractDetail> selectContracts() {
-        return contractMapper.selectContracts();
+    public List<ContractDetail> selectContracts(String contractNum,
+                                                Integer status,
+                                                String sellman,
+                                                String roleName,
+                                                String query_start_time,
+                                                String query_finish_time,
+                                                Boolean is_fuzzy) {
+        if(is_fuzzy) {
+            return contractMapper.selectContractsByFuzzy(contractNum, status, sellman, roleName, query_start_time, query_finish_time);
+        }else {
+            return contractMapper.selectContracts(contractNum, status, sellman, roleName, query_start_time, query_finish_time);
+        }
     }
 
     public void saveAndGetID(Contract contract) {
