@@ -355,7 +355,7 @@
         LEFT JOIN machine_order mo ON m.order_id=mo.id
         LEFT JOIN contract c ON mo.contract_id=c.id
         LEFT JOIN process_record pr ON m.id=pr.machine_id) V
-        WHERE status &gt; 0
+        WHERE process_record_id!=""
         <if test="order_id != null and order_id != ''">
             and order_id like #{order_id}
         </if>
@@ -397,7 +397,7 @@
         LEFT JOIN machine_order mo ON m.order_id=mo.id
         LEFT JOIN contract c ON mo.contract_id=c.id
         LEFT JOIN process_record pr ON m.id=pr.machine_id) V
-        WHERE status &gt; 0
+        WHERE process_record_id!=""
         <if test="order_num != null and order_num != ''">
             and order_num=#{order_num}
         </if>
