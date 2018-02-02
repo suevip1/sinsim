@@ -551,6 +551,11 @@ public class ContractController {
         HSSFWorkbook wb = null;
         FileOutputStream out = null;
         String downloadPath = "";
+        /*
+        返回给docker外部下载
+         */
+        String downloadPathForNginx = "";
+
         try{
             ClassPathResource resource = new ClassPathResource("empty_contract.xls");
             fs = resource.getInputStream();
@@ -1010,6 +1015,7 @@ public class ContractController {
   
             //修改模板内容导出新模板,生成路径供前端下载
             downloadPath = contractOutputDir + contract.getContractNum() + ".xls";
+            downloadPathForNginx = "/download/" + contract.getContractNum() + ".xls";
             out = new FileOutputStream(downloadPath);
             wb.write(out);
             out.close();
@@ -1028,7 +1034,7 @@ public class ContractController {
         if("".equals(downloadPath)) {
             return ResultGenerator.genFailResult("生成合同文件失败!");
         }else {
-            return ResultGenerator.genSuccessResult(downloadPath);
+            return ResultGenerator.genSuccessResult(downloadPathForNginx);
         }
     }
 
