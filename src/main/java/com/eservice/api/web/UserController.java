@@ -67,6 +67,9 @@ public class UserController {
         if("".equals(user1.getPassword())) {
             user1.setPassword(null);
         }
+        if(user1.getGroupId() == null) {
+            user1.setGroupId(0);
+        }
         userService.update(user1);
         return ResultGenerator.genSuccessResult();
     }
