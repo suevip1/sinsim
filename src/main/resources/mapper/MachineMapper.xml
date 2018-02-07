@@ -150,13 +150,12 @@
 
     <!-- 返回需要安排计划的机器-->
     <select id="selectPlanningMachines" resultMap="PlaningResultMap">
-        SELECT m.*, mo.order_num,mo.plan_ship_date, mo.contract_ship_date, COUNT(tr.id) AS total_task_num, COUNT(tp.id)
-        AS planed_task_num FROM machine m
+        SELECT m.*, mo.order_num,mo.plan_ship_date, mo.contract_ship_date, COUNT(tr.id) AS total_task_num FROM machine m
         JOIN machine_order mo ON m.order_id = mo.id
         JOIN process_record pr ON m.id = pr.machine_id
         JOIN task_record tr ON pr.id = tr.process_record_id
         LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
-        WHERE m.status &gt; 0 AND m.status &lt; 6
+        WHERE m.status &gt; 0 AND m.status &lt; 7
         <if test="machine_strid != null and machine_strid != ''">
             and machine_strid=#{machine_strid}
         </if>
@@ -200,12 +199,12 @@
 
     <select id="selectPlanningMachinesFuzzy" resultMap="PlaningResultMap">
         SELECT m.*, mo.order_num, mo.plan_ship_date, pr.id AS process_record_id, mo.contract_ship_date, COUNT(tr.id) AS
-        total_task_num, COUNT(tp.id) AS planed_task_num FROM machine m
+        total_task_num FROM machine m
         JOIN machine_order mo ON m.order_id = mo.id
         JOIN process_record pr ON m.id = pr.machine_id
         JOIN task_record tr ON pr.id = tr.process_record_id
         LEFT JOIN task_plan tp ON tr.id = tp.task_record_id
-        WHERE m.status &gt; 0 AND m.status &lt; 6
+        WHERE m.status &gt; 0 AND m.status &lt; 7
         <if test="machine_strid != null and machine_strid != ''">
             and m.machine_strid like CONCAT('%','${machine_strid}','%' )
         </if>

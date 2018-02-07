@@ -82,11 +82,11 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                 List<TaskRecord> taskRecordList = taskRecordService.findByCondition(tempCondition);
                 HashMap<Byte, Integer> taskStatusMap = new HashMap<>();
                 for (TaskRecord record : taskRecordList) {
-                    if(record.getStatus().equals(Constant.TASK_INITIAL)) {
-                        if(taskStatusMap.get(Constant.TASK_INITIAL) != null){
-                            taskStatusMap.put(Constant.TASK_INITIAL, taskStatusMap.get(Constant.TASK_INITIAL) + 1);
+                    if(record.getStatus().equals(Constant.TASK_PLANED)) {
+                        if(taskStatusMap.get(Constant.TASK_PLANED) != null){
+                            taskStatusMap.put(Constant.TASK_PLANED, taskStatusMap.get(Constant.TASK_PLANED) + 1);
                         }else{
-                            taskStatusMap.put(Constant.TASK_INITIAL, 1);
+                            taskStatusMap.put(Constant.TASK_PLANED, 1);
                         }
                     } else if(record.getStatus().equals(Constant.TASK_INSTALLING)) {
                         if(taskStatusMap.get(Constant.TASK_INSTALLING) != null){
@@ -126,7 +126,7 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                         }
                     }
                 }
-                itemPlan.setInitialTaskNum(taskStatusMap.get(Constant.TASK_INITIAL));
+                itemPlan.setPlanedTaskNum(taskStatusMap.get(Constant.TASK_PLANED));
                 itemPlan.setInstalledTaskNum(taskStatusMap.get(Constant.TASK_INSTALLED));
                 itemPlan.setInstallingTaskNum(taskStatusMap.get(Constant.TASK_INSTALLING));
                 itemPlan.setInstallAbnormalTaskNum(taskStatusMap.get(Constant.TASK_INSTALL_ABNORMAL));

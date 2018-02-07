@@ -99,38 +99,42 @@ public class Constant {
     /**
      * 机器状态:
      * "0" --> 签核完成,机器创建的初始化状态
-     * "1" --> 已加入计划生产
-     * "2" --> 安装中
-     * "3" --> 安装完成
-     * "4" --> 改单
-     * "5" --> 拆单
-     * "6" --> 取消
+     * "1" --> 配置完成，待计划
+     * "2" --> 已加入计划生产
+     * "3" --> 安装中
+     * "4" --> 安装完成
+     * "5" --> 改单
+     * "6" --> 拆单
+     * "7" --> 取消
      */
     public static final Byte MACHINE_INITIAL = 0;
-    public static final Byte MACHINE_PLANING = 1;
-    public static final Byte MACHINE_INSTALLING = 2;
-    public static final Byte MACHINE_INSTALLED = 3;
-    public static final Byte MACHINE_CHANGED = 4;
-    public static final Byte MACHINE_SPLITED = 5;
-    public static final Byte MACHINE_CANCELED = 6;
+    public static final Byte MACHINE_CONFIGURED = 1;
+    public static final Byte MACHINE_PLANING = 2;
+    public static final Byte MACHINE_INSTALLING = 3;
+    public static final Byte MACHINE_INSTALLED = 4;
+    public static final Byte MACHINE_CHANGED = 5;
+    public static final Byte MACHINE_SPLITED = 6;
+    public static final Byte MACHINE_CANCELED = 7;
 
     /**
      * Task(工序)安装状态
      * "0" --> 初始化状态
-     * "1" --> 开始安装
-     * "2" --> 安装完成
-     * "3" --> 质检中
-     * "4" --> 质检完成
-     * "5" --> 安装异常
-     * "6" --> 质检异常
+     * "1" --> 已计划
+     * "2" --> 开始安装
+     * "3" --> 安装完成
+     * "4" --> 质检中
+     * "5" --> 质检完成
+     * "6" --> 安装异常
+     * "7" --> 质检异常
      */
     public static final Byte TASK_INITIAL = 0;
-    public static final Byte TASK_INSTALLING = 1;
-    public static final Byte TASK_INSTALLED = 2;
-    public static final Byte TASK_QUALITY_DOING= 3;
-    public static final Byte TASK_QUALITY_DONE= 4;
-    public static final Byte TASK_INSTALL_ABNORMAL = 5;
-    public static final Byte TASK_QUALITY_ABNORMAL = 6;
+    public static final Byte TASK_PLANED = 1;
+    public static final Byte TASK_INSTALLING = 2;
+    public static final Byte TASK_INSTALLED = 3;
+    public static final Byte TASK_QUALITY_DOING= 4;
+    public static final Byte TASK_QUALITY_DONE= 5;
+    public static final Byte TASK_INSTALL_ABNORMAL = 6;
+    public static final Byte TASK_QUALITY_ABNORMAL = 7;
 
 
     /**

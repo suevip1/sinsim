@@ -302,11 +302,12 @@ public class ContractController {
                         List<Machine> originalInitialedMachine = new ArrayList<>();
                         List<Machine> originalOtherMachine = new ArrayList<>();
                         for (Machine machine : machineList) {
-                            if (machine.getStatus().equals(Constant.MACHINE_PLANING)
+                            if (machine.getStatus().equals(Constant.MACHINE_CONFIGURED)
+                                    ||machine.getStatus().equals(Constant.MACHINE_PLANING)
                                     || machine.getStatus().equals( Constant.MACHINE_INSTALLING)
                                     || machine.getStatus().equals(Constant.MACHINE_INSTALLED)
                                     || machine.getStatus().equals(Constant.MACHINE_SPLITED)) {
-                                ///查找计划中、生产中、被拆单、生产完成的机器
+                                ///查找已配置、计划中、生产中、被拆单、生产完成的机器
                                 originalInitialedMachine.add(machine);
                             } else if (machine.getStatus().equals(Constant.MACHINE_INITIAL)) {
                                 ///初始化状态，未开始计划

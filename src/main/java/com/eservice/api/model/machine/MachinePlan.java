@@ -28,10 +28,10 @@ public class MachinePlan  extends Machine {
      */
     private Integer totalTaskNum;
 
-    /**
-     * 初始状态工序
-     */
-    private Integer initialTaskNum;
+//    /**
+//     * 初始状态工序
+//     */
+//    private Integer initialTaskNum;
 
     /**
      * 安装中工序数
@@ -64,17 +64,17 @@ public class MachinePlan  extends Machine {
     private Integer qualityAbnormalTaskNum;
 
     /**
-     * 已计划工序数
+     * 已计划, 未开始工序数
      */
     private Integer planedTaskNum;
 
-    public Integer getInitialTaskNum() {
-        return initialTaskNum;
-    }
-
-    public void setInitialTaskNum(Integer initialTaskNum) {
-        this.initialTaskNum = initialTaskNum;
-    }
+//    public Integer getInitialTaskNum() {
+//        return initialTaskNum;
+//    }
+//
+//    public void setInitialTaskNum(Integer initialTaskNum) {
+//        this.initialTaskNum = initialTaskNum;
+//    }
 
     public Integer getQualityDoingTaskNum() {
         return qualityDoingTaskNum;
