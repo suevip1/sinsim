@@ -140,7 +140,14 @@ public class MachineOrder {
     /**
      * 备注信息
      */
+    @Column(name = "mark")
     private String mark;
+
+    /**
+     * 保修方式
+     */
+    @Column(name = "maintain_type")
+    private String maintainType;
 
     /**
      * @return id
@@ -568,5 +575,13 @@ public class MachineOrder {
      */
     public void setMark(String mark) {
         this.mark = mark;
+    }
+
+    public String getMaintainType() {
+        return maintainType;
+    }
+
+    public void setMaintainType(String maintainType) {
+        this.maintainType = maintainType;
     }
 }

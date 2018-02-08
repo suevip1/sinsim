@@ -25,6 +25,7 @@
     <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
     <result column="plan_ship_date" jdbcType="DATE" property="planShipDate" />
     <result column="sellman" jdbcType="VARCHAR" property="sellman" />
+    <result column="maintain_type" jdbcType="VARCHAR" property="maintainType" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -56,6 +57,7 @@
     <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
     <result column="plan_ship_date" jdbcType="DATE" property="planShipDate" />
     <result column="sellman" jdbcType="VARCHAR" property="sellman" />
+    <result column="maintain_type" jdbcType="VARCHAR" property="maintainType" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -131,10 +133,10 @@
   <insert id="saveAndGetID"   useGeneratedKeys="true"  parameterType="com.eservice.api.model.machine_order.MachineOrder" keyProperty="id">
     insert into
     machine_order(order_num, original_order_id, contract_id, order_detail_id, create_user_id,country, brand, needle_num, head_num, head_distance, x_distance, y_distance,
-    package_method, machine_num,machine_type, machine_price, contract_ship_date, plan_ship_date, sellman, status,create_time, update_time, end_time, mark)
+    package_method, machine_num,machine_type, machine_price, contract_ship_date, plan_ship_date, sellman, maintain_type, status,create_time, update_time, end_time, mark)
     values(
     #{orderNum},#{originalOrderId},#{contractId},#{orderDetailId},#{createUserId},#{country},#{brand},#{needleNum},#{headNum},#{headDistance},#{xDistance},
-    #{yDistance},#{packageMethod},#{machineNum},#{machineType},#{machinePrice},#{contractShipDate},#{planShipDate},#{sellman},#{status},#{createTime},#{updateTime},#{endTime},#{mark})
+    #{yDistance},#{packageMethod},#{machineNum},#{machineType},#{machinePrice},#{contractShipDate},#{planShipDate},#{sellman},#{maintainType},#{status},#{createTime},#{updateTime},#{endTime},#{mark})
   </insert>
 
   <select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
