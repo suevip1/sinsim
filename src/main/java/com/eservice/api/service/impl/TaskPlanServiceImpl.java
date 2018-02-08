@@ -83,4 +83,8 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
         return true;
     }
 
+    public List<TaskPlan> selectByUserAccount(String userAccount){
+        return taskPlanMapper.selectByUserAccount(userAccount);
+    }
+
 }

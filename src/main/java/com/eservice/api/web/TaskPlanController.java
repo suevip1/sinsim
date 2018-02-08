@@ -70,4 +70,22 @@ public class TaskPlanController {
             }
         }
     }
+
+    /**
+     * 根据user账号返回其taskPlan列表
+     * @param page
+     * @param size
+     * @param userAccount
+     * @return
+     */
+    @PostMapping("/selectByUserAccount")
+    public Result selectByUserAccount(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                      @RequestParam String userAccount) {
+        PageHelper.startPage(page, size);
+        List<TaskPlan> list = taskPlanService.selectByUserAccount(userAccount);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+
 }

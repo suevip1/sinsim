@@ -14,4 +14,10 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <select id="selectByUserAccount" resultMap="BaseResultMap">
+    SELECT * FROM task_plan tp
+    join user on user.id = tp.user_id
+    where user.account = #{userAccount}
+  </select>
 </mapper>
