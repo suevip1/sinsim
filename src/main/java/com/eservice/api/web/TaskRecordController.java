@@ -4,14 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.order_loading_list.OrderLoadingList;
+import com.eservice.api.model.process_record.ProcessRecord;
 import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.model.user.User;
+import com.eservice.api.service.impl.ProcessRecordServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.eservice.api.service.impl.UserServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +35,8 @@ import java.util.List;
 public class TaskRecordController {
     @Resource
     private TaskRecordServiceImpl taskRecordService;
+    @Resource
+    private ProcessRecordServiceImpl processRecordService;
     @Resource
     private UserServiceImpl userService;
 
@@ -181,9 +187,9 @@ public class TaskRecordController {
 
     //根据机器的流程记录ID，返回未计划的作业任务（task plan）
     @PostMapping("/selectNotPlanedTaskRecord")
-    public Result selectNotPlanedTaskRecord(  @RequestParam(defaultValue = "0") Integer page,
-                                              @RequestParam(defaultValue = "0") Integer size,
-                                              Integer processRecordID) {
+    public Result selectNotPlanedTaskRecord(@RequestParam(defaultValue = "0") Integer page,
+                                            @RequestParam(defaultValue = "0") Integer size,
+                                            Integer processRecordID) {
         PageHelper.startPage(page, size);
         List<TaskRecord> list = taskRecordService.selectNotPlanedTaskRecord(processRecordID);
         PageInfo pageInfo = new PageInfo(list);
@@ -204,24 +210,44 @@ public class TaskRecordController {
                                           Integer machineType,
                                           String query_start_time,
                                           String query_finish_time,
-                                          @RequestParam(defaultValue = "true") Boolean is_fuzzy){
+                                          @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
 
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> list = taskRecordService.selectPlanedTaskRecords(orderNum, machineStrId, taskName, nameplate, installStatus, machineType, query_start_time, query_finish_time, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
-	
-	 @PostMapping("/getTaskRecordData")
-     public Result getTaskRecordData(
+
+    @PostMapping("/getTaskRecordData")
+    public Result getTaskRecordData(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "0") Integer size,
             @RequestParam(defaultValue = "0") Integer id,
             @RequestParam(defaultValue = "0") Integer processRecordId
-            ) {
+    ) {
         PageHelper.startPage(page, size);
-        List<TaskRecord> list = taskRecordService.getTaskRecordData(id,processRecordId);
+        List<TaskRecord> list = taskRecordService.getTaskRecordData(id, processRecordId);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @PostMapping("/updateStatus")
+    @Transactional(rollbackFor = Exception.class)
+    public Result updateStatus(String taskRecord, String processRecord) {
+        TaskRecord tr = JSON.parseObject(taskRecord, TaskRecord.class);
+        Integer id = tr.getId();
+        if (id == null || id < 0) {
+            return ResultGenerator.genFailResult("TaskRecord的ID为空，数据更新失败！");
+        }
+        taskRecordService.update(tr);
+
+        ProcessRecord pr = JSON.parseObject(processRecord, ProcessRecord.class);
+        id = pr.getId();
+        if (id == null || id < 0) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResultGenerator.genFailResult("ProcessRecord的ID为空，数据更新失败！");
+        }
+        processRecordService.update(pr);
+        return ResultGenerator.genSuccessResult();
     }
 }
