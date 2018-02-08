@@ -15,13 +15,13 @@ public class Constant {
     /**
      * 签核各个步骤
      */
-    public static Integer SALES_DEP_STEP= 1;
+    public static Integer SALES_DEP_STEP = 1;
     public static Integer TECH_DEP_STEP = 2;
-    public static Integer PMC_STEP= 3;
-    public static Integer COST_ACCOUNT_STEP= 4;
-    public static Integer FINANCIAL_DEP_RULE_STEP= 5;
-    public static Integer GENERAL_MANAGER_STEP= 6;
-    public static Integer FINANCIAL_DEP_DEPOSIT_STEP= 7;
+    public static Integer PMC_STEP = 3;
+    public static Integer COST_ACCOUNT_STEP = 4;
+    public static Integer FINANCIAL_DEP_RULE_STEP = 5;
+    public static Integer GENERAL_MANAGER_STEP = 6;
+    public static Integer FINANCIAL_DEP_DEPOSIT_STEP = 7;
 
     /**
      * 签核结果：“0”-->初始化；“1”-->接受； “2”-->驳回
@@ -56,7 +56,7 @@ public class Constant {
     /**
      * 已驳回，驳回状态下填单员可以再一次编辑合同和需求单内容，进行再一次审核
      */
-    public static final Byte CONTRACT_REJECTED= 5;
+    public static final Byte CONTRACT_REJECTED = 5;
     /**
      * 已取消
      */
@@ -89,7 +89,7 @@ public class Constant {
     /**
      * 已驳回，驳回状态下填单员可以再一次编辑合同和需求单内容，进行再一次审核
      */
-    public static final Byte ORDER_REJECTED= 5;
+    public static final Byte ORDER_REJECTED = 5;
     /**
      * 已取消
      */
@@ -131,11 +131,11 @@ public class Constant {
     public static final Byte TASK_PLANED = 1;
     public static final Byte TASK_INSTALLING = 2;
     public static final Byte TASK_INSTALLED = 3;
-    public static final Byte TASK_QUALITY_DOING= 4;
-    public static final Byte TASK_QUALITY_DONE= 5;
+    public static final Byte TASK_QUALITY_DOING = 4;
+    public static final Byte TASK_QUALITY_DONE = 5;
     public static final Byte TASK_INSTALL_ABNORMAL = 6;
     public static final Byte TASK_QUALITY_ABNORMAL = 7;
-
+    public static final Byte TASK_SKIP = 8;
 
     /**
      * 保存文件的类型
@@ -150,6 +150,6 @@ public class Constant {
     /**
      * 计划的方式："1"==>日计划， "2"==>弹性计划
      */
-    public static final Byte DAILY_PLAN= 1;
-    public static final Byte FLEX_PLAN= 2;
+    public static final Byte DAILY_PLAN = 1;
+    public static final Byte FLEX_PLAN = 2;
 }
