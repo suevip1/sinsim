@@ -120,22 +120,25 @@ public class Constant {
      * Task(工序)安装状态
      * "0" --> 初始化状态
      * "1" --> 已计划
-     * "2" --> 开始安装
-     * "3" --> 安装完成
-     * "4" --> 质检中
-     * "5" --> 质检完成
-     * "6" --> 安装异常
-     * "7" --> 质检异常
+	 * "2" --> 待安装
+     * "3" --> 开始安装
+     * "4" --> 安装完成
+     * "5" --> 质检中
+     * "6" --> 质检完成
+     * "7" --> 安装异常
+     * "8" --> 质检异常
+	 * "9" --> 跳过
      */
     public static final Byte TASK_INITIAL = 0;
     public static final Byte TASK_PLANED = 1;
-    public static final Byte TASK_INSTALLING = 2;
-    public static final Byte TASK_INSTALLED = 3;
-    public static final Byte TASK_QUALITY_DOING = 4;
-    public static final Byte TASK_QUALITY_DONE = 5;
-    public static final Byte TASK_INSTALL_ABNORMAL = 6;
-    public static final Byte TASK_QUALITY_ABNORMAL = 7;
-    public static final Byte TASK_SKIP = 8;
+    public static final Byte TASK_INSTALL_WAITING = 2;
+    public static final Byte TASK_INSTALLING = 3;
+    public static final Byte TASK_INSTALLED = 4;
+    public static final Byte TASK_QUALITY_DOING = 5;
+    public static final Byte TASK_QUALITY_DONE = 6;
+    public static final Byte TASK_INSTALL_ABNORMAL = 7;
+    public static final Byte TASK_QUALITY_ABNORMAL = 8;
+    public static final Byte TASK_SKIP = 9;
 
     /**
      * 保存文件的类型
@@ -148,8 +151,9 @@ public class Constant {
     public static final int LOADING_FILE = 2;
 
     /**
-     * 计划的方式："1"==>日计划， "2"==>弹性计划
+     * 计划的方式："1"==>日计划， "2"==>弹性计划， "3" ==>自计划；未计划，但是在时间允许下安装组长自行安装的
      */
     public static final Byte DAILY_PLAN = 1;
     public static final Byte FLEX_PLAN = 2;
+    public static final Byte SELF_PLAN = 3;
 }
