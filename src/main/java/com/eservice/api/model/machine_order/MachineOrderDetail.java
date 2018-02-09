@@ -5,6 +5,7 @@ import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.model.order_split_record.OrderSplitRecord;
+import com.eservice.api.model.order_loading_list.OrderLoadingList;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -199,6 +200,20 @@ public class MachineOrderDetail {
 
     public void setOrderSplitRecord(OrderSplitRecord orderSplitRecord) {
         this.orderSplitRecord = orderSplitRecord;
+    }
+
+
+    /**
+     * 装车单、联系单
+     */
+    private OrderLoadingList orderLoadingList;
+
+    public OrderLoadingList getOrderLoadingList() {
+        return orderLoadingList;
+    }
+
+    public void setOrderLoadingList(OrderLoadingList orderLoadingList) {
+        this.orderLoadingList = orderLoadingList;
     }
 
     //    /*
