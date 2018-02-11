@@ -60,6 +60,9 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
         return taskRecordMapper.getTaskRecordData(id, processRecordId);
     }
 
+    public   List<TaskRecordDetail> selectTaskRecordByMachineNameplate(String namePlate){
+        return taskRecordMapper.selectTaskRecordByMachineNameplate(namePlate);
+    }
     public void deleteTaskRecordByCondition(Integer id, Integer processRecordId) {
         taskRecordMapper.deleteTaskRecordByCondition(id, processRecordId);
     }
