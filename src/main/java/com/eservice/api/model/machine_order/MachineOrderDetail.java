@@ -121,6 +121,12 @@ public class MachineOrderDetail {
     @Column(name = "machine_price")
     private String machinePrice;
 
+    /**
+     * 机器装置信息，以JSON字符串的形式进行保存（name/number/price）
+     */
+    @Column(name = "equipment")
+    private String equipment;
+
     @Column(name = "contract_ship_date")
     private Date contractShipDate;
 
@@ -257,6 +263,14 @@ public class MachineOrderDetail {
 
     public void setOrderSign(OrderSign orderSign) {
         this.orderSign = orderSign;
+    }
+
+    public String getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(String equipment) {
+        this.equipment = equipment;
     }
 
     /**
