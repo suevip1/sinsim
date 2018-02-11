@@ -144,7 +144,7 @@ public class TaskRecordController {
     }
 
     /**
-     * 根据用户返回所有安装组detail，其中不限于包括：
+     * 根据用户返回所有安装组detail，（除去status为初始化、已计划和质检完成的task_record) ，其中不限于包括：
      * "machine_id":"", 	-->machine.machine_id
      * "task_name":"",	-->task_record.task_name
      * "status":"",		-->task_record.status
@@ -249,5 +249,25 @@ public class TaskRecordController {
         }
         processRecordService.update(pr);
         return ResultGenerator.genSuccessResult();
+    }
+
+
+    /**
+     * 根据机器铭牌（即机器编号）查询对应的机器正在操作的taskRecordDetail（除去status为初始化、已计划和质检完成的task_record) 。
+     * @param page
+     * @param size
+     * @param namePlate
+     * @return
+     */
+    @PostMapping("/selectTaskRecordByMachineNameplate")
+    public Result selectTaskRecordByMachineNameplate(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            @RequestParam(defaultValue = "0") String namePlate
+    ) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineNameplate(namePlate);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
     }
 }
