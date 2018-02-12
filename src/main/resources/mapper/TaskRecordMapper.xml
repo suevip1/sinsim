@@ -335,7 +335,7 @@
         join task on task.task_name = tr.task_name
         join install_group  on install_group.id = task.group_id
         join user on user.group_id = install_group.id
-        where m.nameplate = #{namePlate} and tr.status !=0 and tr.status !=1 and tr.status !=6
+        where m.nameplate = #{namePlate}
     </select>
 
     <select id="selectTaskRecordByMachineStrId" resultMap="TaskRecordDetail">
@@ -357,6 +357,6 @@
         join task on task.task_name = tr.task_name
         join install_group  on install_group.id = task.group_id
         join user on user.group_id = install_group.id
-        where m.machine_strid = #{machineStrId} and tr.status !=0 and tr.status !=1 and tr.status !=6
+        where m.machine_strid = #{machineStrId}
     </select>
 </mapper>

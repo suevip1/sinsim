@@ -253,7 +253,7 @@ public class TaskRecordController {
 
 
     /**
-     * 根据机器铭牌（即机器编号）查询对应的机器正在操作的taskRecordDetail（除去status为初始化、已计划和质检完成的task_record) 。
+     * 根据机器铭牌（即机器编号）查询对应的机器正在操作的taskRecordDetail(全部状态) 。
      * @param page
      * @param size
      * @param namePlate
@@ -272,7 +272,7 @@ public class TaskRecordController {
     }
 
     /**
-     * 根据机器的系统编号（machine_strid）查询对应的机器正在操作的taskRecordDetail（除去status为初始化、已计划和质检完成的task_record) 。
+     * 根据机器的系统编号（machine_strid）查询对应的机器正在操作的taskRecordDetail(全部状态)。
      * @param page
      * @param size
      * @param machineStrId
