@@ -18,6 +18,7 @@ public interface TaskRecordMapper extends Mapper<TaskRecord> {
     List<TaskRecord> selectNotPlanedTaskRecord(@Param("process_record_id")Integer processRecordId);
 	List<TaskRecord> getTaskRecordData(@Param("id") Integer id, @Param("processRecordId") Integer processRecordId);
     List<TaskRecordDetail> selectTaskRecordByMachineNameplate(@Param("namePlate") String namePlate);
+    List<TaskRecordDetail> selectTaskRecordByMachineStrId(@Param("machineStrId") String machineStrId);
     int deleteTaskRecordByCondition(@Param("id") Integer id, @Param("processRecordId") Integer processRecordId);
     List<TaskRecordDetail> selectPlanedTaskRecordsByFuzzy( @Param("order_num") String orderNum,
                                                            @Param("machine_strid") String machineStrId,

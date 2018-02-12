@@ -270,4 +270,23 @@ public class TaskRecordController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 根据机器的系统编号（machine_strid）查询对应的机器正在操作的taskRecordDetail（除去status为初始化、已计划和质检完成的task_record) 。
+     * @param page
+     * @param size
+     * @param machineStrId
+     * @return
+     */
+    @PostMapping("/selectTaskRecordByMachineStrId")
+    public Result selectTaskRecordByMachineStrId(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            @RequestParam(defaultValue = "0") String machineStrId
+    ) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineStrId(machineStrId);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }
