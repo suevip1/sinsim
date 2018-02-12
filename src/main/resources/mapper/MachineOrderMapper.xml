@@ -277,5 +277,10 @@
     ORDER By mo.create_time, mo.order_num
   </select>
 
+  <select id="searchOrderIdByOrderLoadingListId" resultMap="BaseResultMap">
+    SELECT * from order_loading_list oll
+    join machine_order mo on mo.id=oll.order_id
+    WHERE oll.id = #{ollId};
+  </select>
 
 </mapper>

@@ -32,4 +32,7 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
                                    @Param("machine_name") String machine_name);
 
     void saveAndGetID(MachineOrder machineOrder);
+
+
+    MachineOrder searchOrderIdByOrderLoadingListId(@Param("ollId") Integer ollId);
 }

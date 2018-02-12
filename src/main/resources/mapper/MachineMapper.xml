@@ -61,15 +61,16 @@
     </resultMap>
 
     <select id="searchMachineByAbnormalRecordId" resultMap="BaseResultMap">
---  count(distinct m.id)是为了去重
-    select m.*, count(distinct m.id)
-    from abnormal_image ai
-    join abnormal_record ar on ar.id = ai.abnormal_record_id
-    join task_record tr on tr.id = ar.task_record_id
-    join process_record pr on pr.id =tr.process_record_id
-    join machine m on m.id = pr.machine_id
-    where ar.id = #{abnormalRecordId}
-  </select>
+    --  count(distinct m.id)是为了去重
+        select m.*, count(distinct m.id)
+        from abnormal_image ai
+        join abnormal_record ar on ar.id = ai.abnormal_record_id
+        join task_record tr on tr.id = ar.task_record_id
+        join process_record pr on pr.id =tr.process_record_id
+        join machine m on m.id = pr.machine_id
+        where ar.id = #{abnormalRecordId}
+    </select>
+
     <select id="searchMachineByTaskQualityRecordId" resultMap="BaseResultMap">
      select m.*, count(distinct m.id)
      from quality_record_image qri

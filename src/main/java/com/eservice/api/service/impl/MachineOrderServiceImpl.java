@@ -38,4 +38,8 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
     public void saveAndGetID(MachineOrder machineOrder){
         machineOrderMapper.saveAndGetID(machineOrder);
     }
+
+    public MachineOrder searchOrderIdByOrderLoadingListId( Integer ollId){
+        return machineOrderMapper.searchOrderIdByOrderLoadingListId(ollId);
+    }
 }

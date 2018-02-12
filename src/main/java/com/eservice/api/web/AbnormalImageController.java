@@ -56,7 +56,7 @@ public class AbnormalImageController {
         if (machineID == null){
             return ResultGenerator.genFailResult("Error: no machine found by the abnormalRecordId, no records saved");
         }
-        String resultPath = commonService.saveFile(imagesSavedDir,file1,machineID, Constant.ABNORMAL_IMAGE);
+        String resultPath = commonService.saveFile(imagesSavedDir,file1,machineID, null, Constant.ABNORMAL_IMAGE);
         if (resultPath == null){
             return ResultGenerator.genFailResult("failed to save file, no records saved");
         } else {

@@ -50,7 +50,7 @@ public class QualityRecordImageController {
         if(null == machineID){
             return ResultGenerator.genFailResult("Error: no machine found by the taskQualityRecordId, no records saved");
         }
-        String resultPath = commonService.saveFile(imagesSavedDir,file1,machineID, Constant.QUALITY_IMAGE);
+        String resultPath = commonService.saveFile(imagesSavedDir,file1,machineID, null, Constant.QUALITY_IMAGE);
         if(null == resultPath){
             return ResultGenerator.genFailResult("failed to save quality file, no records saved");
         } else {

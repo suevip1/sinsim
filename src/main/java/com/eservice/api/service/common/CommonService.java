@@ -10,6 +10,7 @@ import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.model.role.Role;
 import com.eservice.api.service.impl.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -152,12 +153,13 @@ public class CommonService {
     /**
      * @param path      保存文件的总路径
      * @param file      文件名称
-     * @param machineID 机器的具体ID
+     * @param machineID 机器的具体ID（保存装车单时，machineId可以为NULL）
+     * @param orderNum  装车单对应的需求单编号（保存Abnormal/Quality 图片时，orderNum可为NULL）
      * @param type      文件类型 （不同类型文件名生成规则不同）
      *                  最终生成类似：machineID123_Abnormal_2018-01-10-11-15-56.png
      * @return 文件路径
      */
-    public String saveFile(String path, MultipartFile file, String machineID, int type) {
+    public String saveFile(String path, MultipartFile file, @RequestParam(defaultValue = "") String machineID,  @RequestParam(defaultValue = "")String orderNum, int type) {
         String targetFileName = null;
         if (path != null) {
             if (!file.isEmpty()) {
@@ -185,7 +187,7 @@ public class CommonService {
                         fileType = "";//return targetFileName;//"UnknownFileTypeError";
                     }
 
-                    targetFileName = path + machineID + "_" + fileType + "_" + dateStr + suffixName;
+                    targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + suffixName;
                     BufferedOutputStream out = new BufferedOutputStream(
                             new FileOutputStream(new File(targetFileName)));
                     out.write(file.getBytes());

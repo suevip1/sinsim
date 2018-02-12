@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : MyDB
-Source Server Version : 50547
+Source Server         : Local_sinsim
+Source Server Version : 50553
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50547
+Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2018-02-11 16:59:00
+Date: 2018-02-12 14:56:06
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -46,11 +46,13 @@ CREATE TABLE `abnormal_image` (
   PRIMARY KEY (`id`),
   KEY `fk_ai_abnormal_record_id` (`abnormal_record_id`),
   CONSTRAINT `fk_ai_abnormal_record_id` FOREIGN KEY (`abnormal_record_id`) REFERENCES `abnormal_record` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of abnormal_image
 -- ----------------------------
+INSERT INTO `abnormal_image` VALUES ('1', '2', 'D:/images/abnormal/ABP112914371_null_Abnormal_2018-02-12-14-17-58.png', '2017-12-05 13:34:56');
+INSERT INTO `abnormal_image` VALUES ('2', '1', 'D:/images/abnormal/A0M094156526_null_Abnormal_2018-02-12-14-31-35.png', '2017-12-05 13:34:56');
 
 -- ----------------------------
 -- Table structure for `abnormal_record`
@@ -75,11 +77,13 @@ CREATE TABLE `abnormal_record` (
   CONSTRAINT `fk_ar_solution_user` FOREIGN KEY (`solution_user`) REFERENCES `user` (`id`),
   CONSTRAINT `fk_ar_submit_user` FOREIGN KEY (`submit_user`) REFERENCES `user` (`id`),
   CONSTRAINT `fk_ar_task_record_id` FOREIGN KEY (`task_record_id`) REFERENCES `task_record` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of abnormal_record
 -- ----------------------------
+INSERT INTO `abnormal_record` VALUES ('1', '1', '3', '2', 'cmt111', 'solution111', '1', '2018-02-12 14:16:23', '2018-02-12 14:16:25');
+INSERT INTO `abnormal_record` VALUES ('2', '2', '6', '1', 'cmt222', 's222', '2', '2018-02-12 14:16:55', '2018-02-21 14:16:59');
 
 -- ----------------------------
 -- Table structure for `contract`
@@ -107,7 +111,7 @@ INSERT INTO `contract` VALUES ('31', 'xs-201712009', '胡通', '张三', '2018-0
 INSERT INTO `contract` VALUES ('40', 'xs-201712001', '李四', '王五', '2017-12-30', '', '', '0', '2017-12-18 16:55:14', '2018-02-11 16:07:56');
 INSERT INTO `contract` VALUES ('41', 'ss-20180116', '张三', '李四', '2018-01-18', '支付宝', '无', '1', '2018-01-16 01:15:00', '2018-02-09 17:04:27');
 INSERT INTO `contract` VALUES ('42', 'ss-20180120', '张三', '李四', '2018-01-31', '支付宝', '', '0', '2018-01-20 09:36:37', null);
-INSERT INTO `contract` VALUES ('52', 'ss-20180209', '张三', '李四', '2018-02-24', '支付宝', '无', '0', '2018-02-09 01:09:59', null);
+INSERT INTO `contract` VALUES ('52', 'ss-20180209', '张三', '李四', '2018-02-24', '支付宝', '无', '0', '2018-02-09 01:09:59', '2018-02-12 11:12:45');
 
 -- ----------------------------
 -- Table structure for `contract_reject_record`
@@ -235,10 +239,10 @@ INSERT INTO `machine` VALUES ('28', '51', 'A0M094156191', null, null, '0', '1', 
 INSERT INTO `machine` VALUES ('29', '51', 'A0M094156892', null, null, '1', '1', '2018-01-23 09:41:56', null, null, null);
 INSERT INTO `machine` VALUES ('30', '51', 'A0M094156773', null, null, '2', '1', '2018-01-23 09:41:56', null, null, null);
 INSERT INTO `machine` VALUES ('31', '56', 'A0M094156521', '', '', '4', '1', '2018-01-23 09:41:56', '2018-01-23 14:44:54', null, null);
-INSERT INTO `machine` VALUES ('32', '52', 'A0M094156492', null, null, '1', '1', '2018-01-23 09:41:56', null, null, null);
-INSERT INTO `machine` VALUES ('33', '52', 'A0M094156333', null, null, '1', '1', '2018-01-23 09:41:56', null, null, null);
-INSERT INTO `machine` VALUES ('34', '52', 'A0M094156074', null, null, '1', '1', '2018-01-23 09:41:56', null, null, null);
-INSERT INTO `machine` VALUES ('35', '52', 'A0M094156575', null, null, '1', '1', '2018-01-23 09:41:56', null, null, null);
+INSERT INTO `machine` VALUES ('32', '52', 'A0M094156492', null, null, '3', '1', '2018-01-23 09:41:56', null, null, null);
+INSERT INTO `machine` VALUES ('33', '52', 'A0M094156333', null, null, '3', '1', '2018-01-23 09:41:56', null, null, null);
+INSERT INTO `machine` VALUES ('34', '52', 'A0M094156074', null, null, '3', '1', '2018-01-23 09:41:56', null, null, null);
+INSERT INTO `machine` VALUES ('35', '52', 'A0M094156575', null, null, '4', '1', '2018-01-23 09:41:56', null, null, null);
 INSERT INTO `machine` VALUES ('36', '52', 'A0M094156526', null, null, '1', '1', '2018-01-23 09:41:56', null, null, null);
 
 -- ----------------------------
@@ -297,8 +301,8 @@ INSERT INTO `machine_order` VALUES ('50', '20180101', '0', '41', '84', '1', '2',
 INSERT INTO `machine_order` VALUES ('51', '20180102', '0', '41', '85', '1', '2', '英语', 'SINSIM电脑绣花机', '3', '1', '10', '20', '1', '1', '1', '单机', null, '65000', '2018-01-27', '2018-02-01', '', '李四', '', '2018-01-16 00:00:00', null, null);
 INSERT INTO `machine_order` VALUES ('52', '20180102-1', '51', '41', '86', '1', '4', '英语', 'SINSIM电脑绣花机', '5', '1', '10', '20', '1', '1', '1', '单机', null, '65000', '2018-01-27', '2018-02-01', '', '李四', '', '2018-01-16 00:00:00', '2018-01-23 14:45:23', null);
 INSERT INTO `machine_order` VALUES ('53', '180120-1', null, '42', '87', '1', '0', '英语', 'SINSIM电脑绣花机', '2', '2', '1', '1', '1', '22', '33', '叠机', null, '45678', '2018-01-31', '2018-01-31', '暂无', '李四', '', '2018-01-20 00:00:00', null, null);
-INSERT INTO `machine_order` VALUES ('56', '20180102-1', '52', '41', '90', '1', '1', '英语', 'SINSIM电脑绣花机', '1', '1', '10', '20', '1', '1', '1', '单机', null, '60000', '2018-01-27', '2018-02-01', '', '李四', '', '2018-01-23 00:00:00', null, null);
-INSERT INTO `machine_order` VALUES ('57', '001', null, '52', '100', '1', '0', '中文', 'SINSIM电脑绣花机', '10', '1', '11', '10', '10', '22', '22', '单机', null, '55555', '2018-02-28', '2018-02-28', '暂无', '李四', 'SinSim保修', '2018-02-09 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('56', '20180102-1gg', '52', '41', '90', '1', '1', '英语', 'SINSIM电脑绣花机', '1', '1', '10', '20', '1', '1', '1', '单机', null, '60000', '2018-01-27', '2018-02-01', '', '李四', '', '2018-01-23 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('57', '001', '0', '52', '100', '1', '0', '中文', 'SINSIM电脑绣花机', '10', '1', '11', '10', '10', '22', '22', '单机', '', '55555', '2018-02-28', '2018-02-28', '暂无', '李四', 'SinSim保修', '2018-02-09 00:00:00', null, null);
 
 -- ----------------------------
 -- Table structure for `machine_type`
@@ -444,7 +448,7 @@ INSERT INTO `order_detail` VALUES ('85', '4色', '独立', '无', '松下', '冠
 INSERT INTO `order_detail` VALUES ('86', '4色', '独立', '无', '松下', '冠军独立', '16', 'M98', '大豪', '三相步进', '电机剪线', '380V', '1个', '下点动', '伟龙款', '上塑料下铁', '11', '珠架导轨', '三型断检', '佐伩12-R', '电机跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '一个托架下,一个左侧台板下', 'LED灯', '普通', '普通', '正常', '4', '4', '正常');
 INSERT INTO `order_detail` VALUES ('87', '4色', '独立', '独立', '大豪', '冠军独立', '16', 'C29', '大豪', '三相步进', '电机剪线', '380V', '3个', '下自动', '伟龙款', '上塑料下复合', '14', '珠架导轨', '二位底检', '广濑1.6倍高速', '电磁铁跳跃', '有', '无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '有', '台板上', '1个托架下', 'LED灯', '普通', '宽幅(中传动)', '正常', '2', '2', '正常');
 INSERT INTO `order_detail` VALUES ('90', '4色', '独立', '无', '大豪', '冠军独立', '16', 'M98', '大豪', '三相步进', '电机剪线', '380V', '1个', '下点动', '伟龙款', '上塑料下铁', '11', '珠架导轨', '三型断检', '佐伩12-R', '电机跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '一个托架下,一个左侧台板下', 'LED灯', '普通', '普通', '正常', '4', '4', '正常');
-INSERT INTO `order_detail` VALUES ('100', '无', '独立', '独立', '大豪', '冠军独立', '16', null, null, null, null, null, null, null, '伟龙款', '上下分体面板', '11', '珠架导轨', '三型断检', '广濑1.6倍高速', '电磁铁跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '1个托架下', 'LED灯', '普通', '普通', '正常', '1', '1', '正常');
+INSERT INTO `order_detail` VALUES ('100', '无', '独立', '独立', '大豪', '冠军独立', '16', '', '', '', '', '', '', '', '伟龙款', '上下分体面板', '11', '珠架导轨', '三型断检', '广濑1.6倍高速', '电磁铁跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '1个托架下', 'LED灯', '普通', '普通', '正常', '1', '1', '正常');
 
 -- ----------------------------
 -- Table structure for `order_loading_list`
@@ -459,11 +463,14 @@ CREATE TABLE `order_loading_list` (
   PRIMARY KEY (`id`),
   KEY `fk_oll_order_id` (`order_id`),
   CONSTRAINT `fk_oll_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_loading_list
 -- ----------------------------
+INSERT INTO `order_loading_list` VALUES ('1', '56', 'ffffile111', '2', '2018-02-12 10:27:11');
+INSERT INTO `order_loading_list` VALUES ('2', '52', 'fffff2', '3', '2018-02-12 10:32:23');
+INSERT INTO `order_loading_list` VALUES ('3', '56', 'D:/oll/null_56_LoadingFile_2018-02-12-14-44-33.xlsx', '2', '2018-02-12 10:27:11');
 
 -- ----------------------------
 -- Table structure for `order_sign`
@@ -570,8 +577,8 @@ INSERT INTO `process_record` VALUES ('11', '27', '1', '[{\"fromPort\":\"B\",\"to
 INSERT INTO `process_record` VALUES ('12', '34', '1', '[{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-1,\"to\":-3,\"points\":[207.15625000000003,90.67268123183139,207.15625000000003,100.67268123183139,207.15625000000003,110.3363406159157,207.51251220703125,110.3363406159157,207.51251220703125,120,207.51251220703125,130]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-3,\"to\":-2,\"points\":[207.51251220703125,162.87544860839844,207.51251220703125,172.87544860839844,207.51251220703125,179.4377243041992,207.51251220703125,179.4377243041992,207.51251220703125,186,207.51251220703125,196]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-2,\"to\":-5,\"points\":[207.51251220703125,228.87544860839844,207.51251220703125,238.87544860839844,207.51251220703125,249.53772429823874,210.875,249.53772429823874,210.875,260.19999998807907,210.875,270.19999998807907]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-5,\"to\":-4,\"points\":[210.875,303.0754485964775,210.875,313.0754485964775,210.875,365.1715686546921,213.5960057626528,365.1715686546921,213.5960057626528,417.2676887129068,213.5960057626528,427.2676887129068]}]', '[{\"loc\":\"207.15625000000003 39.99999999999999\",\"text\":\"Start\",\"category\":\"Start\",\"key\":-1},{\"loc\":\"213.5960057626528 427.2676887129069\",\"text\":\"End\",\"category\":\"End\",\"key\":-4},{\"loc\":\"207.51251220703125 130\",\"task_status\":\"0\",\"group_id\":3,\"group_name\":\"驱动安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"调试电脑\",\"key\":-3},{\"loc\":\"207.51251220703125 196\",\"task_status\":\"0\",\"group_id\":4,\"group_name\":\"台板安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安装夹线器\",\"key\":-2},{\"loc\":\"210.875 270.19999998807907\",\"task_status\":\"0\",\"group_id\":1,\"group_name\":\"上轴安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安裝主传动\",\"key\":-5}]', '2018-02-01 01:18:44', null);
 INSERT INTO `process_record` VALUES ('13', '32', '1', '[{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-1,\"to\":-3,\"points\":[207.15625000000003,90.67268123183139,207.15625000000003,100.67268123183139,207.15625000000003,110.3363406159157,207.51251220703125,110.3363406159157,207.51251220703125,120,207.51251220703125,130]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-3,\"to\":-2,\"points\":[207.51251220703125,162.87544860839844,207.51251220703125,172.87544860839844,207.51251220703125,179.4377243041992,207.51251220703125,179.4377243041992,207.51251220703125,186,207.51251220703125,196]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-2,\"to\":-5,\"points\":[207.51251220703125,228.87544860839844,207.51251220703125,238.87544860839844,207.51251220703125,256.03772429823874,207.875,256.03772429823874,207.875,273.19999998807907,207.875,283.19999998807907]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-5,\"to\":-6,\"points\":[207.875,316.0754485964775,207.875,326.0754485964775,207.875,340.1377242922783,207.875,340.1377242922783,207.875,354.19999998807907,207.875,364.19999998807907]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-6,\"to\":-4,\"points\":[207.875,397.0754485964775,207.875,407.0754485964775,207.875,433.1715686546921,208.5960057626528,433.1715686546921,208.5960057626528,459.2676887129068,208.5960057626528,469.2676887129068]}]', '[{\"loc\":\"207.15625000000003 39.99999999999999\",\"text\":\"Start\",\"category\":\"Start\",\"key\":-1},{\"loc\":\"208.59600576265277 469.2676887129068\",\"text\":\"End\",\"category\":\"End\",\"key\":-4},{\"loc\":\"207.51251220703125 130\",\"task_status\":\"0\",\"group_id\":3,\"group_name\":\"驱动安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"调试电脑\",\"key\":-3},{\"loc\":\"207.51251220703125 196\",\"task_status\":\"0\",\"group_id\":4,\"group_name\":\"台板安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安装夹线器\",\"key\":-2},{\"loc\":\"207.875 283.19999998807907\",\"task_status\":\"0\",\"group_id\":1,\"group_name\":\"上轴安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安裝主传动\",\"key\":-5},{\"loc\":\"207.875 364.19999998807907\",\"task_status\":\"0\",\"group_id\":2,\"group_name\":\"下轴安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"喷油漆\",\"key\":-6}]', '2018-02-01 01:23:28', null);
 INSERT INTO `process_record` VALUES ('14', '19', '1', '[{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-1,\"to\":-3,\"points\":[207.15625000000003,90.67268123183139,207.15625000000003,100.67268123183139,207.15625000000003,110.3363406159157,207.51251220703125,110.3363406159157,207.51251220703125,120,207.51251220703125,130]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-3,\"to\":-2,\"points\":[207.51251220703125,162.87544860839844,207.51251220703125,172.87544860839844,207.51251220703125,179.4377243041992,208.51251220703125,179.4377243041992,208.51251220703125,186,208.51251220703125,196]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-2,\"to\":-5,\"points\":[208.51251220703125,228.87544860839844,208.51251220703125,238.87544860839844,208.51251220703125,247.53772429823874,215.875,247.53772429823874,215.875,256.19999998807907,215.875,266.19999998807907]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-5,\"to\":-6,\"points\":[215.875,299.0754485964775,215.875,309.0754485964775,215.875,326.6377242922783,217.875,326.6377242922783,217.875,344.19999998807907,217.875,354.19999998807907]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-6,\"to\":-7,\"points\":[217.875,387.0754485964775,217.875,397.0754485964775,217.875,423.1377242922783,216.875,423.1377242922783,216.875,449.19999998807907,216.875,459.19999998807907]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-7,\"to\":-4,\"points\":[216.875,492.0754485964775,216.875,502.0754485964775,216.875,516.2715686487318,225.5960057626528,516.2715686487318,225.5960057626528,530.467688700986,225.5960057626528,540.467688700986]}]', '[{\"loc\":\"207.15625000000003 39.99999999999999\",\"text\":\"Start\",\"category\":\"Start\",\"key\":-1},{\"loc\":\"225.59600576265282 540.467688700986\",\"text\":\"End\",\"category\":\"End\",\"key\":-4},{\"loc\":\"207.51251220703125 130\",\"task_status\":\"0\",\"group_id\":3,\"group_name\":\"驱动安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"调试电脑\",\"key\":-3},{\"loc\":\"208.51251220703128 196\",\"task_status\":\"0\",\"group_id\":4,\"group_name\":\"台板安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安装夹线器\",\"key\":-2},{\"loc\":\"215.875 266.19999998807907\",\"task_status\":\"0\",\"group_id\":2,\"group_name\":\"下轴安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"喷油漆\",\"key\":-5},{\"loc\":\"217.875 354.19999998807907\",\"task_status\":\"0\",\"group_id\":1,\"group_name\":\"上轴安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安裝主传动\",\"key\":-6},{\"loc\":\"216.875 459.19999998807907\",\"task_status\":\"0\",\"group_id\":2,\"group_name\":\"下轴安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安装电机\",\"key\":-7}]', '2018-02-01 01:27:37', null);
-INSERT INTO `process_record` VALUES ('15', '29', '1', '[{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-1,\"to\":-3,\"points\":[207.15625000000003,90.67268123183139,207.15625000000003,100.67268123183139,207.15625000000003,110.3363406159157,207.51251220703125,110.3363406159157,207.51251220703125,120,207.51251220703125,130]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-3,\"to\":-2,\"points\":[207.51251220703125,162.87544860839844,207.51251220703125,172.87544860839844,207.51251220703125,179.4377243041992,207.51251220703125,179.4377243041992,207.51251220703125,186,207.51251220703125,196]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-2,\"to\":-5,\"points\":[207.51251220703125,228.87544860839844,207.51251220703125,238.87544860839844,207.51251220703125,257.03772429823874,209.875,257.03772429823874,209.875,275.19999998807907,209.875,285.19999998807907]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-5,\"to\":-6,\"points\":[209.875,318.0754485964775,209.875,328.0754485964775,209.875,344.1377242922783,208.875,344.1377242922783,208.875,360.19999998807907,208.875,370.19999998807907]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-6,\"to\":-4,\"points\":[208.875,403.0754485964775,208.875,413.0754485964775,208.875,473.2715686487317,212.5960057626528,473.2715686487317,212.5960057626528,533.467688700986,212.5960057626528,543.467688700986]}]', '[{\"loc\":\"207.15625000000003 39.99999999999999\",\"text\":\"Start\",\"category\":\"Start\",\"key\":-1},{\"loc\":\"212.59600576265282 543.467688700986\",\"text\":\"End\",\"category\":\"End\",\"key\":-4},{\"loc\":\"207.51251220703125 130\",\"task_status\":\"0\",\"group_id\":3,\"group_name\":\"驱动安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"调试电脑\",\"key\":-3},{\"loc\":\"207.51251220703125 196\",\"task_status\":\"0\",\"group_id\":4,\"group_name\":\"台板安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安装夹线器\",\"key\":-2},{\"loc\":\"209.875 285.19999998807907\",\"task_status\":\"0\",\"group_id\":1,\"group_name\":\"上轴安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安裝主传动\",\"key\":-5},{\"loc\":\"208.875 370.19999998807907\",\"task_status\":\"0\",\"group_id\":2,\"group_name\":\"下轴安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"喷油漆\",\"key\":-6}]', '2018-02-01 01:51:00', null);
-INSERT INTO `process_record` VALUES ('16', '30', '1', '[{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-1,\"to\":-3,\"points\":[207.15625000000003,90.67268123183139,207.15625000000003,100.67268123183139,207.15625000000003,110.3363406159157,207.51251220703125,110.3363406159157,207.51251220703125,120,207.51251220703125,130]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-3,\"to\":-2,\"points\":[207.51251220703125,162.87544860839844,207.51251220703125,172.87544860839844,207.51251220703125,179.4377243041992,207.51251220703125,179.4377243041992,207.51251220703125,186,207.51251220703125,196]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-2,\"to\":-4,\"points\":[207.51251220703125,228.87544860839844,207.51251220703125,238.87544860839844,207.51251220703125,251.57156866065264,206.5960057626528,251.57156866065264,206.5960057626528,264.2676887129069,206.5960057626528,274.2676887129069]}]', '[{\"loc\":\"207.15625000000003 39.99999999999999\",\"text\":\"Start\",\"category\":\"Start\",\"key\":-1},{\"loc\":\"206.5960057626528 274.2676887129068\",\"text\":\"End\",\"category\":\"End\",\"key\":-4},{\"loc\":\"207.51251220703125 130\",\"task_status\":\"0\",\"group_id\":3,\"group_name\":\"驱动安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"调试电脑\",\"key\":-3},{\"loc\":\"207.51251220703125 196\",\"task_status\":\"0\",\"group_id\":4,\"group_name\":\"台板安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安装夹线器\",\"key\":-2}]', '2018-02-01 01:51:37', null);
+INSERT INTO `process_record` VALUES ('15', '35', '1', '[{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-1,\"to\":-3,\"points\":[207.15625000000003,90.67268123183139,207.15625000000003,100.67268123183139,207.15625000000003,110.3363406159157,207.51251220703125,110.3363406159157,207.51251220703125,120,207.51251220703125,130]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-3,\"to\":-2,\"points\":[207.51251220703125,162.87544860839844,207.51251220703125,172.87544860839844,207.51251220703125,179.4377243041992,207.51251220703125,179.4377243041992,207.51251220703125,186,207.51251220703125,196]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-2,\"to\":-5,\"points\":[207.51251220703125,228.87544860839844,207.51251220703125,238.87544860839844,207.51251220703125,257.03772429823874,209.875,257.03772429823874,209.875,275.19999998807907,209.875,285.19999998807907]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-5,\"to\":-6,\"points\":[209.875,318.0754485964775,209.875,328.0754485964775,209.875,344.1377242922783,208.875,344.1377242922783,208.875,360.19999998807907,208.875,370.19999998807907]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-6,\"to\":-4,\"points\":[208.875,403.0754485964775,208.875,413.0754485964775,208.875,473.2715686487317,212.5960057626528,473.2715686487317,212.5960057626528,533.467688700986,212.5960057626528,543.467688700986]}]', '[{\"loc\":\"207.15625000000003 39.99999999999999\",\"text\":\"Start\",\"category\":\"Start\",\"key\":-1},{\"loc\":\"212.59600576265282 543.467688700986\",\"text\":\"End\",\"category\":\"End\",\"key\":-4},{\"loc\":\"207.51251220703125 130\",\"task_status\":\"0\",\"group_id\":3,\"group_name\":\"驱动安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"调试电脑\",\"key\":-3},{\"loc\":\"207.51251220703125 196\",\"task_status\":\"0\",\"group_id\":4,\"group_name\":\"台板安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安装夹线器\",\"key\":-2},{\"loc\":\"209.875 285.19999998807907\",\"task_status\":\"0\",\"group_id\":1,\"group_name\":\"上轴安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安裝主传动\",\"key\":-5},{\"loc\":\"208.875 370.19999998807907\",\"task_status\":\"0\",\"group_id\":2,\"group_name\":\"下轴安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"喷油漆\",\"key\":-6}]', '2018-02-01 01:51:00', null);
+INSERT INTO `process_record` VALUES ('16', '36', '1', '[{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-1,\"to\":-3,\"points\":[207.15625000000003,90.67268123183139,207.15625000000003,100.67268123183139,207.15625000000003,110.3363406159157,207.51251220703125,110.3363406159157,207.51251220703125,120,207.51251220703125,130]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-3,\"to\":-2,\"points\":[207.51251220703125,162.87544860839844,207.51251220703125,172.87544860839844,207.51251220703125,179.4377243041992,207.51251220703125,179.4377243041992,207.51251220703125,186,207.51251220703125,196]},{\"fromPort\":\"B\",\"toPort\":\"T\",\"from\":-2,\"to\":-4,\"points\":[207.51251220703125,228.87544860839844,207.51251220703125,238.87544860839844,207.51251220703125,251.57156866065264,206.5960057626528,251.57156866065264,206.5960057626528,264.2676887129069,206.5960057626528,274.2676887129069]}]', '[{\"loc\":\"207.15625000000003 39.99999999999999\",\"text\":\"Start\",\"category\":\"Start\",\"key\":-1},{\"loc\":\"206.5960057626528 274.2676887129068\",\"text\":\"End\",\"category\":\"End\",\"key\":-4},{\"loc\":\"207.51251220703125 130\",\"task_status\":\"0\",\"group_id\":3,\"group_name\":\"驱动安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"调试电脑\",\"key\":-3},{\"loc\":\"207.51251220703125 196\",\"task_status\":\"0\",\"group_id\":4,\"group_name\":\"台板安装组\",\"end_time\":\"\",\"begin_time\":\"\",\"text\":\"安装夹线器\",\"key\":-2}]', '2018-02-01 01:51:37', null);
 
 -- ----------------------------
 -- Table structure for `quality_record_image`
@@ -585,11 +592,13 @@ CREATE TABLE `quality_record_image` (
   PRIMARY KEY (`id`),
   KEY `fk_task_quality_record_id` (`task_quality_record_id`),
   CONSTRAINT `fk_task_quality_record_id` FOREIGN KEY (`task_quality_record_id`) REFERENCES `task_quality_record` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of quality_record_image
 -- ----------------------------
+INSERT INTO `quality_record_image` VALUES ('1', '2', 'D:/images/quality/A0M094156526_null_Quality_2018-02-12-14-18-02.png', '2017-12-05 13:25:31');
+INSERT INTO `quality_record_image` VALUES ('2', '1', 'D:/images/quality/A0M094156526_null_Quality_2018-02-12-14-31-38.png', '2017-12-05 13:25:31');
 
 -- ----------------------------
 -- Table structure for `role`
@@ -697,7 +706,7 @@ INSERT INTO `task_plan` VALUES ('5', '4', '1', '2018-01-28 02:09:48', null, '1',
 INSERT INTO `task_plan` VALUES ('6', '6', '1', '2018-01-31 23:05:09', null, '1', '2018-01-31 23:10:59', null);
 INSERT INTO `task_plan` VALUES ('7', '11', '1', '2018-01-31 23:58:40', null, '1', '2018-01-31 23:58:57', null);
 INSERT INTO `task_plan` VALUES ('8', '12', '1', '2018-01-31 23:58:40', null, '1', '2018-01-31 23:58:57', null);
-INSERT INTO `task_plan` VALUES ('9', '27', '1', '2018-02-01 01:18:46', null, '1', '2018-02-01 01:19:05', null);
+INSERT INTO `task_plan` VALUES ('9', '19', '1', '2018-02-01 01:18:46', null, '1', '2018-02-01 01:19:05', null);
 INSERT INTO `task_plan` VALUES ('10', '28', '1', '2018-02-01 01:18:46', null, '1', '2018-02-01 01:19:05', null);
 INSERT INTO `task_plan` VALUES ('11', '39', '1', '2018-02-07 23:34:03', null, '1', '2018-02-07 23:34:35', null);
 INSERT INTO `task_plan` VALUES ('20', '40', '1', '2018-02-08 00:13:38', null, '1', '2018-02-08 00:18:14', null);
@@ -720,11 +729,13 @@ CREATE TABLE `task_quality_record` (
   PRIMARY KEY (`id`),
   KEY `tqr_task_record_id` (`task_record_id`),
   CONSTRAINT `tqr_task_record_id` FOREIGN KEY (`task_record_id`) REFERENCES `task_record` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task_quality_record
 -- ----------------------------
+INSERT INTO `task_quality_record` VALUES ('1', '3', 'nnnn', '2', 'cmtttt', '2018-02-12 14:17:27');
+INSERT INTO `task_quality_record` VALUES ('2', '4', 'nn222', '3', 'cmt2222', '2018-02-12 14:17:45');
 
 -- ----------------------------
 -- Table structure for `task_record`
@@ -754,10 +765,10 @@ CREATE TABLE `task_record` (
 -- ----------------------------
 INSERT INTO `task_record` VALUES ('3', '安裝主传动', '1', '0', null, null, '0', null, null, '0000-00-00 00:00:00', null);
 INSERT INTO `task_record` VALUES ('4', '喷油漆', '1', '0', null, null, '1', null, null, '0000-00-00 00:00:00', null);
-INSERT INTO `task_record` VALUES ('5', '调试电脑', '2', '-3', null, null, '1', null, null, null, null);
-INSERT INTO `task_record` VALUES ('6', '安装夹线器', '2', '-2', null, null, '1', null, null, null, null);
-INSERT INTO `task_record` VALUES ('7', '调试电脑', '3', '-3', null, null, '1', null, null, null, null);
-INSERT INTO `task_record` VALUES ('8', '安装夹线器', '3', '-2', null, null, '1', null, null, null, null);
+INSERT INTO `task_record` VALUES ('5', '调试电脑', '2', '-3', null, null, '2', null, null, null, null);
+INSERT INTO `task_record` VALUES ('6', '安装夹线器', '2', '-2', null, null, '3', null, null, null, null);
+INSERT INTO `task_record` VALUES ('7', '调试电脑', '3', '-3', null, null, '4', null, null, null, null);
+INSERT INTO `task_record` VALUES ('8', '安装夹线器', '3', '-2', null, null, '5', null, null, null, null);
 INSERT INTO `task_record` VALUES ('11', '调试电脑', '8', '-3', null, null, '0', null, null, null, null);
 INSERT INTO `task_record` VALUES ('12', '安装夹线器', '8', '-2', null, null, '0', null, null, null, null);
 INSERT INTO `task_record` VALUES ('19', '调试电脑', '9', '-3', null, null, '0', null, null, null, null);
@@ -765,25 +776,25 @@ INSERT INTO `task_record` VALUES ('20', '安装夹线器', '9', '-2', null, null
 INSERT INTO `task_record` VALUES ('23', '调试电脑', '10', '-3', null, null, '0', null, null, null, null);
 INSERT INTO `task_record` VALUES ('24', '安装夹线器', '10', '-2', null, null, '0', null, null, null, null);
 INSERT INTO `task_record` VALUES ('25', '调试电脑', '11', '-3', null, null, '1', null, null, null, null);
-INSERT INTO `task_record` VALUES ('26', '安装夹线器', '11', '-2', null, null, '1', null, null, null, null);
-INSERT INTO `task_record` VALUES ('27', '调试电脑', '12', '-3', null, null, '1', null, null, null, null);
+INSERT INTO `task_record` VALUES ('26', '安装夹线器', '11', '-2', null, null, '2', null, null, null, null);
+INSERT INTO `task_record` VALUES ('27', '调试电脑', '12', '-3', null, null, '2', null, null, null, null);
 INSERT INTO `task_record` VALUES ('28', '安装夹线器', '12', '-2', null, null, '1', null, null, null, null);
 INSERT INTO `task_record` VALUES ('29', '安裝主传动', '12', '-5', null, null, '1', null, null, null, null);
 INSERT INTO `task_record` VALUES ('30', '调试电脑', '13', '-3', null, null, '0', null, null, null, null);
 INSERT INTO `task_record` VALUES ('31', '安装夹线器', '13', '-2', null, null, '0', null, null, null, null);
 INSERT INTO `task_record` VALUES ('32', '安裝主传动', '13', '-5', null, null, '0', null, null, null, null);
 INSERT INTO `task_record` VALUES ('33', '喷油漆', '13', '-6', null, null, '0', null, null, null, null);
-INSERT INTO `task_record` VALUES ('34', '调试电脑', '14', '-3', null, null, '0', null, null, null, null);
-INSERT INTO `task_record` VALUES ('35', '安装夹线器', '14', '-2', null, null, '0', null, null, null, null);
-INSERT INTO `task_record` VALUES ('36', '喷油漆', '14', '-5', null, null, '0', null, null, null, null);
+INSERT INTO `task_record` VALUES ('34', '调试电脑', '14', '-3', null, null, '3', null, null, null, null);
+INSERT INTO `task_record` VALUES ('35', '安装夹线器', '14', '-2', null, null, '2', null, null, null, null);
+INSERT INTO `task_record` VALUES ('36', '喷油漆', '14', '-5', null, null, '3', null, null, null, null);
 INSERT INTO `task_record` VALUES ('37', '安裝主传动', '14', '-6', null, null, '0', null, null, null, null);
-INSERT INTO `task_record` VALUES ('38', '安装电机', '14', '-7', null, null, '0', null, null, null, null);
+INSERT INTO `task_record` VALUES ('38', '安装电机', '14', '-7', null, null, '5', null, null, null, null);
 INSERT INTO `task_record` VALUES ('39', '调试电脑', '15', '-3', null, null, '0', null, null, null, null);
-INSERT INTO `task_record` VALUES ('40', '安装夹线器', '15', '-2', null, null, '0', null, null, null, null);
+INSERT INTO `task_record` VALUES ('40', '安装夹线器', '15', '-2', null, null, '3', null, null, null, null);
 INSERT INTO `task_record` VALUES ('41', '安裝主传动', '15', '-5', null, null, '0', null, null, null, null);
-INSERT INTO `task_record` VALUES ('42', '喷油漆', '15', '-6', null, null, '1', null, null, null, null);
-INSERT INTO `task_record` VALUES ('43', '调试电脑', '16', '-3', null, null, '1', null, null, null, null);
-INSERT INTO `task_record` VALUES ('44', '安装夹线器', '16', '-2', null, null, '1', null, null, null, null);
+INSERT INTO `task_record` VALUES ('42', '喷油漆', '15', '-6', null, null, '5', null, null, null, null);
+INSERT INTO `task_record` VALUES ('43', '调试电脑', '16', '-3', null, null, '4', null, null, null, null);
+INSERT INTO `task_record` VALUES ('44', '安装夹线器', '16', '-2', null, null, '2', null, null, null, null);
 
 -- ----------------------------
 -- Table structure for `user`
