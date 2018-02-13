@@ -40,11 +40,13 @@ public class OrderLoadingListController {
 
     /**
      * 在增加记录的同时，也保存了装车单文件file1
+     * 多个装车单文件处理:
+     * 每次上传一个文件，用同个orderLoadingList JSON ( 比如{"createTime":1518402431000, "orderId":56,"type":2})
+     * 上传多次,就上传了多个文件，都属于编号为56的需求单的装车单文件。
      * @param orderLoadingList
-     * @param file1
+     * @param file1 每次上传的一个文件
      * @return
      */
-    //TODO: 多个装车单文件处理
     @PostMapping("/add")
     public Result add(String orderLoadingList,MultipartFile file1) {
         OrderLoadingList orderLoadingList1 = JSON.parseObject(orderLoadingList,OrderLoadingList.class);
@@ -74,7 +76,7 @@ public class OrderLoadingListController {
      * @param orderLoadingListId
      * @return
      */
-    @PostMapping("/searchOrderIdByOrderId")
+    @PostMapping("/searchOrderIdByOrderLoadingListId")
     public String searchOrderIdByOrderLoadingListId(@RequestParam Integer orderLoadingListId){
         MachineOrder machineOrder = machineOrderService.searchOrderIdByOrderLoadingListId(orderLoadingListId);
         if(machineOrder != null) {

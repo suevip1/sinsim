@@ -289,4 +289,26 @@ public class TaskRecordController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 根据account和机器的系统编号（machine_strid），
+     * 返回对应机器正在操作的步骤（除去status为初始化、已计划和质检完成的task_record），且属于该account的排班计划。
+     * @param page
+     * @param size
+     * @param machineStrId
+     * @param account
+     * @return
+     */
+    @PostMapping("/selectTaskRecordByMachineStrIdAndAccount")
+    public Result selectTaskRecordByMachineStrIdAndAccount(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            @RequestParam(defaultValue = "0") String machineStrId,
+            @RequestParam(defaultValue = "0") String account
+    ) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineStrIdAndAccount(machineStrId, account);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }
