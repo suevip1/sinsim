@@ -160,7 +160,11 @@ public class TaskRecordController {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> ListTaskRecordDetail = taskRecordService.selectAllInstallTaskRecordDetailByUserAccount(userAccount);
         PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
-        return ResultGenerator.genSuccessResult(pageInfo);
+        if ( ListTaskRecordDetail.isEmpty() ){
+            return ResultGenerator.genSuccessResult("Empty Result");
+        } else {
+            return ResultGenerator.genSuccessResult(pageInfo);
+        }
     }
 
     /**
@@ -287,7 +291,11 @@ public class TaskRecordController {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineStrId(machineStrId);
         PageInfo pageInfo = new PageInfo(list);
-        return ResultGenerator.genSuccessResult(pageInfo);
+        if ( list.isEmpty() ){
+            return ResultGenerator.genSuccessResult("Empty Result");
+        } else {
+            return ResultGenerator.genSuccessResult(pageInfo);
+        }
     }
 
     /**
@@ -309,6 +317,34 @@ public class TaskRecordController {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineStrIdAndAccount(machineStrId, account);
         PageInfo pageInfo = new PageInfo(list);
-        return ResultGenerator.genSuccessResult(pageInfo);
+        if ( list.isEmpty() ){
+            return ResultGenerator.genSuccessResult("Empty Result");
+        } else {
+            return ResultGenerator.genSuccessResult(pageInfo);
+        }
     }
+
+    /**
+     * 根据account返回该用户的的待计划安装任务
+     * @param page
+     * @param size
+     * @param account
+     * @return
+     */
+    @PostMapping("/selectUnplannedTaskRecordByAccount")
+    public Result selectUnplandTaskRecordByAccount(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            @RequestParam(defaultValue = "0") String account
+    ) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> list = taskRecordService.selectUnplannedTaskRecordByAccount(account);
+        PageInfo pageInfo = new PageInfo(list);
+        if ( list.isEmpty() ){
+            return ResultGenerator.genSuccessResult("Empty Result");
+        } else {
+            return ResultGenerator.genSuccessResult(pageInfo);
+        }
+    }
+
 }
