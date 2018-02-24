@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -20,5 +21,9 @@ import javax.annotation.Resource;
 public class OrderLoadingListServiceImpl extends AbstractService<OrderLoadingList> implements OrderLoadingListService {
     @Resource
     private OrderLoadingListMapper orderLoadingListMapper;
+
+    public List<OrderLoadingList>  selectFilePathByOrderId(Integer order_id) {
+        return orderLoadingListMapper.selectFilePathByOrderId(order_id);
+    }
 
 }

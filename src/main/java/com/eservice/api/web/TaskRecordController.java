@@ -291,11 +291,7 @@ public class TaskRecordController {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineStrId(machineStrId);
         PageInfo pageInfo = new PageInfo(list);
-        if ( list.isEmpty() ){
-            return ResultGenerator.genSuccessResult("Empty Result");
-        } else {
-            return ResultGenerator.genSuccessResult(pageInfo);
-        }
+        return ResultGenerator.genSuccessResult(pageInfo);
     }
 
     /**
@@ -317,11 +313,7 @@ public class TaskRecordController {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineStrIdAndAccount(machineStrId, account);
         PageInfo pageInfo = new PageInfo(list);
-        if ( list.isEmpty() ){
-            return ResultGenerator.genSuccessResult("Empty Result");
-        } else {
-            return ResultGenerator.genSuccessResult(pageInfo);
-        }
+        return ResultGenerator.genSuccessResult(pageInfo);
     }
 
     /**
@@ -340,11 +332,7 @@ public class TaskRecordController {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> list = taskRecordService.selectUnplannedTaskRecordByAccount(account);
         PageInfo pageInfo = new PageInfo(list);
-        if ( list.isEmpty() ){
-            return ResultGenerator.genSuccessResult("Empty Result");
-        } else {
-            return ResultGenerator.genSuccessResult(pageInfo);
-        }
+        return ResultGenerator.genSuccessResult(pageInfo);
     }
 
 }

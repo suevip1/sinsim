@@ -10,6 +10,7 @@ import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.eservice.api.service.impl.OrderLoadingListServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +39,7 @@ public class OrderLoadingListController {
     private MachineOrderServiceImpl machineOrderService;
     @Resource
     private CommonService commonService;
+    Logger logger = Logger.getLogger(CommonService.class);
 
     /**
      * 在增加记录的同时，也保存了装车单文件file1
@@ -66,8 +69,9 @@ public class OrderLoadingListController {
         } else {
             orderLoadingList1.setFileName(resultPath);
             orderLoadingListService.save(orderLoadingList1);
+            logger.info("====/order/loading/list/add():======== " + resultPath);
+            return ResultGenerator.genSuccessResult(resultPath);
         }
-        return ResultGenerator.genSuccessResult();
     }
 
     /**
@@ -111,5 +115,28 @@ public class OrderLoadingListController {
         List<OrderLoadingList> list = orderLoadingListService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     * 根据 order_id 返回 装车单的文件名称(可以有多个装车单)
+     * 下载路径的前面部分是统一的，放在xxx_ip/download/下(nginx配置)，
+     * 比如，访问下面地址可以下载该装车单
+     * http://xx.xx.xx.xx/download/null_1_LoadingFile_2018-02-24-10-12-2.xlsx
+     * @param order_id
+     * @return
+     */
+    @PostMapping("/selectOrderLoadingFileNameByOrderId")
+    public Result selectOrderLoadingFileNameByOrderId(@RequestParam Integer order_id) {
+        List<OrderLoadingList> list = orderLoadingListService.selectFilePathByOrderId(order_id);
+        List<String> fileNameList = new ArrayList<String>();
+
+        for(int i=0;i<list.size();i++){
+            fileNameList.add(list.get(i).getFileName().substring(orderLoadingListSavedDir.length()));
+        }
+        if(fileNameList.isEmpty()) {
+            return ResultGenerator.genFailResult("No orderLoadingList found by the order_id !");
+        }else {
+            return ResultGenerator.genSuccessResult(fileNameList);
+        }
     }
 }

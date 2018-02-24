@@ -9,6 +9,7 @@ import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.model.role.Role;
 import com.eservice.api.service.impl.*;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +39,7 @@ public class CommonService {
     @Resource
     private MachineServiceImpl machineService;
 
+    Logger logger = Logger.getLogger(CommonService.class);
     /**
      * 用于返回对应合同的所有签核记录，每一次提交审核以后，都需要通过该API获取所有审核内容，再设置审核状态
      *
@@ -174,6 +176,8 @@ public class CommonService {
 
                     Date date = new Date();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+                    //指定北京时间
+                    formatter.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                     String dateStr = formatter.format(date);
 
                     String fileType;
@@ -193,7 +197,7 @@ public class CommonService {
                     out.write(file.getBytes());
                     out.flush();
                     out.close();
-
+                    logger.info("====CommonService.saveFile(): success ========" + targetFileName);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     return null;

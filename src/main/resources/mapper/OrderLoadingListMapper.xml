@@ -11,4 +11,8 @@
     <result column="type" jdbcType="TINYINT" property="type" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
+
+  <select id="selectFilePathByOrderId" resultMap="BaseResultMap">
+    select * from order_loading_list where order_id = #{contractId}
+  </select>
 </mapper>
