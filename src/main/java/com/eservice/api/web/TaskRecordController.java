@@ -317,6 +317,27 @@ public class TaskRecordController {
     }
 
     /**
+     * 返回待计划的Task_record具体信息
+     * @param page
+     * @param size
+     * @param machineStrId
+     * @param account
+     * @return
+     */
+    @PostMapping("/selectUnPlannedTaskRecordByMachineStrIdAndAccount")
+    public Result selectUnPlannedTaskRecordByMachineStrIdAndAccount(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            @RequestParam(defaultValue = "0") String machineStrId,
+            @RequestParam(defaultValue = "0") String account
+    ) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> list = taskRecordService.selectUnPlannedTaskRecordByMachineStrIdAndAccount(machineStrId, account);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
      * 根据account返回该用户的的待计划安装任务
      * @param page
      * @param size

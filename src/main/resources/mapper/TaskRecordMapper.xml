@@ -384,6 +384,31 @@
         and tp.user_id = (select id from user where user.account=#{account})
     </select>
 
+    <select id="selectUnPlannedTaskRecordByMachineStrIdAndAccount" resultMap="TaskRecordDetail">
+        select
+        tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
+        pr.id process_record_id_in_association, pr.*,
+        m.id machine_id1,m.status machine_status, m.*,
+        mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
+        oll.id order_loading_list_id,oll.*,
+        tp.id task_plan_id,tp.*
+
+        from task_record tr
+        join task_plan tp on tp.task_record_id = tr.id
+        join process_record pr on tr.process_record_id = pr.id
+        join machine m on m.id = pr.machine_id
+        join machine_order mo on mo.id = m.order_id
+        join order_loading_list oll on oll.order_id = mo.id
+
+        join task on task.task_name = tr.task_name
+        join install_group  on install_group.id = task.group_id
+        join user on user.group_id = install_group.id
+        where m.machine_strid = #{machineStrId}
+        and tr.status !=1 and tr.status !=6
+        and m.status='1'
+        and tp.user_id = (select id from user where user.account=#{account})
+    </select>
+
     <select id="selectUnplannedTaskRecordByAccount" resultMap="TaskRecordDetail">
         select
         tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
@@ -404,6 +429,6 @@
         join install_group  on install_group.id = task.group_id
         join user  on user.group_id = install_group.id
 
-         where user.account=#{account}
+        where m.status='1' and user.account=#{account};
     </select>
 </mapper>
