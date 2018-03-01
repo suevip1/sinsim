@@ -356,4 +356,24 @@ public class TaskRecordController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    /**
+     * 返回满足user+machine_strId且处于安装完成待质检和质检异常状态的质检任务
+     * @param page
+     * @param size
+     * @param machineStrId
+     * @param account
+     * @return
+     */
+    @PostMapping("selectQATaskRecordDetailByAccountAndMachineStrID")
+    public Result selectQATaskRecordDetailByAccountAndMachineStrID(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            @RequestParam(defaultValue = "0") String machineStrId,
+            @RequestParam(defaultValue = "0") String account
+    ) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> list = taskRecordService.selectQATaskRecordDetailByAccountAndMachineStrID(machineStrId, account);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }
