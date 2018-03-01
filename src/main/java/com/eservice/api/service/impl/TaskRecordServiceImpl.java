@@ -71,6 +71,13 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
     public List<TaskRecordDetail> selectTaskRecordByMachineStrIdAndAccount(String machineStrId, String account){
         return taskRecordMapper.selectTaskRecordByMachineStrIdAndAccount(machineStrId, account);
     }
+    public List<TaskRecordDetail> selectUnPlannedTaskRecordByMachineStrIdAndAccount(String machineStrId, String account){
+        return taskRecordMapper.selectUnPlannedTaskRecordByMachineStrIdAndAccount(machineStrId, account);
+    }
+
+    public List<TaskRecordDetail> selectQATaskRecordDetailByAccountAndMachineStrID(String machineStrId, String account){
+        return taskRecordMapper.selectQATaskRecordDetailByAccountAndMachineStrID(machineStrId, account);
+    }
 
     public List<TaskRecordDetail> selectUnplannedTaskRecordByAccount(String account){
         return taskRecordMapper.selectUnplannedTaskRecordByAccount(account);
