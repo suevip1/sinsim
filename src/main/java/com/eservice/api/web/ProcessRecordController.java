@@ -54,8 +54,9 @@ public class ProcessRecordController {
     }
 
     @PostMapping("/update")
-    public Result update(ProcessRecord processRecord) {
-        processRecordService.update(processRecord);
+    public Result update(String processRecord) {
+        ProcessRecord processRecord1 = JSON.parseObject(processRecord,ProcessRecord.class);
+        processRecordService.update(processRecord1);
         return ResultGenerator.genSuccessResult();
     }
 
