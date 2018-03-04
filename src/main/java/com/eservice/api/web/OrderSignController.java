@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
@@ -32,10 +33,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/11/14.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/11/14.
+ */
 @RestController
 @RequestMapping("/order/sign")
 public class OrderSignController {
@@ -52,7 +54,7 @@ public class OrderSignController {
 
     @PostMapping("/add")
     public Result add(String orderSign) {
-        OrderSign orderSign1 = JSON.parseObject(orderSign,OrderSign.class);
+        OrderSign orderSign1 = JSON.parseObject(orderSign, OrderSign.class);
         orderSignService.save(orderSign1);
         return ResultGenerator.genSuccessResult();
     }
@@ -66,25 +68,25 @@ public class OrderSignController {
     @PostMapping("/update")
     @Transactional(rollbackFor = Exception.class)
     public Result update(Integer contractId, String orderSign) {
-        if(orderSign == null || "".equals(orderSign)) {
+        if (orderSign == null || "".equals(orderSign)) {
             ResultGenerator.genFailResult("签核信息为空！");
         }
-        if(contractId == null || contractId <=0) {
+        if (contractId == null || contractId <= 0) {
             ResultGenerator.genFailResult("合同ID不存在或者无效！");
         }
         OrderSign orderSignObj = JSONObject.parseObject(orderSign, OrderSign.class);
-        if(orderSignObj == null) {
+        if (orderSignObj == null) {
             ResultGenerator.genFailResult("签核信息JSON解析失败！");
-        }else {
+        } else {
             //更新需求单签核记录
             orderSignObj.setUpdateTime(new Date());
             orderSignService.update(orderSignObj);
             //更新需求单状态
             List<SignContentItem> orderSignContentList = JSON.parseArray(orderSignObj.getSignContent(), SignContentItem.class);
             boolean haveReject = false;
-            for (SignContentItem item: orderSignContentList) {
+            for (SignContentItem item : orderSignContentList) {
                 //如果签核内容中有“拒绝”状态的签核信息，需要将该
-                if(item.getResult().equals(Constant.SIGN_REJECT)) {
+                if (item.getResult().equals(Constant.SIGN_REJECT)) {
                     haveReject = true;
                     break;
                 }
@@ -95,8 +97,8 @@ public class OrderSignController {
                 //需要把之前的签核状态result设置为初始状态“SIGN_INITIAL”，但是签核内容不变(contract & machineOrder)
                 //合同相关
                 ContractSign contractSignObj = contractSignService.detailByContractId(String.valueOf(contractId));
-                List<SignContentItem> contractSignList  = JSON.parseArray(contractSignObj.getSignContent(), SignContentItem.class);
-                for (SignContentItem item: contractSignList) {
+                List<SignContentItem> contractSignList = JSON.parseArray(contractSignObj.getSignContent(), SignContentItem.class);
+                for (SignContentItem item : contractSignList) {
                     item.setResult(Constant.SIGN_INITIAL);
                 }
                 contractSignObj.setSignContent(JSONObject.toJSONString(contractSignList));
@@ -105,28 +107,27 @@ public class OrderSignController {
                 contractSignService.update(contractSignObj);
 
                 //需求单相关，当前需求单审核变为初始化“SIGN_INITIAL”
-                for (SignContentItem item: orderSignContentList) {
+                for (SignContentItem item : orderSignContentList) {
                     item.setResult(Constant.SIGN_INITIAL);
                 }
                 orderSignObj.setSignContent(JSONObject.toJSONString(orderSignContentList));
                 orderSignService.update(orderSignObj);
 
+            } else {
+                if (!machineOrder.getStatus().equals(Constant.ORDER_CHECKING)) {
+                    machineOrder.setStatus(Constant.ORDER_CHECKING);
+                }
             }
-//            else {
-//                if(machineOrder.getStatus().equals(Constant.ORDER_REJECTED)){
-//                    machineOrder.setStatus(Constant.ORDER_CHECKING);
-//                }
-//            }
             machineOrderService.update(machineOrder);
 
             //更新合同签核记录
             String step = commonService.getCurrentSignStep(contractId);
             ContractSign contractSign = contractSignService.detailByContractId(String.valueOf(contractId));
-            if(step == null || contractSign == null) {
+            if (step == null || contractSign == null) {
                 throw new RuntimeException();
-            }else {
+            } else {
                 Contract contract = contractService.findById(contractId);
-                if(step.equals(Constant.SIGN_FINISHED)) {
+                if (step.equals(Constant.SIGN_FINISHED)) {
                     //表示签核已经完成，合同设置“CONTRACT_CHECKING_FINISHED”
                     contract.setStatus(Constant.CONTRACT_CHECKING_FINISHED);
 
@@ -134,8 +135,8 @@ public class OrderSignController {
                     Condition tempCondition = new Condition(ContractSign.class);
                     tempCondition.createCriteria().andCondition("contract_id = ", contractId);
                     List<MachineOrder> machineOrderList = machineOrderService.findByCondition(tempCondition);
-                    for (MachineOrder item: machineOrderList) {
-                        if(item.getStatus().equals(Constant.ORDER_CHECKING)) {
+                    for (MachineOrder item : machineOrderList) {
+                        if (item.getStatus().equals(Constant.ORDER_CHECKING)) {
                             item.setStatus(Constant.ORDER_CHECKING_FINISHED);
                         }
                         machineOrderService.update(item);
@@ -143,10 +144,10 @@ public class OrderSignController {
 
                     //根据合同中的需求单进行机器添加, 在需求单签核、合同签核都加上是因为最后一步审核可能是需求单，也可能是合同
                     commonService.createMachineByContractId(contractId);
-                }else {
-                    if(haveReject) {
+                } else {
+                    if (haveReject) {
                         contract.setStatus(Constant.CONTRACT_REJECTED);
-                    }else if(contract.getStatus().equals(Constant.CONTRACT_REJECTED)) {
+                    } else if (contract.getStatus().equals(Constant.CONTRACT_REJECTED)) {
                         contract.setStatus(Constant.CONTRACT_CHECKING);
                     }
                 }
@@ -175,6 +176,7 @@ public class OrderSignController {
 
     /**
      * 根据orderId获取签核信息
+     *
      * @param page
      * @param size
      * @param orderId
