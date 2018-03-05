@@ -75,6 +75,7 @@
       <result column="special_taping_head" jdbcType="VARCHAR" property="specialTapingHead" />
       <result column="special_towel_needle" jdbcType="VARCHAR" property="specialTowelNeedle" />
       <result column="electric_pc" jdbcType="VARCHAR" property="electricPc" />
+      <result column="electric_language" jdbcType="VARCHAR" property="electricLanguage" />
       <result column="electric_motor" jdbcType="VARCHAR" property="electricMotor" />
       <result column="electric_motor_xy" jdbcType="VARCHAR" property="electricMotorXy" />
       <result column="electric_trim" jdbcType="VARCHAR" property="electricTrim" />
@@ -159,7 +160,7 @@
   <select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
     select mo.*,
     od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
-    od.special_taping_head, od.special_towel_needle, od.electric_pc, od.electric_motor, od.electric_motor_xy,
+    od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor, od.electric_motor_xy,
     od.electric_trim, od.electric_power, od.electric_switch, od.electric_oil, od.axle_split,
     od.axle_panel, od.axle_needle, od.axle_rail, od.axle_down_check, od.axle_hook,
     od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
@@ -220,7 +221,7 @@
   <select id="selectOrder" resultMap="MachineOrderDetailMap">
     select mo.*,
     od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
-    od.special_taping_head, od.special_towel_needle, od.electric_pc, od.electric_motor, od.electric_motor_xy,
+    od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor, od.electric_motor_xy,
     od.electric_trim, od.electric_power, od.electric_switch, od.electric_oil, od.axle_split,
     od.axle_panel, od.axle_needle, od.axle_rail, od.axle_down_check, od.axle_hook,
     od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,

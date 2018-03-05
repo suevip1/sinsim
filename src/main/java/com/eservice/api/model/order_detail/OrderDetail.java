@@ -51,6 +51,12 @@ public class OrderDetail {
     private String electricPc;
 
     /**
+     * 电气： 语言
+     */
+    @Column(name = "electric_language")
+    private String electricLanguage;
+
+    /**
      * 电气：主电机
      */
     @Column(name = "electric_motor")
@@ -356,6 +362,14 @@ public class OrderDetail {
      */
     public void setElectricPc(String electricPc) {
         this.electricPc = electricPc;
+    }
+
+    public String getElectricLanguage() {
+        return electricLanguage;
+    }
+
+    public void setElectricLanguage(String electricLanguage) {
+        this.electricLanguage = electricLanguage;
     }
 
     /**

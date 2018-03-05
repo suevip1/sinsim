@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : Local_sinsim
+Source Server         : local
 Source Server Version : 50553
 Source Host           : localhost:3306
 Source Database       : sinsim_db
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2018-03-05 14:07:24
+Date: 2018-03-06 01:48:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -110,7 +110,7 @@ INSERT INTO `contract` VALUES ('30', 'xs-201712010', '测试', '张三', '2017-1
 INSERT INTO `contract` VALUES ('31', 'xs-201712009', '胡通', '张三', '2018-02-28', '支付宝', '', '1', '2017-12-18 15:57:06', null);
 INSERT INTO `contract` VALUES ('40', 'xs-201712001', '李四', '王五', '2017-12-30', '', '', '0', '2017-12-18 16:55:14', '2018-02-11 16:07:56');
 INSERT INTO `contract` VALUES ('41', 'ss-20180116', '张三', '李四', '2018-01-18', '支付宝', '无', '1', '2018-01-16 01:15:00', '2018-02-09 17:04:27');
-INSERT INTO `contract` VALUES ('42', 'ss-20180120', '张三', '李四', '2018-01-31', '支付宝', '', '0', '2018-01-20 09:36:37', null);
+INSERT INTO `contract` VALUES ('42', 'ss-20180120', '张三', '李四', '2018-01-31', '支付宝', '', '0', '2018-01-20 09:36:37', '2018-03-06 01:46:43');
 INSERT INTO `contract` VALUES ('52', 'ss-20180209', '张三', '李四', '2018-02-24', '支付宝', '无', '0', '2018-02-09 01:09:59', '2018-02-12 11:12:45');
 
 -- ----------------------------
@@ -300,7 +300,7 @@ INSERT INTO `machine_order` VALUES ('49', '0712002-1', '37', '40', '83', '1', '0
 INSERT INTO `machine_order` VALUES ('50', '20180101', '0', '41', '84', '1', '2', '英语', 'SINSIM电脑绣花机', '2', '1', '10', '20', '1', '1', '1', '单机', null, '50000', '2018-01-27', '2018-02-01', '', '李四', '', '2018-01-16 00:00:00', null, null);
 INSERT INTO `machine_order` VALUES ('51', '20180102', '0', '41', '85', '1', '2', '英语', 'SINSIM电脑绣花机', '3', '1', '10', '20', '1', '1', '1', '单机', null, '65000', '2018-01-27', '2018-02-01', '', '李四', '', '2018-01-16 00:00:00', null, null);
 INSERT INTO `machine_order` VALUES ('52', '20180102-1', '51', '41', '86', '1', '4', '英语', 'SINSIM电脑绣花机', '5', '1', '10', '20', '1', '1', '1', '单机', null, '65000', '2018-01-27', '2018-02-01', '', '李四', '', '2018-01-16 00:00:00', '2018-01-23 14:45:23', null);
-INSERT INTO `machine_order` VALUES ('53', '180120-1', null, '42', '87', '1', '0', '英语', 'SINSIM电脑绣花机', '2', '2', '1', '1', '1', '22', '33', '叠机', null, '45678', '2018-01-31', '2018-01-31', '暂无', '李四', '', '2018-01-20 00:00:00', null, null);
+INSERT INTO `machine_order` VALUES ('53', '180120-1', '0', '42', '87', '1', '0', '中国', 'SINSIM电脑绣花机', '2', '2', '1', '1', '1', '22', '33', '叠机', '[]', '45678', '2018-01-31', '2018-01-31', '暂无', '李四', '', '2018-01-20 00:00:00', null, null);
 INSERT INTO `machine_order` VALUES ('56', '20180102-1gg', '52', '41', '90', '1', '1', '英语', 'SINSIM电脑绣花机', '1', '1', '10', '20', '1', '1', '1', '单机', null, '60000', '2018-01-27', '2018-02-01', '', '李四', '', '2018-01-23 00:00:00', null, null);
 INSERT INTO `machine_order` VALUES ('57', '001', '0', '52', '100', '1', '0', '中文', 'SINSIM电脑绣花机', '10', '1', '11', '10', '10', '22', '22', '单机', '', '55555', '2018-02-28', '2018-02-28', '暂无', '李四', 'SinSim保修', '2018-02-09 00:00:00', null, null);
 
@@ -390,6 +390,7 @@ CREATE TABLE `order_detail` (
   `special_taping_head` varchar(255) DEFAULT NULL COMMENT '特种：特种：盘带头',
   `special_towel_needle` varchar(255) DEFAULT NULL COMMENT '特种：毛巾机针',
   `electric_pc` varchar(255) DEFAULT NULL COMMENT '电气： 电脑',
+  `electric_language` varchar(255) DEFAULT NULL,
   `electric_motor` varchar(255) DEFAULT NULL COMMENT '电气：主电机',
   `electric_motor_xy` varchar(255) DEFAULT NULL COMMENT '电气：X,Y电机',
   `electric_trim` varchar(255) DEFAULT NULL COMMENT '电气：剪线方式',
@@ -424,31 +425,31 @@ CREATE TABLE `order_detail` (
 -- ----------------------------
 -- Records of order_detail
 -- ----------------------------
-INSERT INTO `order_detail` VALUES ('1', 'rred', '11', 'dd', 'ttt', 'head', 'nnbb', 'opc', 'ff', 'ff', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhh', 'rrr', 'ccc', 'hhhh', 'jj', 'yy', 'yyr', 'fttrttr', 'fr', 'rfrf', 'aaa', 'bbbb', 'st', 'aa', 'aa', 'dd', 'hol', '11', '22', 'fffffff');
-INSERT INTO `order_detail` VALUES ('2', 'blue', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'rr', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
-INSERT INTO `order_detail` VALUES ('27', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
-INSERT INTO `order_detail` VALUES ('28', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
-INSERT INTO `order_detail` VALUES ('29', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', '222add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
-INSERT INTO `order_detail` VALUES ('30', '2222blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', '222add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
-INSERT INTO `order_detail` VALUES ('31', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
-INSERT INTO `order_detail` VALUES ('32', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
-INSERT INTO `order_detail` VALUES ('33', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
-INSERT INTO `order_detail` VALUES ('34', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
-INSERT INTO `order_detail` VALUES ('35', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
-INSERT INTO `order_detail` VALUES ('50', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', null, '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('51', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('62', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('71', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('73', '6色', '集中', '集中', '松下', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('81', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('82', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('83', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
-INSERT INTO `order_detail` VALUES ('84', '4色', '独立', '无', '大豪', '冠军独立', '16', 'M98', '大豪', '三相步进', '电机剪线', '380V', '1个', '下点动', '伟龙款', '上塑料下铁', '11', '珠架导轨', '三型断检', '佐伩12-R', '电机跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '一个托架下,一个左侧台板下', 'LED灯', '普通', '普通', '正常', '4', '4', '正常');
-INSERT INTO `order_detail` VALUES ('85', '4色', '独立', '无', '松下', '冠军独立', '16', 'M98', '大豪', '三相步进', '电机剪线', '380V', '1个', '下点动', '伟龙款', '上塑料下铁', '11', '珠架导轨', '三型断检', '佐伩12-R', '电机跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '一个托架下,一个左侧台板下', 'LED灯', '普通', '普通', '正常', '4', '4', '正常');
-INSERT INTO `order_detail` VALUES ('86', '4色', '独立', '无', '松下', '冠军独立', '16', 'M98', '大豪', '三相步进', '电机剪线', '380V', '1个', '下点动', '伟龙款', '上塑料下铁', '11', '珠架导轨', '三型断检', '佐伩12-R', '电机跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '一个托架下,一个左侧台板下', 'LED灯', '普通', '普通', '正常', '4', '4', '正常');
-INSERT INTO `order_detail` VALUES ('87', '4色', '独立', '独立', '大豪', '冠军独立', '16', 'C29', '大豪', '三相步进', '电机剪线', '380V', '3个', '下自动', '伟龙款', '上塑料下复合', '14', '珠架导轨', '二位底检', '广濑1.6倍高速', '电磁铁跳跃', '有', '无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '有', '台板上', '1个托架下', 'LED灯', '普通', '宽幅(中传动)', '正常', '2', '2', '正常');
-INSERT INTO `order_detail` VALUES ('90', '4色', '独立', '无', '大豪', '冠军独立', '16', 'M98', '大豪', '三相步进', '电机剪线', '380V', '1个', '下点动', '伟龙款', '上塑料下铁', '11', '珠架导轨', '三型断检', '佐伩12-R', '电机跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '一个托架下,一个左侧台板下', 'LED灯', '普通', '普通', '正常', '4', '4', '正常');
-INSERT INTO `order_detail` VALUES ('100', '无', '独立', '独立', '大豪', '冠军独立', '16', '', '', '', '', '', '', '', '伟龙款', '上下分体面板', '11', '珠架导轨', '三型断检', '广濑1.6倍高速', '电磁铁跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '1个托架下', 'LED灯', '普通', '普通', '正常', '1', '1', '正常');
+INSERT INTO `order_detail` VALUES ('1', 'rred', '11', 'dd', 'ttt', 'head', 'nnbb', 'opc', null, 'ff', 'ff', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhh', 'rrr', 'ccc', 'hhhh', 'jj', 'yy', 'yyr', 'fttrttr', 'fr', 'rfrf', 'aaa', 'bbbb', 'st', 'aa', 'aa', 'dd', 'hol', '11', '22', 'fffffff');
+INSERT INTO `order_detail` VALUES ('2', 'blue', '33', 'aa', 'ff', '11', 'bbbb', 'vv', null, 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'rr', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('27', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', null, 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('28', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', null, 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('29', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', null, 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', '222add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('30', '2222blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', null, 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', '222add-by-interface--GetID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('31', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', null, 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('32', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', null, 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('33', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', null, 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('34', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', null, 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('35', 'blue--add-by-interface', '33', 'aa', 'ff', '11', 'bbbb', 'vv', null, 'ff', 'xx', 'ss', 'dd', 'dd', 'ee', 'ff', 'gg', 'hhhhhhhh', 'rrrrrr', 'ccccc', 'hhhhhh', 'jj', 'yy', 'yizhixing-add-by-interface--returnID', 'red', 'fraa', 'fffff', 'aaaaa', 'bbbbbb', 'ssss', 'aa', 'aad', 'ddd', 'hoeww', '12', '23', 'rrrrrrrrrrr');
+INSERT INTO `order_detail` VALUES ('50', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', null, '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', null, '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('51', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', null, '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('62', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', null, '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('71', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', null, '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('73', '6色', '集中', '集中', '松下', '冠军独立', '16', '528', null, '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('81', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', null, '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('82', '6色', '集中', '集中', '大豪', '冠军独立', '16', '528', null, '儒竞', '五相步进', '不剪线', '380V', '3个', '下点动', '伟龙款', '上塑料下铁', '11', '普通导轨', '三型断检', '佐伩12-R', '电机跳跃', '有', '', '田岛绿桔纹', '杨桉木', '浅绿', '无', '梁上', '1个托架下', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('83', '4色', '独立', '集中', '大豪', '普通全独立', '18', '316', null, '大豪', '五相步进', '普通剪线', '380V', '3个', '下自动', '15款信胜高速', '上塑料下复合', '14', '珠架导轨', '三型断检', '佐伩12-RP', '电磁铁跳跃带轴承', '有', '', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '梁上', '1个托架下,一个另一侧梁上长杆', '梁下普通', '普通', '普通', '正常', '5', '5', '正常');
+INSERT INTO `order_detail` VALUES ('84', '4色', '独立', '无', '大豪', '冠军独立', '16', 'M98', null, '大豪', '三相步进', '电机剪线', '380V', '1个', '下点动', '伟龙款', '上塑料下铁', '11', '珠架导轨', '三型断检', '佐伩12-R', '电机跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '一个托架下,一个左侧台板下', 'LED灯', '普通', '普通', '正常', '4', '4', '正常');
+INSERT INTO `order_detail` VALUES ('85', '4色', '独立', '无', '松下', '冠军独立', '16', 'M98', null, '大豪', '三相步进', '电机剪线', '380V', '1个', '下点动', '伟龙款', '上塑料下铁', '11', '珠架导轨', '三型断检', '佐伩12-R', '电机跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '一个托架下,一个左侧台板下', 'LED灯', '普通', '普通', '正常', '4', '4', '正常');
+INSERT INTO `order_detail` VALUES ('86', '4色', '独立', '无', '松下', '冠军独立', '16', 'M98', null, '大豪', '三相步进', '电机剪线', '380V', '1个', '下点动', '伟龙款', '上塑料下铁', '11', '珠架导轨', '三型断检', '佐伩12-R', '电机跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '一个托架下,一个左侧台板下', 'LED灯', '普通', '普通', '正常', '4', '4', '正常');
+INSERT INTO `order_detail` VALUES ('87', '4色', '独立', '独立', '大豪', '冠军独立', '16', 'C29', '英语', '大豪', '三相步进', '电机剪线', '380V', '3个', '下自动', '伟龙款', '上塑料下复合', '14', '珠架导轨', '二位底检', '广濑1.6倍高速', '电磁铁跳跃', '有', '无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '有', '台板上', '1个托架下', 'LED灯', '普通', '宽幅(中传动)', '', '2', '2', '正常');
+INSERT INTO `order_detail` VALUES ('90', '4色', '独立', '无', '大豪', '冠军独立', '16', 'M98', null, '大豪', '三相步进', '电机剪线', '380V', '1个', '下点动', '伟龙款', '上塑料下铁', '11', '珠架导轨', '三型断检', '佐伩12-R', '电机跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '一个托架下,一个左侧台板下', 'LED灯', '普通', '普通', '正常', '4', '4', '正常');
+INSERT INTO `order_detail` VALUES ('100', '无', '独立', '独立', '大豪', '冠军独立', '16', '', null, '', '', '', '', '', '', '伟龙款', '上下分体面板', '11', '珠架导轨', '三型断检', '广濑1.6倍高速', '电磁铁跳跃', '无', '暂无', '田岛绿桔纹', '杨桉木', '鲁冰花浅灰边', '无', '台板上', '1个托架下', 'LED灯', '普通', '普通', '正常', '1', '1', '正常');
 
 -- ----------------------------
 -- Table structure for `order_loading_list`
@@ -464,12 +465,11 @@ CREATE TABLE `order_loading_list` (
   PRIMARY KEY (`id`),
   KEY `fk_oll_order_id` (`order_id`),
   CONSTRAINT `fk_oll_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_loading_list
 -- ----------------------------
-
 INSERT INTO `order_loading_list` VALUES ('22', '56', 'D:/oll/null_56_LoadingFile_2018-02-24-09-51-37.xlsx', '2', '2018-02-12 10:27:11', '2018-03-05 13:47:09');
 INSERT INTO `order_loading_list` VALUES ('23', '22', 'D:/oll/null_22_LoadingFile.xlsx', '2', '2018-02-12 10:27:11', null);
 INSERT INTO `order_loading_list` VALUES ('25', '23', 'D:/oll/null_23_LoadingFile.xlsx', '2', '1973-10-02 17:33:51', '2018-03-05 13:47:09');

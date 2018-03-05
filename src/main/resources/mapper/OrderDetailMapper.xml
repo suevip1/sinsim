@@ -13,6 +13,7 @@
     <result column="special_taping_head" jdbcType="VARCHAR" property="specialTapingHead" />
     <result column="special_towel_needle" jdbcType="VARCHAR" property="specialTowelNeedle" />
     <result column="electric_pc" jdbcType="VARCHAR" property="electricPc" />
+    <result column="electric_language" jdbcType="VARCHAR" property="electricLanguage" />
     <result column="electric_motor" jdbcType="VARCHAR" property="electricMotor" />
     <result column="electric_motor_xy" jdbcType="VARCHAR" property="electricMotorXy" />
     <result column="electric_trim" jdbcType="VARCHAR" property="electricTrim" />
@@ -47,7 +48,7 @@
     insert into
     order_detail(
     special_towel_color,special_towel_daxle,special_towel_haxle,special_towel_motor,special_taping_head,
-    special_towel_needle,electric_pc,electric_motor,electric_motor_xy,electric_trim,
+    special_towel_needle,electric_pc,electric_language,electric_motor,electric_motor_xy,electric_trim,
     electric_power, electric_switch,electric_oil,axle_split,axle_panel,
     axle_needle,axle_rail,axle_down_check,axle_hook,axle_jump,
     axle_upper_thread,axle_addition,framework_color,framework_platen,framework_platen_color,
@@ -55,7 +56,7 @@
     driver_method,driver_reel_hole,driver_horizon_num,driver_vertical_num,driver_reel)
     values(
     #{specialTowelColor},#{specialTowelDaxle},#{specialTowelHaxle},#{specialTowelMotor},#{specialTapingHead},
-    #{specialTowelNeedle},#{electricPc},#{electricMotor},#{electricMotorXy},#{electricTrim},
+    #{specialTowelNeedle},#{electricPc},#{electricLanguage},#{electricMotor},#{electricMotorXy},#{electricTrim},
     #{electricPower},#{electricSwitch},#{electricOil},#{axleSplit},#{axlePanel},
     #{axleNeedle},#{axleRail},#{axleDownCheck},#{axleHook},#{axleJump},
     #{axleUpperThread},#{axleAddition},#{frameworkColor},#{frameworkPlaten},#{frameworkPlatenColor},
