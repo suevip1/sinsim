@@ -68,7 +68,7 @@ public class UserController {
             user1.setPassword(null);
         }
         if(user1.getGroupId() == null) {
-            user1.setGroupId(0);
+            user1.setGroupId(1);
         }
         userService.update(user1);
         return ResultGenerator.genSuccessResult();

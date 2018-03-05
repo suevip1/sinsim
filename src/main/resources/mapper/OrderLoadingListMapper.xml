@@ -10,6 +10,7 @@
     <result column="file_name" jdbcType="VARCHAR" property="fileName" />
     <result column="type" jdbcType="TINYINT" property="type" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
 
   <select id="selectFilePathByOrderId" resultMap="BaseResultMap">

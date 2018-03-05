@@ -5,7 +5,7 @@ import com.eservice.api.core.Service;
 /**
 * Class Description: xxx
 * @author Wilson Hu
-* @date 2017/11/14.
+* @date 2018/03/05.
 */
 public interface OrderLoadingListService extends Service<OrderLoadingList> {
 

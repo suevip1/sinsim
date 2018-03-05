@@ -166,10 +166,6 @@ public class CommonService {
         if (path != null) {
             if (!file.isEmpty()) {
                 try {
-                    // 这里只是简单例子，文件直接输出到path路径下。
-                    // 实际项目中，文件需要输出到指定位置，需要在增加代码处理。
-                    // 还有关于文件格式限制、文件大小限制，详见：中配置。
-
                     //取后缀名
                     String fileName = file.getOriginalFilename();
                     String suffixName = fileName.substring(fileName.lastIndexOf("."));
@@ -183,15 +179,20 @@ public class CommonService {
                     String fileType;
                     if (Constant.ABNORMAL_IMAGE == type) {
                         fileType = "Abnormal";
+                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + suffixName;
                     } else if (Constant.QUALITY_IMAGE == type) {
                         fileType = "Quality";
+                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + suffixName;
                     } else if (Constant.LOADING_FILE == type) {
                         fileType = "LoadingFile";
+                        /**
+                         * 一个需求单对应一种机器，对应唯一装车单，不用加时间戳，新上传的覆盖旧的装车单，上传时间更新在装车单的update_time
+                         */
+                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType  + suffixName;
                     } else {
                         fileType = "";//return targetFileName;//"UnknownFileTypeError";
                     }
 
-                    targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + suffixName;
                     BufferedOutputStream out = new BufferedOutputStream(
                             new FileOutputStream(new File(targetFileName)));
                     out.write(file.getBytes());

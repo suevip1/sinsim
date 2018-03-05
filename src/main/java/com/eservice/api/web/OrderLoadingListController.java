@@ -27,11 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class Description: xxx
- *
- * @author Wilson Hu
- * @date 2017/11/14.
- */
+* Class Description: xxx
+* @author Wilson Hu
+* @date 2018/03/05.
+*/
 @RestController
 @RequestMapping("/order/loading/list")
 public class OrderLoadingListController {

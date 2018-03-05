@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2018-02-12 14:56:06
+Date: 2018-03-05 14:07:24
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -460,17 +460,19 @@ CREATE TABLE `order_loading_list` (
   `file_name` varchar(255) NOT NULL COMMENT '装车单、联系单对应的Excel文件名（包含路径）,多个的话对应多条记录',
   `type` tinyint(4) NOT NULL COMMENT '"1"==>装车单，"2"==>联系单',
   `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_oll_order_id` (`order_id`),
   CONSTRAINT `fk_oll_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_loading_list
 -- ----------------------------
-INSERT INTO `order_loading_list` VALUES ('1', '56', 'ffffile111', '2', '2018-02-12 10:27:11');
-INSERT INTO `order_loading_list` VALUES ('2', '52', 'fffff2', '3', '2018-02-12 10:32:23');
-INSERT INTO `order_loading_list` VALUES ('3', '56', 'D:/oll/null_56_LoadingFile_2018-02-12-14-44-33.xlsx', '2', '2018-02-12 10:27:11');
+
+INSERT INTO `order_loading_list` VALUES ('22', '56', 'D:/oll/null_56_LoadingFile_2018-02-24-09-51-37.xlsx', '2', '2018-02-12 10:27:11', '2018-03-05 13:47:09');
+INSERT INTO `order_loading_list` VALUES ('23', '22', 'D:/oll/null_22_LoadingFile.xlsx', '2', '2018-02-12 10:27:11', null);
+INSERT INTO `order_loading_list` VALUES ('25', '23', 'D:/oll/null_23_LoadingFile.xlsx', '2', '1973-10-02 17:33:51', '2018-03-05 13:47:09');
 
 -- ----------------------------
 -- Table structure for `order_sign`
