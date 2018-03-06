@@ -9,6 +9,8 @@ import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.model.user.User;
+import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.common.Utils;
 import com.eservice.api.service.impl.ProcessRecordServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.eservice.api.service.impl.UserServiceImpl;
@@ -20,9 +22,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.eservice.api.service.common.NodeDataModel;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class Description: xxx
@@ -160,7 +166,7 @@ public class TaskRecordController {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> ListTaskRecordDetail = taskRecordService.selectAllInstallTaskRecordDetailByUserAccount(userAccount);
         PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
-        if ( ListTaskRecordDetail.isEmpty() ){
+        if (ListTaskRecordDetail.isEmpty()) {
             return ResultGenerator.genSuccessResult("Empty Result");
         } else {
             return ResultGenerator.genSuccessResult(pageInfo);
@@ -255,9 +261,73 @@ public class TaskRecordController {
         return ResultGenerator.genSuccessResult();
     }
 
+    @PostMapping("/updateTaskInfo")
+    @Transactional(rollbackFor = Exception.class)
+    public Result updateTaskInfo(String taskRecord) {
+        TaskRecord tr = JSON.parseObject(taskRecord, TaskRecord.class);
+        Integer id = tr.getId();
+        if (id == null || id < 0) {
+            return ResultGenerator.genFailResult("TaskRecord的ID为空，数据更新失败！");
+        }
+
+//        if (tr.getStatus() == 0 && tr.getLeader() == "" && tr.getWorkerList() == "") {
+//            return ResultGenerator.genFailResult("无数据可更新！");
+//        }
+        taskRecordService.update(tr);
+
+        Integer prId = tr.getProcessRecordId();
+        if (prId == null || prId < 0) {
+            Logger.getLogger("").log(Level.INFO, "processrecord Id 为空");
+        } else {
+            ProcessRecord pr = processRecordService.findById(prId);
+            if (pr != null) {
+                String nodeData = pr.getNodeData();
+                List<NodeDataModel> ndList = JSON.parseArray(nodeData, NodeDataModel.class);
+                NodeDataModel ndItem = null;
+                Integer index = -1;
+                Boolean isFinished = true;
+                for (int i = 0; i < ndList.size(); i++) {
+                    if (Integer.parseInt(ndList.get(i).getKey()) == tr.getNodeKey()) {
+                        index = i;
+                    }
+                    if (ndList.get(i).getTaskStatus() != null
+                            && Integer.parseInt(ndList.get(i).getTaskStatus()) < Constant.TASK_QUALITY_DONE) {
+                        isFinished = false;
+                    }
+                }
+                if (index > -1) {
+                    ndItem = ndList.get(index);
+                    ndItem.setTaskStatus(tr.getStatus().toString());
+                    if (tr.getInstallBeginTime() != null) {
+                        String date = Utils.getFormatStringDate(tr.getInstallBeginTime(), "yyyy-MM-dd HH:mm:ss");
+                        ndItem.setBeginTime(date);
+                    }
+                    if (tr.getQualityEndTime() != null) {
+                        String date = Utils.getFormatStringDate(tr.getQualityEndTime(), "yyyy-MM-dd HH:mm:ss");
+                        ndItem.setEndTime(date);//质检完成，工序才算完成
+                    }
+                    if (tr.getLeader() != null && tr.getLeader().length() > 0) {
+                        ndItem.setLeader(tr.getLeader());//组长信息
+                    }
+                    if (tr.getWorkerList() != null && tr.getWorkerList().length() > 0) {
+                        ndItem.setWorkList(tr.getWorkerList());//工作人员信息
+                    }
+                    ndList.set(index, ndItem);
+                }
+                if (isFinished && tr.getStatus() >= Constant.TASK_QUALITY_DONE) {//所有工序完成
+                    pr.setEndTime(new Date());
+                }
+                pr.setNodeData(JSON.toJSONString(ndList));
+                processRecordService.update(pr);
+            }
+        }
+
+        return ResultGenerator.genSuccessResult();
+    }
 
     /**
      * 根据机器铭牌（即机器编号）查询对应的机器正在操作的taskRecordDetail(全部状态) 。
+     *
      * @param page
      * @param size
      * @param namePlate
@@ -277,6 +347,7 @@ public class TaskRecordController {
 
     /**
      * 根据机器的系统编号（machine_strid）查询对应的机器正在操作的taskRecordDetail(全部状态)。
+     *
      * @param page
      * @param size
      * @param machineStrId
@@ -297,6 +368,7 @@ public class TaskRecordController {
     /**
      * 根据account和机器的系统编号（machine_strid），
      * 返回对应机器正在操作的步骤（除去status为初始化、已计划和质检完成的task_record），且属于该account的排班计划。
+     *
      * @param page
      * @param size
      * @param machineStrId
@@ -318,6 +390,7 @@ public class TaskRecordController {
 
     /**
      * 返回待计划的Task_record具体信息
+     *
      * @param page
      * @param size
      * @param machineStrId
@@ -339,6 +412,7 @@ public class TaskRecordController {
 
     /**
      * 根据account返回该用户的的待计划安装任务
+     *
      * @param page
      * @param size
      * @param account
@@ -358,6 +432,7 @@ public class TaskRecordController {
 
     /**
      * 返回满足user+machine_strId且处于安装完成待质检和质检异常状态的质检任务
+     *
      * @param page
      * @param size
      * @param machineStrId
