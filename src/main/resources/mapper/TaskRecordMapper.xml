@@ -324,7 +324,6 @@
         pr.id process_record_id_in_association, pr.*,
         m.id machine_id1,m.status machine_status, m.*,
         mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
-        oll.id order_loading_list_id,oll.*,
         tp.id task_plan_id,tp.*
 
         from task_record tr
@@ -332,11 +331,7 @@
         join process_record pr on tr.process_record_id = pr.id
         join machine m on m.id = pr.machine_id
         join machine_order mo on mo.id = m.order_id
-        join order_loading_list oll on oll.order_id = mo.id
 
-        join task on task.task_name = tr.task_name
-        join install_group  on install_group.id = task.group_id
-        join user on user.group_id = install_group.id
         where m.nameplate = #{namePlate}
     </select>
 
