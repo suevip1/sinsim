@@ -5,6 +5,19 @@ package com.eservice.api.service.common;
 NodeData JSON数据的解析
 */
 public class NodeDataModel {
+
+    //<editor-fold desc="获取或设置字段category,流程图的类型">
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    //</editor-fold>
+
     //<editor-fold desc="获取或设置字段loc,流程图的坐标值">
     private String loc;
 
