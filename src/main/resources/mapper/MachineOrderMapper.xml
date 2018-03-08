@@ -217,7 +217,7 @@
             and mt.name like CONCAT('%','${machine_name}','%' )
         </if>
         GROUP BY mo.id
-        ORDER By mo.create_time,mo.update_time DESC
+        ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
     </select>
 
 
@@ -279,7 +279,7 @@
             and mt.name = CONCAT('%','${machine_name}','%' )
         </if>
         GROUP BY mo.id
-        ORDER By mo.create_time,mo.update_time DESC
+        ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
     </select>
 
     <select id="searchOrderIdByOrderLoadingListId" resultMap="BaseResultMap">
