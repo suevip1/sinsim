@@ -1,12 +1,16 @@
 package com.eservice.api.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.eservice.api.dao.TaskPlanMapper;
 import com.eservice.api.model.machine.Machine;
+import com.eservice.api.model.process_record.ProcessRecord;
 import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.service.TaskPlanService;
 import com.eservice.api.core.AbstractService;
 import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.common.LinkDataModel;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +20,7 @@ import tk.mybatis.mapper.entity.Condition;
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +39,8 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
     private MachineServiceImpl machineService;
     @Resource
     private TaskRecordServiceImpl taskRecordService;
+    @Resource
+    private ProcessRecordServiceImpl processRecordService;
 
     public boolean addTaskPlans(@RequestParam List<Integer> taskRecordIds, Integer planType, String machineStrId, Date planDate, Integer userId) {
         for (int i = 0; i < taskRecordIds.size(); i++) {
@@ -59,7 +66,22 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
             //更改task record状态为已计划
             TaskRecord taskRecord = taskRecordService.findById(taskRecordIds.get(i));
             if(taskRecord != null) {
-                taskRecord.setStatus(Constant.TASK_PLANED);
+                //检查是否为第一个计划项，如果是，需要设置为待安装状态
+                Integer processRecordId =  taskRecord.getProcessRecordId();
+                ProcessRecord  processRecord = processRecordService.findById(processRecordId);
+                List<LinkDataModel> linkDataList = JSON.parseArray(processRecord.getLinkData(), LinkDataModel.class);
+                for (LinkDataModel item: linkDataList) {
+                    if(item.getTo().equals(taskRecord.getNodeKey().intValue())) {
+                        if(item.getFrom() == null || item.getFrom() == -1) {
+                            taskRecord.setStatus(Constant.TASK_INSTALL_WAITING);
+                            //TODO 更新机器状态
+                            break;
+                        }
+                    }
+                }
+                if(taskRecord.getStatus().equals(Constant.TASK_INITIAL))  {
+                    taskRecord.setStatus(Constant.TASK_PLANED);
+                }
                 taskRecordService.update(taskRecord);
             }else {
                 //进行事务操作

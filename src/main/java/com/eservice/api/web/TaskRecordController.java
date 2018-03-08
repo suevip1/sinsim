@@ -3,6 +3,7 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.order_loading_list.OrderLoadingList;
 import com.eservice.api.model.process_record.ProcessRecord;
 import com.eservice.api.model.task_plan.TaskPlan;
@@ -11,6 +12,7 @@ import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.model.user.User;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.common.Utils;
+import com.eservice.api.service.impl.MachineServiceImpl;
 import com.eservice.api.service.impl.ProcessRecordServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.eservice.api.service.impl.UserServiceImpl;
@@ -44,7 +46,7 @@ public class TaskRecordController {
     @Resource
     private ProcessRecordServiceImpl processRecordService;
     @Resource
-    private UserServiceImpl userService;
+    private MachineServiceImpl machineService;
 
     @PostMapping("/add")
     public Result add(String taskRecord) {
@@ -280,6 +282,8 @@ public class TaskRecordController {
             Logger.getLogger("").log(Level.INFO, "processrecord Id 为空");
         } else {
             ProcessRecord pr = processRecordService.findById(prId);
+            Machine machine = machineService.findById(pr.getMachineId());
+            boolean isNeedUpdateMachine = false;
             if (pr != null) {
                 String nodeData = pr.getNodeData();
                 List<NodeDataModel> ndList = JSON.parseArray(nodeData, NodeDataModel.class);
@@ -314,11 +318,25 @@ public class TaskRecordController {
                     }
                     ndList.set(index, ndItem);
                 }
-                if (isFinished && tr.getStatus() >= Constant.TASK_QUALITY_DONE) {//所有工序完成
+                if (isFinished && tr.getStatus() >= Constant.TASK_QUALITY_DONE.intValue()) {//所有工序完成
                     pr.setEndTime(new Date());
+                    //安装完成
+                    machine.setStatus(Constant.MACHINE_INSTALLED);
+                    isNeedUpdateMachine=true;
                 }
                 pr.setNodeData(JSON.toJSONString(ndList));
                 processRecordService.update(pr);
+
+                if (machine.getStatus().equals(Constant.MACHINE_PLANING)) {
+                    //安装中
+                    machine.setStatus(Constant.MACHINE_INSTALLING);
+                    isNeedUpdateMachine=true;
+                }
+                if(isNeedUpdateMachine) {
+                    machine.setUpdateTime(new Date());
+                    machineService.update(machine);
+                }
+
             }
         }
 

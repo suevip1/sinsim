@@ -175,6 +175,9 @@ public class ContractController {
                 //更新
                 OrderDetail temp = item.getOrderDetail();
                 MachineOrder orderTemp = item.getMachineOrder();
+                if(orderTemp.getStatus().equals(Constant.ORDER_REJECTED)) {
+                    orderTemp.setStatus(Constant.ORDER_INITIAL);
+                }
                 orderDetailService.update(temp);
                 machineOrderService.update(orderTemp);
             }else {
