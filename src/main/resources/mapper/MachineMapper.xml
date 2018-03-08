@@ -111,7 +111,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        ORDER By create_time, ship_time DESC
+        ORDER By create_time, ship_time DESC,ship_time DESC
 
     </select>
 
@@ -146,7 +146,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        ORDER By create_time, ship_time DESC
+        ORDER By create_time DESC,update_time DESC, ship_time DESC
     </select>
 
     <!-- 返回需要安排计划的机器-->
@@ -195,7 +195,7 @@
             </if>
         </if>
         GROUP BY m.id
-        ORDER By m.create_time, m.ship_time DESC
+        ORDER By m.create_time DESC,m.update_time DESC, m.ship_time DESC
     </select>
 
     <select id="selectPlanningMachinesFuzzy" resultMap="PlaningResultMap">
@@ -245,7 +245,7 @@
         </if>
 
         GROUP BY m.id
-        ORDER By m.create_time, m.ship_time DESC
+        ORDER By m.create_time DESC,m.update_time DESC,m.ship_time DESC
     </select>
 
 
@@ -294,7 +294,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        ORDER By create_time, ship_time DESC
+        ORDER By create_time DESC, update_time DESC,ship_time DESC
     </select>
 
     <select id="selectConfigMachineFuzzy" resultMap="MachineInfoMap">
@@ -342,7 +342,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        ORDER By create_time, ship_time DESC
+        ORDER By create_time DESC, update_time DESC,ship_time DESC
     </select>
 
     <!--selectProcessMachineFuzzy-->
@@ -384,7 +384,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(process_create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        ORDER By process_create_time, ship_time DESC
+        ORDER By process_create_time DESC, update_time DESC,ship_time DESC
     </select>
 
     <!--selectProcessMachine-->
@@ -426,7 +426,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(process_create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        ORDER By process_create_time, ship_time DESC
+        ORDER By process_create_time DESC, update_time DESC,ship_time DESC
     </select>
 
 </mapper>
