@@ -71,4 +71,7 @@
         WHERE u.account = '${account}' AND u.password = '${password}'
     </select>
 
+    <select id="selectByAccount" resultMap="BaseResultMap">
+         select * from user  where account=#{account}
+    </select>
 </mapper>

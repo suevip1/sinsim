@@ -35,4 +35,7 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
         return userMapper.requestLogin(account, password);
     }
 
+    public User selectByAccount(String account){
+        return userMapper.selectByAccount(account);
+    }
 }

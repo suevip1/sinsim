@@ -133,4 +133,17 @@ public class UserController {
             }
         }
     }
+
+    /**
+     * 根据账号返回User
+     * @param account
+     * @return
+     */
+    @PostMapping("/selectByAccount")
+    public Result selectByAccount(@RequestParam String account) {
+        User user = userService.selectByAccount(account);
+        return ResultGenerator.genSuccessResult(user);
+    }
+
+
 }
