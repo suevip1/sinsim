@@ -230,14 +230,10 @@ public class CommonService {
                 List<NodeDataModel> ndList = JSON.parseArray(nodeData, NodeDataModel.class);
                 NodeDataModel ndItem = null;
                 Integer index = -1;
-                Boolean isFinished = true;
                 for (int i = 0; i < ndList.size(); i++) {
                     if (Integer.parseInt(ndList.get(i).getKey()) == tr.getNodeKey()) {
                         index = i;
-                    }
-                    if (ndList.get(i).getTaskStatus() != null
-                            && Integer.parseInt(ndList.get(i).getTaskStatus()) < Constant.TASK_QUALITY_DONE) {
-                        isFinished = false;
+                        break;
                     }
                 }
                 if (index > -1) {
@@ -265,22 +261,22 @@ public class CommonService {
                     if(tr.getStatus().intValue() == Constant.TASK_QUALITY_DONE.intValue()) {
                         List<LinkDataModel> linkDataList = JSON.parseArray(pr.getLinkData(), LinkDataModel.class);
                         for (LinkDataModel item: linkDataList) {
-                            if(item.getFrom().equals(ndItem.getKey())) {
+                            if(String.valueOf(item.getFrom()).equals(String.valueOf(ndItem.getKey()))) {
                                 for (NodeDataModel childNode: ndList) {
                                     //先找到子节点
-                                    if(childNode.getKey().equals(item.getTo())) {
+                                    if(childNode.getKey().equals(String.valueOf(item.getTo()))) {
                                         //找到子节点的所有父节点
                                         boolean allParentFinished = true;
                                         for (LinkDataModel parentOfChild: linkDataList) {
                                             if(!allParentFinished) {
                                                 break;
                                             }
-                                            if(parentOfChild.getTo().equals(childNode.getKey())) {
+                                            if(String.valueOf(parentOfChild.getTo()).equals(childNode.getKey())) {
                                                 for (NodeDataModel parentOfChildNode : ndList) {
-                                                    if(!allParentFinished) {
+                                                    if(parentOfChildNode.getCategory().equals("Start") || parentOfChildNode.getCategory().equals("End") || !allParentFinished) {
                                                         break;
                                                     }
-                                                    if(!parentOfChildNode.getTaskStatus().equals(Constant.TASK_QUALITY_DONE)) {
+                                                    if(Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()) {
                                                         allParentFinished = false;
                                                     }
                                                 }
@@ -294,7 +290,7 @@ public class CommonService {
                                             //TODO:更新task record状态为“TASK_INSTALL_WAITING”
                                             List<TaskRecord> taskRecordList = taskRecordService.getTaskRecordData(null, prId);
                                             for (TaskRecord record: taskRecordList) {
-                                                if(record.getNodeKey().equals(childNode.getKey())) {
+                                                if(String.valueOf(record.getNodeKey().intValue()).equals(childNode.getKey())) {
                                                     record.setStatus(Constant.TASK_INSTALL_WAITING);
                                                     taskRecordService.update(record);
                                                     break;
@@ -307,6 +303,12 @@ public class CommonService {
                         }
                     }
                 }
+                Boolean isFinished = true;
+                for (int i = 0; i < ndList.size(); i++) {
+                    if (ndList.get(i).getTaskStatus() != null && Integer.parseInt(ndList.get(i).getTaskStatus()) == Constant.TASK_QUALITY_DONE.intValue()) {
+                        isFinished = false;
+                    }
+                }
                 //所有工序完成
                 if (isFinished && tr.getStatus() == Constant.TASK_QUALITY_DONE.intValue()) {
                     pr.setEndTime(new Date());
@@ -314,8 +316,6 @@ public class CommonService {
                     machine.setStatus(Constant.MACHINE_INSTALLED);
                     isNeedUpdateMachine=true;
                 }
-                pr.setNodeData(JSON.toJSONString(ndList));
-                processRecordService.update(pr);
 
                 if (machine.getStatus().equals(Constant.MACHINE_PLANING)) {
                     //安装中
@@ -326,9 +326,12 @@ public class CommonService {
                     machine.setUpdateTime(new Date());
                     machineService.update(machine);
                 }
-
+                pr.setNodeData(JSON.toJSONString(ndList));
+                processRecordService.update(pr);
+                return true;
+            } else {
+                return false;
             }
-            return true;
         }
     }
 }
