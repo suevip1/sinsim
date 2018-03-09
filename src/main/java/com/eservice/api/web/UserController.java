@@ -2,9 +2,11 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.role.Role;
 import com.eservice.api.model.user.User;
 import com.eservice.api.model.user.UserDetail;
 import com.eservice.api.service.impl.DeviceServiceImpl;
+import com.eservice.api.service.impl.RoleServiceImpl;
 import com.eservice.api.service.impl.UserServiceImpl;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.github.pagehelper.PageHelper;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -32,7 +35,9 @@ public class UserController {
     private DeviceServiceImpl deviceService;
 
     @Resource
-    MqttMessageHelper mqttMessageHelper;
+    private MqttMessageHelper mqttMessageHelper;
+    @Resource
+    private RoleServiceImpl roleService;
 
     /**
      * 该值为default值， Android端传入的参数不能为“0”
@@ -107,6 +112,26 @@ public class UserController {
         List<UserDetail> list = userService.selectUsers(account,name,roleId,groupId,valid);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @PostMapping("/selectAllQuality")
+    public Result selectAllQuality(@RequestParam(defaultValue = "0") Integer page,
+                                   @RequestParam(defaultValue = "0") Integer size) {
+        PageHelper.startPage(page, size);
+        Condition tempCondition = new Condition(Role.class);
+        tempCondition.createCriteria().andCondition("role_name = ", "质检员");
+        List<Role> roleList = roleService.findByCondition(tempCondition);
+        //这里正常情况下，list中有且仅有一个
+        if(roleList != null && roleList.size()>0) {
+            Condition userCondition = new Condition(User.class);
+            userCondition.createCriteria().andCondition("role_id = ", roleList.get(0).getId());
+            List<User> userList = userService.findByCondition(userCondition);
+            PageInfo pageInfo = new PageInfo(userList);
+            return ResultGenerator.genSuccessResult(pageInfo);
+        } else {
+            return ResultGenerator.genFailResult("质检员角色没有设置!");
+        }
+
     }
 
     @PostMapping("/requestLogin")

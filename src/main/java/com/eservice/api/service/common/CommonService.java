@@ -7,7 +7,9 @@ import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_sign.OrderSign;
+import com.eservice.api.model.process_record.ProcessRecord;
 import com.eservice.api.model.role.Role;
+import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.service.impl.*;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,10 @@ public class CommonService {
     private MachineOrderServiceImpl machineOrderService;
     @Resource
     private MachineServiceImpl machineService;
+    @Resource
+    private ProcessRecordServiceImpl processRecordService;
+    @Resource
+    private TaskRecordServiceImpl taskRecordService;
 
     Logger logger = Logger.getLogger(CommonService.class);
     /**
@@ -209,5 +215,120 @@ public class CommonService {
             }
         }
         return targetFileName;
+    }
+
+    public boolean updateTaskRecordRelatedStatus(TaskRecord tr) {
+        if(tr == null || tr.getProcessRecordId() == null) {
+            return false;
+        }else {
+            Integer prId = tr.getProcessRecordId();
+            ProcessRecord pr = processRecordService.findById(prId);
+            Machine machine = machineService.findById(pr.getMachineId());
+            boolean isNeedUpdateMachine = false;
+            if (pr != null) {
+                String nodeData = pr.getNodeData();
+                List<NodeDataModel> ndList = JSON.parseArray(nodeData, NodeDataModel.class);
+                NodeDataModel ndItem = null;
+                Integer index = -1;
+                Boolean isFinished = true;
+                for (int i = 0; i < ndList.size(); i++) {
+                    if (Integer.parseInt(ndList.get(i).getKey()) == tr.getNodeKey()) {
+                        index = i;
+                    }
+                    if (ndList.get(i).getTaskStatus() != null
+                            && Integer.parseInt(ndList.get(i).getTaskStatus()) < Constant.TASK_QUALITY_DONE) {
+                        isFinished = false;
+                    }
+                }
+                if (index > -1) {
+                    ndItem = ndList.get(index);
+                    ndItem.setTaskStatus(tr.getStatus().toString());
+                    if (tr.getInstallBeginTime() != null) {
+                        String date = Utils.getFormatStringDate(tr.getInstallBeginTime(), "yyyy-MM-dd HH:mm:ss");
+                        ndItem.setBeginTime(date);
+                    }
+                    //质检完成，工序才算完成
+                    if (tr.getQualityEndTime() != null) {
+                        String date = Utils.getFormatStringDate(tr.getQualityEndTime(), "yyyy-MM-dd HH:mm:ss");
+                        ndItem.setEndTime(date);
+                    }
+                    //组长信息
+                    if (tr.getLeader() != null && tr.getLeader().length() > 0) {
+                        ndItem.setLeader(tr.getLeader());
+                    }
+                    //工作人员信息
+                    if (tr.getWorkerList() != null && tr.getWorkerList().length() > 0) {
+                        ndItem.setWorkList(tr.getWorkerList());
+                    }
+                    ndList.set(index, ndItem);
+                    //TODO：如果当前工序是质检完成状态，需要检查其子节点是否可以开始
+                    if(ndItem.getTaskStatus().equals(Constant.TASK_QUALITY_DONE)) {
+                        List<LinkDataModel> linkDataList = JSON.parseArray(pr.getLinkData(), LinkDataModel.class);
+                        for (LinkDataModel item: linkDataList) {
+                            if(item.getFrom().equals(ndItem.getKey())) {
+                                for (NodeDataModel childNode: ndList) {
+                                    //先找到子节点
+                                    if(childNode.getKey().equals(item.getTo())) {
+                                        //找到子节点的所有父节点
+                                        boolean allParentFinished = true;
+                                        for (LinkDataModel parentOfChild: linkDataList) {
+                                            if(!allParentFinished) {
+                                                break;
+                                            }
+                                            if(parentOfChild.getTo().equals(childNode.getKey())) {
+                                                for (NodeDataModel parentOfChildNode : ndList) {
+                                                    if(!allParentFinished) {
+                                                        break;
+                                                    }
+                                                    if(!parentOfChildNode.getTaskStatus().equals(Constant.TASK_QUALITY_DONE)) {
+                                                        allParentFinished = false;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        //子节点的所有父节点都已经完成，则更新子节点的状态
+                                        if(allParentFinished) {
+                                            String dateStr = Utils.getFormatStringDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+                                            childNode.setBeginTime(dateStr);
+                                            childNode.setTaskStatus(Constant.TASK_INSTALL_WAITING.toString());
+                                            //TODO:更新task record状态为“TASK_INSTALL_WAITING”
+                                            List<TaskRecord> taskRecordList = taskRecordService.getTaskRecordData(null, prId);
+                                            for (TaskRecord record: taskRecordList) {
+                                                if(record.getNodeKey().equals(childNode.getKey())) {
+                                                    record.setStatus(Constant.TASK_INSTALL_WAITING);
+                                                    taskRecordService.update(record);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                //所有工序完成
+                if (isFinished && tr.getStatus() >= Constant.TASK_QUALITY_DONE.intValue()) {
+                    pr.setEndTime(new Date());
+                    //安装完成
+                    machine.setStatus(Constant.MACHINE_INSTALLED);
+                    isNeedUpdateMachine=true;
+                }
+                pr.setNodeData(JSON.toJSONString(ndList));
+                processRecordService.update(pr);
+
+                if (machine.getStatus().equals(Constant.MACHINE_PLANING)) {
+                    //安装中
+                    machine.setStatus(Constant.MACHINE_INSTALLING);
+                    isNeedUpdateMachine=true;
+                }
+                if(isNeedUpdateMachine) {
+                    machine.setUpdateTime(new Date());
+                    machineService.update(machine);
+                }
+
+            }
+            return false;
+        }
     }
 }

@@ -9,6 +9,7 @@ import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.service.TaskPlanService;
 import com.eservice.api.core.AbstractService;
+import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.common.LinkDataModel;
 import org.apache.tomcat.util.bcel.Const;
@@ -41,6 +42,8 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
     private TaskRecordServiceImpl taskRecordService;
     @Resource
     private ProcessRecordServiceImpl processRecordService;
+    @Resource
+    private CommonService commonService;
 
     public boolean addTaskPlans(@RequestParam List<Integer> taskRecordIds, Integer planType, String machineStrId, Date planDate, Integer userId) {
         for (int i = 0; i < taskRecordIds.size(); i++) {
@@ -74,15 +77,25 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                     if(item.getTo().equals(taskRecord.getNodeKey().intValue())) {
                         if(item.getFrom() == null || item.getFrom() == -1) {
                             taskRecord.setStatus(Constant.TASK_INSTALL_WAITING);
-                            //TODO 更新机器状态
+///                            Integer machineId = processRecord.getMachineId();
+//                            Machine machine = machineService.findById(machineId);
+//                            //如果机器还处于"MACHINE_INSTALLING"之前，修改为安装中
+//                            if(machine.getStatus() < Constant.MACHINE_INSTALLING) {
+//                                machine.setStatus(Constant.MACHINE_INSTALLING);
+//                                machine.setUpdateTime(new Date());
+//                                machineService.update(machine);
+///                            }
                             break;
                         }
                     }
                 }
-                if(taskRecord.getStatus().equals(Constant.TASK_INITIAL))  {
+                if(taskRecord.getStatus().equals(Constant.TASK_INITIAL)) {
                     taskRecord.setStatus(Constant.TASK_PLANED);
                 }
                 taskRecordService.update(taskRecord);
+                //更新task_record以外，但是跟task record相关的状态,机器状态，process_record中的task_status
+                commonService.updateTaskRecordRelatedStatus(taskRecord);
+
             }else {
                 //进行事务操作
                 throw new RuntimeException();
@@ -98,7 +111,7 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                     machineService.update(machine);
                 }
             }else {
-                //进行事务操作
+                //进行事务rollback操作
                 throw new RuntimeException();
             }
         }

@@ -10,6 +10,7 @@ import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.model.user.User;
+import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.common.Utils;
 import com.eservice.api.service.impl.MachineServiceImpl;
@@ -46,7 +47,7 @@ public class TaskRecordController {
     @Resource
     private ProcessRecordServiceImpl processRecordService;
     @Resource
-    private MachineServiceImpl machineService;
+    private CommonService commonService;
 
     @PostMapping("/add")
     public Result add(String taskRecord) {
@@ -271,72 +272,16 @@ public class TaskRecordController {
         if (id == null || id < 0) {
             return ResultGenerator.genFailResult("TaskRecord的ID为空，数据更新失败！");
         }
-
-//        if (tr.getStatus() == 0 && tr.getLeader() == "" && tr.getWorkerList() == "") {
-//            return ResultGenerator.genFailResult("无数据可更新！");
-//        }
         taskRecordService.update(tr);
 
         Integer prId = tr.getProcessRecordId();
         if (prId == null || prId < 0) {
             Logger.getLogger("").log(Level.INFO, "processrecord Id 为空");
         } else {
-            ProcessRecord pr = processRecordService.findById(prId);
-            Machine machine = machineService.findById(pr.getMachineId());
-            boolean isNeedUpdateMachine = false;
-            if (pr != null) {
-                String nodeData = pr.getNodeData();
-                List<NodeDataModel> ndList = JSON.parseArray(nodeData, NodeDataModel.class);
-                NodeDataModel ndItem = null;
-                Integer index = -1;
-                Boolean isFinished = true;
-                for (int i = 0; i < ndList.size(); i++) {
-                    if (Integer.parseInt(ndList.get(i).getKey()) == tr.getNodeKey()) {
-                        index = i;
-                    }
-                    if (ndList.get(i).getTaskStatus() != null
-                            && Integer.parseInt(ndList.get(i).getTaskStatus()) < Constant.TASK_QUALITY_DONE) {
-                        isFinished = false;
-                    }
-                }
-                if (index > -1) {
-                    ndItem = ndList.get(index);
-                    ndItem.setTaskStatus(tr.getStatus().toString());
-                    if (tr.getInstallBeginTime() != null) {
-                        String date = Utils.getFormatStringDate(tr.getInstallBeginTime(), "yyyy-MM-dd HH:mm:ss");
-                        ndItem.setBeginTime(date);
-                    }
-                    if (tr.getQualityEndTime() != null) {
-                        String date = Utils.getFormatStringDate(tr.getQualityEndTime(), "yyyy-MM-dd HH:mm:ss");
-                        ndItem.setEndTime(date);//质检完成，工序才算完成
-                    }
-                    if (tr.getLeader() != null && tr.getLeader().length() > 0) {
-                        ndItem.setLeader(tr.getLeader());//组长信息
-                    }
-                    if (tr.getWorkerList() != null && tr.getWorkerList().length() > 0) {
-                        ndItem.setWorkList(tr.getWorkerList());//工作人员信息
-                    }
-                    ndList.set(index, ndItem);
-                }
-                if (isFinished && tr.getStatus() >= Constant.TASK_QUALITY_DONE.intValue()) {//所有工序完成
-                    pr.setEndTime(new Date());
-                    //安装完成
-                    machine.setStatus(Constant.MACHINE_INSTALLED);
-                    isNeedUpdateMachine=true;
-                }
-                pr.setNodeData(JSON.toJSONString(ndList));
-                processRecordService.update(pr);
-
-                if (machine.getStatus().equals(Constant.MACHINE_PLANING)) {
-                    //安装中
-                    machine.setStatus(Constant.MACHINE_INSTALLING);
-                    isNeedUpdateMachine=true;
-                }
-                if(isNeedUpdateMachine) {
-                    machine.setUpdateTime(new Date());
-                    machineService.update(machine);
-                }
-
+            //Update task record相关的状态
+            if(!commonService.updateTaskRecordRelatedStatus(tr)) {
+                //更新出错进行事务回退
+                throw new RuntimeException();
             }
         }
 
