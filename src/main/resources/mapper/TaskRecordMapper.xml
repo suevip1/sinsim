@@ -198,8 +198,8 @@
         join task on task.task_name = tr.task_name
         join user on user.id = task.quality_user_id
         where user.account = #{userAccount}
-      -- 4:安装完成，8:质检异常
-        and (tr.status=4 or tr.status=8)
+      -- 4:安装完成，5: 质检中 8:质检异常
+        and (tr.status=4 or tr.status=5 or tr.status=8)
   </select>
     <select id="selectNotPlanedTaskRecord" resultMap="BaseResultMap">
         SELECT tr.* FROM task_record tr
@@ -445,7 +445,7 @@
         join user on user.id = task.quality_user_id
         where user.account = #{account}
         and m.machine_strid = #{machineStrId}
-      -- 4:安装完成，8:质检异常
-        and (tr.status=4 or tr.status=8);
+      -- 4:安装完成，5:质检中， 8:质检异常
+        and (tr.status=4 or tr.status = 5 or tr.status=8);
     </select>
 </mapper>

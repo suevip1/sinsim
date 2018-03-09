@@ -262,7 +262,7 @@ public class CommonService {
                     }
                     ndList.set(index, ndItem);
                     //TODO：如果当前工序是质检完成状态，需要检查其子节点是否可以开始
-                    if(ndItem.getTaskStatus().equals(Constant.TASK_QUALITY_DONE)) {
+                    if(tr.getStatus().intValue() == Constant.TASK_QUALITY_DONE.intValue()) {
                         List<LinkDataModel> linkDataList = JSON.parseArray(pr.getLinkData(), LinkDataModel.class);
                         for (LinkDataModel item: linkDataList) {
                             if(item.getFrom().equals(ndItem.getKey())) {
@@ -308,7 +308,7 @@ public class CommonService {
                     }
                 }
                 //所有工序完成
-                if (isFinished && tr.getStatus() >= Constant.TASK_QUALITY_DONE.intValue()) {
+                if (isFinished && tr.getStatus() == Constant.TASK_QUALITY_DONE.intValue()) {
                     pr.setEndTime(new Date());
                     //安装完成
                     machine.setStatus(Constant.MACHINE_INSTALLED);
@@ -328,7 +328,7 @@ public class CommonService {
                 }
 
             }
-            return false;
+            return true;
         }
     }
 }
