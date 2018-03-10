@@ -989,7 +989,6 @@ public class ContractController {
                     }
 
                 } else {
-
                     System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted 000 line");
                 }//装置end
 
@@ -1105,7 +1104,7 @@ public class ContractController {
   
             //修改模板内容导出新模板,生成路径供前端下载
             downloadPath = contractOutputDir + contract.getContractNum() + ".xls";
-            downloadPathForNginx = "/download/" + contract.getContractNum() + ".xls";
+            downloadPathForNginx = "/excel/" + contract.getContractNum() + ".xls";
             out = new FileOutputStream(downloadPath);
             wb.write(out);
             out.close();

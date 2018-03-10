@@ -157,7 +157,7 @@ public class OrderLoadingListController {
      * 根据 order_id 返回 装车单的文件名称(可以有多个装车单)
      * 下载路径的前面部分是统一的，放在xxx_ip/download/下(nginx配置)，
      * 比如，访问下面地址可以下载该装车单
-     * http://xx.xx.xx.xx/download/null_1_LoadingFile_2018-02-24-10-12-2.xlsx
+     * http://xx.xx.xx.xx/oll/null_1_LoadingFile_2018-02-24-10-12-2.xlsx
      *
      * @param order_id
      * @return
