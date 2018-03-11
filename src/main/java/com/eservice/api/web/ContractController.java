@@ -826,7 +826,7 @@ public class ContractController {
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getHeadNum().toString()));
                 //E4
                 cell2 = sheetX.getRow(3).getCell((short) 4);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getHeadNum().toString()));
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getHeadDistance().toString()));
                 //H4
                 cell2 = sheetX.getRow(3).getCell((short) 7);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getxDistance()));
@@ -983,7 +983,7 @@ public class ContractController {
                         totalPriceOfOrder += eqSum;
                         if(displayPrice){
                             cell2.setCellValue(new HSSFRichTextString(( Integer.toString(eqSum))));
-                        } else  {
+                        } else {
                             cell2.setCellValue(new HSSFRichTextString("/"));
                         }
                     }
@@ -999,7 +999,7 @@ public class ContractController {
                 cell2 = sheetX.getRow(21 + equipmentCount).getCell((short) 3);
                 if(displayPrice){
                     cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachinePrice()));
-                } else  {
+                } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
                 // 机器总价
@@ -1007,7 +1007,7 @@ public class ContractController {
                 cell2 = sheetX.getRow(21 + equipmentCount).getCell((short) 4);
                 if(displayPrice){
                     cell2.setCellValue(new HSSFRichTextString(machineOrderSum.toString()));
-                } else  {
+                } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
 
@@ -1016,17 +1016,17 @@ public class ContractController {
                 cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 4);
                 if(displayPrice){
                     cell2.setCellValue(new HSSFRichTextString(totalPriceOfOrder.toString()));
-                } else  {
+                } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
 
                 // 合同的交货日期
                 cell2 = sheetX.getRow(23+equipmentCount).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString(contract.getContractShipDate().toString()));
+                cell2.setCellValue(new HSSFRichTextString(formatter2.format( contract.getContractShipDate())));
 
                 // 计划发货日期
                 cell2 = sheetX.getRow(24 + equipmentCount).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getPlanShipDate().toString()));
+                cell2.setCellValue(new HSSFRichTextString(formatter2.format( machineOrderDetail.getPlanShipDate())));
 
                 // 备注
                 cell2 = sheetX.getRow(25 + equipmentCount).getCell((short) 0);
