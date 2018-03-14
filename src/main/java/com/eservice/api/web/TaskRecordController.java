@@ -169,11 +169,7 @@ public class TaskRecordController {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> ListTaskRecordDetail = taskRecordService.selectAllInstallTaskRecordDetailByUserAccount(userAccount);
         PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
-        if (ListTaskRecordDetail.isEmpty()) {
-            return ResultGenerator.genSuccessResult("Empty Result");
-        } else {
             return ResultGenerator.genSuccessResult(pageInfo);
-        }
     }
 
     /**
