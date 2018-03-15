@@ -341,6 +341,7 @@ CREATE TABLE `order_detail` (
   `axle_split` varchar(255) DEFAULT NULL COMMENT '上下轴：j夹线器',
   `axle_panel` varchar(255) DEFAULT NULL COMMENT '上下轴：面板',
   `axle_needle` varchar(255) DEFAULT NULL COMMENT '上下轴：机针',
+  `axle_needle_sku` varchar(255) NOT NULL COMMENT '上下轴：机针sku',
   `axle_rail` varchar(255) DEFAULT NULL COMMENT '上下轴：机头中导轨',
   `axle_down_check` varchar(255) DEFAULT NULL COMMENT '上下轴：底检方式',
   `axle_hook` varchar(255) DEFAULT NULL COMMENT '上下轴：旋梭',
