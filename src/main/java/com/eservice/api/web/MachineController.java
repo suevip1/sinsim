@@ -145,4 +145,10 @@ public class MachineController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    @PostMapping("/selectMachinesByNameplate")
+    public Result selectMachinesNameplate(String nameplate) {
+        Machine machine = machineService.selectMachinesByNameplate(nameplate);
+        return ResultGenerator.genSuccessResult(machine);
+    }
+
 }

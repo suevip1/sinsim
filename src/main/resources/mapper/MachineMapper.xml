@@ -429,4 +429,9 @@
         ORDER By process_create_time DESC, update_time DESC,ship_time DESC
     </select>
 
+    <select id="selectMachinesByNameplate" resultMap="BaseResultMap">
+        SELECT * FROM machine
+        where 1=1 and nameplate=#{nameplate}
+    </select>
+
 </mapper>

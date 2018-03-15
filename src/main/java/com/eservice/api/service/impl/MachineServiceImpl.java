@@ -180,4 +180,8 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
             return machineMapper.selectProcessMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time);
         }
     }
+
+    public Machine selectMachinesByNameplate(String nameplate) {
+        return machineMapper.selectMachinesByNameplate(nameplate);
+    }
 }

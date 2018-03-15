@@ -54,4 +54,6 @@ public interface MachineMapper extends Mapper<Machine> {
             @Param("location") String location, @Param("status") Byte status,
             @Param("query_start_time") String query_start_time, @Param("query_finish_time") String query_finish_time);
 
+    Machine selectMachinesByNameplate(@Param("nameplate") String nameplate);
+
 }
