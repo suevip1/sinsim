@@ -54,6 +54,7 @@
         <result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
         <result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
         <result column="package_method" jdbcType="VARCHAR" property="packageMethod"/>
+        <result column="package_remark" jdbcType="VARCHAR" property="packageRemark" />
         <result column="machine_num" jdbcType="TINYINT" property="machineNum"/>
         <result column="machine_price" jdbcType="VARCHAR" property="machinePrice"/>
         <result column="equipment" jdbcType="VARCHAR" property="equipment"/>
@@ -86,6 +87,7 @@
             <result column="axle_split" jdbcType="VARCHAR" property="axleSplit"/>
             <result column="axle_panel" jdbcType="VARCHAR" property="axlePanel"/>
             <result column="axle_needle" jdbcType="VARCHAR" property="axleNeedle"/>
+            <result column="axle_needle_sku" jdbcType="VARCHAR" property="axleNeedleSku" />
             <result column="axle_rail" jdbcType="VARCHAR" property="axleRail"/>
             <result column="axle_down_check" jdbcType="VARCHAR" property="axleDownCheck"/>
             <result column="axle_hook" jdbcType="VARCHAR" property="axleHook"/>
@@ -145,7 +147,7 @@
             keyProperty="id">
     insert into
     machine_order(order_num, original_order_id, contract_id, order_detail_id, create_user_id,country, brand, needle_num, head_num, head_distance, x_distance, y_distance,
-    package_method, machine_num,machine_type, machine_price, equipment, contract_ship_date, plan_ship_date, sellman, maintain_type, status,create_time, update_time, end_time, mark)
+    package_method, package_remark,machine_num,machine_type, machine_price, equipment, contract_ship_date, plan_ship_date, sellman, maintain_type, status,create_time, update_time, end_time, mark)
     values(
     #{orderNum},#{originalOrderId},#{contractId},#{orderDetailId},#{createUserId},#{country},#{brand},#{needleNum},#{headNum},#{headDistance},#{xDistance},
     #{yDistance},#{packageMethod},#{packageRemark},#{machineNum},#{machineType},#{machinePrice},#{equipment},#{contractShipDate},#{planShipDate},#{sellman},#{maintainType},#{status},#{createTime},#{updateTime},#{endTime},#{mark})
@@ -166,7 +168,7 @@
         od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor,
         od.electric_motor_xy,
         od.electric_trim, od.electric_power, od.electric_switch, od.electric_oil, od.axle_split,
-        od.axle_panel, od.axle_needle, od.axle_rail, od.axle_down_check, od.axle_hook,
+        od.axle_panel, od.axle_needle,od.axle_needle_sku, od.axle_rail, od.axle_down_check, od.axle_hook,
         od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
         od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
         od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
@@ -228,7 +230,7 @@
         od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor,
         od.electric_motor_xy,
         od.electric_trim, od.electric_power, od.electric_switch, od.electric_oil, od.axle_split,
-        od.axle_panel, od.axle_needle, od.axle_rail, od.axle_down_check, od.axle_hook,
+        od.axle_panel, od.axle_needle,axle_needle_sku, od.axle_rail, od.axle_down_check, od.axle_hook,
         od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
         od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
         od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,

@@ -110,6 +110,12 @@ public class MachineOrderDetail {
     private String packageMethod;
 
     /**
+     * 包装方式的备注
+     */
+    @Column(name = "package_remark")
+    private String packageRemark;
+
+    /**
      * 机器台数
      */
     @Column(name = "machine_num")
@@ -525,6 +531,12 @@ public class MachineOrderDetail {
         this.packageMethod = packageMethod;
     }
 
+    public String getPackageRemark() {
+        return this.packageRemark;
+    }
+    public void setPackageRemark(String packageRemark) {
+        this.packageRemark = packageRemark;
+    }
     /**
      * 获取机器台数
      *
