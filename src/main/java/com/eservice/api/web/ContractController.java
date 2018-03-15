@@ -919,6 +919,11 @@ public class ContractController {
                 //f15
                 cell2 = sheetX.getRow(14).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkPlaten()));
+
+                //G15
+                cell2 = sheetX.getRow(14).getCell((short) 6);
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkPlatenColor()));
+
                 //i15
                 cell2 = sheetX.getRow(14).getCell((short) 8);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkRing()));

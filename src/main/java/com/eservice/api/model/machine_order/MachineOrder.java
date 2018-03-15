@@ -98,6 +98,12 @@ public class MachineOrder {
     private String packageMethod;
 
     /**
+     * 包装方式的备注
+     */
+    @Column(name = "package_remark")
+    private String packageRemark;
+
+    /**
      * 机器价格（不包括装置）
      */
     @Column(name = "machine_price")
@@ -435,6 +441,24 @@ public class MachineOrder {
      */
     public void setPackageMethod(String packageMethod) {
         this.packageMethod = packageMethod;
+    }
+
+    /**
+     * 获取包装方式的备注
+     *
+     * @return package_remark - 包装方式的备注
+     */
+    public String getPackageRemark() {
+        return packageRemark;
+    }
+
+    /**
+     * 设置包装方式的备注
+     *
+     * @param packageRemark 包装方式的备注
+     */
+    public void setPackageRemark(String packageRemark) {
+        this.packageRemark = packageRemark;
     }
 
     /**

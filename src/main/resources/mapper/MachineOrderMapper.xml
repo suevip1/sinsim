@@ -21,6 +21,7 @@
         <result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
         <result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
         <result column="package_method" jdbcType="VARCHAR" property="packageMethod"/>
+    	<result column="package_remark" jdbcType="VARCHAR" property="packageRemark" />
         <result column="machine_price" jdbcType="VARCHAR" property="machinePrice"/>
         <result column="equipment" jdbcType="VARCHAR" property="equipment"/>
         <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
@@ -147,7 +148,7 @@
     package_method, machine_num,machine_type, machine_price, equipment, contract_ship_date, plan_ship_date, sellman, maintain_type, status,create_time, update_time, end_time, mark)
     values(
     #{orderNum},#{originalOrderId},#{contractId},#{orderDetailId},#{createUserId},#{country},#{brand},#{needleNum},#{headNum},#{headDistance},#{xDistance},
-    #{yDistance},#{packageMethod},#{machineNum},#{machineType},#{machinePrice},#{equipment},#{contractShipDate},#{planShipDate},#{sellman},#{maintainType},#{status},#{createTime},#{updateTime},#{endTime},#{mark})
+    #{yDistance},#{packageMethod},#{packageRemark},#{machineNum},#{machineType},#{machinePrice},#{equipment},#{contractShipDate},#{planShipDate},#{sellman},#{maintainType},#{status},#{createTime},#{updateTime},#{endTime},#{mark})
   </insert>
 
     <select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">

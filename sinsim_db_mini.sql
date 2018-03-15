@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2018-03-09 14:09:20
+Date: 2018-03-15 15:08:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -225,6 +225,7 @@ CREATE TABLE `machine_order` (
   `x_distance` varchar(255) NOT NULL COMMENT 'X-行程',
   `y_distance` varchar(255) NOT NULL COMMENT 'Y-行程',
   `package_method` varchar(255) NOT NULL COMMENT '包装方式',
+  `package_remark` varchar(255) DEFAULT NULL COMMENT '包装方式的备注',
   `equipment` text COMMENT '机器装置，json的字符串，包含装置名称、数量、单价',
   `machine_price` varchar(255) NOT NULL COMMENT '机器价格（不包括装置）',
   `contract_ship_date` date NOT NULL,
