@@ -13,7 +13,7 @@ public class Constant {
     public static String SIGN_FINISHED = "签核完成";
 
     /**
-     * 签核各个步骤
+     * 签核各个步骤 TODO......
      */
     public static Integer SALES_DEP_STEP = 1;
     public static Integer TECH_DEP_STEP = 2;

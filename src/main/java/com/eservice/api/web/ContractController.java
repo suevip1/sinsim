@@ -799,27 +799,29 @@ public class ContractController {
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
 
                 HSSFSheet sheetX = wb.getSheetAt(1+i);
-                //在相应的单元格进行赋值(C2)
-                HSSFCell cell2 = sheetX.getRow(1).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( contract.getContractNum() ));
-                //E2
-                cell2 = sheetX.getRow(1).getCell((short) 4);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderNum() ));
-                //H2
-                cell2 = sheetX.getRow(1).getCell((short) 7);
-                style.setWrapText(true);
-                cell2.setCellStyle(style);
-                cell2.setCellValue(new HSSFRichTextString(dateString));
+                //在相应的单元格进行赋值
+                //B2
+                HSSFCell cell2 = sheetX.getRow(1).getCell((short) 1);
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getSellman()));
+                //D2
+                cell2 = sheetX.getRow(1).getCell((short) 3);
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getMaintainType()));
+                //F2
+                cell2 = sheetX.getRow(1).getCell((short) 5);
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderNum()));
+                // I2
+                cell2 = sheetX.getRow(1).getCell((short) 8);
+                cell2.setCellValue(new HSSFRichTextString( contract.getContractNum()));
 
                 //C3
                 cell2 = sheetX.getRow(2).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getCustomer()));
                 //E3
                 cell2 = sheetX.getRow(2).getCell((short) 4);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getBrand() ));
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getBrand()));
                 //H3
                 cell2 = sheetX.getRow(2).getCell((short) 7);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineType().getName() ));
+                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineType().getName()));
 
                 //C4
                 cell2 = sheetX.getRow(3).getCell((short) 2);
@@ -1036,10 +1038,10 @@ public class ContractController {
                 // 备注
                 cell2 = sheetX.getRow(25 + equipmentCount).getCell((short) 0);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMark()));
-
-                // 销售人员
-                cell2 = sheetX.getRow(32 + equipmentCount).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString(contract.getSellman()));
+//
+//                // 销售人员
+//                cell2 = sheetX.getRow(32 + equipmentCount).getCell((short) 2);
+//                cell2.setCellValue(new HSSFRichTextString(contract.getSellman()));
 
                 //需求单审核信息，来自 order_sign
                 orderSignList = orderSignService.getOrderSignListByOrderId(machineOrderIdList.get(i));
