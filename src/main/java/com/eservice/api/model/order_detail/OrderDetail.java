@@ -111,10 +111,10 @@ public class OrderDetail {
     private String axleNeedle;
 
     /**
-     * 上下轴：机针sku
+     * 上下轴：机针类型
      */
-    @Column(name = "axle_needle_sku")
-    private String axleNeedleSku;
+    @Column(name = "axle_needle_type")
+    private String axleNeedleType;
 
     /**
      * 上下轴：机头中导轨
@@ -370,16 +370,10 @@ public class OrderDetail {
         this.electricPc = electricPc;
     }
 
-    /**
-     * @return electric_language
-     */
     public String getElectricLanguage() {
         return electricLanguage;
     }
 
-    /**
-     * @param electricLanguage
-     */
     public void setElectricLanguage(String electricLanguage) {
         this.electricLanguage = electricLanguage;
     }
@@ -547,22 +541,23 @@ public class OrderDetail {
     }
 
     /**
-     * 获取上下轴：机针sku
+     * 获取上下轴：机针
      *
-     * @return axle_needle_sku - 上下轴：机针sku
+     * @return axleNeedleType - 上下轴：机针
      */
-    public String getAxleNeedleSku() {
-        return axleNeedleSku;
+    public String getAxleNeedleType() {
+        return axleNeedleType;
     }
 
     /**
-     * 设置上下轴：机针sku
+     * 设置上下轴：机针
      *
-     * @param axleNeedleSku 上下轴：机针sku
+     * @param axleNeedleType 上下轴：机针
      */
-    public void setAxleNeedleSku(String axleNeedleSku) {
-        this.axleNeedleSku = axleNeedleSku;
+    public void setAxleNeedleType(String axleNeedleType) {
+        this.axleNeedleType = axleNeedleType;
     }
+
 
     /**
      * 获取上下轴：机头中导轨

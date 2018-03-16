@@ -109,11 +109,9 @@ public class MachineOrderDetail {
     @Column(name = "package_method")
     private String packageMethod;
 
-    /**
-     * 包装方式的备注
-     */
-    @Column(name = "package_remark")
-    private String packageRemark;
+
+    @Column(name = "package_mark")
+    private String packageMark;
 
     /**
      * 机器台数
@@ -531,12 +529,19 @@ public class MachineOrderDetail {
         this.packageMethod = packageMethod;
     }
 
-    public String getPackageRemark() {
-        return this.packageRemark;
+
+    /*
+    ///获取包装备注
+    */
+    public String getPackageMark() {
+        return packageMark;
     }
-    public void setPackageRemark(String packageRemark) {
-        this.packageRemark = packageRemark;
+
+    //设置包装备注
+    public void setPackageMark(String packageMark) {
+        this.packageMark = packageMark;
     }
+
     /**
      * 获取机器台数
      *
