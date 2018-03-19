@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : LHF
+Source Server         : MyDB
 Source Server Version : 50547
 Source Host           : localhost:3306
 Source Database       : sinsim_db
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50547
 File Encoding         : 65001
 
-Date: 2018-03-16 10:02:14
+Date: 2018-03-19 16:18:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,19 +20,19 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `abnormal`;
 CREATE TABLE `abnormal` (
-  `id` tinyint(4) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `abnormal_name` varchar(255) NOT NULL COMMENT '异常名称',
+  `valid` int(10) unsigned NOT NULL DEFAULT '1' COMMENT '异常是否有效，前端删除某个异常类型时，如果该类型被使用过，valid设置为0，未使用过则删除，默认为1',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of abnormal
 -- ----------------------------
-INSERT INTO `abnormal` VALUES ('1', 'abnormalName111');
-INSERT INTO `abnormal` VALUES ('2', 'abn_222');
-INSERT INTO `abnormal` VALUES ('3', 'abn333-by-update');
-INSERT INTO `abnormal` VALUES ('4', 'abnABC');
-INSERT INTO `abnormal` VALUES ('5', 'abn333-by-add');
+INSERT INTO `abnormal` VALUES ('6', '缺料', '1', '2018-03-19 11:26:21', null);
+INSERT INTO `abnormal` VALUES ('8', 'test2', '0', '2018-03-19 15:04:56', null);
 
 -- ----------------------------
 -- Table structure for `abnormal_image`
@@ -51,8 +51,6 @@ CREATE TABLE `abnormal_image` (
 -- ----------------------------
 -- Records of abnormal_image
 -- ----------------------------
-INSERT INTO `abnormal_image` VALUES ('1', '2', 'D:/images/abnormal/ABP112914371_null_Abnormal_2018-02-12-14-17-58.png', '2017-12-05 13:34:56');
-INSERT INTO `abnormal_image` VALUES ('2', '1', 'D:/images/abnormal/A0M094156526_null_Abnormal_2018-02-12-14-31-35.png', '2017-12-05 13:34:56');
 
 -- ----------------------------
 -- Table structure for `abnormal_record`
@@ -60,7 +58,7 @@ INSERT INTO `abnormal_image` VALUES ('2', '1', 'D:/images/abnormal/A0M094156526_
 DROP TABLE IF EXISTS `abnormal_record`;
 CREATE TABLE `abnormal_record` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `abnormal_type` tinyint(4) unsigned NOT NULL COMMENT '异常类型',
+  `abnormal_type` int(10) unsigned NOT NULL COMMENT '异常类型',
   `task_record_id` int(10) unsigned NOT NULL COMMENT '作业工序',
   `submit_user` int(10) unsigned NOT NULL COMMENT '提交异常的用户ID',
   `comment` text NOT NULL COMMENT '异常备注',
@@ -82,8 +80,6 @@ CREATE TABLE `abnormal_record` (
 -- ----------------------------
 -- Records of abnormal_record
 -- ----------------------------
-INSERT INTO `abnormal_record` VALUES ('1', '1', '3', '2', 'cmt111', 'solution111', '1', '2018-02-12 14:16:23', '2018-02-12 14:16:25');
-INSERT INTO `abnormal_record` VALUES ('2', '2', '6', '1', 'cmt222', 's222', '2', '2018-02-12 14:16:55', '2018-02-21 14:16:59');
 
 -- ----------------------------
 -- Table structure for `contract`
@@ -635,7 +631,7 @@ CREATE TABLE `role` (
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES ('1', '超级管理员', '系统后台管理', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":[],\"abnormal\":[],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":[\"/home/system/user_manage\",\"/home/system/install_group_manage\",\"/home/system/role_manage\",\"/home/system/device_manager\"]}');
+INSERT INTO `role` VALUES ('1', '超级管理员', '系统后台管理', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":[],\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":[\"/home/system/user_manage\",\"/home/system/install_group_manage\",\"/home/system/role_manage\",\"/home/system/device_manager\"]}');
 INSERT INTO `role` VALUES ('2', '生产部管理员', '主要Pad上操作，上传位置、pad上查看流程等', '{\"contract\":[\"/home/contract/sign_process\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":null,\"abnormal\":[],\"task\":null,\"system\":null}');
 INSERT INTO `role` VALUES ('3', '安装组长', '安装前后扫描机器', null);
 INSERT INTO `role` VALUES ('4', '生产部经理', '订单审批', null);

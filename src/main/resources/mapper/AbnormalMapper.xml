@@ -5,7 +5,10 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" jdbcType="TINYINT" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="abnormal_name" jdbcType="VARCHAR" property="abnormalName" />
+    <result column="valid" jdbcType="INTEGER" property="valid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
 </mapper>
