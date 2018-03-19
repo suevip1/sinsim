@@ -96,5 +96,11 @@
       values(
       #{contractNum},#{customerName},#{sellman},#{status},#{contractShipDate},#{payMethod},#{mark},#{createTime})
   </insert>
-
+    <select id="selectAllCustomer" resultMap="BaseResultMap">
+        SELECT c.* FROM `contract` c WHERE 1=1
+        <if test="name != null and name != '' ">
+            and c.customer_name LIKE CONCAT('%','${name}','%' )
+        </if>
+        GROUP BY customer_name
+    </select>
 </mapper>

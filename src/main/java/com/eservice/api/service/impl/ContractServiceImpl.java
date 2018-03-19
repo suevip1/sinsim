@@ -20,10 +20,11 @@ import java.util.*;
 
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/12/07.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/12/07.
+ */
 @Service
 @Transactional
 public class ContractServiceImpl extends AbstractService<Contract> implements ContractService {
@@ -37,15 +38,20 @@ public class ContractServiceImpl extends AbstractService<Contract> implements Co
                                                 String query_start_time,
                                                 String query_finish_time,
                                                 Boolean is_fuzzy) {
-        if(is_fuzzy) {
+        if (is_fuzzy) {
             return contractMapper.selectContractsByFuzzy(contractNum, status, sellman, roleName, query_start_time, query_finish_time);
-        }else {
+        } else {
             return contractMapper.selectContracts(contractNum, status, sellman, roleName, query_start_time, query_finish_time);
         }
     }
 
     public void saveAndGetID(Contract contract) {
         contractMapper.saveAndGetID(contract);
+    }
+
+    //selectAllCustomer
+    public List<ContractDetail> selectAllCustomer(String name) {
+        return contractMapper.selectAllCustomer(name);
     }
 
 }

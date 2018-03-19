@@ -1198,4 +1198,11 @@ public class ContractController {
             }
         }
     }
+
+    @PostMapping("/selectAllCustomer")
+    public Result selectAllCustomer(@RequestParam String name) {
+        List<ContractDetail> list = contractService.selectAllCustomer(name);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(list);
+    }
 }
