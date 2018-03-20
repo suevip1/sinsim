@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 
@@ -25,5 +26,9 @@ public class AbnormalRecordServiceImpl extends AbstractService<AbnormalRecord> i
 
     public List<AbnormalRecordDetail> selectAbnormalRecordDetails(Integer taskRecordId){
         return abnormalRecordMapper.selectAbnormalRecordDetails(taskRecordId);
+    }
+
+    public List<AbnormalRecordDetail> selectAbnormalRecordDetailList( Integer abnormalType, String taskName, Integer submitUser,  Integer solutionUser,  Date queryStartTime,  Date queryFinishTime) {
+        return abnormalRecordMapper.selectAbnormalRecordDetailList(abnormalType,taskName, submitUser, solutionUser, queryStartTime, queryFinishTime);
     }
 }

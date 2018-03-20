@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -88,6 +89,25 @@ public class AbnormalRecordController {
                                        @RequestParam Integer taskRecordId) {
         PageHelper.startPage(page, size);
         List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetails(taskRecordId);
+        PageInfo pageInfo = new PageInfo(abnormalRecordDetailList);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     * 根据异常类型、异常提交时间、提交者、解决者，返回abnormalRecordDetail
+     * @return
+     */
+    @PostMapping("/selectAbnormalRecordDetailList")
+    public Result selectAbnormalRecordDetailList(@RequestParam(defaultValue = "0") Integer page,
+                                                 @RequestParam(defaultValue = "0") Integer size,
+                                                 Integer abnormalType,
+                                                 String taskName,
+                                                 Integer submitUser,
+                                                 Integer solutionUser,
+                                                 Date queryStartTime,
+                                                 Date queryFinishTime) {
+        PageHelper.startPage(page, size);
+        List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetailList(abnormalType,taskName, submitUser, solutionUser, queryStartTime, queryFinishTime);
         PageInfo pageInfo = new PageInfo(abnormalRecordDetailList);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

@@ -6,6 +6,7 @@ import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.task_record.TaskRecord;
 
 import javax.persistence.*;
+import java.util.Date;
 
 //@Table(name = "abnormal_record")
 public class AbnormalRecordDetail {
@@ -24,6 +25,12 @@ public class AbnormalRecordDetail {
      */
     @Column(name = "task_record_id")
     private Integer taskRecordId;
+
+    @Column(name = "create_time")
+    private Date createTime;
+
+    @Column(name = "solve_time")
+    private Date solveTime;
 
     /**
      * 提交异常的用户ID
@@ -80,6 +87,23 @@ public class AbnormalRecordDetail {
      */
     public Byte getAbnormalType() {
         return abnormalType;
+    }
+
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getSolveTime() {
+        return solveTime;
+    }
+
+    public void setSolveTime(Date solveTime) {
+        this.solveTime = solveTime;
     }
 
     /**
