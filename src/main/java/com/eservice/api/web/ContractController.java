@@ -25,6 +25,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +74,8 @@ public class ContractController {
     private MachineServiceImpl machineService;
     @Resource
     private UserServiceImpl userService;
+    @Resource
+    private RoleServiceImpl roleService;
 
     @Value("${contract_excel_output_dir}")
     private String contractOutputDir;
@@ -693,96 +696,43 @@ public class ContractController {
             // 合同审核信息，来自 contract_sign
             contractSign = contractSignService.detailByContractId(contractId.toString());
             SignContentItem signContentItem;
-            String contractSignCommentBySalesDep = "";
-            String contractSignCommentByCostAccount = "";
-            String contractSignCommentByFinancialDepRuleCheck = "";
-            String contractSignCommentByGM = "";
-            String contractSignUserBySaleDep = "";
-            String contractSignUserByCostAccount = "";
-            String contractSignUserByFinancialDepRuleCheck = "";
-            String contractSignUserByGM = "";
-            String contractSignDateBySalesDep = "";
-            String contractSignDateByCostAccount = "";
-            String contractSignDateByFinancialDepRuleCheck = "";
-            String contractSignDateByGM = "";
             List<SignContentItem> signContentItemList = JSON.parseArray(contractSign.getSignContent(), SignContentItem.class);
-
             OrderSign orderSign = null;
-            // 合同审核信息，来自 contract_sign
-            String OderSignCommentByTechDep = "";
-            String OrderSignCommentByPMC = "";
-            String OrderSignCommentByFinancialDeposit = "";
 
-            String orderSignUserByTechDep = "";
-            String orderSignUserByPMC = "";
-            String orderSignUserByFinancialDeposit = "";
-            String orderSignDateByTechDep ="";
-            String orderSignDateByPMC ="";
-            String orderSignDateByFinancialDeposit ="";
+            /**
+             *  根据签核内容 signContentItemList，动态填入表格。
+             *  signType为 “合同签核”的，都按顺序填入表格
+             */
+            //合同的N个签核，插入N行
+            Integer contractSignCount = signContentItemList.size();
+            insertRow(wb,sheet1,locationRow,contractSignCount);
+            for( int k=0; k<contractSignCount; k++){
+                /**
+                 * 合同签核的： 角色（部门）/人/时间/意见
+                 */
+                //1.签核角色（部门）
+                int roleId = signContentItemList.get(k).getRoleId();
+                //根据roleId返回角色（部门）
+                String roleName = roleService.findById(roleId).getRoleName();
+                cell = sheet1.getRow(locationRow).getCell((short) 0);
+                cell.setCellValue(new HSSFRichTextString(roleName));
+                //2.签核人
+                cell = sheet1.getRow(locationRow).getCell((short)1);
+                cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getUser()));
+                //3.签核时间
+                cell = sheet1.getRow(locationRow).getCell((short)2);
+                cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
+                cell = sheet1.getRow(locationRow).getCell((short)3);
+                cell.setCellValue(new HSSFRichTextString("意见"));
+                //4.签核意见
+                cell = sheet1.getRow(locationRow++).getCell((short)4);
+                cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
 
-            for ( int i=0;i<signContentItemList.size();i++ ) {
-                signContentItem = signContentItemList.get(i);
-                if(Constant.SALES_DEP_STEP.equals( signContentItem.getNumber())){
-                    //销售部签核顺位
-                    contractSignCommentBySalesDep = signContentItem.getComment();
-                    contractSignUserBySaleDep = signContentItem.getUser();
-                    if(signContentItem.getDate() != null) {
-                        contractSignDateBySalesDep = formatter2.format(signContentItem.getDate());
-                    }
-                } else if(Constant.COST_ACCOUNT_STEP.equals( signContentItem.getNumber()) ) {
-                    //成本核算
-                    contractSignCommentByCostAccount = signContentItem.getComment();
-                    contractSignUserByCostAccount = signContentItem.getUser();
-                    if(signContentItem.getDate() != null) {
-                        contractSignDateByCostAccount = formatter2.format(signContentItem.getDate());
-                    }
-                } else if(Constant.FINANCIAL_DEP_RULE_STEP.equals( signContentItem.getNumber()) ) {
-                    //财务rule审核
-                    contractSignCommentByFinancialDepRuleCheck = signContentItem.getComment();
-                    contractSignUserByFinancialDepRuleCheck = signContentItem.getUser();
-                    if(signContentItem.getDate() != null) {
-                        contractSignDateByFinancialDepRuleCheck = formatter2.format(signContentItem.getDate());
-                    }
-                } else if(Constant.GENERAL_MANAGER_STEP.equals( signContentItem.getNumber()) ) {
-                    //总经理审核
-                    contractSignCommentByGM = signContentItem.getComment();
-                    contractSignUserByGM = signContentItem.getUser();
-                    if(signContentItem.getDate() != null) {
-                        contractSignDateByGM = formatter2.format(signContentItem.getDate());
-                    }
-                }
             }
-            //销售部
-            cell = sheet1.getRow(locationRow).getCell((short) 4);
-            cell.setCellValue(new HSSFRichTextString(contractSignCommentBySalesDep));
-            cell = sheet1.getRow(locationRow).getCell((short)1);
-            cell.setCellValue(new HSSFRichTextString(contractSignUserBySaleDep));
-            cell = sheet1.getRow(locationRow++).getCell((short)2);
-            cell.setCellValue(new HSSFRichTextString(contractSignDateBySalesDep));
-
-            //成本审核
-            cell = sheet1.getRow(locationRow).getCell((short) 4);
-            cell.setCellValue(new HSSFRichTextString(contractSignCommentByCostAccount));
-            cell = sheet1.getRow(locationRow).getCell((short) 1);
-            cell.setCellValue(new HSSFRichTextString(contractSignUserByCostAccount));
-            cell = sheet1.getRow(locationRow++).getCell((short)2);
-            cell.setCellValue(new HSSFRichTextString(contractSignDateByCostAccount));
-
-            //财务审核
-            cell = sheet1.getRow(locationRow).getCell((short) 4);
-            cell.setCellValue(new HSSFRichTextString(contractSignCommentByFinancialDepRuleCheck));
-            cell = sheet1.getRow(locationRow).getCell((short) 1);
-            cell.setCellValue(new HSSFRichTextString(contractSignUserByFinancialDepRuleCheck));
-            cell = sheet1.getRow(locationRow++).getCell((short)2);
-            cell.setCellValue(new HSSFRichTextString(contractSignDateByFinancialDepRuleCheck));
-
-            //总经理
-            cell = sheet1.getRow(locationRow).getCell((short) 4);
-            cell.setCellValue(new HSSFRichTextString(contractSignCommentByGM));
-            cell = sheet1.getRow(locationRow).getCell((short) 1);
-            cell.setCellValue(new HSSFRichTextString(contractSignUserByGM));
-            cell = sheet1.getRow(locationRow++).getCell((short)2);
-            cell.setCellValue(new HSSFRichTextString(contractSignDateByGM));
+            //最后删除多余一行
+            sheet1.shiftRows(   locationRow +1,
+                    sheet1.getLastRowNum(),
+                    -1);
 
             //需求单
             //根据实际需求单数量，动态复制生成新的sheet;
@@ -1038,12 +988,10 @@ public class ContractController {
                 // 备注
                 cell2 = sheetX.getRow(25 + equipmentCount).getCell((short) 0);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMark()));
-//
-//                // 销售人员
-//                cell2 = sheetX.getRow(32 + equipmentCount).getCell((short) 2);
-//                cell2.setCellValue(new HSSFRichTextString(contract.getSellman()));
 
-                //需求单审核信息，来自 order_sign
+                /**
+                 *  需求单审核信息，来自 order_sign， 具体有几个签核步骤，可以动态填入表格
+                 */
                 orderSignList = orderSignService.getOrderSignListByOrderId(machineOrderIdList.get(i));
 
                 if(orderSignList.size() > 0) {
@@ -1051,61 +999,38 @@ public class ContractController {
                     orderSign = orderSignList.get(orderSignList.size()-1);
                     signContentItemList = JSON.parseArray(orderSign.getSignContent(), SignContentItem.class);
 
-                    for ( int j=0;j<signContentItemList.size();j++ ) {
-                        signContentItem = signContentItemList.get(j);
-                        if(Constant.TECH_DEP_STEP.equals( signContentItem.getNumber())){
-                            //技术部签核顺位
-                            OderSignCommentByTechDep = signContentItem.getComment();
-                            orderSignUserByTechDep = signContentItem.getUser();
-                            if(signContentItem.getDate() != null){
-                                orderSignDateByTechDep = formatter2.format(signContentItem.getDate());
-                            }
-                        } else if(Constant.PMC_STEP.equals( signContentItem.getNumber()) ) {
-                            //PMC
-                            OrderSignCommentByPMC = signContentItem.getComment();
-                            orderSignUserByPMC = signContentItem.getUser();
-                            if(signContentItem.getDate() !=null){
-                                orderSignDateByPMC = formatter2.format(signContentItem.getDate());
-                            }
-                        } else if(Constant.FINANCIAL_DEP_DEPOSIT_STEP.equals( signContentItem.getNumber()) ) {
-                            //财务 定金审核
-                            OrderSignCommentByFinancialDeposit = signContentItem.getComment();
-                            orderSignUserByFinancialDeposit = signContentItem.getUser();
-                            if (signContentItem.getDate() != null) {
-                                orderSignDateByFinancialDeposit = formatter2.format(signContentItem.getDate());
-                            }
-                        }
+                    //需求单的N个签核，插入N行
+                    Integer orderSignCount = signContentItemList.size();
+                    insertRow2(wb,sheetX,33+equipmentCount,contractSignCount);
+                    for(int k=0; k<orderSignCount; k++){
+                        /**
+                         * 需求单签核的： 角色（部门）/人/时间/意见
+                         */
+                        //1.签核角色（部门）
+                        int roleId = signContentItemList.get(k).getRoleId();
+                        //根据roleId返回角色（部门）
+                        String roleName = roleService.findById(roleId).getRoleName();
+                        cell = sheetX.getRow(33 + equipmentCount +k).getCell((short) 0);
+                        cell.setCellValue(new HSSFRichTextString(roleName));
+                        //2.签核人
+                        cell = sheetX.getRow(33 + equipmentCount +k).getCell((short) 1);
+                        cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getUser()));
+                        //3.签核时间
+                        cell = sheetX.getRow(33 + equipmentCount +k).getCell((short) 2);
+                        cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
+                        cell = sheetX.getRow(33 + equipmentCount +k).getCell((short)3);
+                        cell.setCellValue(new HSSFRichTextString("意见"));
+                        //4.签核意见
+                        cell = sheetX.getRow(33 + equipmentCount +k).getCell((short) 4);
+                        cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
+                        //合并单元格
+                        sheetX.addMergedRegion(new CellRangeAddress(33 + equipmentCount +k,
+                                33 + equipmentCount +k,4,10));
                     }
-
-                    // 技术部评审
-                    cell2 = sheetX.getRow(34 + equipmentCount).getCell((short) 2);
-                    cell2.setCellValue(new HSSFRichTextString(orderSignUserByTechDep));
-                    //
-                    cell2 = sheetX.getRow(34 + equipmentCount).getCell((short) 3);
-                    cell2.setCellValue(new HSSFRichTextString(orderSignDateByTechDep));
-                    //
-                    cell2 = sheetX.getRow(34 + equipmentCount).getCell((short) 6);
-                    cell2.setCellValue(new HSSFRichTextString(OderSignCommentByTechDep));
-
-                    // PMC评审
-                    cell2 = sheetX.getRow(35 + equipmentCount).getCell((short)2);
-                    cell2.setCellValue(new HSSFRichTextString(orderSignUserByPMC));
-                    //
-                    cell2 = sheetX.getRow(35 + equipmentCount).getCell((short) 3);
-                    cell2.setCellValue(new HSSFRichTextString(orderSignDateByPMC));
-                    //
-                    cell2 = sheetX.getRow(35 + equipmentCount).getCell((short) 6);
-                    cell2.setCellValue(new HSSFRichTextString(OrderSignCommentByPMC));
-
-                    //财务
-                    cell2 = sheetX.getRow(37 + equipmentCount).getCell((short)2);
-                    cell2.setCellValue(new HSSFRichTextString(orderSignUserByFinancialDeposit));
-                    //D35
-                    cell2 = sheetX.getRow(37 + equipmentCount).getCell((short) 3);
-                    cell2.setCellValue(new HSSFRichTextString(orderSignDateByFinancialDeposit));
-                    //G35
-                    cell2 = sheetX.getRow(37 + equipmentCount).getCell((short)6);
-                    cell2.setCellValue(new HSSFRichTextString(OrderSignCommentByFinancialDeposit));
+                    //最后删除多余一行
+                    sheetX.shiftRows( 33 + equipmentCount + orderSignCount +1,
+                            sheetX.getLastRowNum(),
+                            -1);
                 }
             }
   
