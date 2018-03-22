@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
@@ -26,10 +27,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/12/27.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/12/27.
+ */
 @RestController
 @RequestMapping("/abnormal/record")
 public class AbnormalRecordController {
@@ -46,7 +48,7 @@ public class AbnormalRecordController {
 
     @PostMapping("/add")
     public Result add(String abnormalRecord) {
-        AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord,AbnormalRecord.class);
+        AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
 
         abnormalRecordService.save(abnormalRecord1);
         return ResultGenerator.genSuccessResult();
@@ -82,12 +84,13 @@ public class AbnormalRecordController {
 
     /**
      * 根据 task_record.id 返回abnormalRecordDetail
+     *
      * @param taskRecordId
      * @return
      */
     @PostMapping("/selectAbnormalRecordDetails")
     public Result selectAbnormalRecordDetails(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
-                                       @RequestParam Integer taskRecordId) {
+                                              @RequestParam Integer taskRecordId) {
         PageHelper.startPage(page, size);
         List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetails(taskRecordId);
         PageInfo pageInfo = new PageInfo(abnormalRecordDetailList);
@@ -96,6 +99,7 @@ public class AbnormalRecordController {
 
     /**
      * 根据异常类型、异常提交时间、提交者、解决者，返回abnormalRecordDetail
+     *
      * @return
      */
     @PostMapping("/selectAbnormalRecordDetailList")
@@ -109,22 +113,43 @@ public class AbnormalRecordController {
                                                  String queryStartTime,
                                                  String queryFinishTime) {
         PageHelper.startPage(page, size);
-        List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetailList(abnormalType,taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+        List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetailList(abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
         PageInfo pageInfo = new PageInfo(abnormalRecordDetailList);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    /**
+     * 根据异常类型、异常提交时间、提交者、解决者，返回abnormalRecordDetail
+     *
+     * @return
+     */
+    @PostMapping("/export")
+    public Result export(
+            Integer abnormalType,
+            String taskName,
+            Integer submitUser,
+            Integer solutionUser,
+            Integer finishStatus,
+            String queryStartTime,
+            String queryFinishTime) {
+        //TODO:根据返回结果导出
+        List<AbnormalRecordDetail> list = abnormalRecordService.selectAbnormalRecordDetailList(abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+
+        return ResultGenerator.genSuccessResult("导出成功！");
+    }
+
 
     /**
-     *根据传入的strAbnormalRecordDetail，更新对应多表：
-     "machine_id":"", --> machine.machine_id
-     "安装是否异常":"", --> task_record.status  task状态，“1”==>未开始， “2”==>进行中，“3”==>安装完成， “4”==>质检完成，“5“===>异常
-     "异常类型":"",	--> abnormal_record.abnormal_type
-     "异常原因":"", --> abnormal_record.comment
-     "异常照片":"", -->abnormal_image.image
-     "安装完成":"",  -->   task_record.status或machine.status都可以，反正这两个表都更新
-     注意：有外键的字段，需要上传实际存在的外键数据。
-     一项update失败的情况下，全部update无效(事务OK)
+     * 根据传入的strAbnormalRecordDetail，更新对应多表：
+     * "machine_id":"", --> machine.machine_id
+     * "安装是否异常":"", --> task_record.status  task状态，“1”==>未开始， “2”==>进行中，“3”==>安装完成， “4”==>质检完成，“5“===>异常
+     * "异常类型":"",	--> abnormal_record.abnormal_type
+     * "异常原因":"", --> abnormal_record.comment
+     * "异常照片":"", -->abnormal_image.image
+     * "安装完成":"",  -->   task_record.status或machine.status都可以，反正这两个表都更新
+     * 注意：有外键的字段，需要上传实际存在的外键数据。
+     * 一项update失败的情况下，全部update无效(事务OK)
+     *
      * @param strAbnormalRecordDetail
      * @return
      */
