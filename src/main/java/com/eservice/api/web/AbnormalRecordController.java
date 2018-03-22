@@ -61,6 +61,7 @@ public class AbnormalRecordController {
     @PostMapping("/update")
     public Result update(String abnormalRecord) {
         AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
+        abnormalRecord1.setSolveTime(new Date());
         abnormalRecordService.update(abnormalRecord1);
         return ResultGenerator.genSuccessResult();
     }
@@ -104,10 +105,11 @@ public class AbnormalRecordController {
                                                  String taskName,
                                                  Integer submitUser,
                                                  Integer solutionUser,
-                                                 Date queryStartTime,
-                                                 Date queryFinishTime) {
+                                                 Integer finishStatus,
+                                                 String queryStartTime,
+                                                 String queryFinishTime) {
         PageHelper.startPage(page, size);
-        List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetailList(abnormalType,taskName, submitUser, solutionUser, queryStartTime, queryFinishTime);
+        List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetailList(abnormalType,taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
         PageInfo pageInfo = new PageInfo(abnormalRecordDetailList);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

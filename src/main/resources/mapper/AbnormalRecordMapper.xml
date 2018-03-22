@@ -86,7 +86,7 @@
     tr.id task_record_id2, tr.task_name, tr.process_record_id,  tr.leader, tr.worker_list, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
     a.id abnormal_id, a.abnormal_name,
     ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time ai_create_time,
-    ar.abnormal_type, ar.comment, ar.solution, ar.solution_user, ar.task_record_id, ar.create_time, ar.solve_time,
+    ar.id, ar.abnormal_type, ar.comment, ar.solution, ar.submit_user, ar.solution_user, ar.task_record_id, ar.create_time, ar.solve_time,
     m.status machine_status, m.create_time m_create_time, m.id machine_id, m.machine_strid, m.nameplate, m.location, m.installed_time, m.ship_time, m.update_time m_update_time
     FROM abnormal_record ar
     JOIN task_record tr on tr.id = ar.task_record_id
@@ -99,19 +99,25 @@
       and ar.abnormal_type = #{abnormal_type}
     </if>
     <if test="task_name != null and task_name != ''">
-      and tr.task_name = ${task_name}
+      and tr.task_name = #{task_name}
     </if>
     <if test="submit_user != null and submit_user != ''">
-      and ar.submit_user = ${submit_user}
+      and ar.submit_user = #{submit_user}
     </if>
     <if test="solution_user != null and solution_user != ''">
-      and ar.solution_user = ${solution_user}
+      and ar.solution_user = #{solution_user}
+    </if>
+    <if test="finish_status != null and finish_status == 1">
+      and ar.solution != ""
+    </if>
+    <if test="finish_status != null and finish_status == 2">
+      and ar.solution is null
     </if>
     <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-    <if test="query_start_time!=null and query_start_time != '' ">
+    <if test="query_start_time != null and query_start_time != '' ">
       and DATE_FORMAT(ar.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
     </if>
-    <if test="query_finish_time!=null and query_finish_time != '' ">
+    <if test="query_finish_time!= null and query_finish_time != '' ">
       and DATE_FORMAT(ar.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
     </if>
 

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50547
 File Encoding         : 65001
 
-Date: 2018-03-19 16:18:31
+Date: 2018-03-22 16:22:11
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,7 +32,7 @@ CREATE TABLE `abnormal` (
 -- Records of abnormal
 -- ----------------------------
 INSERT INTO `abnormal` VALUES ('6', '缺料', '1', '2018-03-19 11:26:21', null);
-INSERT INTO `abnormal` VALUES ('8', 'test2', '0', '2018-03-19 15:04:56', null);
+INSERT INTO `abnormal` VALUES ('8', 'test2', '0', '2018-03-19 15:04:56', '2018-03-19 16:23:46');
 
 -- ----------------------------
 -- Table structure for `abnormal_image`
@@ -62,8 +62,8 @@ CREATE TABLE `abnormal_record` (
   `task_record_id` int(10) unsigned NOT NULL COMMENT '作业工序',
   `submit_user` int(10) unsigned NOT NULL COMMENT '提交异常的用户ID',
   `comment` text NOT NULL COMMENT '异常备注',
-  `solution` text NOT NULL COMMENT '解决办法',
-  `solution_user` int(10) unsigned NOT NULL COMMENT '解决问题的用户对应的ID',
+  `solution` text COMMENT '解决办法',
+  `solution_user` int(10) unsigned DEFAULT NULL COMMENT '解决问题的用户对应的ID',
   `create_time` datetime NOT NULL,
   `solve_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -75,11 +75,13 @@ CREATE TABLE `abnormal_record` (
   CONSTRAINT `fk_ar_solution_user` FOREIGN KEY (`solution_user`) REFERENCES `user` (`id`),
   CONSTRAINT `fk_ar_submit_user` FOREIGN KEY (`submit_user`) REFERENCES `user` (`id`),
   CONSTRAINT `fk_ar_task_record_id` FOREIGN KEY (`task_record_id`) REFERENCES `task_record` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of abnormal_record
 -- ----------------------------
+INSERT INTO `abnormal_record` VALUES ('4', '6', '54', '2', '', '仓库数据有误', '1', '2018-03-20 15:31:55', '2018-03-22 14:18:33');
+INSERT INTO `abnormal_record` VALUES ('7', '8', '53', '1', '', null, null, '2018-03-22 16:09:19', null);
 
 -- ----------------------------
 -- Table structure for `contract`

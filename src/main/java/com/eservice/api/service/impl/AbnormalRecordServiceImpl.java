@@ -28,7 +28,7 @@ public class AbnormalRecordServiceImpl extends AbstractService<AbnormalRecord> i
         return abnormalRecordMapper.selectAbnormalRecordDetails(taskRecordId);
     }
 
-    public List<AbnormalRecordDetail> selectAbnormalRecordDetailList( Integer abnormalType, String taskName, Integer submitUser,  Integer solutionUser,  Date queryStartTime,  Date queryFinishTime) {
-        return abnormalRecordMapper.selectAbnormalRecordDetailList(abnormalType,taskName, submitUser, solutionUser, queryStartTime, queryFinishTime);
+    public List<AbnormalRecordDetail> selectAbnormalRecordDetailList( Integer abnormalType, String taskName, Integer submitUser,  Integer solutionUser, Integer finishStatus, String queryStartTime,  String queryFinishTime) {
+        return abnormalRecordMapper.selectAbnormalRecordDetailList(abnormalType,taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
     }
 }

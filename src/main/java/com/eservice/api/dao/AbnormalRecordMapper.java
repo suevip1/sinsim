@@ -14,6 +14,7 @@ public interface AbnormalRecordMapper extends Mapper<AbnormalRecord> {
                                                                      @Param("task_name")String taskName,
                                                                      @Param("submit_user")Integer submitUser,
                                                                      @Param("solution_user")Integer solutionUser,
-                                                                     @Param("query_start_time")Date queryStartTime,
-                                                                     @Param("query_finish_time")Date queryFinishTime);
+                                                                     @Param("finish_status")Integer finishStatus,
+                                                                     @Param("query_start_time")String queryStartTime,
+                                                                     @Param("query_finish_time")String queryFinishTime);
 }
