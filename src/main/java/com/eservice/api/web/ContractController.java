@@ -721,7 +721,9 @@ public class ContractController {
                 cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getUser()));
                 //3.签核时间
                 cell = sheet1.getRow(locationRow).getCell((short)2);
-                cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
+                if(null != signContentItemList.get(k).getDate()) {
+                    cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
+                }
                 cell = sheet1.getRow(locationRow).getCell((short)3);
                 cell.setCellValue(new HSSFRichTextString("意见"));
                 //4.签核意见
@@ -1001,7 +1003,7 @@ public class ContractController {
 
                     //需求单的N个签核，插入N行
                     Integer orderSignCount = signContentItemList.size();
-                    insertRow2(wb,sheetX,33+equipmentCount,contractSignCount);
+                    insertRow2(wb,sheetX,33+equipmentCount,orderSignCount);
                     for(int k=0; k<orderSignCount; k++){
                         /**
                          * 需求单签核的： 角色（部门）/人/时间/意见
@@ -1017,18 +1019,20 @@ public class ContractController {
                         cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getUser()));
                         //3.签核时间
                         cell = sheetX.getRow(33 + equipmentCount +k).getCell((short) 2);
-                        cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
+                        if(null != signContentItemList.get(k).getDate()){
+                            cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
+                        }
                         cell = sheetX.getRow(33 + equipmentCount +k).getCell((short)3);
                         cell.setCellValue(new HSSFRichTextString("意见"));
                         //4.签核意见
                         cell = sheetX.getRow(33 + equipmentCount +k).getCell((short) 4);
                         cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
                         //合并单元格
-                        sheetX.addMergedRegion(new CellRangeAddress(33 + equipmentCount +k,
-                                33 + equipmentCount +k,4,10));
+                        sheetX.addMergedRegion(new CellRangeAddress(33 + equipmentCount + k,
+                                    33 + equipmentCount + k, 4, 10));
                     }
                     //最后删除多余一行
-                    sheetX.shiftRows( 33 + equipmentCount + orderSignCount +1,
+                    sheetX.shiftRows( 33 + equipmentCount + orderSignCount + 1,
                             sheetX.getLastRowNum(),
                             -1);
                 }
@@ -1076,14 +1080,12 @@ public class ContractController {
             targetRow.setHeight(sourceRow.getHeight());
 
             //创建多列
-            System.out.println(" rows: " + rows );
             for (m = sourceRow.getFirstCellNum(); m <5; m++) {
 
                 targetCell = targetRow.createCell(m);
                 sourceCell = sourceRow.getCell(m);
                 targetCell.setCellStyle(sourceCell.getCellStyle());
                 targetCell.setCellType(sourceCell.getCellType());
-                System.out.println("========i: " + i +" ---------m: " + m);
             }
         }
     }
@@ -1112,14 +1114,12 @@ public class ContractController {
             targetRow.setHeight(sourceRow.getHeight());
 
             //创建多列
-            System.out.println(" rows: " + rows );
             for (m = sourceRow.getFirstCellNum(); m <11; m++) {
 
                 targetCell = targetRow.createCell(m);
                 sourceCell = sourceRow.getCell(m);
                 targetCell.setCellStyle(sourceCell.getCellStyle());
                 targetCell.setCellType(sourceCell.getCellType());
-                System.out.println("========i: " + i +" ---------m: " + m);
             }
         }
     }
