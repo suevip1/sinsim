@@ -68,6 +68,12 @@ public class MachinePlan  extends Machine {
      */
     private Integer planedTaskNum;
 
+    /**
+     * 待安装的工序数，TASK_INSTALL_WAITING = 2;
+     * @return
+     */
+    private Integer installWaitingTaskNum;
+
 //    public Integer getInitialTaskNum() {
 //        return initialTaskNum;
 //    }
@@ -170,5 +176,11 @@ public class MachinePlan  extends Machine {
 
     public void setPlanedTaskNum(Integer planedTaskNum) {
         this.planedTaskNum = planedTaskNum;
+    }
+    public Integer getInstallWaitingTaskNum(){
+        return  installWaitingTaskNum;
+    }
+    public void setInstallWaitingTaskNum(Integer installWaitingTaskNum){
+        this.installWaitingTaskNum = installWaitingTaskNum;
     }
 }

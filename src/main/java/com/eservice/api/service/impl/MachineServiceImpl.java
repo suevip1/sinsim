@@ -88,6 +88,12 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                         }else{
                             taskStatusMap.put(Constant.TASK_PLANED, 1);
                         }
+                    } else if(record.getStatus().equals(Constant.TASK_INSTALL_WAITING)){
+                        if(taskStatusMap.get(Constant.TASK_INSTALL_WAITING) !=null){
+                            taskStatusMap.put(Constant.TASK_INSTALL_WAITING,taskStatusMap.get(Constant.TASK_INSTALL_WAITING) + 1);
+                        } else {
+                            taskStatusMap.put(Constant.TASK_INSTALL_WAITING,1);
+                        }
                     } else if(record.getStatus().equals(Constant.TASK_INSTALLING)) {
                         if(taskStatusMap.get(Constant.TASK_INSTALLING) != null){
                             taskStatusMap.put(Constant.TASK_INSTALLING, taskStatusMap.get(Constant.TASK_INSTALLING) + 1);
@@ -127,6 +133,7 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                     }
                 }
                 itemPlan.setPlanedTaskNum(taskStatusMap.get(Constant.TASK_PLANED));
+                itemPlan.setInstallWaitingTaskNum(taskStatusMap.get(Constant.TASK_INSTALL_WAITING));
                 itemPlan.setInstalledTaskNum(taskStatusMap.get(Constant.TASK_INSTALLED));
                 itemPlan.setInstallingTaskNum(taskStatusMap.get(Constant.TASK_INSTALLING));
                 itemPlan.setInstallAbnormalTaskNum(taskStatusMap.get(Constant.TASK_INSTALL_ABNORMAL));
