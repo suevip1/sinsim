@@ -246,7 +246,7 @@ public class ContractController {
         List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class);
         for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
-            if(machineOrder.getId() == null && machineOrder.getOriginalOrderId() != 0) {
+            if(machineOrder.getStatus().equals(Constant.ORDER_INITIAL) && machineOrder.getOriginalOrderId() != 0) {
                 //插入新增改单项的detail
                 OrderDetail temp = orderItem.getOrderDetail();
                 orderDetailService.saveAndGetID(temp);
@@ -295,6 +295,17 @@ public class ContractController {
                 }
                 if (newOrder != null) {
                     ///改单前后机器数相等或者大于原需求单数中对应的机器数;多出部分机器在审核完成以后自动添加
+                    for (Machine machine : machineList) {
+                        ///初始化、取消状态，直接将机器的上的需求单号直接绑定到新需求单
+                        if (machine.getStatus().equals(Constant.MACHINE_INITIAL) || machine.getStatus().equals(Constant.MACHINE_CANCELED)) {
+                        } else {
+                            machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                        }
+                        machine.setOrderId(newOrder.getId());
+                        machine.setUpdateTime(new Date());
+                        machineService.update(machine);
+                    }
+                    /* 20180323精简了算法，对于被改的需求单，除了初始化和取消状态的机器保持状态不变，其他机器都设置为该到为状态
                     if (newOrder.getMachineNum() >= machineOrder.getMachineNum()) {
                         for (Machine machine : machineList) {
                             ///初始化状态，直接将机器的上的需求单号直接绑定到新需求单
@@ -370,6 +381,7 @@ public class ContractController {
 //                            }
                         }
                     }
+                    */
                 } else {
                     ///在同一个合同中没有找到新的需求单,抛出异常
                     throw new RuntimeException();
