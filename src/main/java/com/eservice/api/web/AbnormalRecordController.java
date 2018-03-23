@@ -11,11 +11,17 @@ import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.service.AbnormalImageService;
 import com.eservice.api.service.AbnormalService;
+import com.eservice.api.service.UserService;
 import com.eservice.api.service.impl.AbnormalRecordServiceImpl;
 import com.eservice.api.service.impl.MachineServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +29,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +56,14 @@ public class AbnormalRecordController {
     private TaskRecordServiceImpl taskRecordService;
     @Resource
     private MachineServiceImpl machineService;
+    /**
+     * 异常管理excel表格，和合同excel表格放同个地方
+     */
+    @Value("${contract_excel_output_dir}")
+    private String abnoramlExcelOutputDir;
+    @Resource
+    private UserService userService;
+
 
     @PostMapping("/add")
     public Result add(String abnormalRecord) {
@@ -135,7 +154,85 @@ public class AbnormalRecordController {
         //TODO:根据返回结果导出
         List<AbnormalRecordDetail> list = abnormalRecordService.selectAbnormalRecordDetailList(abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
 
-        return ResultGenerator.genSuccessResult("导出成功！");
+        InputStream fs = null;
+        POIFSFileSystem pfs = null;
+        HSSFWorkbook wb = null;
+        FileOutputStream out = null;
+        String downloadPath = "";
+        /*
+        返回给docker外部下载
+         */
+        String downloadPathForNginx = "";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        String dateString;
+        try {
+            //生成一个空的Excel文件
+            wb=new HSSFWorkbook();
+            Sheet sheet1=wb.createSheet("sheet1");
+
+            //设置标题行格式
+            HSSFCellStyle headcellstyle = wb.createCellStyle();
+            HSSFFont headfont = wb.createFont();
+            headfont.setFontHeightInPoints((short) 10);
+            headfont.setBold(true);//粗体显示
+            headcellstyle.setFont(headfont);
+            Row row;
+            //创建行和列
+            for(int r=0;r<list.size() + 1; r++ ) {
+                row = sheet1.createRow(r);//新创建一行，行号为row+1
+                //序号，异常类型，工序，提交者，解决者，创建时间，解决时间
+                for(int c=0; c< 7; c++){
+                    row.createCell(c);//创建一个单元格，列号为col+1
+                    sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
+                }
+            }
+            sheet1.setColumnWidth(1,5000);
+            sheet1.setColumnWidth(2,5000);
+            sheet1.setColumnWidth(5,4000);
+            sheet1.setColumnWidth(6,4000);
+            //第一行为标题
+            sheet1.getRow(0).getCell(0).setCellValue("No");
+            sheet1.getRow(0).getCell(1).setCellValue("异常类型");
+            sheet1.getRow(0).getCell(2).setCellValue("工序");
+            sheet1.getRow(0).getCell(3).setCellValue("提交者");
+            sheet1.getRow(0).getCell(4).setCellValue("解决者");
+            sheet1.getRow(0).getCell(5).setCellValue("创建时间");
+            sheet1.getRow(0).getCell(6).setCellValue("解决时间");
+
+            //第二行开始，填入值
+            for(int r=0; r<list.size(); r++ ) {
+                row = sheet1.getRow(r + 1);
+                row.getCell(0).setCellValue(r + 1);
+
+                row.getCell(1).setCellValue(list.get(r).getAbnormal().getAbnormalName());
+                row.getCell(2).setCellValue(list.get(r).getTaskRecord().getTaskName());
+                int userID = list.get(r).getSubmitUser();
+                row.getCell(3).setCellValue(userService.findById(userID).getName());
+                userID =  list.get(r).getSolutionUser();
+                row.getCell(4).setCellValue(userService.findById(userID).getName());
+                dateString= formatter.format(list.get(r).getCreateTime());
+                row.getCell(5).setCellValue(dateString);
+                dateString = formatter.format(list.get(r).getSolveTime());
+                row.getCell(6).setCellValue(dateString);
+
+            }
+            downloadPath = abnoramlExcelOutputDir + "异常统计" + ".xls";
+            downloadPathForNginx = "/excel/" + ".xls";
+            out = new FileOutputStream(downloadPath);
+            wb.write(out);
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if("".equals(downloadPath)) {
+            return ResultGenerator.genFailResult("异常导出失败!");
+        }else {
+            return ResultGenerator.genSuccessResult(downloadPathForNginx);
+        }
     }
 
 
