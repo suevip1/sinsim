@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : Local_sinsim
-Source Server Version : 50553
+Source Server         : MyDB
+Source Server Version : 50547
 Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50553
+Target Server Version : 50547
 File Encoding         : 65001
 
-Date: 2018-03-15 15:08:30
+Date: 2018-03-22 16:22:11
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,10 +20,13 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `abnormal`;
 CREATE TABLE `abnormal` (
-  `id` tinyint(4) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `abnormal_name` varchar(255) NOT NULL COMMENT '异常名称',
+  `valid` int(10) unsigned NOT NULL DEFAULT '1' COMMENT '异常是否有效，前端删除某个异常类型时，如果该类型被使用过，valid设置为0，未使用过则删除，默认为1',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of abnormal
@@ -53,12 +56,12 @@ CREATE TABLE `abnormal_image` (
 DROP TABLE IF EXISTS `abnormal_record`;
 CREATE TABLE `abnormal_record` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `abnormal_type` tinyint(4) unsigned NOT NULL COMMENT '异常类型',
+  `abnormal_type` int(10) unsigned NOT NULL COMMENT '异常类型',
   `task_record_id` int(10) unsigned NOT NULL COMMENT '作业工序',
   `submit_user` int(10) unsigned NOT NULL COMMENT '提交异常的用户ID',
   `comment` text NOT NULL COMMENT '异常备注',
-  `solution` text NOT NULL COMMENT '解决办法',
-  `solution_user` int(10) unsigned NOT NULL COMMENT '解决问题的用户对应的ID',
+  `solution` text COMMENT '解决办法',
+  `solution_user` int(10) unsigned DEFAULT NULL COMMENT '解决问题的用户对应的ID',
   `create_time` datetime NOT NULL,
   `solve_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -70,7 +73,7 @@ CREATE TABLE `abnormal_record` (
   CONSTRAINT `fk_ar_solution_user` FOREIGN KEY (`solution_user`) REFERENCES `user` (`id`),
   CONSTRAINT `fk_ar_submit_user` FOREIGN KEY (`submit_user`) REFERENCES `user` (`id`),
   CONSTRAINT `fk_ar_task_record_id` FOREIGN KEY (`task_record_id`) REFERENCES `task_record` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of abnormal_record
@@ -225,7 +228,7 @@ CREATE TABLE `machine_order` (
   `x_distance` varchar(255) NOT NULL COMMENT 'X-行程',
   `y_distance` varchar(255) NOT NULL COMMENT 'Y-行程',
   `package_method` varchar(255) NOT NULL COMMENT '包装方式',
-  `package_remark` varchar(255) DEFAULT NULL COMMENT '包装方式的备注',
+  `package_mark` text COMMENT '包装备注',
   `equipment` text COMMENT '机器装置，json的字符串，包含装置名称、数量、单价',
   `machine_price` varchar(255) NOT NULL COMMENT '机器价格（不包括装置）',
   `contract_ship_date` date NOT NULL,
@@ -341,7 +344,7 @@ CREATE TABLE `order_detail` (
   `axle_split` varchar(255) DEFAULT NULL COMMENT '上下轴：j夹线器',
   `axle_panel` varchar(255) DEFAULT NULL COMMENT '上下轴：面板',
   `axle_needle` varchar(255) DEFAULT NULL COMMENT '上下轴：机针',
-  `axle_needle_sku` varchar(255) NOT NULL COMMENT '上下轴：机针sku',
+  `axle_needle_type` varchar(255) DEFAULT NULL COMMENT '机针类型',
   `axle_rail` varchar(255) DEFAULT NULL COMMENT '上下轴：机头中导轨',
   `axle_down_check` varchar(255) DEFAULT NULL COMMENT '上下轴：底检方式',
   `axle_hook` varchar(255) DEFAULT NULL COMMENT '上下轴：旋梭',
@@ -504,7 +507,7 @@ CREATE TABLE `role` (
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES ('1', '超级管理员', '系统后台管理', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":[],\"abnormal\":[],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":[\"/home/system/user_manage\",\"/home/system/install_group_manage\",\"/home/system/role_manage\",\"/home/system/device_manager\"]}');
+INSERT INTO `role` VALUES ('1', '超级管理员', '系统后台管理', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":[],\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":[\"/home/system/user_manage\",\"/home/system/install_group_manage\",\"/home/system/role_manage\",\"/home/system/device_manager\"]}');
 INSERT INTO `role` VALUES ('2', '生产部管理员', '主要Pad上操作，上传位置、pad上查看流程等', '{\"contract\":[\"/home/contract/sign_process\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":null,\"abnormal\":[],\"task\":null,\"system\":null}');
 INSERT INTO `role` VALUES ('3', '安装组长', '安装前后扫描机器', null);
 INSERT INTO `role` VALUES ('4', '生产部经理', '订单审批', null);

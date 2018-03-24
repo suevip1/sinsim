@@ -454,7 +454,7 @@ public class ContractController {
                 //被拆分出来的机器绑定到新的需求单
                 for ( Machine splitMachine: splitMachineList ) {
                     splitMachine.setOrderId(machineOrder.getId());
-                    splitMachine.setStatus(Constant.ORDER_SPLITED);
+                    splitMachine.setStatus(Constant.MACHINE_SPLITED);
                     splitMachine.setUpdateTime(new Date());
                     machineService.update(splitMachine);
                 }
