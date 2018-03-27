@@ -12,6 +12,7 @@ import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.service.AbnormalImageService;
 import com.eservice.api.service.AbnormalService;
 import com.eservice.api.service.UserService;
+import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.AbnormalRecordServiceImpl;
 import com.eservice.api.service.impl.MachineServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
@@ -80,9 +81,24 @@ public class AbnormalRecordController {
     }
 
     @PostMapping("/update")
+    @Transactional(rollbackFor = Exception.class)
     public Result update(String abnormalRecord) {
         AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
         abnormalRecord1.setSolveTime(new Date());
+        //修改对应工序的状态为"安装中"或者“质检中”，需要检查安装开始时间和质检开始时间，质检已开始则状态为质检中
+        AbnormalRecord completeInfo = abnormalRecordService.findById(abnormalRecord1.getId());
+        Integer taskRecordId = completeInfo.getTaskRecordId();
+        if(taskRecordId != null && taskRecordId > 0) {
+            TaskRecord tr = taskRecordService.findById(taskRecordId);
+            if(tr.getQualityBeginTime() != null) {
+                tr.setStatus(Constant.TASK_QUALITY_DOING);
+            }else {
+                tr.setStatus(Constant.TASK_INSTALLING);
+            }
+            taskRecordService.update(tr);
+        }else {
+            throw new RuntimeException();
+        }
         abnormalRecordService.update(abnormalRecord1);
         return ResultGenerator.genSuccessResult();
     }
