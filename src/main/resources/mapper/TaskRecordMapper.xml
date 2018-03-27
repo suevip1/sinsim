@@ -227,6 +227,12 @@
         </if>
         <if test="processRecordId != null and processRecordId != ''">
             DELETE FROM task_record WHERE process_record_id=#{processRecordId}
+            <if test="nodeKey != null">
+                AND node_key=#{nodeKey}
+            </if>
+            <if test="status != null">
+                AND `status`=#{status}
+            </if>
         </if>
     </delete>
 

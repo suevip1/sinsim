@@ -79,19 +79,19 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
         return taskRecordMapper.selectQATaskRecordDetailByAccountAndNamePlate(namePlate, account);
     }
 
-    public List<TaskRecordDetail> selectUnplannedTaskRecordByAccount(String account){
+    public List<TaskRecordDetail> selectUnplannedTaskRecordByAccount(String account) {
         return taskRecordMapper.selectUnplannedTaskRecordByAccount(account);
     }
 
-    public void deleteTaskRecordByCondition(Integer id, Integer processRecordId) {
-        taskRecordMapper.deleteTaskRecordByCondition(id, processRecordId);
+    public void deleteTaskRecordByCondition(Integer id, Integer processRecordId, Byte nodeKey, Byte status) {
+        taskRecordMapper.deleteTaskRecordByCondition(id, processRecordId, nodeKey, status);
     }
 
-    public List<TaskRecordDetail> selectPlanedTaskRecords(String orderNum, String machineStrId, String taskName, String nameplate, Integer installStatus, Integer machineType, String query_start_time, String query_finish_time, Boolean is_fuzzy){
-        if(is_fuzzy){
-            return taskRecordMapper.selectPlanedTaskRecordsByFuzzy(orderNum, machineStrId, taskName, nameplate,installStatus, machineType, query_start_time, query_finish_time);
-        }else {
-            return taskRecordMapper.selectPlanedTaskRecords(orderNum, machineStrId, taskName, nameplate,installStatus, machineType, query_start_time, query_finish_time);
+    public List<TaskRecordDetail> selectPlanedTaskRecords(String orderNum, String machineStrId, String taskName, String nameplate, Integer installStatus, Integer machineType, String query_start_time, String query_finish_time, Boolean is_fuzzy) {
+        if (is_fuzzy) {
+            return taskRecordMapper.selectPlanedTaskRecordsByFuzzy(orderNum, machineStrId, taskName, nameplate, installStatus, machineType, query_start_time, query_finish_time);
+        } else {
+            return taskRecordMapper.selectPlanedTaskRecords(orderNum, machineStrId, taskName, nameplate, installStatus, machineType, query_start_time, query_finish_time);
         }
     }
 }

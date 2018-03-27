@@ -12,6 +12,7 @@ import com.eservice.api.service.impl.ProcessRecordServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Resource;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -55,7 +57,7 @@ public class ProcessRecordController {
 
     @PostMapping("/update")
     public Result update(String processRecord) {
-        ProcessRecord processRecord1 = JSON.parseObject(processRecord,ProcessRecord.class);
+        ProcessRecord processRecord1 = JSON.parseObject(processRecord, ProcessRecord.class);
         processRecordService.update(processRecord1);
         return ResultGenerator.genSuccessResult();
     }
@@ -92,8 +94,8 @@ public class ProcessRecordController {
             if (prId != null && prId > 0) {
                 processRecordService.update(pr);
                 try {
-                    //删除旧的taskrecorder表中对应的任务,根据process_recorder_id删除
-                    taskRecordService.deleteTaskRecordByCondition(0, prId);
+                    //删除旧的taskrecorder表中对应的任务,根据process_recorder_id删除 status==0的
+                    taskRecordService.deleteTaskRecordByCondition(null, prId, null, (byte)0);
                 } catch (Exception e) {
                     e.printStackTrace();
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -123,7 +125,7 @@ public class ProcessRecordController {
         }
         try {
             //如果机器处于初始化状态，则设置为“已配置”
-            if(machineObj.getStatus().equals(Constant.MACHINE_INITIAL)) {
+            if (machineObj.getStatus().equals(Constant.MACHINE_INITIAL)) {
                 machineObj.setStatus(Constant.MACHINE_CONFIGURED);
             }
             if (machineObj.getId() == 0) {
