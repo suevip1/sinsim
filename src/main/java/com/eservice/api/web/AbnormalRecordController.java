@@ -151,7 +151,6 @@ public class AbnormalRecordController {
             Integer finishStatus,
             String queryStartTime,
             String queryFinishTime) {
-        //TODO:根据返回结果导出
         List<AbnormalRecordDetail> list = abnormalRecordService.selectAbnormalRecordDetailList(abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
 
         InputStream fs = null;

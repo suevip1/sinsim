@@ -335,7 +335,7 @@
         where m.nameplate = #{namePlate}
     </select>
 
-    <select id="selectTaskRecordByMachineStrId" resultMap="TaskRecordDetail">
+    <select id="selectTaskRecordByNamePlate" resultMap="TaskRecordDetail">
        select
         tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
         pr.id process_record_id_in_association, pr.*,
@@ -354,10 +354,10 @@
         join task on task.task_name = tr.task_name
         join install_group  on install_group.id = task.group_id
         join user on user.group_id = install_group.id
-        where m.machine_strid = #{machineStrId}
+        where m.nameplate = #{namePlate}
     </select>
 
-    <select id="selectTaskRecordByMachineStrIdAndAccount" resultMap="TaskRecordDetail">
+    <select id="selectTaskRecordByNamePlateAndAccount" resultMap="TaskRecordDetail">
         select
         tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
         pr.id process_record_id_in_association, pr.*,
@@ -376,12 +376,12 @@
         join task on task.task_name = tr.task_name
         join install_group  on install_group.id = task.group_id
         join user on user.group_id = install_group.id
-        where m.machine_strid = #{machineStrId}
+        where m.nameplate = #{namePlate}
         and  tr.status !=1 and tr.status !=6
         and tp.user_id = (select id from user where user.account=#{account})
     </select>
 
-    <select id="selectUnPlannedTaskRecordByMachineStrIdAndAccount" resultMap="TaskRecordDetail">
+    <select id="selectUnPlannedTaskRecordByNamePlateAndAccount" resultMap="TaskRecordDetail">
         select
         tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
         pr.id process_record_id_in_association, pr.*,
@@ -400,7 +400,7 @@
         join task on task.task_name = tr.task_name
         join install_group  on install_group.id = task.group_id
         join user on user.group_id = install_group.id
-        where m.machine_strid = #{machineStrId}
+        where m.nameplate = #{namePlate}
         and tr.status !=1 and tr.status !=6
         and m.status='1'
         and tp.user_id = (select id from user where user.account=#{account})
@@ -428,7 +428,7 @@
 
         where m.status='1' and user.account=#{account};
     </select>
-    <select id="selectQATaskRecordDetailByAccountAndMachineStrID" resultMap="TaskRecordDetail">
+    <select id="selectQATaskRecordDetailByAccountAndNamePlate" resultMap="TaskRecordDetail">
         select
         tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
         pr.id process_record_id_in_association, pr.*,
@@ -444,7 +444,7 @@
         join task on task.task_name = tr.task_name
         join user on user.id = task.quality_user_id
         where user.account = #{account}
-        and m.machine_strid = #{machineStrId}
+        and m.nameplate = #{namePlate}
       -- 4:安装完成，5:质检中， 8:质检异常
         and (tr.status=4 or tr.status = 5 or tr.status=8);
     </select>

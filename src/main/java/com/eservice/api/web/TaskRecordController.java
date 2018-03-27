@@ -306,44 +306,44 @@ public class TaskRecordController {
     }
 
     /**
-     * 根据机器的系统编号（machine_strid）查询对应的机器正在操作的taskRecordDetail(全部状态)。
+     * 根据机器的铭牌号（nameplate）查询对应的机器正在操作的taskRecordDetail(全部状态)。
      *
      * @param page
      * @param size
-     * @param machineStrId
+     * @param namePlate
      * @return
      */
-    @PostMapping("/selectTaskRecordByMachineStrId")
-    public Result selectTaskRecordByMachineStrId(
+    @PostMapping("/selectTaskRecordByNamePlate")
+    public Result selectTaskRecordByNamePlate(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "0") Integer size,
-            @RequestParam(defaultValue = "0") String machineStrId
+            @RequestParam(defaultValue = "0") String namePlate
     ) {
         PageHelper.startPage(page, size);
-        List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineStrId(machineStrId);
+        List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByNamePlate(namePlate);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
     /**
-     * 根据account和机器的系统编号（machine_strid），
+     * 根据account和机器的铭牌号（nameplate），
      * 返回对应机器正在操作的步骤（除去status为初始化、已计划和质检完成的task_record），且属于该account的排班计划。
      *
      * @param page
      * @param size
-     * @param machineStrId
+     * @param namePlate
      * @param account
      * @return
      */
-    @PostMapping("/selectTaskRecordByMachineStrIdAndAccount")
-    public Result selectTaskRecordByMachineStrIdAndAccount(
+    @PostMapping("/selectTaskRecordByNamePlateAndAccount")
+    public Result selectTaskRecordByNamePlateAndAccount(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "0") Integer size,
-            @RequestParam(defaultValue = "0") String machineStrId,
+            @RequestParam(defaultValue = "0") String namePlate,
             @RequestParam(defaultValue = "0") String account
     ) {
         PageHelper.startPage(page, size);
-        List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineStrIdAndAccount(machineStrId, account);
+        List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByNamePlateAndAccount(namePlate, account);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
@@ -353,19 +353,19 @@ public class TaskRecordController {
      *
      * @param page
      * @param size
-     * @param machineStrId
+     * @param namePlate
      * @param account
      * @return
      */
-    @PostMapping("/selectUnPlannedTaskRecordByMachineStrIdAndAccount")
-    public Result selectUnPlannedTaskRecordByMachineStrIdAndAccount(
+    @PostMapping("/selectUnPlannedTaskRecordByNamePlateAndAccount")
+    public Result selectUnPlannedTaskRecordByNamePlateAndAccount(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "0") Integer size,
-            @RequestParam(defaultValue = "0") String machineStrId,
+            @RequestParam(defaultValue = "0") String namePlate,
             @RequestParam(defaultValue = "0") String account
     ) {
         PageHelper.startPage(page, size);
-        List<TaskRecordDetail> list = taskRecordService.selectUnPlannedTaskRecordByMachineStrIdAndAccount(machineStrId, account);
+        List<TaskRecordDetail> list = taskRecordService.selectUnPlannedTaskRecordByNamePlateAndAccount(namePlate, account);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
@@ -391,23 +391,23 @@ public class TaskRecordController {
     }
 
     /**
-     * 返回满足user+machine_strId且处于安装完成待质检和质检异常状态的质检任务
+     * 返回满足user+nameplate 且处于安装完成待质检和质检异常状态的质检任务
      *
      * @param page
      * @param size
-     * @param machineStrId
+     * @param namePlate
      * @param account
      * @return
      */
-    @PostMapping("selectQATaskRecordDetailByAccountAndMachineStrID")
-    public Result selectQATaskRecordDetailByAccountAndMachineStrID(
+    @PostMapping("selectQATaskRecordDetailByAccountAndNamePlate")
+    public Result selectQATaskRecordDetailByAccountAndNamePlate(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "0") Integer size,
-            @RequestParam(defaultValue = "0") String machineStrId,
+            @RequestParam(defaultValue = "0") String namePlate,
             @RequestParam(defaultValue = "0") String account
     ) {
         PageHelper.startPage(page, size);
-        List<TaskRecordDetail> list = taskRecordService.selectQATaskRecordDetailByAccountAndMachineStrID(machineStrId, account);
+        List<TaskRecordDetail> list = taskRecordService.selectQATaskRecordDetailByAccountAndNamePlate(namePlate, account);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

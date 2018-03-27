@@ -64,19 +64,19 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
         return taskRecordMapper.selectTaskRecordByMachineNameplate(namePlate);
     }
 
-    public List<TaskRecordDetail> selectTaskRecordByMachineStrId(String machineStrId){
-        return taskRecordMapper.selectTaskRecordByMachineStrId(machineStrId);
+    public List<TaskRecordDetail> selectTaskRecordByNamePlate(String namePlate){
+        return taskRecordMapper.selectTaskRecordByNamePlate(namePlate);
     }
 
-    public List<TaskRecordDetail> selectTaskRecordByMachineStrIdAndAccount(String machineStrId, String account){
-        return taskRecordMapper.selectTaskRecordByMachineStrIdAndAccount(machineStrId, account);
+    public List<TaskRecordDetail> selectTaskRecordByNamePlateAndAccount(String namePlate, String account){
+        return taskRecordMapper.selectTaskRecordByNamePlateAndAccount(namePlate, account);
     }
-    public List<TaskRecordDetail> selectUnPlannedTaskRecordByMachineStrIdAndAccount(String machineStrId, String account){
-        return taskRecordMapper.selectUnPlannedTaskRecordByMachineStrIdAndAccount(machineStrId, account);
+    public List<TaskRecordDetail> selectUnPlannedTaskRecordByNamePlateAndAccount(String namePlate, String account){
+        return taskRecordMapper.selectUnPlannedTaskRecordByNamePlateAndAccount(namePlate, account);
     }
 
-    public List<TaskRecordDetail> selectQATaskRecordDetailByAccountAndMachineStrID(String machineStrId, String account){
-        return taskRecordMapper.selectQATaskRecordDetailByAccountAndMachineStrID(machineStrId, account);
+    public List<TaskRecordDetail> selectQATaskRecordDetailByAccountAndNamePlate(String namePlate, String account){
+        return taskRecordMapper.selectQATaskRecordDetailByAccountAndNamePlate(namePlate, account);
     }
 
     public List<TaskRecordDetail> selectUnplannedTaskRecordByAccount(String account){

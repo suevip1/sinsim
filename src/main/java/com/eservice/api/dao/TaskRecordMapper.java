@@ -18,12 +18,12 @@ public interface TaskRecordMapper extends Mapper<TaskRecord> {
     List<TaskRecord> selectNotPlanedTaskRecord(@Param("process_record_id")Integer processRecordId);
 	List<TaskRecord> getTaskRecordData(@Param("id") Integer id, @Param("processRecordId") Integer processRecordId);
     List<TaskRecordDetail> selectTaskRecordByMachineNameplate(@Param("namePlate") String namePlate);
-    List<TaskRecordDetail> selectTaskRecordByMachineStrId(@Param("machineStrId") String machineStrId);
-    List<TaskRecordDetail> selectTaskRecordByMachineStrIdAndAccount(@Param("machineStrId") String machineStrId,
+    List<TaskRecordDetail> selectTaskRecordByNamePlate(@Param("namePlate") String namePlate);
+    List<TaskRecordDetail> selectTaskRecordByNamePlateAndAccount(@Param("namePlate") String namePlate,
                                                                     @Param("account") String account);
-    List<TaskRecordDetail> selectUnPlannedTaskRecordByMachineStrIdAndAccount(@Param("machineStrId") String machineStrId,
+    List<TaskRecordDetail> selectUnPlannedTaskRecordByNamePlateAndAccount(@Param("namePlate") String namePlate,
                                                                              @Param("account") String account);
-    List<TaskRecordDetail> selectQATaskRecordDetailByAccountAndMachineStrID(@Param("machineStrId") String machineStrId,
+    List<TaskRecordDetail> selectQATaskRecordDetailByAccountAndNamePlate(@Param("namePlate") String namePlate,
                                                                       @Param("account") String account);
     List<TaskRecordDetail> selectUnplannedTaskRecordByAccount(@Param("account") String account);
     int deleteTaskRecordByCondition(@Param("id") Integer id, @Param("processRecordId") Integer processRecordId);
