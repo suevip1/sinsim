@@ -3,32 +3,37 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
-import com.eservice.api.model.machine.Machine;
-import com.eservice.api.model.order_loading_list.OrderLoadingList;
 import com.eservice.api.model.process_record.ProcessRecord;
 import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
-import com.eservice.api.model.user.User;
+import com.eservice.api.service.UserService;
 import com.eservice.api.service.common.CommonService;
-import com.eservice.api.service.common.Constant;
-import com.eservice.api.service.common.Utils;
 import com.eservice.api.service.impl.MachineServiceImpl;
 import com.eservice.api.service.impl.ProcessRecordServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
-import com.eservice.api.service.impl.UserServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.eservice.api.service.common.NodeDataModel;
 
 import javax.annotation.Resource;
-import java.util.Date;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +53,15 @@ public class TaskRecordController {
     private ProcessRecordServiceImpl processRecordService;
     @Resource
     private CommonService commonService;
+    /**
+     * 导出计划的excel表格，和合同excel表格放同个地方
+     */
+    @Value("${contract_excel_output_dir}")
+    private String abnoramlExcelOutputDir;
+    @Resource
+    private UserService userService;
+    @Resource
+    private MachineServiceImpl machineService;
 
     @PostMapping("/add")
     public Result add(String taskRecord) {
@@ -225,6 +239,123 @@ public class TaskRecordController {
         List<TaskRecordDetail> list = taskRecordService.selectPlanedTaskRecords(orderNum, machineStrId, taskName, nameplate, installStatus, machineType, query_start_time, query_finish_time, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     * 导出计划到excel表格
+     * @param page
+     * @param size
+     * @param orderNum
+     * @param machineStrId
+     * @param taskName
+     * @param nameplate
+     * @param installStatus
+     * @param machineType
+     * @param query_start_time
+     * @param query_finish_time
+     * @param is_fuzzy
+     * @return
+     */
+    @PostMapping("/export")
+    public Result export(@RequestParam(defaultValue = "0") Integer page,
+                                          @RequestParam(defaultValue = "0") Integer size,
+                                          String orderNum,
+                                          String machineStrId,
+                                          String taskName,
+                                          String nameplate,
+                                          Integer installStatus,
+                                          Integer machineType,
+                                          String query_start_time,
+                                          String query_finish_time,
+                                          @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
+
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> list = taskRecordService.selectPlanedTaskRecords(orderNum, machineStrId, taskName, nameplate, installStatus, machineType, query_start_time, query_finish_time, is_fuzzy);
+        PageInfo pageInfo = new PageInfo(list);
+
+        InputStream fs = null;
+        POIFSFileSystem pfs = null;
+        HSSFWorkbook wb = null;
+        FileOutputStream out = null;
+        String downloadPath = "";
+        /*
+        返回给docker外部下载
+         */
+        String downloadPathForNginx = "";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        String dateString;
+        try {
+            //生成一个空的Excel文件
+            wb=new HSSFWorkbook();
+            Sheet sheet1=wb.createSheet("sheet1");
+
+            //设置标题行格式
+            HSSFCellStyle headcellstyle = wb.createCellStyle();
+            HSSFFont headfont = wb.createFont();
+            headfont.setFontHeightInPoints((short) 10);
+            headfont.setBold(true);//粗体显示
+            headcellstyle.setFont(headfont);
+            Row row;
+            //创建行和列
+            for(int r=0;r<list.size() + 1; r++ ) {
+                row = sheet1.createRow(r);//新创建一行，行号为row+1
+                //序号，需求单号，机器编号，机型，工序，状态，安装的开始时间，安装的结束时间，质检的开始时间，质检的结束时间
+                //计划完成时间，合同交货日期，计划交货日期
+                for(int c=0; c< 13; c++){
+                    row.createCell(c);//创建一个单元格，列号为col+1
+                    sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
+                }
+            }
+            sheet1.setColumnWidth(1,5000);
+            sheet1.setColumnWidth(2,5000);
+            sheet1.setColumnWidth(5,4000);
+            sheet1.setColumnWidth(6,4000);
+            //第一行为标题
+            sheet1.getRow(0).getCell(0).setCellValue("序号");
+            sheet1.getRow(0).getCell(1).setCellValue("需求单号");
+            sheet1.getRow(0).getCell(2).setCellValue("机器编号");
+            sheet1.getRow(0).getCell(3).setCellValue("机型");
+            sheet1.getRow(0).getCell(4).setCellValue("工序");
+            sheet1.getRow(0).getCell(5).setCellValue("状态");
+            sheet1.getRow(0).getCell(6).setCellValue("安装的开始时间");
+            sheet1.getRow(0).getCell(7).setCellValue("安装的结束时间");
+            sheet1.getRow(0).getCell(8).setCellValue("质检的开始时间");
+            sheet1.getRow(0).getCell(9).setCellValue("质检的结束时间");
+            sheet1.getRow(0).getCell(10).setCellValue("计划完成时间");
+            sheet1.getRow(0).getCell(11).setCellValue("合同交货日期");
+            sheet1.getRow(0).getCell(12).setCellValue("计划交货日期");
+
+
+            //第二行开始，填入值
+            for(int r=0; r<list.size(); r++ ) {
+                row = sheet1.getRow(r + 1);
+                row.getCell(0).setCellValue(r + 1);
+
+                row.getCell(1).setCellValue(list.get(r).getMachineOrder().getOrderNum());
+                row.getCell(2).setCellValue(list.get(r).getMachine().getNameplate());
+                int machineTypeID = list.get(r).getMachine().getMachineType();
+
+				//TODO ...
+
+            }
+            downloadPath = abnoramlExcelOutputDir + "导出计划" + ".xls";
+            downloadPathForNginx = "/excel/" + ".xls";
+            out = new FileOutputStream(downloadPath);
+            wb.write(out);
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if("".equals(downloadPath)) {
+            return ResultGenerator.genFailResult("异常导出失败!");
+        }else {
+            return ResultGenerator.genSuccessResult(downloadPathForNginx);
+        }
+
     }
 
     @PostMapping("/getTaskRecordData")

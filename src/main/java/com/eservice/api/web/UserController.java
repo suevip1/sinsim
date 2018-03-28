@@ -170,5 +170,19 @@ public class UserController {
         return ResultGenerator.genSuccessResult(user);
     }
 
+    /**
+     * 根据user的id号，获得该用户所在的install_group的所有在职安装工.
+     * @param id
+     * @return
+     */
+    @PostMapping("/selectAllInstallGroupByUserId")
+    public Result selectAllInstallGroupByUserId(@RequestParam(defaultValue = "0") Integer page,
+                                                @RequestParam(defaultValue = "0") Integer size,
+                                                @RequestParam Integer id) {
+        PageHelper.startPage(page, size);
+        List<UserDetail> list = userService.selectAllInstallGroupByUserId(id);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 
 }

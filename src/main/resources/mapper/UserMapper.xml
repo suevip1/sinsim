@@ -74,4 +74,12 @@
     <select id="selectByAccount" resultMap="BaseResultMap">
          select * from user  where account=#{account}
     </select>
+
+    <select id="selectAllInstallGroupByUserId" resultMap="UserDetailMap">
+        select u.*, r.id role_id, r.role_des, r.role_name, ig.id install_group_id, ig.group_name
+        from user u
+        join install_group ig on u.group_id=ig.id
+        join role r on r.id = u.role_id
+        where group_id=(select group_id from user where user.id=#{id}) and u.valid='1'
+    </select>
 </mapper>

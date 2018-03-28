@@ -15,4 +15,5 @@ public interface UserMapper extends Mapper<User> {
     List<UserDetail> selectUsers( @Param("account")String account, @Param("name")String name, @Param("roleId")Integer roleId,
                                   @Param("groupId")Integer groupId, @Param("valid")Integer valid);
     User selectByAccount(@Param("account") String account);
+    List<UserDetail> selectAllInstallGroupByUserId(@Param("id") Integer id);
 }

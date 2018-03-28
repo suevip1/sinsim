@@ -38,4 +38,8 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     public User selectByAccount(String account){
         return userMapper.selectByAccount(account);
     }
+
+    public List<UserDetail> selectAllInstallGroupByUserId(Integer id){
+        return userMapper.selectAllInstallGroupByUserId(id);
+    }
 }
