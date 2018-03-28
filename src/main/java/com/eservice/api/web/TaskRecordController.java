@@ -32,14 +32,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,6 +61,8 @@ public class TaskRecordController {
     private AbnormalImageServiceImpl abnormalImageService;
     @Resource
     private AbnormalRecordServiceImpl abnormalRecordService;
+    @Value("${abnormal_images_saved_dir}")
+    private String imagesSavedDir;
     /**
      * 导出计划的excel表格，和合同excel表格放同个地方
      */
@@ -255,7 +255,6 @@ public class TaskRecordController {
 
     /**
      * 导出计划到excel表格
-     * @param size
      * @param orderNum
      * @param machineStrId
      * @param taskName
@@ -635,19 +634,43 @@ public class TaskRecordController {
      * task_record, abnormal_record, abnormal_image  3个表一起更新。
      * app端，在安装异常时需要更新task_record(update)，增加 abnormal_record(add), abnormal_image (add)
      */
-    @PostMapping("/addTrArAi")//TODO ...
-    public Result addTrArAi(String taskRecord, String abnormalRecord, String abnormalImage) {
+    @PostMapping("/addTrArAi")
+    public Result addTrArAi(@RequestParam String taskRecord,
+                            @RequestParam String abnormalRecord,
+                            @RequestParam String abnormalImage,
+                            @RequestParam MultipartFile[] files) {
+
         //task_record(update)
         TaskRecord taskRecord1 = JSON.parseObject(taskRecord, TaskRecord.class);
         taskRecordService.update(taskRecord1);
 
-        //abnormal_record add
+        //abnormal_record add:
         AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
         abnormalRecordService.save(abnormalRecord1);
 
-        //abnormal_image add
-
+        //abnormal_image add:
+        AbnormalImage abnormalImage1 = JSON.parseObject(abnormalImage,AbnormalImage.class);
+        Integer abnormalRecordId = abnormalImage1.getAbnormalRecordId();
+        File dir = new File(imagesSavedDir);
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+        String machineID = machineService.searchMachineByAbnormalRecordId(abnormalRecordId).getMachineStrId();
+        if (machineID == null){
+            return ResultGenerator.genFailResult("Error: no machine found by the abnormalRecordId, no records saved");
+        }
+        List<String> listResultPath = new ArrayList<>() ;
+        for(int i=0; i<files.length; i++) {
+            listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.ABNORMAL_IMAGE));
+        }
+        if (listResultPath == null){
+            return ResultGenerator.genFailResult("failed to save file, no records saved");
+        } else {
+            abnormalImage1.setImage(listResultPath.toString());
+            abnormalImageService.save(abnormalImage1);
+        }
 
         return ResultGenerator.genSuccessResult();
     }
+
 }
