@@ -140,6 +140,7 @@ public class AbnormalRecordController {
     @PostMapping("/selectAbnormalRecordDetailList")
     public Result selectAbnormalRecordDetailList(@RequestParam(defaultValue = "0") Integer page,
                                                  @RequestParam(defaultValue = "0") Integer size,
+                                                 String nameplate,
                                                  Integer abnormalType,
                                                  String taskName,
                                                  Integer submitUser,
@@ -148,7 +149,7 @@ public class AbnormalRecordController {
                                                  String queryStartTime,
                                                  String queryFinishTime) {
         PageHelper.startPage(page, size);
-        List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetailList(abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+        List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetailList(nameplate, abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
         PageInfo pageInfo = new PageInfo(abnormalRecordDetailList);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
@@ -160,6 +161,7 @@ public class AbnormalRecordController {
      */
     @PostMapping("/export")
     public Result export(
+            String nameplate,
             Integer abnormalType,
             String taskName,
             Integer submitUser,
@@ -167,7 +169,7 @@ public class AbnormalRecordController {
             Integer finishStatus,
             String queryStartTime,
             String queryFinishTime) {
-        List<AbnormalRecordDetail> list = abnormalRecordService.selectAbnormalRecordDetailList(abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+        List<AbnormalRecordDetail> list = abnormalRecordService.selectAbnormalRecordDetailList(nameplate, abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
 
         InputStream fs = null;
         POIFSFileSystem pfs = null;
@@ -196,39 +198,47 @@ public class AbnormalRecordController {
             for(int r=0;r<list.size() + 1; r++ ) {
                 row = sheet1.createRow(r);//新创建一行，行号为row+1
                 //序号，异常类型，工序，提交者，解决者，创建时间，解决时间
-                for(int c=0; c< 7; c++){
+                for(int c=0; c< 9; c++){
                     row.createCell(c);//创建一个单元格，列号为col+1
                     sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
                 }
             }
-            sheet1.setColumnWidth(1,5000);
-            sheet1.setColumnWidth(2,5000);
+            sheet1.setColumnWidth(0,2000);
+            sheet1.setColumnWidth(1,4000);
+            sheet1.setColumnWidth(2,4000);
+            sheet1.setColumnWidth(3,4000);
+            sheet1.setColumnWidth(4,4000);
             sheet1.setColumnWidth(5,4000);
-            sheet1.setColumnWidth(6,4000);
+            sheet1.setColumnWidth(6,10000);
+            sheet1.setColumnWidth(7,4000);
+            sheet1.setColumnWidth(8,4000);
             //第一行为标题
-            sheet1.getRow(0).getCell(0).setCellValue("No");
-            sheet1.getRow(0).getCell(1).setCellValue("异常类型");
-            sheet1.getRow(0).getCell(2).setCellValue("工序");
-            sheet1.getRow(0).getCell(3).setCellValue("提交者");
-            sheet1.getRow(0).getCell(4).setCellValue("解决者");
-            sheet1.getRow(0).getCell(5).setCellValue("创建时间");
-            sheet1.getRow(0).getCell(6).setCellValue("解决时间");
+            sheet1.getRow(0).getCell(0).setCellValue("序号");
+            sheet1.getRow(0).getCell(1).setCellValue("机器编号");
+            sheet1.getRow(0).getCell(2).setCellValue("异常类型");
+            sheet1.getRow(0).getCell(3).setCellValue("工序");
+            sheet1.getRow(0).getCell(4).setCellValue("提交者");
+            sheet1.getRow(0).getCell(5).setCellValue("解决者");
+            sheet1.getRow(0).getCell(6).setCellValue("解决方法");
+            sheet1.getRow(0).getCell(7).setCellValue("创建时间");
+            sheet1.getRow(0).getCell(8).setCellValue("解决时间");
 
             //第二行开始，填入值
             for(int r=0; r<list.size(); r++ ) {
                 row = sheet1.getRow(r + 1);
                 row.getCell(0).setCellValue(r + 1);
-
-                row.getCell(1).setCellValue(list.get(r).getAbnormal().getAbnormalName());
-                row.getCell(2).setCellValue(list.get(r).getTaskRecord().getTaskName());
+                row.getCell(1).setCellValue(list.get(r).getMachine().getNameplate());
+                row.getCell(2).setCellValue(list.get(r).getAbnormal().getAbnormalName());
+                row.getCell(3).setCellValue(list.get(r).getTaskRecord().getTaskName());
                 int userID = list.get(r).getSubmitUser();
-                row.getCell(3).setCellValue(userService.findById(userID).getName());
-                userID =  list.get(r).getSolutionUser();
                 row.getCell(4).setCellValue(userService.findById(userID).getName());
+                userID =  list.get(r).getSolutionUser();
+                row.getCell(5).setCellValue(userService.findById(userID).getName());
+                row.getCell(6).setCellValue(list.get(r).getSolution());
                 dateString= formatter.format(list.get(r).getCreateTime());
-                row.getCell(5).setCellValue(dateString);
+                row.getCell(7).setCellValue(dateString);
                 dateString = formatter.format(list.get(r).getSolveTime());
-                row.getCell(6).setCellValue(dateString);
+                row.getCell(8).setCellValue(dateString);
 
             }
             downloadPath = abnoramlExcelOutputDir + "异常统计" + ".xls";
