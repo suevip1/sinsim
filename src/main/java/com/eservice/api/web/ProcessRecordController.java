@@ -125,13 +125,13 @@ public class ProcessRecordController {
         }
         try {
             //如果机器处于初始化状态，则设置为“已配置”
-            if (machineObj.getStatus().equals(Constant.MACHINE_INITIAL)) {
+            if (machineObj.getStatus().equals(Constant.MACHINE_INITIAL)) {//如果已经是其他状态，则不需要更改机器状态
                 machineObj.setStatus(Constant.MACHINE_CONFIGURED);
+                if (machineObj.getId() == 0) {
+                    return ResultGenerator.genFailResult("机器Id为空，数据更新失败");
+                }
+                machineService.update(machineObj);
             }
-            if (machineObj.getId() == 0) {
-                return ResultGenerator.genFailResult("机器Id为空，数据更新失败");
-            }
-            machineService.update(machineObj);
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

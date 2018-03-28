@@ -31,14 +31,14 @@ public class NodeDataModel {
     //</editor-fold>
 
     //<editor-fold desc="获取或设置字段task_status,工序的完成状态">
-    private String task_status;
+    private String taskStatus;
 
     public String getTaskStatus() {
-        return task_status;
+        return taskStatus;
     }
 
     public void setTaskStatus(String status) {
-        this.task_status = status;
+        this.taskStatus = status;
     }
     //</editor-fold>
 
@@ -67,26 +67,26 @@ public class NodeDataModel {
     //</editor-fold>
 
     //<editor-fold desc="获取或设置字段begin_time,工序的开始时间">
-    private String begin_time;
+    private String beginTime;
 
     public String getBeginTime() {
-        return begin_time;
+        return beginTime;
     }
 
     public void setBeginTime(String beginTime) {
-        this.begin_time = beginTime;
+        this.beginTime = beginTime;
     }
     //</editor-fold>
 
     //<editor-fold desc="获取或设置字段end_time,工序的结束时间">
-    private String end_time;
+    private String endTime;
 
     public String getEndTime() {
-        return end_time;
+        return endTime;
     }
 
     public void setEndTime(String endTime) {
-        this.end_time = endTime;
+        this.endTime = endTime;
     }
     //</editor-fold>
 
@@ -103,14 +103,14 @@ public class NodeDataModel {
     //</editor-fold>
 
     //<editor-fold desc="获取或设置字段work_list,工序的实施人员">
-    private String work_list;
+    private String workList;
 
     public String getWorkList() {
-        return work_list;
+        return workList;
     }
 
     public void setWorkList(String workList) {
-        this.work_list = workList;
+        this.workList = workList;
     }
     //</editor-fold>
 
