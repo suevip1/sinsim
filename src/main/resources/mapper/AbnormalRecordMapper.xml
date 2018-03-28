@@ -95,6 +95,9 @@
     JOIN process_record pr on pr.id = tr.process_record_id
     JOIN machine m on m.id = pr.machine_id
     where 1 = 1
+    <if test="nameplate != null and nameplate != ''">
+      and m.nameplate like CONCAT('%','${nameplate}','%' )
+    </if>
     <if test="abnormal_type != null and abnormal_type != ''">
       and ar.abnormal_type = #{abnormal_type}
     </if>
