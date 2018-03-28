@@ -3,15 +3,20 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.abnormal_image.AbnormalImage;
+import com.eservice.api.model.abnormal_record.AbnormalRecord;
+import com.eservice.api.model.machine.Machine;
+import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.process_record.ProcessRecord;
 import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
+import com.eservice.api.service.MachineTypeService;
 import com.eservice.api.service.UserService;
 import com.eservice.api.service.common.CommonService;
-import com.eservice.api.service.impl.MachineServiceImpl;
-import com.eservice.api.service.impl.ProcessRecordServiceImpl;
-import com.eservice.api.service.impl.TaskRecordServiceImpl;
+import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -34,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,6 +59,10 @@ public class TaskRecordController {
     private ProcessRecordServiceImpl processRecordService;
     @Resource
     private CommonService commonService;
+    @Resource
+    private AbnormalImageServiceImpl abnormalImageService;
+    @Resource
+    private AbnormalRecordServiceImpl abnormalRecordService;
     /**
      * 导出计划的excel表格，和合同excel表格放同个地方
      */
@@ -62,6 +72,8 @@ public class TaskRecordController {
     private UserService userService;
     @Resource
     private MachineServiceImpl machineService;
+    @Resource
+    private MachineTypeService machineTypeService;
 
     @PostMapping("/add")
     public Result add(String taskRecord) {
@@ -243,7 +255,6 @@ public class TaskRecordController {
 
     /**
      * 导出计划到excel表格
-     * @param page
      * @param size
      * @param orderNum
      * @param machineStrId
@@ -257,9 +268,7 @@ public class TaskRecordController {
      * @return
      */
     @PostMapping("/export")
-    public Result export(@RequestParam(defaultValue = "0") Integer page,
-                                          @RequestParam(defaultValue = "0") Integer size,
-                                          String orderNum,
+    public Result export(                 String orderNum,
                                           String machineStrId,
                                           String taskName,
                                           String nameplate,
@@ -269,7 +278,6 @@ public class TaskRecordController {
                                           String query_finish_time,
                                           @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
 
-        PageHelper.startPage(page, size);
         List<TaskRecordDetail> list = taskRecordService.selectPlanedTaskRecords(orderNum, machineStrId, taskName, nameplate, installStatus, machineType, query_start_time, query_finish_time, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
 
@@ -306,10 +314,10 @@ public class TaskRecordController {
                     sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
                 }
             }
-            sheet1.setColumnWidth(1,5000);
-            sheet1.setColumnWidth(2,5000);
-            sheet1.setColumnWidth(5,4000);
-            sheet1.setColumnWidth(6,4000);
+            for(int k=1; k<13; k++){
+                sheet1.setColumnWidth(k,4500);
+            }
+
             //第一行为标题
             sheet1.getRow(0).getCell(0).setCellValue("序号");
             sheet1.getRow(0).getCell(1).setCellValue("需求单号");
@@ -325,18 +333,98 @@ public class TaskRecordController {
             sheet1.getRow(0).getCell(11).setCellValue("合同交货日期");
             sheet1.getRow(0).getCell(12).setCellValue("计划交货日期");
 
-
             //第二行开始，填入值
+            Machine machine = null;
+            MachineOrder machineOrder = null;
+            MachineType machineType1 = null;
+            Byte taskStatus = 0;
             for(int r=0; r<list.size(); r++ ) {
                 row = sheet1.getRow(r + 1);
                 row.getCell(0).setCellValue(r + 1);
 
-                row.getCell(1).setCellValue(list.get(r).getMachineOrder().getOrderNum());
-                row.getCell(2).setCellValue(list.get(r).getMachine().getNameplate());
+                //需求单号
+                if(list.get(r).getMachineOrder().getOrderNum() != null ) {
+                    row.getCell(1).setCellValue(list.get(r).getMachineOrder().getOrderNum());
+                }
+                //机器编号
+                if(list.get(r).getMachine().getNameplate() != null ) {
+                    row.getCell(2).setCellValue(list.get(r).getMachine().getNameplate());
+                }
                 int machineTypeID = list.get(r).getMachine().getMachineType();
 
-				//TODO ...
 
+                machine = machineService.selectMachinesByNameplate(list.get(r).getMachine().getNameplate());
+
+                /**
+                 * 获取机型类型的名称 machine_type.name
+                 */
+                machineType1 = machineTypeService.findById(machineTypeID);
+                if(machineType1 != null) {
+                    row.getCell(3).setCellValue(machineType1.getName()); //机型
+                }
+                // 工序
+                if(list.get(r).getTaskName() != null ) {
+                    row.getCell(4).setCellValue(list.get(r).getTaskName());
+                }
+                //状态
+                taskStatus = list.get(r).getStatus();
+                if(taskStatus == Constant.TASK_INITIAL) {
+                    row.getCell(5).setCellValue(Constant.STR_TASK_INITIAL);
+                } else if(taskStatus == Constant.TASK_PLANED) {
+                    row.getCell(5).setCellValue(Constant.STR_TASK_PLANED);
+                } else if(taskStatus == Constant.TASK_INSTALL_WAITING) {
+                    row.getCell(5).setCellValue(Constant.STR_TASK_INSTALL_WAITING);
+                } else if(taskStatus == Constant.TASK_INSTALLING) {
+                    row.getCell(5).setCellValue(Constant.STR_TASK_INSTALLING);
+                } else if(taskStatus == Constant.TASK_INSTALLED) {
+                    row.getCell(5).setCellValue(Constant.STR_TASK_INSTALLED);
+                } else if(taskStatus == Constant.TASK_QUALITY_DOING) {
+                    row.getCell(5).setCellValue(Constant.STR_TASK_QUALITY_DOING);
+                } else if(taskStatus == Constant.TASK_QUALITY_DONE) {
+                    row.getCell(5).setCellValue(Constant.STR_TASK_QUALITY_DONE);
+                } else if(taskStatus == Constant.TASK_INSTALL_ABNORMAL) {
+                    row.getCell(5).setCellValue(Constant.STR_TASK_INSTALL_ABNORMAL);
+                } else if(taskStatus == Constant.TASK_QUALITY_ABNORMAL) {
+                    row.getCell(5).setCellValue(Constant.STR_TASK_QUALITY_ABNORMAL);
+                } else if(taskStatus == Constant.TASK_SKIP) {
+                    row.getCell(5).setCellValue(Constant.STR_TASK_SKIP);
+                }
+
+                // 安装的开始时间
+                if( list.get(r).getInstallBeginTime() != null) {
+                    dateString = formatter.format(list.get(r).getInstallBeginTime());
+                    row.getCell(6).setCellValue(dateString);
+                }
+                // 安装的结束时间
+                if( list.get(r).getInstallEndTime() != null) {
+                    dateString = formatter.format(list.get(r).getInstallEndTime());
+                    row.getCell(7).setCellValue(dateString);
+                }
+                // 质检的开始时间
+                if( list.get(r).getQualityBeginTime()  != null) {
+                    dateString = formatter.format(list.get(r).getQualityBeginTime());
+                    row.getCell(8).setCellValue(dateString);
+                }
+                // 质检的结束时间
+                if( list.get(r).getQualityEndTime() != null) {
+                    dateString = formatter.format(list.get(r).getQualityEndTime());
+                    row.getCell(9).setCellValue(dateString);
+                }
+                //计划完成时间
+                if( list.get(r).getTaskPlan().getPlanTime() != null) {
+                    dateString = formatter.format(list.get(r).getTaskPlan().getPlanTime());
+                    row.getCell(10).setCellValue(dateString);
+                }
+                //合同交货日期
+                if( list.get(r).getMachineOrder().getContractShipDate()!= null) {
+                    dateString = formatter.format(list.get(r).getMachineOrder().getContractShipDate());
+                    row.getCell(11).setCellValue(dateString);
+                }
+                //计划交货日期
+                if( list.get(r).getMachineOrder().getPlanShipDate()!= null) {
+                    dateString = formatter.format(list.get(r).getMachineOrder().getPlanShipDate());
+                    row.getCell(12).setCellValue(dateString);
+                }
             }
             downloadPath = abnoramlExcelOutputDir + "导出计划" + ".xls";
             downloadPathForNginx = "/excel/" + ".xls";
@@ -541,5 +629,25 @@ public class TaskRecordController {
         List<TaskRecordDetail> list = taskRecordService.selectQATaskRecordDetailByAccountAndNamePlate(namePlate, account);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     * task_record, abnormal_record, abnormal_image  3个表一起更新。
+     * app端，在安装异常时需要更新task_record(update)，增加 abnormal_record(add), abnormal_image (add)
+     */
+    @PostMapping("/addTrArAi")//TODO ...
+    public Result addTrArAi(String taskRecord, String abnormalRecord, String abnormalImage) {
+        //task_record(update)
+        TaskRecord taskRecord1 = JSON.parseObject(taskRecord, TaskRecord.class);
+        taskRecordService.update(taskRecord1);
+
+        //abnormal_record add
+        AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
+        abnormalRecordService.save(abnormalRecord1);
+
+        //abnormal_image add
+
+
+        return ResultGenerator.genSuccessResult();
     }
 }

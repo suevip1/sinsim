@@ -129,6 +129,19 @@ public class Constant {
     public static final Byte TASK_QUALITY_ABNORMAL = 8;
     public static final Byte TASK_SKIP = 9;
 
+    public static final String STR_TASK_INITIAL = "初始化";
+    public static final String STR_TASK_PLANED = "已计划";
+    public static final String STR_TASK_INSTALL_WAITING = "待安装";
+    public static final String STR_TASK_INSTALLING = "开始安装";
+    public static final String STR_TASK_INSTALLED = "安装完成";
+    public static final String STR_TASK_QUALITY_DOING = "质检中";
+    public static final String STR_TASK_QUALITY_DONE = "质检完成";
+    public static final String STR_TASK_INSTALL_ABNORMAL = "安装异常";
+    public static final String STR_TASK_QUALITY_ABNORMAL = "质检异常";
+    public static final String STR_TASK_SKIP = "已跳过";
+
+
+
     /**
      * 保存文件的类型
      * "0" --> 异常

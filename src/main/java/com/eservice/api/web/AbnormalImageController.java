@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,13 +40,14 @@ public class AbnormalImageController {
     private String imagesSavedDir;
 
     /**
-     * 增加abnormalImage时，也保存了图片。
+     * 增加abnormalImage时，也保存了图片,可以多张图片。
      * @param abnormalImage
-     * @param file1
+     * @param files
      * @return
      */
     @PostMapping("/add")
-    public Result add(String abnormalImage,MultipartFile file1) {
+    public Result add(@RequestParam String abnormalImage,
+                      @RequestParam MultipartFile[] files) {
         AbnormalImage abnormalImage1 = JSON.parseObject(abnormalImage,AbnormalImage.class);
         Integer abnormalRecordId = abnormalImage1.getAbnormalRecordId();
         File dir = new File(imagesSavedDir);
@@ -56,11 +58,14 @@ public class AbnormalImageController {
         if (machineID == null){
             return ResultGenerator.genFailResult("Error: no machine found by the abnormalRecordId, no records saved");
         }
-        String resultPath = commonService.saveFile(imagesSavedDir,file1,machineID, null, Constant.ABNORMAL_IMAGE);
-        if (resultPath == null){
+        List<String> listResultPath = new ArrayList<>() ;
+        for(int i=0; i<files.length; i++) {
+            listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.ABNORMAL_IMAGE));
+        }
+        if (listResultPath == null){
             return ResultGenerator.genFailResult("failed to save file, no records saved");
         } else {
-            abnormalImage1.setImage(resultPath);
+            abnormalImage1.setImage(listResultPath.toString());
             abnormalImageService.save(abnormalImage1);
         }
 
