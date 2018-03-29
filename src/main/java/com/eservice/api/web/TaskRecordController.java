@@ -661,7 +661,7 @@ public class TaskRecordController {
         }
         List<String> listResultPath = new ArrayList<>() ;
         for(int i=0; i<files.length; i++) {
-            listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.ABNORMAL_IMAGE));
+            listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.ABNORMAL_IMAGE, i ));
         }
         if (listResultPath == null){
             return ResultGenerator.genFailResult("failed to save file, no records saved");

@@ -61,7 +61,7 @@ public class QualityRecordImageController {
 
         List<String> listResultPath = new ArrayList<>() ;
         for(int i=0; i<files.length; i++) {
-            listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.QUALITY_IMAGE));
+            listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.QUALITY_IMAGE, i));
         }
          if(listResultPath.size() == 0){
             return ResultGenerator.genFailResult("failed to save quality file, no records saved");

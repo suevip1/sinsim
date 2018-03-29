@@ -165,9 +165,15 @@ public class CommonService {
      * @param orderNum  装车单对应的需求单编号（保存Abnormal/Quality 图片时，orderNum可为NULL）
      * @param type      文件类型 （不同类型文件名生成规则不同）
      *                  最终生成类似：machineID123_Abnormal_2018-01-10-11-15-56.png
+     * @param number    表示第几个文件
+     *
      * @return 文件路径
      */
-    public String saveFile(String path, MultipartFile file, @RequestParam(defaultValue = "") String machineID,  @RequestParam(defaultValue = "")String orderNum, int type) {
+    public String saveFile(String path, MultipartFile file,
+                           @RequestParam(defaultValue = "") String machineID,
+                           @RequestParam(defaultValue = "") String orderNum,
+                           int type,
+                           @RequestParam(defaultValue = "0") int number ) {
         String targetFileName = null;
         if (path != null) {
             if (!file.isEmpty()) {
@@ -185,16 +191,16 @@ public class CommonService {
                     String fileType;
                     if (Constant.ABNORMAL_IMAGE == type) {
                         fileType = "Abnormal";
-                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + suffixName;
+                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + "_" + number + suffixName;
                     } else if (Constant.QUALITY_IMAGE == type) {
                         fileType = "Quality";
-                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + suffixName;
+                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + "_" + number + suffixName;
                     } else if (Constant.LOADING_FILE == type) {
                         fileType = "LoadingFile";
                         /**
                          * 一个需求单对应一种机器，对应唯一装车单，不用加时间戳，新上传的覆盖旧的装车单，上传时间更新在装车单的update_time
                          */
-                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType  + suffixName;
+                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + number + suffixName;
                     } else {
                         fileType = "";//return targetFileName;//"UnknownFileTypeError";
                     }

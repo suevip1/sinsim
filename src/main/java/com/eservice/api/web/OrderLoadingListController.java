@@ -66,7 +66,7 @@ public class OrderLoadingListController {
         if (machineOrderId == null) {
             return ResultGenerator.genFailResult("Error: no machineOrder found by the ollId, no records saved");
         }
-        String resultPath = commonService.saveFile(orderLoadingListSavedDir, file1, null, machineOrderId.toString(), Constant.LOADING_FILE);
+        String resultPath = commonService.saveFile(orderLoadingListSavedDir, file1, null, machineOrderId.toString(), Constant.LOADING_FILE,0);
 
         if (null == resultPath) {
             return ResultGenerator.genFailResult("failed to save OrderloadingList file, no records saved");
@@ -97,7 +97,7 @@ public class OrderLoadingListController {
         if (machineOrderId == null) {
             return ResultGenerator.genFailResult("Error: no machineOrder found by the ollId, no records saved");
         }
-        String resultPath = commonService.saveFile(orderLoadingListSavedDir, file, orderNum, machineOrderId.toString(), Constant.LOADING_FILE);
+        String resultPath = commonService.saveFile(orderLoadingListSavedDir, file, orderNum, machineOrderId.toString(), Constant.LOADING_FILE,0);
 
         if (null == resultPath) {
             return ResultGenerator.genFailResult("failed to save OrderloadingList file, no records saved");
