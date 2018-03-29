@@ -9,6 +9,7 @@ import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.process_record.ProcessRecord;
+import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
@@ -17,6 +18,8 @@ import com.eservice.api.service.UserService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
+import com.eservice.api.service.mqtt.MqttMessageHelper;
+import com.eservice.api.service.mqtt.ServerToClientMsg;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -74,6 +78,12 @@ public class TaskRecordController {
     private MachineServiceImpl machineService;
     @Resource
     private MachineTypeService machineTypeService;
+    @Resource
+    private TaskServiceImpl taskService;
+    @Resource
+    private MachineOrderServiceImpl machineOrderService;
+    @Resource
+    private MqttMessageHelper mqttMessageHelper;
 
     @PostMapping("/add")
     public Result add(String taskRecord) {
@@ -498,7 +508,26 @@ public class TaskRecordController {
                 throw new RuntimeException();
             }
         }
+        if(tr.getStatus().equals(Constant.TASK_INSTALLED)) {
+            //MQTT 如果当前工序状态是安装完成等待质检的状态，则通知App
+            //找到工序对应的quality_user_id
+            String taskName = tr.getTaskName();
+            Condition condition = new Condition(Task.class);
+            condition.createCriteria().andCondition("task_name = ", taskName);
+            List<Task> taskList = taskService.findByCondition(condition);
+            if(taskList == null || taskList.size() <= 0) {
+                throw new RuntimeException();
+            }
 
+            ProcessRecord pr = processRecordService.findById(prId);
+            Machine machine = machineService.findById(pr.getMachineId());
+            MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+
+            ServerToClientMsg msg = new ServerToClientMsg();
+            msg.setOrderNum(machineOrder.getOrderNum());
+            msg.setNameplate(machine.getNameplate());
+            mqttMessageHelper.sendToClient(Constant.S2C_TASK_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
+        }
         return ResultGenerator.genSuccessResult();
     }
 

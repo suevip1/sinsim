@@ -9,8 +9,11 @@ import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.model.process_record.ProcessRecord;
 import com.eservice.api.model.role.Role;
+import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.service.impl.*;
+import com.eservice.api.service.mqtt.MqttMessageHelper;
+import com.eservice.api.service.mqtt.ServerToClientMsg;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,6 +47,10 @@ public class CommonService {
     private ProcessRecordServiceImpl processRecordService;
     @Resource
     private TaskRecordServiceImpl taskRecordService;
+    @Resource
+    private MqttMessageHelper mqttMessageHelper;
+    @Resource
+    private TaskServiceImpl taskService;
 
     Logger logger = Logger.getLogger(CommonService.class);
     /**
@@ -293,13 +300,27 @@ public class CommonService {
                                             String dateStr = Utils.getFormatStringDate(new Date(), "yyyy-MM-dd HH:mm:ss");
                                             childNode.setBeginTime(dateStr);
                                             childNode.setTaskStatus(Constant.TASK_INSTALL_WAITING.toString());
-                                            //TODO:更新task record状态为“TASK_INSTALL_WAITING”
                                             List<TaskRecord> taskRecordList = taskRecordService.getTaskRecordData(null, prId);
                                             for (TaskRecord record: taskRecordList) {
                                                 if(String.valueOf(record.getNodeKey().intValue()).equals(childNode.getKey())) {
                                                     record.setStatus(Constant.TASK_INSTALL_WAITING);
                                                     taskRecordService.update(record);
-                                                    break;
+                                                    //MQTT 通知下一道工序可以开始安装
+                                                    ServerToClientMsg msg = new ServerToClientMsg();
+                                                    MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+                                                    msg.setOrderNum(machineOrder.getOrderNum());
+                                                    msg.setNameplate(machine.getNameplate());
+                                                    //找到工序对应的group_id
+                                                    String taskName = record.getTaskName();
+                                                    Condition condition = new Condition(Task.class);
+                                                    condition.createCriteria().andCondition("task_name = ", taskName);
+                                                    List<Task> taskList = taskService.findByCondition(condition);
+                                                    if(taskList == null || taskList.size() <= 0) {
+                                                        throw new RuntimeException();
+                                                    }
+                                                    mqttMessageHelper.sendToClient(Constant.S2C_TASK_INSTALL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
+                                                    //这个break需要去掉，因为存在多个子工序可以安装的情况
+                                                    //break;
                                                 }
                                             }
                                         }

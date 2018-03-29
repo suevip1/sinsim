@@ -21,6 +21,8 @@ import com.eservice.api.model.user.User;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
+import com.eservice.api.service.mqtt.MqttMessageHelper;
+import com.eservice.api.service.mqtt.ServerToClientMsg;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.*;
@@ -76,6 +78,8 @@ public class ContractController {
     private UserServiceImpl userService;
     @Resource
     private RoleServiceImpl roleService;
+    @Resource
+    private MqttMessageHelper mqttMessageHelper;
 
     @Value("${contract_excel_output_dir}")
     private String contractOutputDir;
@@ -300,6 +304,12 @@ public class ContractController {
                         if (machine.getStatus().equals(Constant.MACHINE_INITIAL) || machine.getStatus().equals(Constant.MACHINE_CANCELED)) {
                         } else {
                             machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                            ///有改单状态的机器，通知全部安装组长
+                            ServerToClientMsg msg = new ServerToClientMsg();
+                            msg.setOrderNum(newOrder.getOrderNum());
+                            msg.setNameplate(machine.getNameplate());
+                            msg.setType(ServerToClientMsg.MsgType.ORDER_CHANGE);
+                            mqttMessageHelper.sendToClient(Constant.S2C_MACHINE_STATUS_CHANGE, JSON.toJSONString(msg));
                         }
                         machine.setOrderId(newOrder.getId());
                         machine.setUpdateTime(new Date());
@@ -455,6 +465,12 @@ public class ContractController {
                 for ( Machine splitMachine: splitMachineList ) {
                     splitMachine.setOrderId(machineOrder.getId());
                     splitMachine.setStatus(Constant.MACHINE_SPLITED);
+                    ///MQTT 有拆单状态的机器，通知全部安装组长
+                    ServerToClientMsg msg = new ServerToClientMsg();
+                    msg.setOrderNum(machineOrder.getOrderNum());
+                    msg.setNameplate(splitMachine.getNameplate());
+                    msg.setType(ServerToClientMsg.MsgType.ORDER_SPLIT);
+                    mqttMessageHelper.sendToClient(Constant.S2C_MACHINE_STATUS_CHANGE, JSON.toJSONString(msg));
                     splitMachine.setUpdateTime(new Date());
                     machineService.update(splitMachine);
                 }

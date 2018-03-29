@@ -8,14 +8,18 @@ import com.eservice.api.model.abnormal_image.AbnormalImage;
 import com.eservice.api.model.abnormal_record.AbnormalRecord;
 import com.eservice.api.model.abnormal_record.AbnormalRecordDetail;
 import com.eservice.api.model.machine.Machine;
+import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.process_record.ProcessRecord;
+import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.service.AbnormalImageService;
 import com.eservice.api.service.AbnormalService;
 import com.eservice.api.service.UserService;
+import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
-import com.eservice.api.service.impl.AbnormalRecordServiceImpl;
-import com.eservice.api.service.impl.MachineServiceImpl;
-import com.eservice.api.service.impl.TaskRecordServiceImpl;
+import com.eservice.api.service.impl.*;
+import com.eservice.api.service.mqtt.MqttMessageHelper;
+import com.eservice.api.service.mqtt.ServerToClientMsg;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.*;
@@ -28,6 +32,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.io.FileNotFoundException;
@@ -57,6 +62,14 @@ public class AbnormalRecordController {
     private TaskRecordServiceImpl taskRecordService;
     @Resource
     private MachineServiceImpl machineService;
+    @Resource
+    private ProcessRecordServiceImpl processRecordService;
+    @Resource
+    private TaskServiceImpl taskService;
+    @Resource
+    private MachineOrderServiceImpl machineOrderService;
+    @Resource
+    private MqttMessageHelper mqttMessageHelper;
     /**
      * 异常管理excel表格，和合同excel表格放同个地方
      */
@@ -90,10 +103,26 @@ public class AbnormalRecordController {
         Integer taskRecordId = completeInfo.getTaskRecordId();
         if(taskRecordId != null && taskRecordId > 0) {
             TaskRecord tr = taskRecordService.findById(taskRecordId);
+            //MQTT 异常解决后，通知工序的安装组长或者质检员，取决于之前是处于安装中还是质检中
+            String taskName = tr.getTaskName();
+            Condition condition = new Condition(Task.class);
+            condition.createCriteria().andCondition("task_name = ", taskName);
+            List<Task> taskList = taskService.findByCondition(condition);
+            if(taskList == null || taskList.size() <= 0) {
+                throw new RuntimeException();
+            }
+            ProcessRecord pr = processRecordService.findById(tr.getProcessRecordId());
+            Machine machine = machineService.findById(pr.getMachineId());
+            MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+            ServerToClientMsg msg = new ServerToClientMsg();
+            msg.setOrderNum(machineOrder.getOrderNum());
+            msg.setNameplate(machine.getNameplate());
             if(tr.getQualityBeginTime() != null) {
                 tr.setStatus(Constant.TASK_QUALITY_DOING);
+                mqttMessageHelper.sendToClient(Constant.S2C_QUALITY_ABNORMAL_RESOLVE + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
             }else {
                 tr.setStatus(Constant.TASK_INSTALLING);
+                mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL_RESOLVE + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
             }
             taskRecordService.update(tr);
         }else {

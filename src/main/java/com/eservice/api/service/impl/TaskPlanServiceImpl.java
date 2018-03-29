@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.eservice.api.dao.TaskPlanMapper;
 import com.eservice.api.model.machine.Machine;
+import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.process_record.ProcessRecord;
+import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.service.TaskPlanService;
@@ -12,6 +14,8 @@ import com.eservice.api.core.AbstractService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.common.LinkDataModel;
+import com.eservice.api.service.mqtt.MqttMessageHelper;
+import com.eservice.api.service.mqtt.ServerToClientMsg;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +48,12 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
     private ProcessRecordServiceImpl processRecordService;
     @Resource
     private CommonService commonService;
+    @Resource
+    private TaskServiceImpl taskService;
+    @Resource
+    private MachineOrderServiceImpl machineOrderService;
+    @Resource
+    private MqttMessageHelper mqttMessageHelper;
 
     public boolean addTaskPlans(@RequestParam List<Integer> taskRecordIds, Integer planType, String machineStrId, Date planDate, Integer userId) {
         for (int i = 0; i < taskRecordIds.size(); i++) {
@@ -77,6 +87,23 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                     if(item.getTo().equals(taskRecord.getNodeKey().intValue())) {
                         if(item.getFrom() == null || item.getFrom() == -1) {
                             taskRecord.setStatus(Constant.TASK_INSTALL_WAITING);
+                            //MQTT 计划后，通知第一道的安装组长，可以进行安装
+                            String taskName = taskRecord.getTaskName();
+                            Condition condition = new Condition(Task.class);
+                            condition.createCriteria().andCondition("task_name = ", taskName);
+                            List<Task> taskList = taskService.findByCondition(condition);
+                            if(taskList == null || taskList.size() <= 0) {
+                                throw new RuntimeException();
+                            }
+
+                            ProcessRecord pr = processRecordService.findById(taskRecord.getProcessRecordId());
+                            Machine machine = machineService.findById(pr.getMachineId());
+                            MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+
+                            ServerToClientMsg msg = new ServerToClientMsg();
+                            msg.setOrderNum(machineOrder.getOrderNum());
+                            msg.setNameplate(machine.getNameplate());
+                            mqttMessageHelper.sendToClient(Constant.S2C_TASK_INSTALL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
 ///                            Integer machineId = processRecord.getMachineId();
 //                            Machine machine = machineService.findById(machineId);
 //                            //如果机器还处于"MACHINE_INSTALLING"之前，修改为安装中

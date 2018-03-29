@@ -158,4 +158,29 @@ public class Constant {
     public static final Byte DAILY_PLAN = 1;
     public static final Byte FLEX_PLAN = 2;
     public static final Byte SELF_PLAN = 3;
+
+    /**
+     * MQTT Topic： 后台通知前台App,机器进行了改单、拆单、取消操作
+     */
+    public static final String S2C_MACHINE_STATUS_CHANGE = "/s2c/machine_status_change";
+
+    /**
+     * MQTT Topic: 质检完成,后台通知前台App,下一道工序可以安装
+     */
+    public static final String S2C_TASK_INSTALL = "/s2c/task_install/";
+
+    /**
+     * MQTT Topic: 安装完成,后台通知前台App,可以质检
+     */
+    public static final String S2C_TASK_QUALITY = "/s2c/task_quality/";
+
+    /**
+     * MQTT Topic: 某工序的安装异常处理结束后，通知该工序安装组长
+     */
+    public static final String S2C_INSTALL_ABNORMAL_RESOLVE = "/s2c/install_abnormal_resolve";
+
+    /**
+     * MQTT Topic: 某工序的质检异常处理结束后，通知该工序质检员
+     */
+    public static final String S2C_QUALITY_ABNORMAL_RESOLVE = "/s2c/quality_abnormal_resolve";
 }
