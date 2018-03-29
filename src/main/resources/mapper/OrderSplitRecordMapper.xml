@@ -11,4 +11,32 @@
     <result column="split_time" jdbcType="TIMESTAMP" property="splitTime" />
     <result column="split_reason" jdbcType="LONGVARCHAR" property="splitReason" />
   </resultMap>
+
+  <resultMap id="ViewMap" type="com.eservice.api.model.order_split_record.OrderSplitRecordView">
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="split_time" jdbcType="TIMESTAMP" property="splitTime" />
+    <result column="split_reason" jdbcType="LONGVARCHAR" property="splitReason" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount"/>
+    <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+  </resultMap>
+
+  <select id="getSplitRecordList" resultMap="ViewMap">
+    SELECT * FROM
+    (SELECT osr.*,mo.order_num,u.`name` as user_name,u.account as user_account
+    FROM order_split_record osr
+    LEFT JOIN machine_order mo
+    ON osr.order_id=mo.id
+    LEFT JOIN `user` u
+    ON osr.user_id=u.id) V
+    WHERE 1=1
+    <if test="id != null and id != ''">
+      AND id=#{id}
+    </if>
+    <if test="orderId != null and orderId != ''">
+      AND order_id=#{orderId}
+    </if>
+  </select>
 </mapper>

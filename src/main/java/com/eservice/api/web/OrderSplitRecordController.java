@@ -2,7 +2,11 @@ package com.eservice.api.web;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.order_split_record.OrderSplitRecord;
+import com.eservice.api.model.order_split_record.OrderSplitRecordView;
+
 import com.eservice.api.service.OrderSplitRecordService;
+
+import com.eservice.api.service.impl.OrderSplitRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +26,7 @@ import java.util.List;
 @RequestMapping("/order/split/record")
 public class OrderSplitRecordController {
     @Resource
-    private OrderSplitRecordService orderSplitRecordService;
+    private OrderSplitRecordServiceImpl orderSplitRecordService;
 
     @PostMapping("/add")
     public Result add(OrderSplitRecord orderSplitRecord) {
@@ -52,6 +56,15 @@ public class OrderSplitRecordController {
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
         List<OrderSplitRecord> list = orderSplitRecordService.findAll();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    //getSplitRecordList
+    @PostMapping("/getSplitRecordList")
+    public Result getSplitRecordList(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size, @RequestParam Integer id, @RequestParam Integer orderId) {
+        PageHelper.startPage(page, size);
+        List<OrderSplitRecordView> list = orderSplitRecordService.getSplitRecordList(id, orderId);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
