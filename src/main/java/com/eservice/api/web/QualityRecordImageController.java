@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,8 +39,15 @@ public class QualityRecordImageController {
     @Value("${quality_images_saved_dir}")
     private String imagesSavedDir;
 
+    /**
+     * 增加 qualityRecordImage 时，也保存了图片,可以多张图片
+     * (10+ 张图片应该没问题，quality_record_image.image字段长度1000，保存的路径长度不要超过这个值就好)。
+     * @param qualityRecordImage
+     * @param files
+     * @return
+     */
     @PostMapping("/add")
-    public Result add(String qualityRecordImage,MultipartFile file1) {
+    public Result add(String qualityRecordImage, MultipartFile[] files) {
         QualityRecordImage qualityRecordImage1 = JSON.parseObject(qualityRecordImage, QualityRecordImage.class);
         Integer taskQualityRecordId = qualityRecordImage1.getTaskQualityRecordId();
         File dir = new File(imagesSavedDir);
@@ -50,11 +58,15 @@ public class QualityRecordImageController {
         if(null == machineID){
             return ResultGenerator.genFailResult("Error: no machine found by the taskQualityRecordId, no records saved");
         }
-        String resultPath = commonService.saveFile(imagesSavedDir,file1,machineID, null, Constant.QUALITY_IMAGE);
-        if(null == resultPath){
+
+        List<String> listResultPath = new ArrayList<>() ;
+        for(int i=0; i<files.length; i++) {
+            listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.QUALITY_IMAGE));
+        }
+         if(listResultPath.size() == 0){
             return ResultGenerator.genFailResult("failed to save quality file, no records saved");
         } else {
-            qualityRecordImage1.setImage(resultPath);
+            qualityRecordImage1.setImage(listResultPath.toString());
             qualityRecordImageService.save(qualityRecordImage1);
         }
         return ResultGenerator.genSuccessResult();

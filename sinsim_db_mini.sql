@@ -39,7 +39,7 @@ DROP TABLE IF EXISTS `abnormal_image`;
 CREATE TABLE `abnormal_image` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `abnormal_record_id` int(10) unsigned NOT NULL,
-  `image` varchar(255) NOT NULL COMMENT '异常图片名称（包含路径）,以后这部分数据是最大的，首先pad上传时候时候需要压缩，以后硬盘扩展的话，可以把几几年的图片放置到另外一个硬盘，然后pad端响应升级（根据时间加上图片的路径）',
+  `image` varchar(1000) NOT NULL COMMENT '异常图片名称（包含路径）,以后这部分数据是最大的，首先pad上传时候时候需要压缩，以后硬盘扩展的话，可以把几几年的图片放置到另外一个硬盘，然后pad端响应升级（根据时间加上图片的路径）',
   `create_time` datetime NOT NULL COMMENT '上传异常图片的时间',
   PRIMARY KEY (`id`),
   KEY `fk_ai_abnormal_record_id` (`abnormal_record_id`),
@@ -481,7 +481,7 @@ DROP TABLE IF EXISTS `quality_record_image`;
 CREATE TABLE `quality_record_image` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `task_quality_record_id` int(10) unsigned NOT NULL,
-  `image` varchar(255) NOT NULL COMMENT '异常图片名称（包含路径）,以后这部分数据是最大的，首先pad上传时候时候需要压缩，以后硬盘扩展的话，可以把几几年的图片放置到另外一个硬盘，然后pad端响应升级（根据时间加上图片的路径）',
+  `image` varchar(1000) NOT NULL COMMENT '异常图片名称（包含路径）,以后这部分数据是最大的，首先pad上传时候时候需要压缩，以后硬盘扩展的话，可以把几几年的图片放置到另外一个硬盘，然后pad端响应升级（根据时间加上图片的路径）',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   KEY `fk_task_quality_record_id` (`task_quality_record_id`),

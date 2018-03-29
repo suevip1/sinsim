@@ -62,7 +62,7 @@ public class AbnormalImageController {
         for(int i=0; i<files.length; i++) {
             listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.ABNORMAL_IMAGE));
         }
-        if (listResultPath == null){
+        if (listResultPath.size() == 0){
             return ResultGenerator.genFailResult("failed to save file, no records saved");
         } else {
             abnormalImage1.setImage(listResultPath.toString());

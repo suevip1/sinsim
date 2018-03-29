@@ -242,7 +242,7 @@ public class AbnormalRecordController {
 
             }
             downloadPath = abnoramlExcelOutputDir + "异常统计" + ".xls";
-            downloadPathForNginx = "/excel/" + ".xls";
+            downloadPathForNginx = "/excel/" + "异常统计" + ".xls";
             out = new FileOutputStream(downloadPath);
             wb.write(out);
             out.close();

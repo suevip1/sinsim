@@ -426,7 +426,7 @@ public class TaskRecordController {
                 }
             }
             downloadPath = abnoramlExcelOutputDir + "导出计划" + ".xls";
-            downloadPathForNginx = "/excel/" + ".xls";
+            downloadPathForNginx = "/excel/" + "导出计划" + ".xls";
             out = new FileOutputStream(downloadPath);
             wb.write(out);
             out.close();
