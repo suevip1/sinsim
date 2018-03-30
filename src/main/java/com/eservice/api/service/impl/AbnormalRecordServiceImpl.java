@@ -31,4 +31,11 @@ public class AbnormalRecordServiceImpl extends AbstractService<AbnormalRecord> i
     public List<AbnormalRecordDetail> selectAbnormalRecordDetailList(String nameplate, Integer abnormalType, String taskName, Integer submitUser,  Integer solutionUser, Integer finishStatus, String queryStartTime,  String queryFinishTime) {
         return abnormalRecordMapper.selectAbnormalRecordDetailList(nameplate, abnormalType,taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
     }
+
+    /**
+     * 保存并得到id号
+     */
+    public void saveAndGetID(AbnormalRecord abnormalRecord){
+        abnormalRecordMapper.saveAndGetID(abnormalRecord);
+    }
 }

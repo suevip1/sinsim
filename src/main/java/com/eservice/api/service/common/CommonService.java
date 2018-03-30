@@ -180,51 +180,45 @@ public class CommonService {
                            @RequestParam(defaultValue = "") String machineID,
                            @RequestParam(defaultValue = "") String orderNum,
                            int type,
-                           @RequestParam(defaultValue = "0") int number ) {
+                           @RequestParam(defaultValue = "0") int number ) throws IOException {
         String targetFileName = null;
         if (path != null) {
             if (!file.isEmpty()) {
-                try {
-                    //取后缀名
-                    String fileName = file.getOriginalFilename();
-                    String suffixName = fileName.substring(fileName.lastIndexOf("."));
 
-                    Date date = new Date();
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-                    //指定北京时间
-                    formatter.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-                    String dateStr = formatter.format(date);
+                //取后缀名
+                String fileName = file.getOriginalFilename();
+                String suffixName = fileName.substring(fileName.lastIndexOf("."));
 
-                    String fileType;
-                    if (Constant.ABNORMAL_IMAGE == type) {
-                        fileType = "Abnormal";
-                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + "_" + number + suffixName;
-                    } else if (Constant.QUALITY_IMAGE == type) {
-                        fileType = "Quality";
-                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + "_" + number + suffixName;
-                    } else if (Constant.LOADING_FILE == type) {
-                        fileType = "LoadingFile";
-                        /**
-                         * 一个需求单对应一种机器，对应唯一装车单，不用加时间戳，新上传的覆盖旧的装车单，上传时间更新在装车单的update_time
-                         */
-                        targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + number + suffixName;
-                    } else {
-                        fileType = "";//return targetFileName;//"UnknownFileTypeError";
-                    }
+                Date date = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+                //指定北京时间
+                formatter.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+                String dateStr = formatter.format(date);
 
-                    BufferedOutputStream out = new BufferedOutputStream(
-                            new FileOutputStream(new File(targetFileName)));
-                    out.write(file.getBytes());
-                    out.flush();
-                    out.close();
-                    logger.info("====CommonService.saveFile(): success ========" + targetFileName);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    return null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
+                String fileType;
+                if (Constant.ABNORMAL_IMAGE == type) {
+                    fileType = "Abnormal";
+                    targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + "_" + number + suffixName;
+                } else if (Constant.QUALITY_IMAGE == type) {
+                    fileType = "Quality";
+                    targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + "_" + number + suffixName;
+                } else if (Constant.LOADING_FILE == type) {
+                    fileType = "LoadingFile";
+                    /**
+                     * 一个需求单对应一种机器，对应唯一装车单，不用加时间戳，新上传的覆盖旧的装车单，上传时间更新在装车单的update_time
+                     */
+                    targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + number + suffixName;
+                } else {
+                    fileType = "";//return targetFileName;//"UnknownFileTypeError";
                 }
+
+                BufferedOutputStream out = new BufferedOutputStream(
+                        new FileOutputStream(new File(targetFileName)));
+                out.write(file.getBytes());
+                out.flush();
+                out.close();
+                logger.info("====CommonService.saveFile(): success ========" + targetFileName);
+
             }
         }
         return targetFileName;

@@ -663,10 +663,10 @@ public class TaskRecordController {
      * task_record, abnormal_record, abnormal_image  3个表一起更新。
      * app端，在安装异常时需要更新task_record(update)，增加 abnormal_record(add), abnormal_image (add)
      */
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/addTrArAi")
     public Result addTrArAi(@RequestParam String taskRecord,
                             @RequestParam String abnormalRecord,
-                            @RequestParam String abnormalImage,
                             @RequestParam MultipartFile[] files) {
 
         //task_record(update)
@@ -675,31 +675,42 @@ public class TaskRecordController {
 
         //abnormal_record add:
         AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
-        abnormalRecordService.save(abnormalRecord1);
+        abnormalRecordService.saveAndGetID(abnormalRecord1);
 
-        //abnormal_image add:
-        AbnormalImage abnormalImage1 = JSON.parseObject(abnormalImage,AbnormalImage.class);
-        Integer abnormalRecordId = abnormalImage1.getAbnormalRecordId();
+        /**
+         * abnormal_image add
+         * 因为此时从app端无法知道 abnormal_record_id，所以需要在服务端获取abnormal_record_id
+         * abnormal_image的create_time和abnormal_record.create_time一样
+         */
+        AbnormalImage abnormalImage1 = new AbnormalImage();
         File dir = new File(imagesSavedDir);
         if(!dir.exists()){
             dir.mkdir();
         }
+        //获取保存后分配到的id
+        Integer abnormalRecordId = abnormalRecord1.getId();
         String machineID = machineService.searchMachineByAbnormalRecordId(abnormalRecordId).getMachineStrId();
-        if (machineID == null){
-            return ResultGenerator.genFailResult("Error: no machine found by the abnormalRecordId, no records saved");
-        }
+
         List<String> listResultPath = new ArrayList<>() ;
         for(int i=0; i<files.length; i++) {
-            listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.ABNORMAL_IMAGE, i ));
+            try {
+                listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.ABNORMAL_IMAGE, i ));
+            } catch (IOException e) {
+                e.printStackTrace();
+                //抛异常引发回滚，防止数据只更新了前面部分。
+                throw new RuntimeException();
+            }
         }
-        if (listResultPath == null){
-            return ResultGenerator.genFailResult("failed to save file, no records saved");
+        if (listResultPath.size() != files.length){
+            throw new RuntimeException();
         } else {
             abnormalImage1.setImage(listResultPath.toString());
+            abnormalImage1.setAbnormalRecordId(abnormalRecordId);
+            abnormalImage1.setCreateTime(abnormalRecord1.getCreateTime());
             abnormalImageService.save(abnormalImage1);
         }
 
-        return ResultGenerator.genSuccessResult();
+        return ResultGenerator.genSuccessResult("3个表更新成功");
     }
 
 }

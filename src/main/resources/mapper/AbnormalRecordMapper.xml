@@ -125,4 +125,13 @@
     </if>
 
   </select>
+
+  <insert id="saveAndGetID"  parameterType="com.eservice.api.model.abnormal_record.AbnormalRecord" useGeneratedKeys="true"  keyProperty="id">
+    insert into
+    abnormal_record(
+    abnormal_type, task_record_id, submit_user, comment, solution, solution_user, create_time, solve_time)
+    values(
+    #{ abnormalType},#{ taskRecordId},#{submitUser },#{comment },#{solution}, #{solutionUser},#{createTime}, #{solveTime})
+
+  </insert>
 </mapper>

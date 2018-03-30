@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +67,12 @@ public class OrderLoadingListController {
         if (machineOrderId == null) {
             return ResultGenerator.genFailResult("Error: no machineOrder found by the ollId, no records saved");
         }
-        String resultPath = commonService.saveFile(orderLoadingListSavedDir, file1, null, machineOrderId.toString(), Constant.LOADING_FILE,0);
+        String resultPath = null;
+        try {
+            resultPath = commonService.saveFile(orderLoadingListSavedDir, file1, null, machineOrderId.toString(), Constant.LOADING_FILE,0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (null == resultPath) {
             return ResultGenerator.genFailResult("failed to save OrderloadingList file, no records saved");
@@ -97,7 +103,12 @@ public class OrderLoadingListController {
         if (machineOrderId == null) {
             return ResultGenerator.genFailResult("Error: no machineOrder found by the ollId, no records saved");
         }
-        String resultPath = commonService.saveFile(orderLoadingListSavedDir, file, orderNum, machineOrderId.toString(), Constant.LOADING_FILE,0);
+        String resultPath = null;
+        try {
+            resultPath = commonService.saveFile(orderLoadingListSavedDir, file, orderNum, machineOrderId.toString(), Constant.LOADING_FILE,0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (null == resultPath) {
             return ResultGenerator.genFailResult("failed to save OrderloadingList file, no records saved");

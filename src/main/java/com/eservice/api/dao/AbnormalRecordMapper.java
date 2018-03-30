@@ -18,4 +18,5 @@ public interface AbnormalRecordMapper extends Mapper<AbnormalRecord> {
                                                              @Param("finish_status")Integer finishStatus,
                                                              @Param("query_start_time")String queryStartTime,
                                                              @Param("query_finish_time")String queryFinishTime);
+    void saveAndGetID(AbnormalRecord abnormalRecord);
 }
