@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -45,8 +46,20 @@ public class MachineController {
     @PostMapping("/update")
     public Result update(String machine) {
         Machine machine1 = JSON.parseObject(machine, Machine.class);
-        machineService.update(machine1);
-        return ResultGenerator.genSuccessResult();
+        if (machine1.getNameplate() == null || machine1.getNameplate() == "") {
+            return ResultGenerator.genFailResult("机器编号不能为空！");
+        } else {
+            //检查机器编号是否存在，存在则返回错误
+            Condition condition = new Condition(Machine.class);
+            condition.createCriteria().andCondition("nameplate = ", machine1.getNameplate());
+            List<Machine> list = machineService.findByCondition(condition);
+            if (list.size() >= 1) {
+                return ResultGenerator.genFailResult("机器编号已存在！");
+            }else {
+                machineService.update(machine1);
+                return ResultGenerator.genSuccessResult();
+            }
+        }
     }
 
     @PostMapping("/detail")
@@ -100,7 +113,7 @@ public class MachineController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
-	
+
     //
     @PostMapping("/selectConfigMachine")
     public Result selectConfigMachine(
@@ -119,7 +132,7 @@ public class MachineController {
             @RequestParam(defaultValue = "true") Boolean is_fuzzy
     ) {
         PageHelper.startPage(page, size);
-        List<MachineInfo> list = machineService.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time,configStatus,is_fuzzy);
+        List<MachineInfo> list = machineService.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, configStatus, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
@@ -140,7 +153,7 @@ public class MachineController {
             @RequestParam(defaultValue = "true") Boolean is_fuzzy
     ) {
         PageHelper.startPage(page, size);
-        List<MachineInfo> list = machineService.selectProcessMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time,is_fuzzy);
+        List<MachineInfo> list = machineService.selectProcessMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
