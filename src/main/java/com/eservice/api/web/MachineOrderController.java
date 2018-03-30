@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -112,5 +113,21 @@ public class MachineOrderController {
         List<MachineOrderDetail> list = machineOrderService.selectOrder(id, contract_id,order_num, contract_num, status,sellman,customer,query_start_time,query_finish_time,machine_name,is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @PostMapping("/isOrderNumExist")
+    public Result isOrderNumExist(@RequestParam String orderNum) {
+        if (orderNum == null) {
+            return ResultGenerator.genFailResult("请输入需求单编号！");
+        } else {
+            Condition condition = new Condition(MachineOrder.class);
+            condition.createCriteria().andCondition("order_num = ", orderNum);
+            List<MachineOrder> list = machineOrderService.findByCondition(condition);
+            if (list.size() == 0) {
+                return ResultGenerator.genSuccessResult();
+            } else {
+                return ResultGenerator.genFailResult("需求单编号已存在！");
+            }
+        }
     }
 }

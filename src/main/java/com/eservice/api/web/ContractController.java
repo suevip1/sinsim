@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -49,10 +50,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/12/07.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/12/07.
+ */
 @RestController
 @RequestMapping("/contract")
 public class ContractController {
@@ -87,17 +89,17 @@ public class ContractController {
     @PostMapping("/add")
     @Transactional(rollbackFor = Exception.class)
     public Result add(String contract, String contractSign, String requisitionForms) {
-        if(contract == null || "".equals(contract)) {
+        if (contract == null || "".equals(contract)) {
             return ResultGenerator.genFailResult("合同信息为空！");
         }
-        if(contractSign == null || "".equals(contractSign)) {
+        if (contractSign == null || "".equals(contractSign)) {
             return ResultGenerator.genFailResult("合同审核初始化信息为空！");
         }
-        if(requisitionForms == null || "".equals(requisitionForms)) {
+        if (requisitionForms == null || "".equals(requisitionForms)) {
             return ResultGenerator.genFailResult("订单信息为空！");
         }
         Contract contract1 = JSONObject.parseObject(contract, Contract.class);
-        if(contract1 == null) {
+        if (contract1 == null) {
             return ResultGenerator.genFailResult("Contract对象JSON解析失败！");
         }
         contract1.setCreateTime(new Date());
@@ -114,8 +116,8 @@ public class ContractController {
 
         //插入需求单记录
         List<MachineOrderWrapper> machineOrderWapperList = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
-        if(machineOrderWapperList != null) {
-            for (int i = 0; i <machineOrderWapperList.size() ; i++) {
+        if (machineOrderWapperList != null) {
+            for (int i = 0; i < machineOrderWapperList.size(); i++) {
                 OrderDetail temp = machineOrderWapperList.get(i).getOrderDetail();
                 MachineOrder orderTemp = machineOrderWapperList.get(i).getMachineOrder();
                 orderDetailService.saveAndGetID(temp);
@@ -132,7 +134,7 @@ public class ContractController {
                 orderSign.setCreateTime(new Date());
                 orderSignService.save(orderSign);
             }
-        }else {
+        } else {
             //手动回滚事务
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResultGenerator.genFailResult("需求单为空！");
@@ -149,25 +151,25 @@ public class ContractController {
 
     @PostMapping("/update")
     @Transactional(rollbackFor = Exception.class)
-    public Result update(String contract,  String requisitionForms) {
+    public Result update(String contract, String requisitionForms) {
         Contract contract1 = JSONObject.parseObject(contract, Contract.class);
-        List<MachineOrderWrapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class );
+        List<MachineOrderWrapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
         //先获取当前合同的所有订单
-        List<MachineOrderDetail> originalOrderList =  machineOrderService.selectOrder(null, contract1.getId(), null, null, null,
-                null, null, null,null, null, false);
+        List<MachineOrderDetail> originalOrderList = machineOrderService.selectOrder(null, contract1.getId(), null, null, null,
+                null, null, null, null, null, false);
         ///删除该合同下，不在本次保存范围内的需求单
-        for (MachineOrderDetail item: originalOrderList) {
+        for (MachineOrderDetail item : originalOrderList) {
             boolean exist = false;
-            for (MachineOrderWrapper wapperItem: machineOrderWapperlist) {
-                if(wapperItem.getMachineOrder().getId().equals(item.getId())) {
+            for (MachineOrderWrapper wapperItem : machineOrderWapperlist) {
+                if (wapperItem.getMachineOrder().getId().equals(item.getId())) {
                     exist = true;
                     break;
                 }
             }
-            if(!exist) {
+            if (!exist) {
                 //删除需求单审核记录
                 OrderSign orderSign = orderSignService.findBy("orderId", item.getId());
-                if(orderSign != null) {
+                if (orderSign != null) {
                     orderSignService.deleteById(orderSign.getId());
                 }
                 //删除需求单
@@ -177,17 +179,17 @@ public class ContractController {
             }
         }
 
-        for (MachineOrderWrapper item: machineOrderWapperlist) {
-            if(item.getMachineOrder().getId() != null) {
+        for (MachineOrderWrapper item : machineOrderWapperlist) {
+            if (item.getMachineOrder().getId() != null) {
                 //更新
                 OrderDetail temp = item.getOrderDetail();
                 MachineOrder orderTemp = item.getMachineOrder();
-                if(orderTemp.getStatus().equals(Constant.ORDER_REJECTED)) {
+                if (orderTemp.getStatus().equals(Constant.ORDER_REJECTED)) {
                     orderTemp.setStatus(Constant.ORDER_INITIAL);
                 }
                 orderDetailService.update(temp);
                 machineOrderService.update(orderTemp);
-            }else {
+            } else {
                 //新增
                 OrderDetail temp = item.getOrderDetail();
                 MachineOrder orderTemp = item.getMachineOrder();
@@ -217,17 +219,17 @@ public class ContractController {
     @PostMapping("/changeOrder")
     @Transactional(rollbackFor = Exception.class)
     public Result changeOrder(String contract, String contractSign, String requisitionForms) {
-        if(contract == null || "".equals(contract)) {
+        if (contract == null || "".equals(contract)) {
             return ResultGenerator.genFailResult("合同信息为空！");
         }
-        if(contractSign == null || "".equals(contractSign)) {
+        if (contractSign == null || "".equals(contractSign)) {
             return ResultGenerator.genFailResult("合同审核初始化信息为空！");
         }
-        if(requisitionForms == null || "".equals(requisitionForms)) {
+        if (requisitionForms == null || "".equals(requisitionForms)) {
             return ResultGenerator.genFailResult("订单信息为空！");
         }
         Contract contract1 = JSONObject.parseObject(contract, Contract.class);
-        if(contract1 == null) {
+        if (contract1 == null) {
             return ResultGenerator.genFailResult("Contract对象JSON解析失败！");
         }
 
@@ -247,10 +249,10 @@ public class ContractController {
         contractSignService.save(contractSignObj);
 
         //新增的改单处理
-        List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class);
-        for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
+        List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
+        for (MachineOrderWrapper orderItem : machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
-            if(machineOrder.getStatus().equals(Constant.ORDER_INITIAL) && machineOrder.getOriginalOrderId() != 0) {
+            if (machineOrder.getStatus().equals(Constant.ORDER_INITIAL) && machineOrder.getOriginalOrderId() != 0) {
                 //插入新增改单项的detail
                 OrderDetail temp = orderItem.getOrderDetail();
                 orderDetailService.saveAndGetID(temp);
@@ -269,17 +271,17 @@ public class ContractController {
 
                 //改单记录(插入或者修改)
                 OrderChangeRecord changeRecord = orderItem.getOrderChangeRecord();
-                if(changeRecord.getId() == null) {
+                if (changeRecord.getId() == null) {
                     changeRecord.setChangeTime(new Date());
                     orderChangeRecordService.save(changeRecord);
-                }else {
+                } else {
                     changeRecord.setChangeTime(new Date());
                     orderChangeRecordService.update(changeRecord);
                 }
             }
         }
 
-        for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
+        for (MachineOrderWrapper orderItem : machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
             //设置被改单的需求单状态(machine_order/order_sign)
             if (machineOrder.getStatus().equals(Constant.ORDER_CHANGED)) {
@@ -406,21 +408,21 @@ public class ContractController {
     @PostMapping("/splitOrder")
     @Transactional(rollbackFor = Exception.class)
     public Result splitOrder(String contract, String contractSign, String requisitionForms, String splitMachines) {
-        if(contract == null || "".equals(contract)) {
+        if (contract == null || "".equals(contract)) {
             return ResultGenerator.genFailResult("合同信息为空！");
         }
-        if(contractSign == null || "".equals(contractSign)) {
+        if (contractSign == null || "".equals(contractSign)) {
             return ResultGenerator.genFailResult("合同审核初始化信息为空！");
         }
-        if(requisitionForms == null || "".equals(requisitionForms)) {
+        if (requisitionForms == null || "".equals(requisitionForms)) {
             return ResultGenerator.genFailResult("订单信息为空！");
         }
-        if(splitMachines == null || "".equals(splitMachines)) {
+        if (splitMachines == null || "".equals(splitMachines)) {
             return ResultGenerator.genFailResult("拆单机器信息为空！");
         }
 
         Contract contractObj = JSONObject.parseObject(contract, Contract.class);
-        if(contractObj == null || contractSign == null || requisitionForms == null || splitMachines == null) {
+        if (contractObj == null || contractSign == null || requisitionForms == null || splitMachines == null) {
             return ResultGenerator.genFailResult("JSON解析失败！");
         }
 
@@ -439,12 +441,12 @@ public class ContractController {
         contractSignService.save(contractSignObj);
 
         //新增的改单处理
-        List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms,MachineOrderWrapper.class);
+        List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
         List<Machine> splitMachineList = JSONObject.parseArray(splitMachines, Machine.class);
 
-        for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
+        for (MachineOrderWrapper orderItem : machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
-            if(machineOrder.getId() == null && machineOrder.getOriginalOrderId() != 0) {
+            if (machineOrder.getId() == null && machineOrder.getOriginalOrderId() != 0) {
                 //插入新增改单项的detail
                 OrderDetail temp = orderItem.getOrderDetail();
                 orderDetailService.saveAndGetID(temp);
@@ -462,7 +464,7 @@ public class ContractController {
                 orderSignService.save(orderSign);
 
                 //被拆分出来的机器绑定到新的需求单
-                for ( Machine splitMachine: splitMachineList ) {
+                for (Machine splitMachine : splitMachineList) {
                     splitMachine.setOrderId(machineOrder.getId());
                     splitMachine.setStatus(Constant.MACHINE_SPLITED);
                     ///MQTT 有拆单状态的机器，通知全部安装组长
@@ -477,10 +479,10 @@ public class ContractController {
 
                 //拆单记录(插入或者修改)
                 OrderSplitRecord splitRecord = orderItem.getOrderSplitRecord();
-                if(splitRecord.getId() == null) {
+                if (splitRecord.getId() == null) {
                     splitRecord.setSplitTime(new Date());
                     orderSplitRecordService.save(splitRecord);
-                }else {
+                } else {
                     splitRecord.setSplitTime(new Date());
                     orderSplitRecordService.update(splitRecord);
                 }
@@ -488,10 +490,10 @@ public class ContractController {
         }
 
         //处于拆单状态的需求单，更新状态成“ORDER_SPLIT”
-        for (MachineOrderWrapper orderItem: machineOrderWrapperList) {
+        for (MachineOrderWrapper orderItem : machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
             //TODO:同一个合同中其他为“ORDER_SPLIT”状态的需求单也会被更新，需要完善
-            if(machineOrder.getStatus().equals(Constant.ORDER_SPLITED)) {
+            if (machineOrder.getStatus().equals(Constant.ORDER_SPLITED)) {
                 machineOrder.setUpdateTime(new Date());
                 machineOrderService.update(machineOrder);
             }
@@ -515,8 +517,8 @@ public class ContractController {
     }
 
     @PostMapping("/selectContracts")
-    public Result selectContracts( @RequestParam(defaultValue = "0") Integer page,
-                                   @RequestParam(defaultValue = "0") Integer size,
+    public Result selectContracts(@RequestParam(defaultValue = "0") Integer page,
+                                  @RequestParam(defaultValue = "0") Integer size,
                                   String contractNum,
                                   Integer status,
                                   String sellman,
@@ -533,18 +535,18 @@ public class ContractController {
     @PostMapping("/startSign")
     @Transactional(rollbackFor = Exception.class)
     public Result startSign(@RequestParam Integer contractId) {
-        if(contractId == null) {
+        if (contractId == null) {
             ResultGenerator.genFailResult("合同ID为空！");
-        }else {
+        } else {
             ContractSign contractSign = contractSignService.detailByContractId(String.valueOf(contractId));
-            if(contractSign == null) {
+            if (contractSign == null) {
                 return ResultGenerator.genFailResult("根据合同号获取合同签核信息失败！");
-            }else {
+            } else {
                 //更新合同状态为“CONTRACT_CHECKING”
                 Contract contract = contractService.findById(contractId);
-                if(contract == null) {
+                if (contract == null) {
                     return ResultGenerator.genFailResult("合同编号ID无效");
-                }else {
+                } else {
                     contract.setStatus(Constant.CONTRACT_CHECKING);
                     contract.setUpdateTime(new Date());
                     contractService.update(contract);
@@ -555,8 +557,8 @@ public class ContractController {
                 tempCondition.createCriteria().andCondition("contract_id = ", contractId);
                 tempCondition.createCriteria().andCondition("status = ", Constant.ORDER_INITIAL);
                 List<MachineOrder> orderList = machineOrderService.findByCondition(tempCondition);
-                for (MachineOrder orderItem: orderList) {
-                    if(orderItem.getStatus().equals(Constant.ORDER_INITIAL)) {
+                for (MachineOrder orderItem : orderList) {
+                    if (orderItem.getStatus().equals(Constant.ORDER_INITIAL)) {
                         orderItem.setStatus(Constant.ORDER_CHECKING);
                         machineOrderService.update(orderItem);
                     }
@@ -564,8 +566,8 @@ public class ContractController {
 
                 //更新签核记录
                 contractSign.setUpdateTime(new Date());
-                String currentStep =  commonService.getCurrentSignStep(contractId);
-                if(currentStep == null) {
+                String currentStep = commonService.getCurrentSignStep(contractId);
+                if (currentStep == null) {
                     return ResultGenerator.genFailResult("获取当前签核steps失败！");
                 }
                 contractSign.setCurrentStep(currentStep);
@@ -580,11 +582,12 @@ public class ContractController {
      * 根据 contract_id，创建EXCEL表格，“合同评审单”+“客户需求单” 等sheet。
      * 具体内容来自 contract, contract_sign,machine_order,order_detail
      * Update: 总经理，销售，财务之外的用户，生成的excel里不显示金额信息.
+     *
      * @param contractId
      * @return
      */
     @PostMapping("/buildContractExcel")
-    public Result buildContractExcel(@RequestParam Integer contractId,@RequestParam String account) {
+    public Result buildContractExcel(@RequestParam Integer contractId, @RequestParam String account) {
         InputStream fs = null;
         POIFSFileSystem pfs = null;
         HSSFWorkbook wb = null;
@@ -598,47 +601,47 @@ public class ContractController {
         //只有总经理，销售，财务等用户，生成的excel里才显示金额信息. '6','7','9','14','15'
         Boolean displayPrice = false;
         User user = userService.selectByAccount(account);
-        if (user != null ){
+        if (user != null) {
             Integer roleId = user.getRoleId();
-            if( (6 == roleId)
+            if ((6 == roleId)
                     || (7 == roleId)
                     || (9 == roleId)
                     || (14 == roleId)
-                    || (15 == roleId) ){
+                    || (15 == roleId)) {
                 displayPrice = true;
             }
         }
 
-        try{
+        try {
             ClassPathResource resource = new ClassPathResource("empty_contract.xls");
             fs = resource.getInputStream();
-            pfs=new POIFSFileSystem(fs);
+            pfs = new POIFSFileSystem(fs);
             wb = new HSSFWorkbook(pfs);
 
             Contract contract = contractService.findById(contractId);
-            if(contract == null){
+            if (contract == null) {
                 return ResultGenerator.genFailResult("contractID not exist!");
             }
 
             //一个合同可能对应多个需求单
             List<Integer> machineOrderIdList = new ArrayList<Integer>();
             MachineOrder mo;
-            for (int i =0; i<machineOrderService.findAll().size() ; i++){
+            for (int i = 0; i < machineOrderService.findAll().size(); i++) {
                 mo = machineOrderService.findAll().get(i);
-                if(mo.getContractId().equals(contractId)){
+                if (mo.getContractId().equals(contractId)) {
                     machineOrderIdList.add(mo.getId());
                 }
             }
             MachineOrder machineOrder;
             MachineOrderDetail machineOrderDetail;
             //需求单签核,一个需求单对应0个或多个签核
-            List<OrderSign> orderSignList ;
+            List<OrderSign> orderSignList;
 
             //读取了模板内所有sheet1内容
             HSSFSheet sheet1 = wb.getSheetAt(0);
             //在相应的单元格进行赋值(A2)
             HSSFCell cell = sheet1.getRow(1).getCell((short) 0);
-            cell.setCellValue(new HSSFRichTextString( "合 同 号：" + contract.getContractNum() ));
+            cell.setCellValue(new HSSFRichTextString("合 同 号：" + contract.getContractNum()));
             //D2
             cell = sheet1.getRow(1).getCell((short) 3);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -654,39 +657,39 @@ public class ContractController {
 
             //N个需求单，插入N行
             Integer machineOrderCount = machineOrderIdList.size();
-            insertRow(wb,sheet1,5,machineOrderCount);
+            insertRow(wb, sheet1, 5, machineOrderCount);
 
-            System.out.println("======== machineOrderCount: " + machineOrderCount );
+            System.out.println("======== machineOrderCount: " + machineOrderCount);
             Integer allSum = 0;
-            for(int i=0; i<machineOrderCount;i++){
+            for (int i = 0; i < machineOrderCount; i++) {
                 machineOrder = machineOrderService.findById(contractId);
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
                 //A5,A6,A7,...品牌
-                cell = sheet1.getRow(5+i).getCell((short) 0);
+                cell = sheet1.getRow(5 + i).getCell((short) 0);
                 cell.setCellValue(new HSSFRichTextString(machineOrderService.findAll().get(i).getBrand()));
 
                 //B5,B6,B7,...机型
-                cell = sheet1.getRow(5+i).getCell((short) 1);
-                cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineType().getName()));
+                cell = sheet1.getRow(5 + i).getCell((short) 1);
+                cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineType().getName()));
 
                 //C5,C6,C7,...数量
-                cell = sheet1.getRow(5+i).getCell((short) 2);
-                cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineNum().toString()));
+                cell = sheet1.getRow(5 + i).getCell((short) 2);
+                cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineNum().toString()));
 
                 //D5,D6,D7,...单价
-                cell = sheet1.getRow(5+i).getCell((short) 3);
-                if(displayPrice){
-                    cell.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachinePrice()));
+                cell = sheet1.getRow(5 + i).getCell((short) 3);
+                if (displayPrice) {
+                    cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachinePrice()));
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
 
                 //E5,E6,E7...总价
-                cell = sheet1.getRow(5+i).getCell((short) 4);
-                if(displayPrice){
-                    Integer sum = Integer.parseInt(machineOrderDetail.getMachinePrice()) *  machineOrderDetail.getMachineNum();
+                cell = sheet1.getRow(5 + i).getCell((short) 4);
+                if (displayPrice) {
+                    Integer sum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum();
                     allSum = allSum + sum;
-                    cell.setCellValue(new HSSFRichTextString( sum.toString() ));
+                    cell.setCellValue(new HSSFRichTextString(sum.toString()));
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
@@ -695,15 +698,15 @@ public class ContractController {
             Integer locationRow = 6 + machineOrderCount;
             // 总计
             cell = sheet1.getRow(locationRow++).getCell((short) 4);
-            if(displayPrice){
-                cell.setCellValue(new HSSFRichTextString( allSum.toString()));
+            if (displayPrice) {
+                cell.setCellValue(new HSSFRichTextString(allSum.toString()));
             } else {
                 cell.setCellValue(new HSSFRichTextString("/"));
             }
 
             // 付款方式
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
-            cell.setCellValue(new HSSFRichTextString( contract.getPayMethod() ));
+            cell.setCellValue(new HSSFRichTextString(contract.getPayMethod()));
 
             // 合同交货日期
             String dateTimeString = formatter.format(contract.getContractShipDate());
@@ -712,12 +715,12 @@ public class ContractController {
 
             // 备注
             cell = sheet1.getRow(locationRow++).getCell((short) 0);
-            cell.setCellValue(new HSSFRichTextString( contract.getMark()));
+            cell.setCellValue(new HSSFRichTextString(contract.getMark()));
 
             // 销售员
-            locationRow = locationRow+6;
+            locationRow = locationRow + 6;
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
-            cell.setCellValue(new HSSFRichTextString( contract.getSellman()));
+            cell.setCellValue(new HSSFRichTextString(contract.getSellman()));
 
             //一个合同对应多个签核 TODO:多个签核时如何选择，contractSignService.detailByContractId 可能要改。
             ContractSign contractSign;
@@ -733,8 +736,8 @@ public class ContractController {
              */
             //合同的N个签核，插入N行
             Integer contractSignCount = signContentItemList.size();
-            insertRow(wb,sheet1,locationRow,contractSignCount);
-            for( int k=0; k<contractSignCount; k++){
+            insertRow(wb, sheet1, locationRow, contractSignCount);
+            for (int k = 0; k < contractSignCount; k++) {
                 /**
                  * 合同签核的： 角色（部门）/人/时间/意见
                  */
@@ -745,231 +748,231 @@ public class ContractController {
                 cell = sheet1.getRow(locationRow).getCell((short) 0);
                 cell.setCellValue(new HSSFRichTextString(roleName));
                 //2.签核人
-                cell = sheet1.getRow(locationRow).getCell((short)1);
+                cell = sheet1.getRow(locationRow).getCell((short) 1);
                 cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getUser()));
                 //3.签核时间
-                cell = sheet1.getRow(locationRow).getCell((short)2);
-                if(null != signContentItemList.get(k).getDate()) {
+                cell = sheet1.getRow(locationRow).getCell((short) 2);
+                if (null != signContentItemList.get(k).getDate()) {
                     cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
                 }
-                cell = sheet1.getRow(locationRow).getCell((short)3);
+                cell = sheet1.getRow(locationRow).getCell((short) 3);
                 cell.setCellValue(new HSSFRichTextString("意见"));
                 //4.签核意见
-                cell = sheet1.getRow(locationRow++).getCell((short)4);
+                cell = sheet1.getRow(locationRow++).getCell((short) 4);
                 cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
 
             }
             //最后删除多余一行
-            sheet1.shiftRows(   locationRow +1,
+            sheet1.shiftRows(locationRow + 1,
                     sheet1.getLastRowNum(),
                     -1);
 
             //需求单
             //根据实际需求单数量，动态复制生成新的sheet;
-            for(int i=0; i<machineOrderCount-1;i++) {
+            for (int i = 0; i < machineOrderCount - 1; i++) {
                 // clone已经包含copy+paste
                 wb.cloneSheet(1);
             }
             //调整sheet位置
             Integer sheetCount = wb.getNumberOfSheets();
-            wb.setSheetOrder("Sheet3",sheetCount-1);
+            wb.setSheetOrder("Sheet3", sheetCount - 1);
 
             //sheet2，sheet3...,第1,2,...个需求单
-            for(int i=0; i<machineOrderCount;i++) {
+            for (int i = 0; i < machineOrderCount; i++) {
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
 
-                HSSFSheet sheetX = wb.getSheetAt(1+i);
+                HSSFSheet sheetX = wb.getSheetAt(1 + i);
                 //在相应的单元格进行赋值
                 //B2
                 HSSFCell cell2 = sheetX.getRow(1).getCell((short) 1);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getSellman()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getSellman()));
                 //D2
                 cell2 = sheetX.getRow(1).getCell((short) 3);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getMaintainType()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMaintainType()));
                 //F2
                 cell2 = sheetX.getRow(1).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderNum()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderNum()));
                 // I2
                 cell2 = sheetX.getRow(1).getCell((short) 8);
-                cell2.setCellValue(new HSSFRichTextString( contract.getContractNum()));
+                cell2.setCellValue(new HSSFRichTextString(contract.getContractNum()));
 
                 //C3
                 cell2 = sheetX.getRow(2).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getCustomer()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getCustomer()));
                 //E3
                 cell2 = sheetX.getRow(2).getCell((short) 4);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getBrand()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getBrand()));
                 //H3
                 cell2 = sheetX.getRow(2).getCell((short) 7);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getMachineType().getName()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineType().getName()));
 
                 //C4
                 cell2 = sheetX.getRow(3).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getHeadNum().toString()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getHeadNum().toString()));
                 //E4
                 cell2 = sheetX.getRow(3).getCell((short) 4);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getHeadDistance().toString()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getHeadDistance().toString()));
                 //H4
                 cell2 = sheetX.getRow(3).getCell((short) 7);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getxDistance()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getxDistance()));
 
                 //H5
                 cell2 = sheetX.getRow(4).getCell((short) 7);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getyDistance()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getyDistance()));
 
                 //D6
                 cell2 = sheetX.getRow(5).getCell((short) 3);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTowelColor()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelColor()));
                 //F6
                 cell2 = sheetX.getRow(5).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTowelDaxle()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelDaxle()));
                 //H6
                 cell2 = sheetX.getRow(5).getCell((short) 7);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTowelHaxle()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelHaxle()));
                 //K6
                 cell2 = sheetX.getRow(5).getCell((short) 10);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTowelMotor()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelMotor()));
 
                 //D7
                 cell2 = sheetX.getRow(6).getCell((short) 3);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTapingHead()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTapingHead()));
                 //H7
                 cell2 = sheetX.getRow(6).getCell((short) 7);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getSpecialTowelNeedle()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelNeedle()));
 
                 //C8
                 cell2 = sheetX.getRow(7).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricPc()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricPc()));
                 //D8
                 cell2 = sheetX.getRow(7).getCell((short) 3);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getCountry()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getCountry()));
                 //F8
                 cell2 = sheetX.getRow(7).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricMotor()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricMotor()));
                 //I8
                 cell2 = sheetX.getRow(7).getCell((short) 8);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricMotorXy()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricMotorXy()));
 
                 //C9
                 cell2 = sheetX.getRow(8).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricTrim()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricTrim()));
                 //F9
                 cell2 = sheetX.getRow(8).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricPower()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricPower()));
                 //I9
                 cell2 = sheetX.getRow(8).getCell((short) 8);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricSwitch()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricSwitch()));
 
                 //C10
                 cell2 = sheetX.getRow(9).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getElectricOil()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricOil()));
 
                 //C11
                 cell2 = sheetX.getRow(10).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleSplit()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleSplit()));
                 //F11
                 cell2 = sheetX.getRow(10).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxlePanel()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxlePanel()));
                 //i11
                 cell2 = sheetX.getRow(10).getCell((short) 8);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleNeedle()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleNeedle()));
 
                 //C12
                 cell2 = sheetX.getRow(11).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleRail()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleRail()));
                 //f12
                 cell2 = sheetX.getRow(11).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleDownCheck()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleDownCheck()));
                 //i12
                 cell2 = sheetX.getRow(11).getCell((short) 8);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleHook()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleHook()));
 
                 //C13
                 cell2 = sheetX.getRow(12).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleJump()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleJump()));
                 //F13
                 cell2 = sheetX.getRow(12).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleUpperThread()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleUpperThread()));
 
                 //C14
                 cell2 = sheetX.getRow(13).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getAxleAddition()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleAddition()));
 
                 //C15
                 cell2 = sheetX.getRow(14).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkColor()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkColor()));
                 //f15
                 cell2 = sheetX.getRow(14).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkPlaten()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkPlaten()));
 
                 //G15
                 cell2 = sheetX.getRow(14).getCell((short) 6);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkPlatenColor()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkPlatenColor()));
 
                 //i15
                 cell2 = sheetX.getRow(14).getCell((short) 8);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkRing()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkRing()));
 
                 //C16
                 cell2 = sheetX.getRow(15).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkBracket()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkBracket()));
                 //f16
                 cell2 = sheetX.getRow(15).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkStop()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkStop()));
                 //i16
                 cell2 = sheetX.getRow(15).getCell((short) 8);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getFrameworkLight()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkLight()));
 
                 //C17
                 cell2 = sheetX.getRow(16).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getDriverType()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverType()));
                 //f17
                 cell2 = sheetX.getRow(16).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getDriverMethod()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverMethod()));
 
                 //C18
                 cell2 = sheetX.getRow(17).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getDriverHorizonNum().toString()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverHorizonNum().toString()));
                 //C19
                 cell2 = sheetX.getRow(18).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getOrderDetail().getDriverVerticalNum().toString()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverVerticalNum().toString()));
                 //C20
                 cell2 = sheetX.getRow(19).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString( machineOrderDetail.getPackageMethod()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getPackageMethod()));
 
                 //C22，23 ... N 装置名称
                 String str = machineOrderDetail.getEquipment();
                 JSONArray jsonArray = JSON.parseArray(str);
                 Integer equipmentCount = 0;
                 Integer totalPriceOfOrder = 0;
-                if( null != jsonArray ) {
+                if (null != jsonArray) {
                     //该需求单的N个装置，插入N行
                     equipmentCount = jsonArray.size();
                     insertRow2(wb, sheetX, 21, equipmentCount - 1);
                     System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted " + equipmentCount + " line");
 
-                    for (int j = 0; j < equipmentCount; j++){
-                        Equipment eq = JSON.parseObject((String) jsonArray.get(j).toString(),Equipment.class);
-                        cell2 = sheetX.getRow(21+j).getCell((short) 0);
-                        cell2.setCellValue(new HSSFRichTextString(  Integer.toString(j+1)));
+                    for (int j = 0; j < equipmentCount; j++) {
+                        Equipment eq = JSON.parseObject((String) jsonArray.get(j).toString(), Equipment.class);
+                        cell2 = sheetX.getRow(21 + j).getCell((short) 0);
+                        cell2.setCellValue(new HSSFRichTextString(Integer.toString(j + 1)));
 
-                        cell2 = sheetX.getRow(21+j).getCell((short) 1);
-                        cell2.setCellValue(new HSSFRichTextString( eq.getName()));
+                        cell2 = sheetX.getRow(21 + j).getCell((short) 1);
+                        cell2.setCellValue(new HSSFRichTextString(eq.getName()));
 
-                        cell2 = sheetX.getRow(21+j).getCell((short) 2);
-                        cell2.setCellValue(new HSSFRichTextString( eq.getNumber().toString()));
+                        cell2 = sheetX.getRow(21 + j).getCell((short) 2);
+                        cell2.setCellValue(new HSSFRichTextString(eq.getNumber().toString()));
 
-                        cell2 = sheetX.getRow(21+j).getCell((short) 3);
-                        if(displayPrice){
-                            cell2.setCellValue(new HSSFRichTextString( eq.getPrice().toString()));
+                        cell2 = sheetX.getRow(21 + j).getCell((short) 3);
+                        if (displayPrice) {
+                            cell2.setCellValue(new HSSFRichTextString(eq.getPrice().toString()));
                         } else {
                             cell2.setCellValue(new HSSFRichTextString("/"));
                         }
-                        cell2 = sheetX.getRow(21+j).getCell((short) 4);
+                        cell2 = sheetX.getRow(21 + j).getCell((short) 4);
                         int eqSum = eq.getNumber() * eq.getPrice();
                         totalPriceOfOrder += eqSum;
-                        if(displayPrice){
-                            cell2.setCellValue(new HSSFRichTextString(( Integer.toString(eqSum))));
+                        if (displayPrice) {
+                            cell2.setCellValue(new HSSFRichTextString((Integer.toString(eqSum))));
                         } else {
                             cell2.setCellValue(new HSSFRichTextString("/"));
                         }
@@ -984,15 +987,15 @@ public class ContractController {
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineNum().toString()));
                 // 机器单价
                 cell2 = sheetX.getRow(21 + equipmentCount).getCell((short) 3);
-                if(displayPrice){
+                if (displayPrice) {
                     cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachinePrice()));
                 } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
                 // 机器总价
-                Integer machineOrderSum = Integer.parseInt(machineOrderDetail.getMachinePrice())*machineOrderDetail.getMachineNum();
+                Integer machineOrderSum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum();
                 cell2 = sheetX.getRow(21 + equipmentCount).getCell((short) 4);
-                if(displayPrice){
+                if (displayPrice) {
                     cell2.setCellValue(new HSSFRichTextString(machineOrderSum.toString()));
                 } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
@@ -1001,19 +1004,19 @@ public class ContractController {
                 // 需求单总价
                 totalPriceOfOrder += machineOrderSum;
                 cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 4);
-                if(displayPrice){
+                if (displayPrice) {
                     cell2.setCellValue(new HSSFRichTextString(totalPriceOfOrder.toString()));
                 } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
 
                 // 合同的交货日期
-                cell2 = sheetX.getRow(23+equipmentCount).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString(formatter2.format( contract.getContractShipDate())));
+                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 2);
+                cell2.setCellValue(new HSSFRichTextString(formatter2.format(contract.getContractShipDate())));
 
                 // 计划发货日期
                 cell2 = sheetX.getRow(24 + equipmentCount).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString(formatter2.format( machineOrderDetail.getPlanShipDate())));
+                cell2.setCellValue(new HSSFRichTextString(formatter2.format(machineOrderDetail.getPlanShipDate())));
 
                 // 备注
                 cell2 = sheetX.getRow(25 + equipmentCount).getCell((short) 0);
@@ -1024,15 +1027,15 @@ public class ContractController {
                  */
                 orderSignList = orderSignService.getOrderSignListByOrderId(machineOrderIdList.get(i));
 
-                if(orderSignList.size() > 0) {
+                if (orderSignList.size() > 0) {
                     //取最后一次的签核，后续看是否需要根据时间来取最新
-                    orderSign = orderSignList.get(orderSignList.size()-1);
+                    orderSign = orderSignList.get(orderSignList.size() - 1);
                     signContentItemList = JSON.parseArray(orderSign.getSignContent(), SignContentItem.class);
 
                     //需求单的N个签核，插入N行
                     Integer orderSignCount = signContentItemList.size();
-                    insertRow2(wb,sheetX,33+equipmentCount,orderSignCount);
-                    for(int k=0; k<orderSignCount; k++){
+                    insertRow2(wb, sheetX, 33 + equipmentCount, orderSignCount);
+                    for (int k = 0; k < orderSignCount; k++) {
                         /**
                          * 需求单签核的： 角色（部门）/人/时间/意见
                          */
@@ -1040,32 +1043,32 @@ public class ContractController {
                         int roleId = signContentItemList.get(k).getRoleId();
                         //根据roleId返回角色（部门）
                         String roleName = roleService.findById(roleId).getRoleName();
-                        cell = sheetX.getRow(33 + equipmentCount +k).getCell((short) 0);
+                        cell = sheetX.getRow(33 + equipmentCount + k).getCell((short) 0);
                         cell.setCellValue(new HSSFRichTextString(roleName));
                         //2.签核人
-                        cell = sheetX.getRow(33 + equipmentCount +k).getCell((short) 1);
+                        cell = sheetX.getRow(33 + equipmentCount + k).getCell((short) 1);
                         cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getUser()));
                         //3.签核时间
-                        cell = sheetX.getRow(33 + equipmentCount +k).getCell((short) 2);
-                        if(null != signContentItemList.get(k).getDate()){
+                        cell = sheetX.getRow(33 + equipmentCount + k).getCell((short) 2);
+                        if (null != signContentItemList.get(k).getDate()) {
                             cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
                         }
-                        cell = sheetX.getRow(33 + equipmentCount +k).getCell((short)3);
+                        cell = sheetX.getRow(33 + equipmentCount + k).getCell((short) 3);
                         cell.setCellValue(new HSSFRichTextString("意见"));
                         //4.签核意见
-                        cell = sheetX.getRow(33 + equipmentCount +k).getCell((short) 4);
+                        cell = sheetX.getRow(33 + equipmentCount + k).getCell((short) 4);
                         cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
                         //合并单元格
                         sheetX.addMergedRegion(new CellRangeAddress(33 + equipmentCount + k,
-                                    33 + equipmentCount + k, 4, 10));
+                                33 + equipmentCount + k, 4, 10));
                     }
                     //最后删除多余一行
-                    sheetX.shiftRows( 33 + equipmentCount + orderSignCount + 1,
+                    sheetX.shiftRows(33 + equipmentCount + orderSignCount + 1,
                             sheetX.getLastRowNum(),
                             -1);
                 }
             }
-  
+
             //修改模板内容导出新模板,生成路径供前端下载
             downloadPath = contractOutputDir + contract.getContractNum() + ".xls";
             downloadPathForNginx = "/excel/" + contract.getContractNum() + ".xls";
@@ -1073,30 +1076,30 @@ public class ContractController {
             wb.write(out);
             out.close();
 
-        }  catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 fs.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        if("".equals(downloadPath)) {
+        if ("".equals(downloadPath)) {
             return ResultGenerator.genFailResult("生成合同文件失败!");
-        }else {
+        } else {
             return ResultGenerator.genSuccessResult(downloadPathForNginx);
         }
     }
 
-    private void insertRow(HSSFWorkbook wb, HSSFSheet sheet, int starRow,int rows) {
-        sheet.shiftRows(starRow + 1, sheet.getLastRowNum(), rows,true,false);
+    private void insertRow(HSSFWorkbook wb, HSSFSheet sheet, int starRow, int rows) {
+        sheet.shiftRows(starRow + 1, sheet.getLastRowNum(), rows, true, false);
         starRow = starRow - 1;
 
         //创建 多 行
-        for (int i = 0; i <rows; i++) {
+        for (int i = 0; i < rows; i++) {
             HSSFRow sourceRow = null;
             HSSFRow targetRow = null;
             HSSFCell sourceCell = null;
@@ -1108,7 +1111,7 @@ public class ContractController {
             targetRow.setHeight(sourceRow.getHeight());
 
             //创建多列
-            for (m = sourceRow.getFirstCellNum(); m <5; m++) {
+            for (m = sourceRow.getFirstCellNum(); m < 5; m++) {
 
                 targetCell = targetRow.createCell(m);
                 sourceCell = sourceRow.getCell(m);
@@ -1120,17 +1123,18 @@ public class ContractController {
 
     /**
      * TODO: insertRow2和insertRow可以合并
+     *
      * @param wb
      * @param sheet
      * @param starRow
      * @param rows
      */
-    private void insertRow2(HSSFWorkbook wb, HSSFSheet sheet, int starRow,int rows) {
-        sheet.shiftRows(starRow + 1, sheet.getLastRowNum(), rows,true,false);
+    private void insertRow2(HSSFWorkbook wb, HSSFSheet sheet, int starRow, int rows) {
+        sheet.shiftRows(starRow + 1, sheet.getLastRowNum(), rows, true, false);
         starRow = starRow - 1;
 
         //创建 多 行
-        for (int i = 0; i <rows; i++) {
+        for (int i = 0; i < rows; i++) {
             HSSFRow sourceRow = null;
             HSSFRow targetRow = null;
             HSSFCell sourceCell = null;
@@ -1142,7 +1146,7 @@ public class ContractController {
             targetRow.setHeight(sourceRow.getHeight());
 
             //创建多列
-            for (m = sourceRow.getFirstCellNum(); m <11; m++) {
+            for (m = sourceRow.getFirstCellNum(); m < 11; m++) {
 
                 targetCell = targetRow.createCell(m);
                 sourceCell = sourceRow.getCell(m);
@@ -1157,5 +1161,21 @@ public class ContractController {
         List<ContractDetail> list = contractService.selectAllCustomer(name);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(list);
+    }
+
+    @PostMapping("/isContractExist")
+    public Result isContractExist(@RequestParam String contractNum) {
+        if (contractNum == null) {
+            return ResultGenerator.genFailResult("请输入合同编号！");
+        } else {
+            Condition condition = new Condition(Contract.class);
+            condition.createCriteria().andCondition("contract_num = ", contractNum);
+            List<Contract> list = contractService.findByCondition(condition);
+            if (list.size() == 0) {
+                return ResultGenerator.genSuccessResult();
+            } else {
+                return ResultGenerator.genFailResult("合同编号已存在！");
+            }
+        }
     }
 }
