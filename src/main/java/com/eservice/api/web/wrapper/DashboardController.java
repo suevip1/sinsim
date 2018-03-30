@@ -5,6 +5,7 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.dashboard.Statistic;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.task_record.TaskRecord;
+import com.eservice.api.model.task_record.TaskRecordExpired;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.MachineServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
@@ -68,5 +69,11 @@ public class DashboardController {
         List<TaskRecord> abnormalTaskRecordList = taskRecordService.findByCondition(taskRecordCondition);
         statistic.setAbnormalTaskNum(abnormalTaskRecordList.size());
         return ResultGenerator.genSuccessResult(statistic);
+    }
+
+    @PostMapping("/getExpiredTaskStatistics")
+    public Result getExpiredTaskStatistics(Integer mode) {
+        List<TaskRecordExpired> list = taskRecordService.getExpiredTaskStatistics(mode);
+        return ResultGenerator.genSuccessResult(list);
     }
 }

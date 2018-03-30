@@ -4,6 +4,7 @@ import com.eservice.api.dao.TaskRecordMapper;
 import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
+import com.eservice.api.model.task_record.TaskRecordExpired;
 import com.eservice.api.service.TaskRecordService;
 import com.eservice.api.core.AbstractService;
 import com.eservice.api.service.common.Constant;
@@ -93,5 +94,9 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
         } else {
             return taskRecordMapper.selectPlanedTaskRecords(orderNum, machineStrId, taskName, nameplate, installStatus, machineType, query_start_time, query_finish_time);
         }
+    }
+
+    public List<TaskRecordExpired> getExpiredTaskStatistics(Integer mode) {
+        return taskRecordMapper.getExpiredTaskStatistics(mode);
     }
 }

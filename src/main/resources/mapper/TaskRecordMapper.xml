@@ -18,6 +18,14 @@
         <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
     </resultMap>
 
+    <resultMap id="TaskRecordExpiredMap" type="com.eservice.api.model.task_record.TaskRecordExpired">
+        <result column="expired_count" jdbcType="INTEGER" property="expiredCount"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="date_year" jdbcType="INTEGER" property="dateYear"/>
+        <result column="date_month" jdbcType="INTEGER" property="dateMonth"/>
+	<result column="date_day" jdbcType="INTEGER" property="dateDay"/>
+    </resultMap>
+
     <!--根据user.account查 task_record OK-->
     <select id="selectTaskReocords" resultMap="BaseResultMap">
   select
@@ -161,7 +169,7 @@
         where tr.status !=0 and tr.status !=1 and tr.status !=6
   </select>
 
-   <select id="selectAllInstallTaskRecordDetailByUserAccount" resultMap="TaskRecordDetail">
+    <select id="selectAllInstallTaskRecordDetailByUserAccount" resultMap="TaskRecordDetail">
         select
         tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
         pr.id process_record_id_in_association, pr.*,
@@ -238,7 +246,8 @@
 
     <select id="selectPlanedTaskRecordsByFuzzy" resultMap="TaskRecordDetail">
         select
-        tr.id, tr.task_name,tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
+        tr.id, tr.task_name,tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time,
+        tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
         m.machine_strid,m.nameplate,m.machine_type,
         mo.order_num,mo.contract_ship_date, mo.plan_ship_date,
         tp.plan_time, tp.plan_type, tp.deadline
@@ -282,7 +291,8 @@
     </select>
     <select id="selectPlanedTaskRecords" resultMap="TaskRecordDetail">
         select
-        tr.id, tr.task_name,tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
+        tr.id, tr.task_name,tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time,
+        tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
         m.machine_strid,m.nameplate,m.machine_type,
         mo.order_num,mo.contract_ship_date, mo.plan_ship_date,
         tp.plan_time, tp.plan_type, tp.deadline
@@ -453,5 +463,25 @@
         and m.nameplate = #{namePlate}
       -- 4:安装完成，5:质检中， 8:质检异常
         and (tr.status=4 or tr.status = 5 or tr.status=8);
+    </select>
+
+    <select id="getExpiredTaskStatistics" resultMap="TaskRecordExpiredMap">
+        SELECT COUNT(*) AS expired_count,v.`status`,YEAR(plan_time) AS date_year,MONTH(plan_time) AS date_month,
+        DAY(plan_time) AS date_day
+        FROM
+        (
+        SELECT tr.*,tp.plan_time FROM task_record tr
+        LEFT JOIN task_plan tp ON tr.id=tp.task_record_id
+        ) v
+        WHERE !ISNULL(plan_time)
+        <if test="mode == null||mode == 0"><!--TODO AND install_end_time>plan_time AND `status`=6-->
+            GROUP BY date_year
+        </if>
+        <if test="mode == 1">
+            GROUP BY date_year,date_month
+        </if>
+        <if test="mode == 2">
+            GROUP BY date_year,date_month,date_day
+        </if>
     </select>
 </mapper>
