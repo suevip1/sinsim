@@ -69,7 +69,8 @@
     a.id abnormal_id, a.abnormal_name,
     ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time ai_create_time,
     ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time ai_create_time,
-    m.status machine_status, m.create_time m_create_time, m.id machine_id, m.machine_strid, m.nameplate, m.location, m.installed_time, m.ship_time, m.update_time m_update_time
+    m.status machine_status, m.create_time m_create_time, m.id machine_id, m.machine_strid, m.nameplate, m.location, m.installed_time, m.ship_time, m.update_time m_update_time,
+    ar.id, ar.abnormal_type, ar.comment, ar.solution, ar.submit_user, ar.solution_user, ar.task_record_id, ar.create_time, ar.solve_time
     FROM abnormal_record ar
     JOIN task_record tr on tr.id = ar.task_record_id
     JOIN abnormal a on a.id = ar.abnormal_type
