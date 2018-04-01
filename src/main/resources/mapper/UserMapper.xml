@@ -80,7 +80,7 @@
         from user u
         join install_group ig on u.group_id=ig.id
         join role r on r.id = u.role_id
-        where group_id=(select group_id from user where user.id=#{id}) and u.valid='1'
-	and r.id=5
+        where group_id=(select group_id from user where user.id=#{id}) and u.valid='1'and r.id=17
+        <!-- role id为17是安装工 -->
     </select>
 </mapper>
