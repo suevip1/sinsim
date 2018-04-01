@@ -473,7 +473,7 @@
         SELECT tr.*,tp.plan_time FROM task_record tr
         LEFT JOIN task_plan tp ON tr.id=tp.task_record_id
         ) v
-        WHERE !ISNULL(plan_time) AND ((ISNULL(install_end_time) AND NOW()>plan_time) OR (!ISNULL(install_end_time) AND install_end_time>plan_time))
+        WHERE !ISNULL(plan_time) AND ((ISNULL(install_end_time) AND CURRENT_DATE >DATE(plan_time)) OR (!ISNULL(install_end_time) AND DATE(install_end_time)>DATE(plan_time)))
         GROUP BY date_year
         <!--TODO AND install_end_time>plan_time AND `status`=6-->
 
