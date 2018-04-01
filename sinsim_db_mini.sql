@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : MyDB
-Source Server Version : 50547
-Source Host           : localhost:3306
+Source Server         : remoteSinsim
+Source Server Version : 50721
+Source Host           : 172.18.0.2:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50547
+Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2018-03-22 16:22:11
+Date: 2018-04-01 17:05:27
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -153,10 +153,9 @@ CREATE TABLE `device` (
 -- ----------------------------
 -- Records of device
 -- ----------------------------
-INSERT INTO `device` VALUES ('1', '上轴组手机', '12:34:56:78:90');
-INSERT INTO `device` VALUES ('2', '下轴组手机（彭）', '866413031233123');
-INSERT INTO `device` VALUES ('4', '电控组设备', '354112070615948');
-INSERT INTO `device` VALUES ('5', '驱动安装组设备', '990009269149749');
+INSERT INTO `device` VALUES ('2', 'EService-Zhao', '866413031233123');
+INSERT INTO `device` VALUES ('4', 'EService-hu', '354112070615948');
+INSERT INTO `device` VALUES ('5', 'EService-wu', '990009269149749');
 
 -- ----------------------------
 -- Table structure for `install_group`
@@ -166,18 +165,20 @@ CREATE TABLE `install_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) NOT NULL COMMENT '公司部门',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of install_group
 -- ----------------------------
-INSERT INTO `install_group` VALUES ('1', '上轴安装组');
-INSERT INTO `install_group` VALUES ('2', '下轴安装组');
-INSERT INTO `install_group` VALUES ('3', '驱动安装组');
-INSERT INTO `install_group` VALUES ('4', '台板安装组');
+INSERT INTO `install_group` VALUES ('1', '上轴组');
+INSERT INTO `install_group` VALUES ('2', '下轴组');
+INSERT INTO `install_group` VALUES ('3', '驱动组');
+INSERT INTO `install_group` VALUES ('4', '台板组');
 INSERT INTO `install_group` VALUES ('5', '电控组');
-INSERT INTO `install_group` VALUES ('6', '喷油漆');
-INSERT INTO `install_group` VALUES ('7', '针杆架安装');
+INSERT INTO `install_group` VALUES ('7', '针杆架组');
+INSERT INTO `install_group` VALUES ('8', '调试组');
+INSERT INTO `install_group` VALUES ('9', '剪线组');
+INSERT INTO `install_group` VALUES ('10', '金片组');
 
 -- ----------------------------
 -- Table structure for `machine`
@@ -447,9 +448,7 @@ CREATE TABLE `process` (
 -- ----------------------------
 -- Records of process
 -- ----------------------------
-INSERT INTO `process` VALUES ('1', '流程一', '{ \"class\": \"go.GraphLinksModel\",\n  \"linkFromPortIdProperty\": \"fromPort\",\n  \"linkToPortIdProperty\": \"toPort\",\n  \"nodeDataArray\": [ \n{\"category\":\"Start\", \"text\":\"Start\", \"key\":-1, \"loc\":\"207.15625000000003 39.99999999999999\"},\n{\"category\":\"End\", \"text\":\"End\", \"key\":-4, \"loc\":\"206.5960057626528 274.2676887129068\"},\n{\"text\":\"调试电脑\", \"task_status\":\"0\", \"begin_time\":\"\", \"end_time\":\"\", \"group_id\":3, \"group_name\":\"驱动安装组\", \"key\":-3, \"loc\":\"207.51251220703125 130\"},\n{\"text\":\"安装夹线器\", \"task_status\":\"0\", \"begin_time\":\"\", \"end_time\":\"\", \"group_id\":4, \"group_name\":\"台板安装组\", \"key\":-2, \"loc\":\"207.51251220703125 196\"}\n ],\n  \"linkDataArray\": [ \n{\"from\":-1, \"to\":-3, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[207.15625000000003,90.67268123183139,207.15625000000003,100.67268123183139,207.15625000000003,110.3363406159157,207.51251220703125,110.3363406159157,207.51251220703125,120,207.51251220703125,130]},\n{\"from\":-3, \"to\":-2, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[207.51251220703125,162.87544860839844,207.51251220703125,172.87544860839844,207.51251220703125,179.4377243041992,207.51251220703125,179.4377243041992,207.51251220703125,186,207.51251220703125,196]},\n{\"from\":-2, \"to\":-4, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[207.51251220703125,228.87544860839844,207.51251220703125,238.87544860839844,207.51251220703125,251.57156866065264,206.5960057626528,251.57156866065264,206.5960057626528,264.2676887129069,206.5960057626528,274.2676887129069]}\n ]}', '2017-11-30 10:58:17', '2018-01-30 02:01:58');
-INSERT INTO `process` VALUES ('2', '流程二', 'tsk22', '2017-11-30 10:58:43', '2017-11-30 10:58:46');
-INSERT INTO `process` VALUES ('3', '流程三', 'taskList333', '2017-11-30 11:10:08', '2017-11-30 22:10:12');
+INSERT INTO `process` VALUES ('1', '测试流程模板', '{ \"class\": \"go.GraphLinksModel\",\n  \"linkFromPortIdProperty\": \"fromPort\",\n  \"linkToPortIdProperty\": \"toPort\",\n  \"nodeDataArray\": [ \n{\"category\":\"Start\", \"text\":\"Start\", \"key\":-1, \"loc\":\"142.15625000000003 5.999999999999993\"},\n{\"category\":\"End\", \"text\":\"End\", \"key\":-4, \"loc\":\"130.5960057626528 702.2676887129068\"},\n{\"text\":\"下轴安装\", \"taskStatus\":\"0\", \"beginTime\":\"\", \"endTime\":\"\", \"leader\":\"\", \"workList\":\"\", \"key\":-8, \"loc\":\"143.63748168945312 172.19999998807904\"},\n{\"text\":\"上轴安装\", \"taskStatus\":\"0\", \"beginTime\":\"\", \"endTime\":\"\", \"leader\":\"\", \"workList\":\"\", \"key\":-9, \"loc\":\"143.6374816894531 124.19999998807907\"},\n{\"text\":\"针杆架安装\", \"taskStatus\":\"0\", \"beginTime\":\"\", \"endTime\":\"\", \"leader\":\"\", \"workList\":\"\", \"key\":-7, \"loc\":\"143.63748168945312 225.19999998807907\"},\n{\"text\":\"驱动安装\", \"taskStatus\":\"0\", \"beginTime\":\"\", \"endTime\":\"\", \"leader\":\"\", \"workList\":\"\", \"key\":-5, \"loc\":\"143.63748168945312 278.19999998807907\"},\n{\"text\":\"台板安装\", \"taskStatus\":\"0\", \"beginTime\":\"\", \"endTime\":\"\", \"leader\":\"\", \"workList\":\"\", \"key\":-6, \"loc\":\"143.63748168945312 336.19999998807907\"},\n{\"text\":\"电控\", \"taskStatus\":\"0\", \"beginTime\":\"\", \"endTime\":\"\", \"leader\":\"\", \"workList\":\"\", \"key\":-10, \"loc\":\"143.63748168945312 397.19999998807907\"},\n{\"text\":\"金片安装\", \"taskStatus\":\"0\", \"beginTime\":\"\", \"endTime\":\"\", \"leader\":\"\", \"workList\":\"\", \"key\":-12, \"loc\":\"256.6374816894531 519.1999999880791\"},\n{\"text\":\"剪线\", \"taskStatus\":\"0\", \"beginTime\":\"\", \"endTime\":\"\", \"leader\":\"\", \"workList\":\"\", \"key\":-13, \"loc\":\"143.63748168945312 447.19999998807907\"},\n{\"text\":\"金片安装\", \"taskStatus\":\"0\", \"beginTime\":\"\", \"endTime\":\"\", \"leader\":\"\", \"workList\":\"\", \"key\":-14, \"loc\":\"44.637481689453125 518.1999999880791\"},\n{\"text\":\"调试\", \"taskStatus\":\"0\", \"beginTime\":\"\", \"endTime\":\"\", \"leader\":\"\", \"workList\":\"\", \"key\":-3, \"loc\":\"142.63748168945312 75.19999998807907\"}\n ],\n  \"linkDataArray\": [ \n{\"from\":-9, \"to\":-8, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 143.63748168945312,157.07544859647751,143.63748168945312,167.07544859647751,143.63748168945312,167.07544859647751,143.63748168945312,162.19999998807907,143.63748168945312,162.19999998807907,143.63748168945312,172.19999998807907 ]},\n{\"from\":-8, \"to\":-7, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 143.63748168945312,205.07544859647751,143.63748168945312,215.07544859647751,143.63748168945312,215.13772429227828,143.63748168945312,215.13772429227828,143.63748168945312,215.19999998807907,143.63748168945312,225.19999998807907 ]},\n{\"from\":-7, \"to\":-5, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 143.63748168945312,258.0754485964775,143.63748168945312,268.0754485964775,143.63748168945312,268.1377242922783,143.63748168945312,268.1377242922783,143.63748168945312,268.19999998807907,143.63748168945312,278.19999998807907 ]},\n{\"from\":-5, \"to\":-6, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 143.63748168945312,311.0754485964775,143.63748168945312,321.0754485964775,143.63748168945312,323.6377242922783,143.63748168945312,323.6377242922783,143.63748168945312,326.19999998807907,143.63748168945312,336.19999998807907 ]},\n{\"from\":-6, \"to\":-10, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 143.63748168945312,369.0754485964775,143.63748168945312,379.0754485964775,143.63748168945312,383.1377242922783,143.63748168945312,383.1377242922783,143.63748168945312,387.19999998807907,143.63748168945312,397.19999998807907 ]},\n{\"from\":-10, \"to\":-13, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 143.63748168945312,430.0754485964775,143.63748168945312,440.0754485964775,143.63748168945312,440.0754485964775,143.63748168945312,437.19999998807907,143.63748168945312,437.19999998807907,143.63748168945312,447.19999998807907 ]},\n{\"from\":-13, \"to\":-14, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 143.63748168945312,480.0754485964775,143.63748168945312,490.0754485964775,143.63748168945312,499.1377242922783,44.637481689453125,499.1377242922783,44.637481689453125,508.19999998807907,44.637481689453125,518.1999999880791 ]},\n{\"from\":-13, \"to\":-12, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 143.63748168945312,480.0754485964775,143.63748168945312,490.0754485964775,143.63748168945312,499.6377242922783,256.6374816894531,499.6377242922783,256.6374816894531,509.19999998807907,256.6374816894531,519.1999999880791 ]},\n{\"from\":-14, \"to\":-4, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 44.637481689453125,551.0754485964775,44.637481689453125,561.0754485964775,44.637481689453125,626.6715686546922,130.5960057626528,626.6715686546922,130.5960057626528,692.2676887129069,130.5960057626528,702.2676887129069 ]},\n{\"from\":-12, \"to\":-4, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 256.6374816894531,552.0754485964775,256.6374816894531,562.0754485964775,256.6374816894531,627.1715686546922,130.5960057626528,627.1715686546922,130.5960057626528,692.2676887129069,130.5960057626528,702.2676887129069 ]},\n{\"from\":-1, \"to\":-3, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 142.15625000000003,56.67268123183139,142.15625000000003,66.67268123183139,142.39686584472656,66.67268123183139,142.39686584472656,65.19999998807907,142.63748168945312,65.19999998807907,142.63748168945312,75.19999998807907 ]},\n{\"from\":-3, \"to\":-9, \"fromPort\":\"B\", \"toPort\":\"T\", \"points\":[ 142.63748168945312,108.07544859647751,142.63748168945312,118.07544859647751,143.13748168945312,118.07544859647751,143.13748168945312,114.19999998807907,143.63748168945312,114.19999998807907,143.63748168945312,124.19999998807907 ]}\n ]}', '2017-11-30 10:58:17', '2018-04-01 08:59:58');
 
 -- ----------------------------
 -- Table structure for `process_record`
@@ -502,26 +501,28 @@ CREATE TABLE `role` (
   `role_des` text COMMENT '角色说明',
   `role_scope` text COMMENT '角色权限列表',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
 INSERT INTO `role` VALUES ('1', '超级管理员', '系统后台管理', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":[],\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":[\"/home/system/user_manage\",\"/home/system/install_group_manage\",\"/home/system/role_manage\",\"/home/system/device_manager\"]}');
-INSERT INTO `role` VALUES ('2', '生产部管理员', '主要Pad上操作，上传位置、pad上查看流程等', '{\"contract\":[\"/home/contract/sign_process\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":null,\"abnormal\":[],\"task\":null,\"system\":null}');
-INSERT INTO `role` VALUES ('3', '安装组长', '安装前后扫描机器', null);
-INSERT INTO `role` VALUES ('4', '生产部经理', '订单审批', null);
-INSERT INTO `role` VALUES ('5', '普通员工', '浏览一般网页信息', null);
-INSERT INTO `role` VALUES ('6', '总经理', '订单审核等其他可配置权限', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[\"/home/order/order_sign\",\"/home/order/order_manage\"],\"plan\":[],\"abnormal\":[],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":[]}');
-INSERT INTO `role` VALUES ('7', '销售部经理', '订单审批', null);
-INSERT INTO `role` VALUES ('8', '技术部经理', '订单审批', null);
-INSERT INTO `role` VALUES ('9', '销售员', '录入订单', null);
-INSERT INTO `role` VALUES ('10', '技术员', '上传装车单，联系单', null);
-INSERT INTO `role` VALUES ('11', '质检员', 'pad上操作', null);
-INSERT INTO `role` VALUES ('12', 'PMC', '生产计划', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[\"/home/order/order_sign\",\"/home/order/order_manage\"],\"plan\":[],\"abnormal\":[],\"task\":[],\"system\":[]}');
-INSERT INTO `role` VALUES ('13', '成本核算员', '成本核算', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[\"/home/order/order_sign\",\"/home/order/order_manage\"],\"plan\":[],\"abnormal\":[],\"task\":[],\"system\":[]}');
-INSERT INTO `role` VALUES ('14', '财务经理', '合同合规性检查', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[\"/home/order/order_sign\",\"/home/order/order_manage\"],\"plan\":[],\"abnormal\":[],\"task\":[],\"system\":[]}');
-INSERT INTO `role` VALUES ('15', '财务会计', '订金确认', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[\"/home/order/order_sign\",\"/home/order/order_manage\"],\"plan\":[],\"abnormal\":[],\"task\":[],\"system\":[]}');
+INSERT INTO `role` VALUES ('2', '生产部管理员', '主要手机上传位置、查看机器安装状态', '{\"contract\":[\"/home/contract/contract_sign\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":null,\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":null}');
+INSERT INTO `role` VALUES ('3', '安装组长', '安装前后扫描机器', '{\"contract\":null,\"order\":null,\"machine\":null,\"plan\":null,\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('4', '生产部经理', '订单审批', '{\"contract\":[\"/home/contract/contract_sign\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":[],\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":null}');
+INSERT INTO `role` VALUES ('5', '普通员工', '浏览一般网页信息', '{\"contract\":null,\"order\":[],\"machine\":[\"/home/machine/machine_install_process\"],\"plan\":null,\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('6', '总经理', '订单审核等其他可配置权限', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":[],\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":null}');
+INSERT INTO `role` VALUES ('7', '销售部经理', '订单审批', '{\"contract\":[\"/home/contract/contract_sign\"],\"order\":[],\"machine\":[\"/home/machine/machine_install_process\"],\"plan\":null,\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('8', '技术部经理', '订单审批', '{\"contract\":[\"/home/contract/contract_sign\"],\"order\":[],\"machine\":[\"/home/machine/machine_install_process\"],\"plan\":null,\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('9', '销售员', '录入订单', '{\"contract\":[\"/home/contract/contract_sign\"],\"order\":[],\"machine\":null,\"plan\":null,\"abnormal\":null,\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('10', '技术员', '上传装车单，联系单', '{\"contract\":null,\"order\":[],\"machine\":[\"/home/machine/machine_install_process\"],\"plan\":null,\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('11', '质检员', 'pad上操作', '{\"contract\":null,\"order\":[],\"machine\":[\"/home/machine/machine_install_process\"],\"plan\":null,\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('12', 'PMC', '生产计划', '{\"contract\":[\"/home/contract/contract_sign\"],\"order\":[],\"machine\":[\"/home/machine/machine_config_process\",\"/home/machine/machine_install_process\"],\"plan\":[],\"abnormal\":[\"/home/abnormal/abnormal_statistic_manage\",\"/home/abnormal/abnormal_type_manage\"],\"task\":[\"/home/task/task_content_manage\",\"/home/task/process_manage\"],\"system\":null}');
+INSERT INTO `role` VALUES ('13', '成本核算员', '成本核算', '{\"contract\":[\"/home/contract/contract_sign\",\"/home/contract/sign_process\"],\"order\":[],\"machine\":null,\"plan\":null,\"abnormal\":null,\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('14', '财务经理', '合同合规性检查', '{\"contract\":[\"/home/contract/contract_sign\"],\"order\":[],\"machine\":null,\"plan\":null,\"abnormal\":null,\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('15', '财务会计', '订金确认', '{\"contract\":[\"/home/contract/contract_sign\"],\"order\":[],\"machine\":null,\"plan\":null,\"abnormal\":null,\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('16', '质检组长', '质检组长', '{\"contract\":null,\"order\":null,\"machine\":null,\"plan\":null,\"abnormal\":null,\"task\":null,\"system\":null}');
+INSERT INTO `role` VALUES ('17', '安装工', '安装工', '{\"contract\":null,\"order\":null,\"machine\":null,\"plan\":null,\"abnormal\":null,\"task\":null,\"system\":null}');
 
 -- ----------------------------
 -- Table structure for `sign_process`
@@ -540,7 +541,7 @@ CREATE TABLE `sign_process` (
 -- Records of sign_process
 -- ----------------------------
 INSERT INTO `sign_process` VALUES ('4', '改单签核流程', '[{\"number\":1,\"roleId\":7,\"signType\":\"合同签核\"},{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\"},{\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\"},{\"number\":4,\"roleId\":14,\"signType\":\"合同签核\"},{\"number\":5,\"roleId\":6,\"signType\":\"合同签核\"}]', '2017-12-12 01:14:40', '2017-12-26 08:30:28');
-INSERT INTO `sign_process` VALUES ('3', '正常签核流程', '[{\"number\":1,\"roleId\":7,\"signType\":\"合同签核\"},{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\"},{\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\"},{\"number\":4,\"roleId\":13,\"signType\":\"合同签核\"},{\"number\":5,\"roleId\":14,\"signType\":\"合同签核\"},{\"number\":6,\"roleId\":6,\"signType\":\"合同签核\"},{\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\"}]', '2017-12-11 23:57:56', '2017-12-15 20:30:47');
+INSERT INTO `sign_process` VALUES ('3', '正常签核流程', '[{\"number\":1,\"roleId\":7,\"signType\":\"合同签核\"},{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\"},{\"number\":3,\"roleId\":12,\"signType\":\"需求单签核\"},{\"number\":4,\"roleId\":13,\"signType\":\"合同签核\"},{\"number\":5,\"roleId\":14,\"signType\":\"合同签核\"},{\"number\":6,\"roleId\":6,\"signType\":\"合同签核\"},{\"number\":7,\"roleId\":15,\"signType\":\"需求单签核\"},{\"number\":8,\"roleId\":12,\"signType\":\"需求单签核\"}]', '2017-12-11 23:57:56', '2018-04-01 08:50:12');
 INSERT INTO `sign_process` VALUES ('5', '拆单流程', '[{\"number\":1,\"roleId\":7,\"signType\":\"合同签核\"},{\"number\":2,\"roleId\":8,\"signType\":\"需求单签核\"},{\"number\":3,\"roleId\":4,\"signType\":\"需求单签核\"},{\"number\":4,\"roleId\":14,\"signType\":\"合同签核\"},{\"number\":5,\"roleId\":6,\"signType\":\"合同签核\"}]', '2018-01-23 09:59:38', '2018-01-23 10:01:32');
 
 -- ----------------------------
@@ -559,17 +560,20 @@ CREATE TABLE `task` (
   KEY `fk_t_quality_user_id` (`quality_user_id`),
   CONSTRAINT `fk_t_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`),
   CONSTRAINT `fk_t_quality_user_id` FOREIGN KEY (`quality_user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES ('1', '安裝主传动', '1', '1', 'guidance111');
-INSERT INTO `task` VALUES ('2', '安装电机', '2', '2', 'guidance2222');
-INSERT INTO `task` VALUES ('3', '喷油漆', '1', '2', 'guidance3333');
-INSERT INTO `task` VALUES ('4', '安装夹线器', '1', '4', 'guidance444');
-INSERT INTO `task` VALUES ('5', '调试电脑', '1', '3', 'guidanceAAA');
-INSERT INTO `task` VALUES ('6', '针杆架安装', null, '7', '');
+INSERT INTO `task` VALUES ('1', '上轴安装', '25', '1', '');
+INSERT INTO `task` VALUES ('2', '下轴安装', '25', '2', '');
+INSERT INTO `task` VALUES ('3', '驱动安装', '25', '3', '');
+INSERT INTO `task` VALUES ('4', '台板安装', '26', '4', '');
+INSERT INTO `task` VALUES ('5', '电控', '26', '5', '');
+INSERT INTO `task` VALUES ('6', '针杆架安装', '26', '7', '');
+INSERT INTO `task` VALUES ('7', '调试', '27', '8', '');
+INSERT INTO `task` VALUES ('8', '剪线', '27', '9', '');
+INSERT INTO `task` VALUES ('9', '金片安装', '27', '10', '');
 
 -- ----------------------------
 -- Table structure for `task_plan`
@@ -657,26 +661,153 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   KEY `idx_user_role_id` (`role_id`) USING BTREE,
   KEY `fk_user_group_id` (`group_id`),
-  CONSTRAINT `fk_user_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`),
   CONSTRAINT `fk_user_role_id` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'admin', '彭胜利', '1', 'sinsim', '1', '1');
-INSERT INTO `user` VALUES ('2', 'scbgly', '沈', '2', 'sinsim', '1', '1');
-INSERT INTO `user` VALUES ('7', 'azzz', '李二', '3', 'sinsim', '2', '1');
-INSERT INTO `user` VALUES ('12', 'ptyg', '张三', '5', 'sinsim', null, '1');
+INSERT INTO `user` VALUES ('1', 'admin', '彭胜利', '1', 'sinsim', '0', '1');
+INSERT INTO `user` VALUES ('7', 'azzz-xz', 'azzz-xz', '3', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('12', 'ptyg', 'ptyg', '5', 'sinsim', '0', '1');
 INSERT INTO `user` VALUES ('13', 'xsbjl', 'xsb', '7', 'sinsim', null, '1');
 INSERT INTO `user` VALUES ('14', 'jsbjl', 'jsb', '8', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('15', 'zjl', 'Jack', '6', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('16', 'xsy', '马克', '9', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('17', 'pmc', '刘1', '12', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('18', 'cbhsy', '李10', '13', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('19', 'cwjl', '蔡1', '14', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('20', 'cwkj', '蔡2', '15', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('21', 'jsy', '季四', '10', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('22', 'zjy', '李志', '11', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('23', 'scbjl', '沈从', '4', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('24', 'azzz2', '安喜', '3', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('15', 'zjl', 'zjl', '6', 'sinsim', '0', '1');
+INSERT INTO `user` VALUES ('16', 'xsy', 'xsy', '9', 'sinsim', '0', '1');
+INSERT INTO `user` VALUES ('17', 'pmc', 'pcm-1', '12', 'sinsim', '0', '1');
+INSERT INTO `user` VALUES ('18', 'cbhsy', 'cbhsy-1', '13', 'sinsim', '0', '1');
+INSERT INTO `user` VALUES ('19', 'cwjl', 'cwjl1', '14', 'sinsim', '0', '1');
+INSERT INTO `user` VALUES ('25', '徐锡康', '徐锡康', '11', 'sinsim', null, '1');
+INSERT INTO `user` VALUES ('26', '王叠松', '王叠松', '11', 'sinsim', null, '1');
+INSERT INTO `user` VALUES ('27', '刘林', '刘林', '11', 'sinsim', null, '1');
+INSERT INTO `user` VALUES ('28', '孟佳飞', '孟佳飞', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('29', '王国娜', '王国娜', '3', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('30', '李霞', '李霞', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('31', '宣小华', '宣小华', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('32', '何承凤', '何承凤', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('33', '陈小英', '陈小英', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('34', '王丹飞', '王丹飞', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('35', '骆钰洁', '骆钰洁', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('36', '陈秀琴', '陈秀琴', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('37', '赵燕红', '赵燕红', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('38', '赵丽霞', '赵丽霞', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('39', '俞红萍', '俞红萍', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('40', '孙兰华', '俞红萍', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('41', '郑国平', '郑国平', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('42', '饶桂枝', '饶桂枝', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('43', '骆利淼', '骆利淼', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('44', '胡尚连', '胡尚连', '17', 'sinsim', '8', '1');
+INSERT INTO `user` VALUES ('45', '何赵军', '何赵军', '3', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('46', '王飞', '王飞', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('47', '陈炯苗', '陈炯苗', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('48', '斯校军', '斯校军', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('49', '张文龙', '张文龙', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('50', '何海潮', '何海潮', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('51', '章方斌', '章方斌', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('52', '张强', '张强', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('53', '郑锴', '郑锴', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('54', '方泽锋', '方泽锋', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('55', '章钟铭', '章钟铭', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('56', '王艳', '王艳', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('57', '王荣燕', '王艳', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('58', '张叶峰', '张叶峰', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('59', '贺伟', '贺伟', '17', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('60', '陈镇波', '陈镇波', '3', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('61', '陆铮', '陆铮', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('62', '宣浩龙', '宣浩龙', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('63', '韩先成', '韩先成', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('64', '陈铁威', '陈铁威', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('65', '马越柯', '马越柯', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('66', '徐佳龙', '徐佳龙', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('67', '陈益锋', '陈益锋', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('68', '章建达', '章建达', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('69', '徐迪', '徐迪', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('70', '王君', '王君', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('71', '郑茗友', '郑茗友', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('72', '王阿妹', '王阿妹', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('73', '吴鹏飞', '吴鹏飞', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('74', '郑梧', '郑梧', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('75', '向春林', '向春林', '17', 'sinsim', '2', '1');
+INSERT INTO `user` VALUES ('76', '张斌', '张斌', '3', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('77', '徐银风', '徐银风', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('78', '何洪锋', '何洪锋', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('79', '韩海强', '韩海强', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('80', '阮鑫钢', '阮鑫钢', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('81', '袁伯钿', '袁伯钿', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('82', '杨瑞', '杨瑞', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('83', '卓欢其', '卓欢其', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('84', '郑国涛', '郑国涛', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('85', '魏权峰', '魏权峰', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('86', '方颖丰', '方颖丰', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('87', '陶百伟', '陶百伟', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('88', '楼建锋', '楼建锋', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('89', '郑水锋', '郑水锋', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('90', '章瑜', '章瑜', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('91', '蔡辉辉', '蔡辉辉', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('92', '王烜波', '王烜波', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('93', '袁涛', '袁涛', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('94', '马雄伟', '马雄伟', '17', 'sinsim', '7', '1');
+INSERT INTO `user` VALUES ('95', '金少军', '金少军', '3', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('96', '张海中', '张海中', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('97', '余斌江', '余斌江', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('98', '毛杭斌', '毛杭斌', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('99', '毛陈波', '毛陈波', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('100', '伍瑞林', '伍瑞林', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('101', '李润', '李润', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('102', '宣汉江', '宣汉江', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('103', '魏叶威', '魏叶威', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('104', '陈天龙', '陈天龙', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('105', '周安', '周安', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('106', '郭镓楠', '郭镓楠', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('107', '何天钢', '何天钢', '17', 'sinsim', '3', '1');
+INSERT INTO `user` VALUES ('108', '周志祥', '周志祥', '3', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('109', '宣言梁', '宣言梁', '17', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('110', '郭海强', '郭海强', '17', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('111', '龙江', '龙江', '17', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('112', '吴凡', '吴凡', '17', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('113', '付中亚', '付中亚', '17', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('114', '舒孝欢', '舒孝欢', '17', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('115', '高欢欢', '高欢欢', '17', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('116', '曾祥平', '曾祥平', '17', 'sinsim', '4', '1');
+INSERT INTO `user` VALUES ('117', '方毅', '方毅', '3', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('118', '丁文', '丁文', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('119', '许金龙', '许金龙', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('120', '陈钱栋', '陈钱栋', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('121', '蒋峰', '蒋峰', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('122', '刘伟', '刘伟', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('123', '汤剑', '汤剑', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('124', '周光焱', '周光焱', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('125', '邬润杰', '邬润杰', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('126', '陈可女', '陈可女', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('127', '姚远平', '姚远平', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('128', '杨海军', '杨海军', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('129', '毛锡伟', '毛锡伟', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('130', '李坤鹏', '李坤鹏', '17', 'sinsim', '5', '1');
+INSERT INTO `user` VALUES ('131', '王新全', '王新全', '3', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('132', '陈益锋2', '陈益锋2', '17', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('133', '余铮宇', '余铮宇', '17', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('134', '宣焕强', '宣焕强', '17', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('135', '阮少杰', '阮少杰', '17', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('136', '钱盛', '钱盛', '17', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('137', '章正国', '章正国', '17', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('138', '周桂新', '周桂新', '17', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('139', '侯棋', '侯棋', '17', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('140', '宣锡阳', '宣锡阳', '17', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('141', '严玮杰', '严玮杰', '17', 'sinsim', '9', '1');
+INSERT INTO `user` VALUES ('142', '王朴卡', '王朴卡', '3', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('143', '胡夏飞', '胡夏飞', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('144', '徐孝栋', '徐孝栋', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('145', '方陈勇', '方陈勇', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('146', '郭忠梁', '郭忠梁', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('147', '陈燕丰', '陈燕丰', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('148', '卓永福', '卓永福', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('149', '吕翔', '吕翔', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('150', '王威', '王威', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('151', '杨忠', '杨忠', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('152', '楼飞翔', '楼飞翔', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('153', '吴明枝', '吴明枝', '17', 'sinsim', '10', '1');
+INSERT INTO `user` VALUES ('154', '蒋立奇', '蒋立奇', '16', 'sinsim', '0', '1');
+INSERT INTO `user` VALUES ('155', 'scbgly', 'scbgly', '2', 'sinsim', null, '1');
+INSERT INTO `user` VALUES ('156', 'scbjl', 'scbjl', '4', 'sinsim', null, '1');
+INSERT INTO `user` VALUES ('157', 'jsy', 'jsy', '10', 'sinsim', null, '1');
+INSERT INTO `user` VALUES ('158', 'cwkj', 'cwkj-1', '15', 'sinsim', null, '1');
