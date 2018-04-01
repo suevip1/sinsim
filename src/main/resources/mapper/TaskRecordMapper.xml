@@ -23,7 +23,7 @@
         <result column="status" jdbcType="INTEGER" property="status"/>
         <result column="date_year" jdbcType="INTEGER" property="dateYear"/>
         <result column="date_month" jdbcType="INTEGER" property="dateMonth"/>
-	<result column="date_day" jdbcType="INTEGER" property="dateDay"/>
+        <result column="date_day" jdbcType="INTEGER" property="dateDay"/>
     </resultMap>
 
     <!--根据user.account查 task_record OK-->
@@ -473,15 +473,15 @@
         SELECT tr.*,tp.plan_time FROM task_record tr
         LEFT JOIN task_plan tp ON tr.id=tp.task_record_id
         ) v
-        WHERE !ISNULL(plan_time)
-        <if test="mode == null||mode == 0"><!--TODO AND install_end_time>plan_time AND `status`=6-->
-            GROUP BY date_year
-        </if>
+        WHERE !ISNULL(plan_time) AND ((ISNULL(install_end_time) AND NOW()>plan_time) OR (!ISNULL(install_end_time) AND install_end_time>plan_time))
+        GROUP BY date_year
+        <!--TODO AND install_end_time>plan_time AND `status`=6-->
+
         <if test="mode == 1">
-            GROUP BY date_year,date_month
+            ,date_month
         </if>
         <if test="mode == 2">
-            GROUP BY date_year,date_month,date_day
+            ,date_month,date_day
         </if>
     </select>
 </mapper>

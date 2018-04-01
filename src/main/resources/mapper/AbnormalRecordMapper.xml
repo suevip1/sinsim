@@ -63,6 +63,16 @@
     </association>
   </resultMap>
 
+
+  <resultMap id="AbnormalMap" type="com.eservice.api.model.abnormal_record.AbnormalRecordStatistics">
+    <result column="abnormal_count" jdbcType="INTEGER" property="abnormalCount"/>
+    <result column="abnormal_name" jdbcType="INTEGER" property="abnormalName"/>
+    <result column="abnormal_type" jdbcType="INTEGER" property="abnormalType"/>
+    <result column="date_year" jdbcType="INTEGER" property="dateYear"/>
+    <result column="date_month" jdbcType="INTEGER" property="dateMonth"/>
+    <result column="date_day" jdbcType="INTEGER" property="dateDay"/>
+  </resultMap>
+
   <select id="selectAbnormalRecordDetails" resultMap="AbnormalRecordDetailResultMap">
     SELECT
     tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
@@ -135,4 +145,25 @@
     #{ abnormalType},#{ taskRecordId},#{submitUser },#{comment },#{solution}, #{solutionUser},#{createTime}, #{solveTime})
 
   </insert>
+
+  <select id="getAbnormalStatistics" resultMap="AbnormalMap">
+    SELECT COUNT(*) AS abnormal_count,
+    abnormal_name,abnormal_type,
+    YEAR(create_time) AS date_year,
+    MONTH(create_time) AS date_month,
+    DAY(create_time) AS date_day
+    FROM
+    (
+    SELECT ar.*,ab.abnormal_name,ab.valid FROM abnormal_record ar
+    LEFT JOIN abnormal ab ON ab.id=ar.abnormal_type WHERE valid=1
+    ) v
+    GROUP BY abnormal_type,date_year
+    <if test="mode == 1">
+        ,date_month
+    </if>
+    <if test="mode == 2">
+        ,date_month,date_day
+    </if>
+  </select>
+
 </mapper>

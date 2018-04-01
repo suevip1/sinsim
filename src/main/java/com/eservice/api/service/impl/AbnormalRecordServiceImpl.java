@@ -3,6 +3,7 @@ package com.eservice.api.service.impl;
 import com.eservice.api.dao.AbnormalRecordMapper;
 import com.eservice.api.model.abnormal_record.AbnormalRecord;
 import com.eservice.api.model.abnormal_record.AbnormalRecordDetail;
+import com.eservice.api.model.abnormal_record.AbnormalRecordStatistics;
 import com.eservice.api.service.AbnormalRecordService;
 import com.eservice.api.core.AbstractService;
 import org.springframework.stereotype.Service;
@@ -37,5 +38,9 @@ public class AbnormalRecordServiceImpl extends AbstractService<AbnormalRecord> i
      */
     public void saveAndGetID(AbnormalRecord abnormalRecord){
         abnormalRecordMapper.saveAndGetID(abnormalRecord);
+    }
+
+    public List<AbnormalRecordStatistics> getAbnormalStatistics(Integer mode) {
+        return abnormalRecordMapper.getAbnormalStatistics(mode);
     }
 }

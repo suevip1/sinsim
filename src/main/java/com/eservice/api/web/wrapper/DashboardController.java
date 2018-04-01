@@ -2,11 +2,13 @@ package com.eservice.api.web.wrapper;
 
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.abnormal_record.AbnormalRecordStatistics;
 import com.eservice.api.model.dashboard.Statistic;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordExpired;
 import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.impl.AbnormalRecordServiceImpl;
 import com.eservice.api.service.impl.MachineServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +31,12 @@ import java.util.List;
 public class DashboardController {
     @Resource
     private MachineServiceImpl machineService;
+
     @Resource
     private TaskRecordServiceImpl taskRecordService;
+
+    @Resource
+    private AbnormalRecordServiceImpl abnormalRecordService;
 
     /**
      * @return 返回dashboard中用到的安装中、改拆单等数据信息
@@ -74,6 +80,12 @@ public class DashboardController {
     @PostMapping("/getExpiredTaskStatistics")
     public Result getExpiredTaskStatistics(Integer mode) {
         List<TaskRecordExpired> list = taskRecordService.getExpiredTaskStatistics(mode);
+        return ResultGenerator.genSuccessResult(list);
+    }
+
+    @PostMapping("/getAbnormalStatistics")
+    public Result getAbnormalStatistics(Integer mode) {
+        List<AbnormalRecordStatistics> list = abnormalRecordService.getAbnormalStatistics(mode);
         return ResultGenerator.genSuccessResult(list);
     }
 }
