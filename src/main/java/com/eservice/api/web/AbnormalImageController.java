@@ -7,6 +7,7 @@ import com.eservice.api.model.machine.Machine;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.AbnormalImageServiceImpl;
+import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.eservice.api.service.impl.MachineServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -37,6 +38,8 @@ public class AbnormalImageController {
     private CommonService commonService;
     @Resource
     private MachineServiceImpl machineService;
+    @Resource
+    private MachineOrderServiceImpl machineOrderService;
     @Value("${abnormal_images_saved_dir}")
     private String imagesSavedDir;
 
@@ -59,7 +62,9 @@ public class AbnormalImageController {
         if (machineID == null){
             return ResultGenerator.genFailResult("Error: no machine found by the abnormalRecordId, no records saved");
         }
-        String orderNum = machineService.searchMachineByAbnormalRecordId(abnormalRecordId).getOrderId().toString();
+
+        Integer orderId = machineService.searchMachineByAbnormalRecordId(abnormalRecordId).getOrderId();
+        String orderNum = machineOrderService.findById(orderId).getOrderNum();
         List<String> listResultPath = new ArrayList<>() ;
         for(int i=0; i<files.length; i++) {
             try {

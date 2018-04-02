@@ -697,7 +697,8 @@ public class TaskRecordController {
             dir.mkdir();
         }
         String machineID = machineService.searchMachineByAbnormalRecordId(abnormalRecordId).getMachineStrId();
-        String orderNum = machineService.searchMachineByAbnormalRecordId(abnormalRecordId).getOrderId().toString();
+        Integer orderId = machineService.searchMachineByAbnormalRecordId(abnormalRecordId).getOrderId();
+        String orderNum = machineOrderService.findById(orderId).getOrderNum();
         List<String> listResultPath = new ArrayList<>() ;
         for(int i=0; i<files.length; i++) {
             try {
@@ -744,8 +745,9 @@ public class TaskRecordController {
         if(!dir.exists()){
             dir.mkdir();
         }
-        String machineID = machineService.searchMachineByTaskQualityRecordId(taskQualityRecordId).getNameplate();
-        String orderNum = machineService.searchMachineByTaskQualityRecordId(taskQualityRecordId).getOrderId().toString();
+        String machineID = machineService.searchMachineByTaskQualityRecordId(taskQualityRecordId).getMachineStrId();
+        Integer orderId = machineService.searchMachineByTaskQualityRecordId(taskQualityRecordId).getOrderId() ;
+        String orderNum = machineOrderService.findById(orderId).getOrderNum();
         List<String> listResultPath = new ArrayList<>() ;
         for(int i=0; i<files.length; i++) {
             try {
