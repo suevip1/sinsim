@@ -30,4 +30,8 @@ public class TaskQualityRecordServiceImpl extends AbstractService<TaskQualityRec
     public void saveAndGetID(TaskQualityRecord taskQualityRecord){
         taskQualityRecordMapper.saveAndGetID(taskQualityRecord);
     }
+
+    public List<TaskQualityRecordDetail> selectTaskQualityList(String nameplate, String taskName, Integer submitUser,  Integer solutionUser, Integer finishStatus, String queryStartTime,  String queryFinishTime) {
+        return taskQualityRecordMapper.selectTaskQualityList(nameplate, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+    }
 }

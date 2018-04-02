@@ -1,5 +1,6 @@
 package com.eservice.api.model.task_quality_record;
 
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.quality_record_image.QualityRecordImage;
 import com.eservice.api.model.task_record.TaskRecord;
 
@@ -208,9 +209,18 @@ public class TaskQualityRecordDetail {
      */
     private QualityRecordImage qualityRecordImage;
     private TaskRecord taskRecord;
+    private Machine machine;
 
     public QualityRecordImage getQualityRecordImage() { return  this.qualityRecordImage; }
     public void setQualityRecordImage(QualityRecordImage qualityRecordImage) {this.qualityRecordImage = qualityRecordImage; }
     public TaskRecord getTaskRecord() { return this.taskRecord; }
     public void setTaskRecord(TaskRecord taskRecord) { this.taskRecord = taskRecord; }
+
+    public Machine getMachine() {
+        return machine;
+    }
+
+    public void setMachine(Machine machine) {
+        this.machine = machine;
+    }
 }

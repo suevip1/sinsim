@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,6 +51,7 @@ public class TaskQualityRecordController {
     @PostMapping("/update")
     public Result update(String  taskQualityRecord) {
         TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord,TaskQualityRecord.class);
+        taskQualityRecord1.setSolveTime(new Date());
         taskQualityRecordService.update(taskQualityRecord1);
         return ResultGenerator.genSuccessResult();
     }
@@ -84,33 +86,24 @@ public class TaskQualityRecordController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
-//    /**
-//     * 根据传入的strTaskQualityRecordDetail，更新对应多表：
-//     "machine_id":"",  --> machine.machine_id
-//     "检验是否合格":"", --> task_quality_record.status 质检结果: "1"==>通过； “0”==>不通过
-//     "不合格原因":"",	--> task_quality_record.comment
-//     "不合格照片":"",	--> quality_record_image.image
-//     "检验完成":"",		--> task_record.status  task状态，“1”==>未开始， “2”==>进行中，“3”==>安装完成， “4”==>质检完成，“5“===>异常
-//     * @param strTaskQualityRecordDetail
-//     * @return
-//     */
-//    @PostMapping("updateTaskQualityRecordDetail")
-//    public Result updateTaskQualityRecordDetail(@RequestParam String strTaskQualityRecordDetail){
-//        TaskQualityRecordDetail taskQualityRecordDetail = JSON.parseObject(strTaskQualityRecordDetail,TaskQualityRecordDetail.class);
-//        Integer taskQualityRecordDetail_ID = taskQualityRecordDetail.getId();
-//
-//        TaskQualityRecord taskQualityRecord = taskQualityRecordService.findById(taskQualityRecordDetail_ID);
-//        taskQualityRecord.setTaskRecordId(taskQualityRecordDetail.getTaskRecordId());
-//        taskQualityRecord.setSubmitUser(taskQualityRecordDetail.getSubmitUser());
-//        taskQualityRecord.setCreateTime(taskQualityRecordDetail.getCreateTime());
-//        taskQualityRecord.setComment(taskQualityRecordDetail.getComment());
-//
-//        QualityRecordImage qualityRecordImage = taskQualityRecordDetail.getQualityRecordImage();
-//        TaskRecord taskRecord = taskQualityRecordDetail.getTaskRecord();
-//
-//        taskQualityRecordService.update(taskQualityRecord);
-//        qualityRecordImageService.update(qualityRecordImage);
-//        taskRecordService.update(taskRecord);
-//        return ResultGenerator.genSuccessResult();
-//    }
+    /**
+     * 根据异常类型、异常提交时间、提交者、解决者，返回abnormalRecordDetail
+     *
+     * @return
+     */
+    @PostMapping("/selectTaskQualityList")
+    public Result selectTaskQualityList(@RequestParam(defaultValue = "0") Integer page,
+                                                 @RequestParam(defaultValue = "0") Integer size,
+                                                 String nameplate,
+                                                 String taskName,
+                                                 Integer submitUser,
+                                                 Integer solutionUser,
+                                                 Integer finishStatus,
+                                                 String queryStartTime,
+                                                 String queryFinishTime) {
+        PageHelper.startPage(page, size);
+        List<TaskQualityRecordDetail> abnormalRecordDetailList = taskQualityRecordService.selectTaskQualityList(nameplate, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+        PageInfo pageInfo = new PageInfo(abnormalRecordDetailList);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }
