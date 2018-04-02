@@ -52,4 +52,13 @@
     JOIN quality_record_image qri on qri.task_quality_record_id = tqr.id
     where tr.id = #{taskRecordId}
   </select>
+
+  <insert id="saveAndGetID"  parameterType="com.eservice.api.model.task_quality_record.TaskQualityRecord" useGeneratedKeys="true"  keyProperty="id">
+    insert into
+    task_quality_record(
+    task_record_id, name, status, create_time, comment )
+    values(
+    #{taskRecordId},#{name},#{status},#{createTime},#{comment} )
+
+  </insert>
 </mapper>

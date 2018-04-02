@@ -59,10 +59,11 @@ public class AbnormalImageController {
         if (machineID == null){
             return ResultGenerator.genFailResult("Error: no machine found by the abnormalRecordId, no records saved");
         }
+        String orderNum = machineService.searchMachineByAbnormalRecordId(abnormalRecordId).getOrderId().toString();
         List<String> listResultPath = new ArrayList<>() ;
         for(int i=0; i<files.length; i++) {
             try {
-                listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.ABNORMAL_IMAGE,i ));
+                listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, orderNum, Constant.ABNORMAL_IMAGE,i ));
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -60,10 +60,11 @@ public class QualityRecordImageController {
             return ResultGenerator.genFailResult("Error: no machine found by the taskQualityRecordId, no records saved");
         }
 
+        String orderNum = machineService.searchMachineByTaskQualityRecordId(taskQualityRecordId).getOrderId().toString();
         List<String> listResultPath = new ArrayList<>() ;
         for(int i=0; i<files.length; i++) {
             try {
-                listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.QUALITY_IMAGE, i));
+                listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, orderNum, Constant.QUALITY_IMAGE, i));
             } catch (IOException e) {
                 e.printStackTrace();
             }

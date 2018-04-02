@@ -9,11 +9,14 @@ import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.process_record.ProcessRecord;
+import com.eservice.api.model.quality_record_image.QualityRecordImage;
 import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_plan.TaskPlan;
+import com.eservice.api.model.task_quality_record.TaskQualityRecord;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.service.MachineTypeService;
+import com.eservice.api.service.QualityRecordImageService;
 import com.eservice.api.service.UserService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
@@ -84,6 +87,10 @@ public class TaskRecordController {
     private MachineOrderServiceImpl machineOrderService;
     @Resource
     private MqttMessageHelper mqttMessageHelper;
+    @Resource
+    private TaskQualityRecordServiceImpl taskQualityRecordService;
+    @Resource
+    private QualityRecordImageService qualityRecordImageService;
 
     @PostMapping("/add")
     public Result add(String taskRecord) {
@@ -676,6 +683,8 @@ public class TaskRecordController {
         //abnormal_record add:
         AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
         abnormalRecordService.saveAndGetID(abnormalRecord1);
+        //获取保存后分配到的id
+        Integer abnormalRecordId = abnormalRecord1.getId();
 
         /**
          * abnormal_image add
@@ -687,14 +696,12 @@ public class TaskRecordController {
         if(!dir.exists()){
             dir.mkdir();
         }
-        //获取保存后分配到的id
-        Integer abnormalRecordId = abnormalRecord1.getId();
         String machineID = machineService.searchMachineByAbnormalRecordId(abnormalRecordId).getMachineStrId();
-
+        String orderNum = machineService.searchMachineByAbnormalRecordId(abnormalRecordId).getOrderId().toString();
         List<String> listResultPath = new ArrayList<>() ;
         for(int i=0; i<files.length; i++) {
             try {
-                listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, null, Constant.ABNORMAL_IMAGE, i ));
+                listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, orderNum, Constant.ABNORMAL_IMAGE, i ));
             } catch (IOException e) {
                 e.printStackTrace();
                 //抛异常引发回滚，防止数据只更新了前面部分。
@@ -710,7 +717,53 @@ public class TaskRecordController {
             abnormalImageService.save(abnormalImage1);
         }
 
-        return ResultGenerator.genSuccessResult("3个表更新成功");
+        return ResultGenerator.genSuccessResult("3个表 task_record + abnormal_record + abnormal_image更新成功");
     }
 
+    /**
+     * 3个表 task_record/TaskQualityRecord/QualityRecordImage 更新。
+     * app端，上传质检异常状态，task_record(update)，增加 TaskQualityRecord(add), QualityRecordImage (add)
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/addTrTqrQri")
+    public Result addTrTqrQri(@RequestParam String taskRecord,
+                            @RequestParam String taskQualityRecord,
+                            @RequestParam MultipartFile[] files) {
+        //task_record(update)
+        TaskRecord taskRecord1 = JSON.parseObject(taskRecord, TaskRecord.class);
+        taskRecordService.update(taskRecord1);
+
+        TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord, TaskQualityRecord.class);
+        taskQualityRecordService.saveAndGetID(taskQualityRecord1);
+        //获取保存后分配到的id
+        Integer taskQualityRecordId = taskQualityRecord1.getId();
+
+        //构建 qualityRecordImage1
+        QualityRecordImage qualityRecordImage1 = new QualityRecordImage();
+        File dir = new File(imagesSavedDir);
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+        String machineID = machineService.searchMachineByTaskQualityRecordId(taskQualityRecordId).getNameplate();
+        String orderNum = machineService.searchMachineByTaskQualityRecordId(taskQualityRecordId).getOrderId().toString();
+        List<String> listResultPath = new ArrayList<>() ;
+        for(int i=0; i<files.length; i++) {
+            try {
+                listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, orderNum, Constant.QUALITY_IMAGE, i));
+            } catch (IOException e) {
+                e.printStackTrace();
+                //抛异常引发回滚，防止数据只更新了前面部分。
+                throw new RuntimeException();
+            }
+        }
+        if (listResultPath.size() != files.length){
+            throw new RuntimeException();
+        } else {
+            qualityRecordImage1.setTaskQualityRecordId(taskQualityRecordId);
+            qualityRecordImage1.setImage(listResultPath.toString());
+            qualityRecordImage1.setCreateTime(taskQualityRecord1.getCreateTime());
+            qualityRecordImageService.save(qualityRecordImage1);
+        }
+        return ResultGenerator.genSuccessResult("3个表 task_record + TaskQualityRecord + QualityRecordImage 更新成功");
+    }
 }

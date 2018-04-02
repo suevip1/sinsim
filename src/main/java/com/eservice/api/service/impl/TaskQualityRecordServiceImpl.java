@@ -26,4 +26,8 @@ public class TaskQualityRecordServiceImpl extends AbstractService<TaskQualityRec
     public List<TaskQualityRecordDetail> selectTaskQualityRecordDetails(Integer taskRecordId ){
         return taskQualityRecordMapper.selectTaskQualityRecordDetails(taskRecordId);
     }
+
+    public void saveAndGetID(TaskQualityRecord taskQualityRecord){
+        taskQualityRecordMapper.saveAndGetID(taskQualityRecord);
+    }
 }
