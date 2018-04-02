@@ -84,34 +84,33 @@ public class TaskQualityRecordController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
-    /**
-     * 根据传入的strTaskQualityRecordDetail，更新对应多表：
-     "machine_id":"",  --> machine.machine_id
-     "检验是否合格":"", --> task_quality_record.status 质检结果: "1"==>通过； “0”==>不通过
-     "不合格原因":"",	--> task_quality_record.comment
-     "不合格照片":"",	--> quality_record_image.image
-     "检验完成":"",		--> task_record.status  task状态，“1”==>未开始， “2”==>进行中，“3”==>安装完成， “4”==>质检完成，“5“===>异常
-     * @param strTaskQualityRecordDetail
-     * @return
-     */
-    @PostMapping("updateTaskQualityRecordDetail")
-    public Result updateTaskQualityRecordDetail(@RequestParam String strTaskQualityRecordDetail){
-        TaskQualityRecordDetail taskQualityRecordDetail = JSON.parseObject(strTaskQualityRecordDetail,TaskQualityRecordDetail.class);
-        Integer taskQualityRecordDetail_ID = taskQualityRecordDetail.getId();
-
-        TaskQualityRecord taskQualityRecord = taskQualityRecordService.findById(taskQualityRecordDetail_ID);
-        taskQualityRecord.setTaskRecordId(taskQualityRecordDetail.getTaskRecordId());
-        taskQualityRecord.setName(taskQualityRecordDetail.getName());
-        taskQualityRecord.setStatus(taskQualityRecordDetail.getStatus());
-        taskQualityRecord.setCreateTime(taskQualityRecordDetail.getCreateTime());
-        taskQualityRecord.setComment(taskQualityRecordDetail.getComment());
-
-        QualityRecordImage qualityRecordImage = taskQualityRecordDetail.getQualityRecordImage();
-        TaskRecord taskRecord = taskQualityRecordDetail.getTaskRecord();
-
-        taskQualityRecordService.update(taskQualityRecord);
-        qualityRecordImageService.update(qualityRecordImage);
-        taskRecordService.update(taskRecord);
-        return ResultGenerator.genSuccessResult();
-    }
+//    /**
+//     * 根据传入的strTaskQualityRecordDetail，更新对应多表：
+//     "machine_id":"",  --> machine.machine_id
+//     "检验是否合格":"", --> task_quality_record.status 质检结果: "1"==>通过； “0”==>不通过
+//     "不合格原因":"",	--> task_quality_record.comment
+//     "不合格照片":"",	--> quality_record_image.image
+//     "检验完成":"",		--> task_record.status  task状态，“1”==>未开始， “2”==>进行中，“3”==>安装完成， “4”==>质检完成，“5“===>异常
+//     * @param strTaskQualityRecordDetail
+//     * @return
+//     */
+//    @PostMapping("updateTaskQualityRecordDetail")
+//    public Result updateTaskQualityRecordDetail(@RequestParam String strTaskQualityRecordDetail){
+//        TaskQualityRecordDetail taskQualityRecordDetail = JSON.parseObject(strTaskQualityRecordDetail,TaskQualityRecordDetail.class);
+//        Integer taskQualityRecordDetail_ID = taskQualityRecordDetail.getId();
+//
+//        TaskQualityRecord taskQualityRecord = taskQualityRecordService.findById(taskQualityRecordDetail_ID);
+//        taskQualityRecord.setTaskRecordId(taskQualityRecordDetail.getTaskRecordId());
+//        taskQualityRecord.setSubmitUser(taskQualityRecordDetail.getSubmitUser());
+//        taskQualityRecord.setCreateTime(taskQualityRecordDetail.getCreateTime());
+//        taskQualityRecord.setComment(taskQualityRecordDetail.getComment());
+//
+//        QualityRecordImage qualityRecordImage = taskQualityRecordDetail.getQualityRecordImage();
+//        TaskRecord taskRecord = taskQualityRecordDetail.getTaskRecord();
+//
+//        taskQualityRecordService.update(taskQualityRecord);
+//        qualityRecordImageService.update(qualityRecordImage);
+//        taskRecordService.update(taskRecord);
+//        return ResultGenerator.genSuccessResult();
+//    }
 }

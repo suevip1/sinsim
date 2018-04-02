@@ -10,31 +10,44 @@ public class TaskQualityRecord {
     private Integer id;
 
     /**
-     * 对应安装项ID
+     * 异常类型,目前default为1，没有使用
+     */
+    @Column(name = "abnormal_type")
+    private Integer abnormalType;
+
+    /**
+     * 作业工序
      */
     @Column(name = "task_record_id")
     private Integer taskRecordId;
 
     /**
-     * 质检员名字
+     * 提交异常的用户ID
      */
-    private String name;
+    @Column(name = "submit_user")
+    private String submitUser;
 
     /**
-     * 质检结果: "1"==>通过； “0”==>不通过
+     * 解决问题的用户对应的ID
      */
-    private Byte status;
+    @Column(name = "solution_user")
+    private String solutionUser;
 
-    /**
-     * 添加质检结果的时间
-     */
     @Column(name = "create_time")
     private Date createTime;
 
+    @Column(name = "solve_time")
+    private Date solveTime;
+
     /**
-     * 质检备注
+     * 异常备注
      */
     private String comment;
+
+    /**
+     * 解决办法
+     */
+    private String solution;
 
     /**
      * @return id
@@ -51,92 +64,138 @@ public class TaskQualityRecord {
     }
 
     /**
-     * 获取对应安装项ID
+     * 获取异常类型
      *
-     * @return task_record_id - 对应安装项ID
+     * @return abnormal_type - 异常类型
+     */
+    public Integer getAbnormalType() {
+        return abnormalType;
+    }
+
+    /**
+     * 设置异常类型
+     *
+     * @param abnormalType 异常类型
+     */
+    public void setAbnormalType(Integer abnormalType) {
+        this.abnormalType = abnormalType;
+    }
+
+    /**
+     * 获取作业工序
+     *
+     * @return task_record_id - 作业工序
      */
     public Integer getTaskRecordId() {
         return taskRecordId;
     }
 
     /**
-     * 设置对应安装项ID
+     * 设置作业工序
      *
-     * @param taskRecordId 对应安装项ID
+     * @param taskRecordId 作业工序
      */
     public void setTaskRecordId(Integer taskRecordId) {
         this.taskRecordId = taskRecordId;
     }
 
     /**
-     * 获取质检员名字
+     * 获取提交异常的用户ID
      *
-     * @return name - 质检员名字
+     * @return submit_user - 提交异常的用户ID
      */
-    public String getName() {
-        return name;
+    public String getSubmitUser() {
+        return submitUser;
     }
 
     /**
-     * 设置质检员名字
+     * 设置提交异常的用户ID
      *
-     * @param name 质检员名字
+     * @param submitUser 提交异常的用户ID
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setSubmitUser(String submitUser) {
+        this.submitUser = submitUser;
     }
 
     /**
-     * 获取质检结果: "1"==>通过； “0”==>不通过
+     * 获取解决问题的用户对应的ID
      *
-     * @return status - 质检结果: "1"==>通过； “0”==>不通过
+     * @return solution_user - 解决问题的用户对应的ID
      */
-    public Byte getStatus() {
-        return status;
+    public String getSolutionUser() {
+        return solutionUser;
     }
 
     /**
-     * 设置质检结果: "1"==>通过； “0”==>不通过
+     * 设置解决问题的用户对应的ID
      *
-     * @param status 质检结果: "1"==>通过； “0”==>不通过
+     * @param solutionUser 解决问题的用户对应的ID
      */
-    public void setStatus(Byte status) {
-        this.status = status;
+    public void setSolutionUser(String solutionUser) {
+        this.solutionUser = solutionUser;
     }
 
     /**
-     * 获取添加质检结果的时间
-     *
-     * @return create_time - 添加质检结果的时间
+     * @return create_time
      */
     public Date getCreateTime() {
         return createTime;
     }
 
     /**
-     * 设置添加质检结果的时间
-     *
-     * @param createTime 添加质检结果的时间
+     * @param createTime
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
     /**
-     * 获取质检备注
+     * @return solve_time
+     */
+    public Date getSolveTime() {
+        return solveTime;
+    }
+
+    /**
+     * @param solveTime
+     */
+    public void setSolveTime(Date solveTime) {
+        this.solveTime = solveTime;
+    }
+
+    /**
+     * 获取异常备注
      *
-     * @return comment - 质检备注
+     * @return comment - 异常备注
      */
     public String getComment() {
         return comment;
     }
 
     /**
-     * 设置质检备注
+     * 设置异常备注
      *
-     * @param comment 质检备注
+     * @param comment 异常备注
      */
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    /**
+     * 获取解决办法
+     *
+     * @return solution - 解决办法
+     */
+    public String getSolution() {
+        return solution;
+    }
+
+    /**
+     * 设置解决办法
+     *
+     * @param solution 解决办法
+     */
+    public void setSolution(String solution) {
+        this.solution = solution;
     }
 }

@@ -6,20 +6,26 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="abnormal_type" jdbcType="INTEGER" property="abnormalType" />
     <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="submit_user" jdbcType="VARCHAR" property="submitUser" />
+    <result column="solution_user" jdbcType="VARCHAR" property="solutionUser" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+    <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
   </resultMap>
 
   <resultMap id="TaskQualityRecordDetailResultMap" type="com.eservice.api.model.task_quality_record.TaskQualityRecordDetail">
-    <id column="id" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="abnormal_type" jdbcType="INTEGER" property="abnormalType" />
     <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="submit_user" jdbcType="VARCHAR" property="submitUser" />
+    <result column="solution_user" jdbcType="VARCHAR" property="solutionUser" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+    <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
     <association property="qualityRecordImage" javaType="com.eservice.api.model.quality_record_image.QualityRecordImage">
       <id column="quality_record_image_id" property="id" />
       <result column="task_quality_record_id" jdbcType="INTEGER" property="taskQualityRecordId" />
@@ -58,7 +64,7 @@
     task_quality_record(
     task_record_id, name, status, create_time, comment )
     values(
-    #{taskRecordId},#{name},#{status},#{createTime},#{comment} )
+    #{taskRecordId},#{abnormalType},#{submitUser},#{solutionUser},#{createTime},#{solveTime},#{comment},#{solution} )
 
   </insert>
 </mapper>

@@ -630,11 +630,14 @@ INSERT INTO `task_plan` VALUES ('27', '46', '1', '2018-04-01 10:08:02', null, '1
 DROP TABLE IF EXISTS `task_quality_record`;
 CREATE TABLE `task_quality_record` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `abnormal_type` int(10) unsigned NOT NULL DEFAULT '1' COMMENT '质检异常类型，目前未使用，default值为1',
   `task_record_id` int(10) unsigned NOT NULL COMMENT '对应安装项ID',
-  `name` varchar(255) NOT NULL COMMENT '质检员名字',
-  `status` tinyint(4) NOT NULL COMMENT '质检结果: "1"==>通过； “0”==>不通过',
+  `submit_user` varchar(255) NOT NULL COMMENT '提交质检异常的用户',
   `comment` text COMMENT '质检备注',
+  `solution` text COMMENT '解决方法',
+  `solution_user` varchar(255) DEFAULT NULL,
   `create_time` datetime NOT NULL COMMENT '添加质检结果的时间',
+  `solve_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `tqr_task_record_id` (`task_record_id`),
   CONSTRAINT `tqr_task_record_id` FOREIGN KEY (`task_record_id`) REFERENCES `task_record` (`id`)

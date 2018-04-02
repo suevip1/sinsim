@@ -43,8 +43,8 @@ public class MachineController {
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/update")
-    public Result update(String machine) {
+    @PostMapping("/addMachineNum")
+    public Result addMachineNum(String machine) {
         Machine machine1 = JSON.parseObject(machine, Machine.class);
         if (machine1.getNameplate() == null || machine1.getNameplate() == "") {
             return ResultGenerator.genFailResult("机器编号不能为空！");
@@ -60,6 +60,13 @@ public class MachineController {
                 return ResultGenerator.genSuccessResult();
             }
         }
+    }
+
+    @PostMapping("/update")
+    public Result update(String machine) {
+        Machine machine1 = JSON.parseObject(machine, Machine.class);
+        machineService.update(machine1);
+        return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/detail")
