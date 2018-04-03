@@ -13,6 +13,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,10 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2018/03/05.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2018/03/05.
+ */
 @RestController
 @RequestMapping("/order/loading/list")
 public class OrderLoadingListController {
@@ -69,7 +72,7 @@ public class OrderLoadingListController {
         }
         String resultPath = null;
         try {
-            resultPath = commonService.saveFile(orderLoadingListSavedDir, file1, null, machineOrderId.toString(), Constant.LOADING_FILE,0);
+            resultPath = commonService.saveFile(orderLoadingListSavedDir, file1, null, machineOrderId.toString(), Constant.LOADING_FILE, 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,38 +88,54 @@ public class OrderLoadingListController {
     }
 
     @PostMapping("/upload")
+    @Transactional(rollbackFor = Exception.class)
     public Result upload(HttpServletRequest request) {
-        String data = request.getParameterValues("uploadData")[0];
-        String orderNum = request.getParameterValues("orderNum")[0];
-        OrderLoadingList orderLoadingList = JSON.parseObject(data, OrderLoadingList.class);
-        List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("file");
-        if (fileList == null || fileList.size() == 0) {
-            return ResultGenerator.genFailResult("Error: no available file");
-        }
-
-        MultipartFile file = fileList.get(0);
-        Integer machineOrderId = orderLoadingList.getOrderId();
-        File dir = new File(orderLoadingListSavedDir);
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-        if (machineOrderId == null) {
-            return ResultGenerator.genFailResult("Error: no machineOrder found by the ollId, no records saved");
-        }
-        String resultPath = null;
         try {
-            resultPath = commonService.saveFile(orderLoadingListSavedDir, file, orderNum, machineOrderId.toString(), Constant.LOADING_FILE,0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            String data = request.getParameterValues("uploadData")[0];
+            String orderNum = request.getParameterValues("orderNum")[0];
+            OrderLoadingList orderLoadingList = JSON.parseObject(data, OrderLoadingList.class);
+            List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("file");
+            if (fileList == null || fileList.size() == 0) {
+                return ResultGenerator.genFailResult("Error: no available file");
+            }
+            MultipartFile file = fileList.get(0);
+            Integer machineOrderId = orderLoadingList.getOrderId();
+            File dir = new File(orderLoadingListSavedDir);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            if (machineOrderId == null) {
+                return ResultGenerator.genFailResult("Error: no machineOrder found by the ollId, no records saved");
+            }
+            String resultPath = orderLoadingListSavedDir + commonService.formatFileName(Constant.LOADING_FILE, file.getOriginalFilename(), machineOrderId.toString(), orderNum, 0);
+            if (resultPath == null || resultPath == "") {
+                return ResultGenerator.genFailResult("文件名为空，装车单上传失败！");
+            }
+            try {
+                orderLoadingList.setFileName(resultPath);
 
-        if (null == resultPath) {
-            return ResultGenerator.genFailResult("failed to save OrderloadingList file, no records saved");
-        } else {
-            orderLoadingList.setFileName(resultPath);
-            orderLoadingListService.save(orderLoadingList);
-            logger.info("====/order/loading/list/upload():======== " + resultPath);
+                List<OrderLoadingList> orderLoadingLists = orderLoadingListService.selectFilePathByOrderId(machineOrderId);
+                if (orderLoadingLists.size() > 0) { //update if exist this data
+                    orderLoadingListService.update(orderLoadingList);
+                } else { //new add
+                    orderLoadingListService.save(orderLoadingList);
+                }
+
+                //save file
+                resultPath = commonService.saveFile(orderLoadingListSavedDir, file, machineOrderId.toString(), orderNum, Constant.LOADING_FILE, 0);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultGenerator.genFailResult("装车单上传失败！" + e.getMessage());
+            }
+            logger.info("====/order/loading/list/upload(): success======== " + resultPath);
             return ResultGenerator.genSuccessResult(orderLoadingList.getId());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResultGenerator.genFailResult("装车单上传失败！" + e.getMessage());
         }
     }
 

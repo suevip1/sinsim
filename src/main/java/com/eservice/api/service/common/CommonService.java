@@ -53,6 +53,7 @@ public class CommonService {
     private TaskServiceImpl taskService;
 
     Logger logger = Logger.getLogger(CommonService.class);
+
     /**
      * 用于返回对应合同的所有签核记录，每一次提交审核以后，都需要通过该API获取所有审核内容，再设置审核状态
      *
@@ -173,61 +174,68 @@ public class CommonService {
      * @param type      文件类型 （不同类型文件名生成规则不同）
      *                  最终生成类似：machineID123_Abnormal_2018-01-10-11-15-56.png
      * @param number    表示第几个文件
-     *
      * @return 文件路径
      */
     public String saveFile(String path, MultipartFile file,
                            @RequestParam(defaultValue = "") String machineID,
                            @RequestParam(defaultValue = "") String orderNum,
                            int type,
-                           @RequestParam(defaultValue = "0") int number ) throws IOException {
+                           @RequestParam(defaultValue = "0") int number) throws IOException {
         String targetFileName = null;
-        if (path != null) {
-            if (!file.isEmpty()) {
-
+        try {
+            if (path != null && !file.isEmpty()) {
                 //取后缀名
                 String fileName = file.getOriginalFilename();
-                String suffixName = fileName.substring(fileName.lastIndexOf("."));
-
-                Date date = new Date();
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-                //指定北京时间
-                formatter.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-                String dateStr = formatter.format(date);
-
-                String fileType;
-                if (Constant.ABNORMAL_IMAGE == type) {
-                    fileType = "Abnormal";
-                    targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + "_" + number + suffixName;
-                } else if (Constant.QUALITY_IMAGE == type) {
-                    fileType = "Quality";
-                    targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + dateStr + "_" + number + suffixName;
-                } else if (Constant.LOADING_FILE == type) {
-                    fileType = "LoadingFile";
-                    /**
-                     * 一个需求单对应一种机器，对应唯一装车单，不用加时间戳，新上传的覆盖旧的装车单，上传时间更新在装车单的update_time
-                     */
-                    targetFileName = path + machineID + "_" + orderNum+"_" + fileType + "_" + number + suffixName;
-                } else {
-                    fileType = "";//return targetFileName;//"UnknownFileTypeError";
-                }
-
+                targetFileName = path + formatFileName(type, fileName, machineID, orderNum, number);
                 BufferedOutputStream out = new BufferedOutputStream(
                         new FileOutputStream(new File(targetFileName)));
                 out.write(file.getBytes());
                 out.flush();
                 out.close();
                 logger.info("====CommonService.saveFile(): success ========" + targetFileName);
-
             }
+        } catch (IOException e) {
+            throw e;
         }
         return targetFileName;
     }
 
+    public String formatFileName(int type, String fileName,
+                                 @RequestParam(defaultValue = "") String machineID,
+                                 @RequestParam(defaultValue = "") String orderNum,
+                                 @RequestParam(defaultValue = "0") int number) {
+        String targetFileName = "";
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        //指定北京时间
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        String dateStr = formatter.format(date);
+
+        String fileType;
+        switch (type) {
+            case Constant.ABNORMAL_IMAGE:
+                fileType = "Abnormal";
+                break;
+            case Constant.QUALITY_IMAGE:
+                fileType = "Quality";
+                break;
+            case Constant.LOADING_FILE:
+                fileType = "LoadingFile";
+                dateStr = "";
+                break;
+            default:
+                fileType = " ";
+                break;
+        }
+        targetFileName = orderNum + "_" + machineID + "_" + fileType + "_" + dateStr + "_" + number + suffixName;
+        return targetFileName;
+    }
+
     public boolean updateTaskRecordRelatedStatus(TaskRecord tr) {
-        if(tr == null || tr.getProcessRecordId() == null) {
+        if (tr == null || tr.getProcessRecordId() == null) {
             return false;
-        }else {
+        } else {
             Integer prId = tr.getProcessRecordId();
             ProcessRecord pr = processRecordService.findById(prId);
             Machine machine = machineService.findById(pr.getMachineId());
@@ -265,38 +273,38 @@ public class CommonService {
                     }
                     ndList.set(index, ndItem);
                     //TODO：如果当前工序是质检完成状态，需要检查其子节点是否可以开始
-                    if(tr.getStatus().intValue() == Constant.TASK_QUALITY_DONE.intValue()) {
+                    if (tr.getStatus().intValue() == Constant.TASK_QUALITY_DONE.intValue()) {
                         List<LinkDataModel> linkDataList = JSON.parseArray(pr.getLinkData(), LinkDataModel.class);
-                        for (LinkDataModel item: linkDataList) {
-                            if(String.valueOf(item.getFrom()).equals(String.valueOf(ndItem.getKey()))) {
-                                for (NodeDataModel childNode: ndList) {
+                        for (LinkDataModel item : linkDataList) {
+                            if (String.valueOf(item.getFrom()).equals(String.valueOf(ndItem.getKey()))) {
+                                for (NodeDataModel childNode : ndList) {
                                     //先找到子节点
-                                    if(childNode.getKey().equals(String.valueOf(item.getTo()))) {
+                                    if (childNode.getKey().equals(String.valueOf(item.getTo()))) {
                                         //找到子节点的所有父节点
                                         boolean allParentFinished = true;
-                                        for (LinkDataModel parentOfChild: linkDataList) {
-                                            if(!allParentFinished) {
+                                        for (LinkDataModel parentOfChild : linkDataList) {
+                                            if (!allParentFinished) {
                                                 break;
                                             }
-                                            if(String.valueOf(parentOfChild.getTo()).equals(childNode.getKey())) {
+                                            if (String.valueOf(parentOfChild.getTo()).equals(childNode.getKey())) {
                                                 for (NodeDataModel parentOfChildNode : ndList) {
-                                                    if(parentOfChildNode.getCategory().equals("Start") || parentOfChildNode.getCategory().equals("End") || !allParentFinished) {
+                                                    if (parentOfChildNode.getCategory().equals("Start") || parentOfChildNode.getCategory().equals("End") || !allParentFinished) {
                                                         break;
                                                     }
-                                                    if(Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()) {
+                                                    if (Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()) {
                                                         allParentFinished = false;
                                                     }
                                                 }
                                             }
                                         }
                                         //子节点的所有父节点都已经完成，则更新子节点的状态
-                                        if(allParentFinished) {
+                                        if (allParentFinished) {
                                             String dateStr = Utils.getFormatStringDate(new Date(), "yyyy-MM-dd HH:mm:ss");
                                             childNode.setBeginTime(dateStr);
                                             childNode.setTaskStatus(Constant.TASK_INSTALL_WAITING.toString());
                                             List<TaskRecord> taskRecordList = taskRecordService.getTaskRecordData(null, prId);
-                                            for (TaskRecord record: taskRecordList) {
-                                                if(String.valueOf(record.getNodeKey().intValue()).equals(childNode.getKey())) {
+                                            for (TaskRecord record : taskRecordList) {
+                                                if (String.valueOf(record.getNodeKey().intValue()).equals(childNode.getKey())) {
                                                     record.setStatus(Constant.TASK_INSTALL_WAITING);
                                                     taskRecordService.update(record);
                                                     //MQTT 通知下一道工序可以开始安装
@@ -309,7 +317,7 @@ public class CommonService {
                                                     Condition condition = new Condition(Task.class);
                                                     condition.createCriteria().andCondition("task_name = ", taskName);
                                                     List<Task> taskList = taskService.findByCondition(condition);
-                                                    if(taskList == null || taskList.size() <= 0) {
+                                                    if (taskList == null || taskList.size() <= 0) {
                                                         throw new RuntimeException();
                                                     }
                                                     mqttMessageHelper.sendToClient(Constant.S2C_TASK_INSTALL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
@@ -335,15 +343,15 @@ public class CommonService {
                     pr.setEndTime(new Date());
                     //安装完成
                     machine.setStatus(Constant.MACHINE_INSTALLED);
-                    isNeedUpdateMachine=true;
+                    isNeedUpdateMachine = true;
                 }
 
                 if (machine.getStatus().equals(Constant.MACHINE_PLANING)) {
                     //安装中
                     machine.setStatus(Constant.MACHINE_INSTALLING);
-                    isNeedUpdateMachine=true;
+                    isNeedUpdateMachine = true;
                 }
-                if(isNeedUpdateMachine) {
+                if (isNeedUpdateMachine) {
                     machine.setUpdateTime(new Date());
                     machineService.update(machine);
                 }

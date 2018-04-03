@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface OrderLoadingListMapper extends Mapper<OrderLoadingList> {
 
-    List<OrderLoadingList>  selectFilePathByOrderId(@Param("contractId") Integer contractId);
+    List<OrderLoadingList>  selectFilePathByOrderId(@Param("orderId") Integer orderId);
 }

@@ -14,7 +14,7 @@ import java.util.List;
 /**
 * Class Description: xxx
 * @author Wilson Hu
-* @date 2018/03/05.
+* @date 2017/11/14.
 */
 @Service
 @Transactional
@@ -22,8 +22,8 @@ public class OrderLoadingListServiceImpl extends AbstractService<OrderLoadingLis
     @Resource
     private OrderLoadingListMapper orderLoadingListMapper;
 
-    public List<OrderLoadingList>  selectFilePathByOrderId(Integer order_id) {
-        return orderLoadingListMapper.selectFilePathByOrderId(order_id);
+    public List<OrderLoadingList>  selectFilePathByOrderId(Integer orderId) {
+        return orderLoadingListMapper.selectFilePathByOrderId(orderId);
     }
 
 }
