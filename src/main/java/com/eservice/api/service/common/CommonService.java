@@ -333,8 +333,13 @@ public class CommonService {
                     }
                 }
                 Boolean isFinished = true;
-                for (int i = 0; i < ndList.size(); i++) {
-                    if (ndList.get(i).getTaskStatus() != null && Integer.parseInt(ndList.get(i).getTaskStatus()) == Constant.TASK_QUALITY_DONE.intValue()) {
+                for (int i = 0; i < ndList.size() && isFinished; i++) {
+                    //开始和结束节点不考虑在内
+                    if(ndList.get(i).getCategory() != null
+                            && (ndList.get(i).getCategory().equals("Start") || ndList.get(i).getCategory().equals("End"))) {
+                        continue;
+                    }
+                    if (ndList.get(i).getTaskStatus() != null && Integer.parseInt(ndList.get(i).getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()) {
                         isFinished = false;
                     }
                 }

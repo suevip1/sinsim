@@ -183,4 +183,8 @@ public class Constant {
      * MQTT Topic: 某工序的质检异常处理结束后，通知该工序质检员
      */
     public static final String S2C_QUALITY_ABNORMAL_RESOLVE = "/s2c/quality_abnormal_resolve/";
+	
+	//TODO:发生安装异常时，通知生产部管理员
+	
+	//TODO:发生质检异常时，通知生产部管理员
 }
