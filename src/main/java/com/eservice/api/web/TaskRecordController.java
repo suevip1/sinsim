@@ -70,6 +70,8 @@ public class TaskRecordController {
     private AbnormalRecordServiceImpl abnormalRecordService;
     @Value("${abnormal_images_saved_dir}")
     private String imagesSavedDir;
+    @Value("${quality_images_saved_dir}")
+    private String qualityImagesSavedDir;
     /**
      * 导出计划的excel表格，和合同excel表格放同个地方
      */
@@ -745,7 +747,7 @@ public class TaskRecordController {
 
         //构建 qualityRecordImage1
         QualityRecordImage qualityRecordImage1 = new QualityRecordImage();
-        File dir = new File(imagesSavedDir);
+        File dir = new File(qualityImagesSavedDir);
         if(!dir.exists()){
             dir.mkdir();
         }
@@ -755,7 +757,7 @@ public class TaskRecordController {
         List<String> listResultPath = new ArrayList<>() ;
         for(int i=0; i<files.length; i++) {
             try {
-                listResultPath.add( commonService.saveFile(imagesSavedDir, files[i], machineID, orderNum, Constant.QUALITY_IMAGE, i));
+                listResultPath.add( commonService.saveFile(qualityImagesSavedDir, files[i], machineID, orderNum, Constant.QUALITY_IMAGE, i));
             } catch (IOException e) {
                 e.printStackTrace();
                 //抛异常引发回滚，防止数据只更新了前面部分。
