@@ -74,7 +74,7 @@
   <insert id="saveAndGetID"  parameterType="com.eservice.api.model.task_quality_record.TaskQualityRecord" useGeneratedKeys="true"  keyProperty="id">
     insert into
     task_quality_record(
-    task_record_id, name, status, create_time, comment )
+    task_record_id, abnormal_type, submit_user, solution_user, create_time, solve_time, comment, solution )
     values(
     #{taskRecordId},#{abnormalType},#{submitUser},#{solutionUser},#{createTime},#{solveTime},#{comment},#{solution} )
 

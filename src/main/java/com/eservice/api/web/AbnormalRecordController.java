@@ -184,9 +184,7 @@ public class AbnormalRecordController {
     }
 
     /**
-     * 根据异常类型、异常提交时间、提交者、解决者，返回abnormalRecordDetail
-     *
-     * @return
+     * 生成 安装异常的excel表格
      */
     @PostMapping("/export")
     public Result export(
@@ -200,8 +198,6 @@ public class AbnormalRecordController {
             String queryFinishTime) {
         List<AbnormalRecordDetail> list = abnormalRecordService.selectAbnormalRecordDetailList(nameplate, abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
 
-        InputStream fs = null;
-        POIFSFileSystem pfs = null;
         HSSFWorkbook wb = null;
         FileOutputStream out = null;
         String downloadPath = "";
@@ -220,19 +216,18 @@ public class AbnormalRecordController {
             HSSFCellStyle headcellstyle = wb.createCellStyle();
             HSSFFont headfont = wb.createFont();
             headfont.setFontHeightInPoints((short) 10);
-            headfont.setBold(true);//粗体显示
+            headfont.setBold(true);
             headcellstyle.setFont(headfont);
             Row row;
             //创建行和列
             for(int r=0;r<list.size() + 1; r++ ) {
-                row = sheet1.createRow(r);//新创建一行，行号为row+1
-                //序号，异常类型，工序，提交者，解决者，创建时间，解决时间
+                row = sheet1.createRow(r);
                 for(int c=0; c< 9; c++){
-                    row.createCell(c);//创建一个单元格，列号为col+1
+                    row.createCell(c);
                     sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
                 }
             }
-            sheet1.setColumnWidth(0,2000);
+            sheet1.setColumnWidth(0,1500);
             sheet1.setColumnWidth(1,4000);
             sheet1.setColumnWidth(2,4000);
             sheet1.setColumnWidth(3,4000);
@@ -261,17 +256,22 @@ public class AbnormalRecordController {
                 row.getCell(3).setCellValue(list.get(r).getTaskRecord().getTaskName());
                 int userID = list.get(r).getSubmitUser();
                 row.getCell(4).setCellValue(userService.findById(userID).getName());
-                userID =  list.get(r).getSolutionUser();
-                row.getCell(5).setCellValue(userService.findById(userID).getName());
+
+                //安装异常时， 还不知道SolutionUser， SolutionUser是null
+                if(list.get(r).getSolutionUser() != null) {
+                    userID = list.get(r).getSolutionUser();
+                    row.getCell(5).setCellValue(userService.findById(userID).getName());
+                }
                 row.getCell(6).setCellValue(list.get(r).getSolution());
                 dateString= formatter.format(list.get(r).getCreateTime());
                 row.getCell(7).setCellValue(dateString);
-                dateString = formatter.format(list.get(r).getSolveTime());
-                row.getCell(8).setCellValue(dateString);
-
+                if(list.get(r).getSolveTime() != null) {
+                    dateString = formatter.format(list.get(r).getSolveTime());
+                    row.getCell(8).setCellValue(dateString);
+                }
             }
-            downloadPath = abnoramlExcelOutputDir + "异常统计" + ".xls";
-            downloadPathForNginx = "/excel/" + "异常统计" + ".xls";
+            downloadPath = abnoramlExcelOutputDir + "安装异常统计" + ".xls";
+            downloadPathForNginx = "/excel/" + "安装异常统计" + ".xls";
             out = new FileOutputStream(downloadPath);
             wb.write(out);
             out.close();

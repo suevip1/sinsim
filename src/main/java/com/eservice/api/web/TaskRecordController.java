@@ -682,6 +682,8 @@ public class TaskRecordController {
 
         //abnormal_record add:
         AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
+        //在安装异常时，并没有SolutionUser，即还不知道SolutionUser，所以这里设为null
+        abnormalRecord1.setSolutionUser(null);
         abnormalRecordService.saveAndGetID(abnormalRecord1);
         //获取保存后分配到的id
         Integer abnormalRecordId = abnormalRecord1.getId();
@@ -735,6 +737,8 @@ public class TaskRecordController {
         taskRecordService.update(taskRecord1);
 
         TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord, TaskQualityRecord.class);
+        //质检异常类型，目前未使用，default值为1
+        taskQualityRecord1.setAbnormalType(1);
         taskQualityRecordService.saveAndGetID(taskQualityRecord1);
         //获取保存后分配到的id
         Integer taskQualityRecordId = taskQualityRecord1.getId();
