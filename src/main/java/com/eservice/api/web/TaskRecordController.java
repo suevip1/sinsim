@@ -676,11 +676,7 @@ public class TaskRecordController {
                             @RequestParam String abnormalRecord,
                             @RequestParam MultipartFile[] files) {
 
-        //task_record(update)
-        TaskRecord taskRecord1 = JSON.parseObject(taskRecord, TaskRecord.class);
-        taskRecordService.update(taskRecord1);
-
-        //abnormal_record add:
+        //abnormal_record add: 只能在保存文件之前进行，因为保存文件需要用到这些数据。
         AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
         //在安装异常时，并没有SolutionUser，即还不知道SolutionUser，所以这里设为null
         abnormalRecord1.setSolutionUser(null);
@@ -720,6 +716,9 @@ public class TaskRecordController {
             abnormalImageService.save(abnormalImage1);
         }
 
+        //task_record(update)，数据库的保存，尽量放在文件保存之后。
+        TaskRecord taskRecord1 = JSON.parseObject(taskRecord, TaskRecord.class);
+        taskRecordService.update(taskRecord1);
         return ResultGenerator.genSuccessResult("3个表 task_record + abnormal_record + abnormal_image更新成功");
     }
 
@@ -732,9 +731,6 @@ public class TaskRecordController {
     public Result addTrTqrQri(@RequestParam String taskRecord,
                             @RequestParam String taskQualityRecord,
                             @RequestParam MultipartFile[] files) {
-        //task_record(update)
-        TaskRecord taskRecord1 = JSON.parseObject(taskRecord, TaskRecord.class);
-        taskRecordService.update(taskRecord1);
 
         TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord, TaskQualityRecord.class);
         //质检异常类型，目前未使用，default值为1
@@ -770,6 +766,9 @@ public class TaskRecordController {
             qualityRecordImage1.setCreateTime(taskQualityRecord1.getCreateTime());
             qualityRecordImageService.save(qualityRecordImage1);
         }
+        //task_record(update),数据库的保存，尽量放在文件保存之后。
+        TaskRecord taskRecord1 = JSON.parseObject(taskRecord, TaskRecord.class);
+        taskRecordService.update(taskRecord1);
         return ResultGenerator.genSuccessResult("3个表 task_record + TaskQualityRecord + QualityRecordImage 更新成功");
     }
 }

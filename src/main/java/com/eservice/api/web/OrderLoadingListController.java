@@ -58,34 +58,34 @@ public class OrderLoadingListController {
      * @param file1            每次上传的一个文件
      * @return
      */
-    @PostMapping("/add")
-    public Result add(String orderLoadingList, MultipartFile file1) {
-        OrderLoadingList orderLoadingList1 = JSON.parseObject(orderLoadingList, OrderLoadingList.class);
-        Integer machineOrderId = orderLoadingList1.getOrderId();
-//        String machineOrderId = searchOrderIdByOrderId(orderId);
-        File dir = new File(orderLoadingListSavedDir);
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-        if (machineOrderId == null) {
-            return ResultGenerator.genFailResult("Error: no machineOrder found by the ollId, no records saved");
-        }
-        String resultPath = null;
-        try {
-            resultPath = commonService.saveFile(orderLoadingListSavedDir, file1, null, machineOrderId.toString(), Constant.LOADING_FILE, 0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (null == resultPath) {
-            return ResultGenerator.genFailResult("failed to save OrderloadingList file, no records saved");
-        } else {
-            orderLoadingList1.setFileName(resultPath);
-            orderLoadingListService.save(orderLoadingList1);
-            logger.info("====/order/loading/list/add():======== " + resultPath);
-            return ResultGenerator.genSuccessResult(resultPath);
-        }
-    }
+//    @PostMapping("/add")
+//    public Result add(String orderLoadingList, MultipartFile file1) {
+//        OrderLoadingList orderLoadingList1 = JSON.parseObject(orderLoadingList, OrderLoadingList.class);
+//        Integer machineOrderId = orderLoadingList1.getOrderId();
+////        String machineOrderId = searchOrderIdByOrderId(orderId);
+//        File dir = new File(orderLoadingListSavedDir);
+//        if (!dir.exists()) {
+//            dir.mkdir();
+//        }
+//        if (machineOrderId == null) {
+//            return ResultGenerator.genFailResult("Error: no machineOrder found by the ollId, no records saved");
+//        }
+//        String resultPath = null;
+//        try {
+//            resultPath = commonService.saveFile(orderLoadingListSavedDir, file1, null, machineOrderId.toString(), Constant.LOADING_FILE, 0);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if (null == resultPath) {
+//            return ResultGenerator.genFailResult("failed to save OrderloadingList file, no records saved");
+//        } else {
+//            orderLoadingList1.setFileName(resultPath);
+//            orderLoadingListService.save(orderLoadingList1);
+//            logger.info("====/order/loading/list/add():======== " + resultPath);
+//            return ResultGenerator.genSuccessResult(resultPath);
+//        }
+//    }
 
     @PostMapping("/upload")
     @Transactional(rollbackFor = Exception.class)
@@ -107,11 +107,13 @@ public class OrderLoadingListController {
             if (machineOrderId == null) {
                 return ResultGenerator.genFailResult("Error: no machineOrder found by the ollId, no records saved");
             }
-            String resultPath = orderLoadingListSavedDir + commonService.formatFileName(Constant.LOADING_FILE, file.getOriginalFilename(), machineOrderId.toString(), orderNum, 0);
-            if (resultPath == null || resultPath == "") {
-                return ResultGenerator.genFailResult("文件名为空，装车单上传失败！");
-            }
+
             try {
+                //save file， 先保存文件，再保存数据库，因为 如果文件保存失败则数据库方便回滚。
+                String resultPath = commonService.saveFile(orderLoadingListSavedDir, file, machineOrderId.toString(), orderNum, Constant.LOADING_FILE, 0);
+                if (resultPath == null || resultPath == "") {
+                    return ResultGenerator.genFailResult("文件名为空，装车单上传失败！");
+                }
                 orderLoadingList.setFileName(resultPath);
 
                 List<OrderLoadingList> orderLoadingLists = orderLoadingListService.selectFilePathByOrderId(machineOrderId);
@@ -120,16 +122,13 @@ public class OrderLoadingListController {
                 } else { //new add
                     orderLoadingListService.save(orderLoadingList);
                 }
-
-                //save file
-                resultPath = commonService.saveFile(orderLoadingListSavedDir, file, machineOrderId.toString(), orderNum, Constant.LOADING_FILE, 0);
+                logger.info("====/order/loading/list/upload(): success======== " + resultPath);
 
             } catch (Exception e) {
                 e.printStackTrace();
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultGenerator.genFailResult("装车单上传失败！" + e.getMessage());
             }
-            logger.info("====/order/loading/list/upload(): success======== " + resultPath);
             return ResultGenerator.genSuccessResult(orderLoadingList.getId());
 
         } catch (Exception e) {
