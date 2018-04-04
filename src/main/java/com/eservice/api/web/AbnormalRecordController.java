@@ -103,7 +103,7 @@ public class AbnormalRecordController {
         Integer taskRecordId = completeInfo.getTaskRecordId();
         if(taskRecordId != null && taskRecordId > 0) {
             TaskRecord tr = taskRecordService.findById(taskRecordId);
-            //MQTT 异常解决后，通知工序的安装组长或者质检员，取决于之前是处于安装中还是质检中
+            //MQTT 异常解决后，通知工序的安装组长
             String taskName = tr.getTaskName();
             Condition condition = new Condition(Task.class);
             condition.createCriteria().andCondition("task_name = ", taskName);
@@ -111,20 +111,15 @@ public class AbnormalRecordController {
             if(taskList == null || taskList.size() <= 0) {
                 throw new RuntimeException();
             }
+            tr.setStatus(Constant.TASK_INSTALLING);
+            taskRecordService.update(tr);
             ProcessRecord pr = processRecordService.findById(tr.getProcessRecordId());
             Machine machine = machineService.findById(pr.getMachineId());
             MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
             ServerToClientMsg msg = new ServerToClientMsg();
             msg.setOrderNum(machineOrder.getOrderNum());
             msg.setNameplate(machine.getNameplate());
-            if(tr.getQualityBeginTime() != null) {
-                tr.setStatus(Constant.TASK_QUALITY_DOING);
-                mqttMessageHelper.sendToClient(Constant.S2C_QUALITY_ABNORMAL_RESOLVE + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
-            }else {
-                tr.setStatus(Constant.TASK_INSTALLING);
-                mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL_RESOLVE + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
-            }
-            taskRecordService.update(tr);
+            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL_RESOLVE + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
         }else {
             throw new RuntimeException();
         }

@@ -2,11 +2,18 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.machine.Machine;
+import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.process_record.ProcessRecord;
+import com.eservice.api.model.quality_record_image.QualityRecordImage;
+import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_quality_record.TaskQualityRecord;
 import com.eservice.api.model.task_quality_record.TaskQualityRecordDetail;
-import com.eservice.api.service.impl.QualityRecordImageServiceImpl;
-import com.eservice.api.service.impl.TaskQualityRecordServiceImpl;
-import com.eservice.api.service.impl.TaskRecordServiceImpl;
+import com.eservice.api.model.task_record.TaskRecord;
+import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.impl.*;
+import com.eservice.api.service.mqtt.MqttMessageHelper;
+import com.eservice.api.service.mqtt.ServerToClientMsg;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -19,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.io.FileNotFoundException;
@@ -42,6 +50,16 @@ public class TaskQualityRecordController {
     private QualityRecordImageServiceImpl qualityRecordImageService;
     @Resource
     private TaskRecordServiceImpl taskRecordService;
+    @Resource
+    private ProcessRecordServiceImpl processRecordService;
+    @Resource
+    private TaskServiceImpl taskService;
+    @Resource
+    private MachineServiceImpl machineService;
+    @Resource
+    private MachineOrderServiceImpl machineOrderService;
+    @Resource
+    private MqttMessageHelper mqttMessageHelper;
     /**
      * 质检异常管理excel表格，和合同excel表格放同个地方
      */
@@ -65,6 +83,32 @@ public class TaskQualityRecordController {
     public Result update(String  taskQualityRecord) {
         TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord,TaskQualityRecord.class);
         taskQualityRecord1.setSolveTime(new Date());
+        //修改对应工序的状态为“质检中”
+        TaskQualityRecord completeInfo = taskQualityRecordService.findById(taskQualityRecord1.getId());
+        Integer taskRecordId = completeInfo.getTaskRecordId();
+        if(taskRecordId != null && taskRecordId > 0) {
+            TaskRecord tr = taskRecordService.findById(taskRecordId);
+            //MQTT 异常解决后，通知工序的质检员
+            String taskName = tr.getTaskName();
+            Condition condition = new Condition(Task.class);
+            condition.createCriteria().andCondition("task_name = ", taskName);
+            List<Task> taskList = taskService.findByCondition(condition);
+            if(taskList == null || taskList.size() <= 0) {
+                throw new RuntimeException();
+            }
+            tr.setStatus(Constant.TASK_QUALITY_DOING);
+            taskRecordService.update(tr);
+
+            ProcessRecord pr = processRecordService.findById(tr.getProcessRecordId());
+            Machine machine = machineService.findById(pr.getMachineId());
+            ServerToClientMsg msg = new ServerToClientMsg();
+            MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+            msg.setOrderNum(machineOrder.getOrderNum());
+            msg.setNameplate(machine.getNameplate());
+            mqttMessageHelper.sendToClient(Constant.S2C_QUALITY_ABNORMAL_RESOLVE + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
+        }else {
+            throw new RuntimeException();
+        }
         taskQualityRecordService.update(taskQualityRecord1);
         return ResultGenerator.genSuccessResult();
     }

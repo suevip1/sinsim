@@ -177,10 +177,10 @@ public class Constant {
     /**
      * MQTT Topic: 某工序的安装异常处理结束后，通知该工序安装组长
      */
-    public static final String S2C_INSTALL_ABNORMAL_RESOLVE = "/s2c/install_abnormal_resolve";
+    public static final String S2C_INSTALL_ABNORMAL_RESOLVE = "/s2c/install_abnormal_resolve/";
 
     /**
      * MQTT Topic: 某工序的质检异常处理结束后，通知该工序质检员
      */
-    public static final String S2C_QUALITY_ABNORMAL_RESOLVE = "/s2c/quality_abnormal_resolve";
+    public static final String S2C_QUALITY_ABNORMAL_RESOLVE = "/s2c/quality_abnormal_resolve/";
 }
