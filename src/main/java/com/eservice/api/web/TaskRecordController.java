@@ -517,25 +517,30 @@ public class TaskRecordController {
                 throw new RuntimeException();
             }
         }
+        //找到工序对应的quality_user_id
+        String taskName = tr.getTaskName();
+        Condition condition = new Condition(Task.class);
+        condition.createCriteria().andCondition("task_name = ", taskName);
+        List<Task> taskList = taskService.findByCondition(condition);
+        if(taskList == null || taskList.size() <= 0) {
+            throw new RuntimeException();
+        }
+
+        ProcessRecord pr = processRecordService.findById(prId);
+        Machine machine = machineService.findById(pr.getMachineId());
+        MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+        ServerToClientMsg msg = new ServerToClientMsg();
+        msg.setOrderNum(machineOrder.getOrderNum());
+        msg.setNameplate(machine.getNameplate());
         if(tr.getStatus().equals(Constant.TASK_INSTALLED)) {
             //MQTT 如果当前工序状态是安装完成等待质检的状态，则通知App
-            //找到工序对应的quality_user_id
-            String taskName = tr.getTaskName();
-            Condition condition = new Condition(Task.class);
-            condition.createCriteria().andCondition("task_name = ", taskName);
-            List<Task> taskList = taskService.findByCondition(condition);
-            if(taskList == null || taskList.size() <= 0) {
-                throw new RuntimeException();
-            }
-
-            ProcessRecord pr = processRecordService.findById(prId);
-            Machine machine = machineService.findById(pr.getMachineId());
-            MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
-
-            ServerToClientMsg msg = new ServerToClientMsg();
-            msg.setOrderNum(machineOrder.getOrderNum());
-            msg.setNameplate(machine.getNameplate());
             mqttMessageHelper.sendToClient(Constant.S2C_TASK_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
+        } else if(tr.getStatus().equals(Constant.TASK_INSTALL_ABNORMAL)) {
+            //MQTT 发生安装异常时，通知生产部管理员
+            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL, JSON.toJSONString(msg));
+        } else if(tr.getStatus().equals(Constant.TASK_QUALITY_ABNORMAL)) {
+            //MQTT 发生质检异常时，通知生产部管理员
+            mqttMessageHelper.sendToClient(Constant.S2C_QUALITY_ABNORMAL, JSON.toJSONString(msg));
         }
         return ResultGenerator.genSuccessResult();
     }
