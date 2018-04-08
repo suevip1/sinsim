@@ -88,31 +88,6 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                     if(item.getTo().equals(taskRecord.getNodeKey().intValue())) {
                         if(item.getFrom() == null || item.getFrom() == -1) {
                             taskRecord.setStatus(Constant.TASK_INSTALL_WAITING);
-                            //MQTT 计划后，通知第一道的安装组长，可以进行安装
-                            String taskName = taskRecord.getTaskName();
-                            Condition condition = new Condition(Task.class);
-                            condition.createCriteria().andCondition("task_name = ", taskName);
-                            List<Task> taskList = taskService.findByCondition(condition);
-                            if(taskList == null || taskList.size() <= 0) {
-                                throw new RuntimeException();
-                            }
-
-                            ProcessRecord pr = processRecordService.findById(taskRecord.getProcessRecordId());
-                            Machine machine = machineService.findById(pr.getMachineId());
-                            MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
-
-                            ServerToClientMsg msg = new ServerToClientMsg();
-                            msg.setOrderNum(machineOrder.getOrderNum());
-                            msg.setNameplate(machine.getNameplate());
-                            mqttMessageHelper.sendToClient(Constant.S2C_TASK_INSTALL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
-///                            Integer machineId = processRecord.getMachineId();
-//                            Machine machine = machineService.findById(machineId);
-//                            //如果机器还处于"MACHINE_INSTALLING"之前，修改为安装中
-//                            if(machine.getStatus() < Constant.MACHINE_INSTALLING) {
-//                                machine.setStatus(Constant.MACHINE_INSTALLING);
-//                                machine.setUpdateTime(new Date());
-//                                machineService.update(machine);
-///                            }
                             break;
                         } else {
                             //TODO:如果是重新配置流程项，比如：改单、拆单以后再最后增加了安装项，则需要设置成待安装状态
@@ -150,6 +125,26 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                 taskRecordService.update(taskRecord);
                 //更新task_record以外，但是跟task record相关的状态,机器状态，process_record中的task_status
                 commonService.updateTaskRecordRelatedStatus(taskRecord);
+
+                if(taskRecord.getStatus().equals(Constant.TASK_INSTALL_WAITING)) {
+                    //MQTT 计划后，通知安装组长，可以进行安装
+                    String taskName = taskRecord.getTaskName();
+                    Condition condition = new Condition(Task.class);
+                    condition.createCriteria().andCondition("task_name = ", taskName);
+                    List<Task> taskList = taskService.findByCondition(condition);
+                    if(taskList == null || taskList.size() <= 0) {
+                        throw new RuntimeException();
+                    }
+
+                    ProcessRecord pr = processRecordService.findById(taskRecord.getProcessRecordId());
+                    Machine machine = machineService.findById(pr.getMachineId());
+                    MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+
+                    ServerToClientMsg msg = new ServerToClientMsg();
+                    msg.setOrderNum(machineOrder.getOrderNum());
+                    msg.setNameplate(machine.getNameplate());
+                    mqttMessageHelper.sendToClient(Constant.S2C_TASK_INSTALL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
+                }
 
             }else {
                 //进行事务操作
