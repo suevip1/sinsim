@@ -120,15 +120,15 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                             String nodeData = processRecord.getNodeData();
                             List<NodeDataModel> ndList = JSON.parseArray(nodeData, NodeDataModel.class);
                             for (LinkDataModel tmp: linkDataList) {
-                                if(tmp.getTo().equals(taskRecord.getNodeKey())) {
+                                if(tmp.getTo() == taskRecord.getNodeKey().intValue()) {
                                     parentNodeList.add(tmp.getFrom());
                                 }
                             }
                             boolean allParentFinished = true;
                             for (Integer parentNodeKey:parentNodeList) {
                                 for (NodeDataModel nodeDataModel: ndList) {
-                                    if(parentNodeKey.equals(nodeDataModel.getKey())) {
-                                        if(!nodeDataModel.getTaskStatus().equals(Constant.TASK_QUALITY_DONE)) {
+                                    if(parentNodeKey.intValue() == Integer.valueOf(nodeDataModel.getKey())) {
+                                        if(Integer.valueOf(nodeDataModel.getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()) {
                                             allParentFinished = false;
                                             break;
                                         }
