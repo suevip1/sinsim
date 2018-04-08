@@ -134,6 +134,7 @@
     <if test="query_finish_time!= null and query_finish_time != '' ">
       and DATE_FORMAT(ar.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
     </if>
+    ORDER BY ar.solve_time, ar.create_time DESC
 
   </select>
 
