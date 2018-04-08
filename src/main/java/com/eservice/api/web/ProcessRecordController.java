@@ -111,27 +111,31 @@ public class ProcessRecordController {
             return ResultGenerator.genFailResult("processRecordService数据库操作失败");
         }
 
-        trList.forEach((item) -> {
-            item.setProcessRecordId(pr.getId());
-        });
-        try {
+        //存在不改变流程项目（trList的size等于0），但是需要改变状态
+        if(trList.size() > 0) {
+            trList.forEach((item) -> {
+                item.setProcessRecordId(pr.getId());
+            });
+            try {
 
-            taskRecordService.save(trList);
+                taskRecordService.save(trList);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return ResultGenerator.genFailResult("taskRecordService数据库操作失败");
+            } catch (Exception e) {
+                e.printStackTrace();
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultGenerator.genFailResult("taskRecordService数据库操作失败");
+            }
         }
         try {
-            //如果机器处于初始化状态，则设置为“已配置”
-            if (machineObj.getStatus().equals(Constant.MACHINE_INITIAL)) {//如果已经是其他状态，则不需要更改机器状态
-                machineObj.setStatus(Constant.MACHINE_CONFIGURED);
-                if (machineObj.getId() == 0) {
-                    return ResultGenerator.genFailResult("机器Id为空，数据更新失败");
-                }
-                machineService.update(machineObj);
+            if (machineObj.getId() == 0) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultGenerator.genFailResult("机器Id为空，数据更新失败");
             }
+            //如果机器处于初始化状态，则设置为“已配置”,如果已经是其他状态，则不需要更改机器状态
+            if (machineObj.getStatus().equals(Constant.MACHINE_INITIAL)) {
+                machineObj.setStatus(Constant.MACHINE_CONFIGURED);
+            }
+            machineService.update(machineObj);
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
