@@ -535,14 +535,6 @@ public class TaskRecordController {
         if(tr.getStatus().equals(Constant.TASK_INSTALLED)) {
             //MQTT 如果当前工序状态是安装完成等待质检的状态，则通知App
             mqttMessageHelper.sendToClient(Constant.S2C_TASK_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
-        } else if(tr.getStatus().equals(Constant.TASK_INSTALL_ABNORMAL)) {
-            //MQTT 发生安装异常时，通知生产部管理员
-            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
-            //MQTT 发生安装异常时，通知对应质检员
-            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL_TO_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
-        } else if(tr.getStatus().equals(Constant.TASK_QUALITY_ABNORMAL)) {
-            //MQTT 发生质检异常时，通知生产部管理员
-            mqttMessageHelper.sendToClient(Constant.S2C_QUALITY_ABNORMAL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
         }
         return ResultGenerator.genSuccessResult();
     }
@@ -729,6 +721,39 @@ public class TaskRecordController {
             abnormalImageService.save(abnormalImage1);
         }
 
+        //找到工序对应的quality_user_id
+        String taskName = taskRecord1.getTaskName();
+        Condition condition = new Condition(Task.class);
+        condition.createCriteria().andCondition("task_name = ", taskName);
+        List<Task> taskList = taskService.findByCondition(condition);
+        if(taskList == null || taskList.size() <= 0) {
+            throw new RuntimeException();
+        }
+
+        Integer prId = taskRecord1.getProcessRecordId();
+        if (prId == null || prId < 0) {
+            Logger.getLogger("").log(Level.INFO, "processrecord Id 为空");
+        } else {
+            //Update task record相关的状态
+            if(!commonService.updateTaskRecordRelatedStatus(taskRecord1)) {
+                //更新出错进行事务回退
+                throw new RuntimeException();
+            }
+        }
+
+        ProcessRecord pr = processRecordService.findById(prId);
+        Machine machine = machineService.findById(pr.getMachineId());
+        MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+        ServerToClientMsg msg = new ServerToClientMsg();
+        msg.setOrderNum(machineOrder.getOrderNum());
+        msg.setNameplate(machine.getNameplate());
+        if(taskRecord1.getStatus().equals(Constant.TASK_INSTALL_ABNORMAL)) {
+            //MQTT 发生安装异常时，通知生产部管理员
+            //mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
+            //MQTT 发生安装异常时，通知对应质检员
+            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL_TO_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
+        }
+
         return ResultGenerator.genSuccessResult("3个表 task_record + abnormal_record + abnormal_image更新成功");
     }
 
@@ -778,6 +803,37 @@ public class TaskRecordController {
             qualityRecordImage1.setImage(listResultPath.toString());
             qualityRecordImage1.setCreateTime(taskQualityRecord1.getCreateTime());
             qualityRecordImageService.save(qualityRecordImage1);
+        }
+
+        //找到工序对应的quality_user_id
+        String taskName = taskRecord1.getTaskName();
+        Condition condition = new Condition(Task.class);
+        condition.createCriteria().andCondition("task_name = ", taskName);
+        List<Task> taskList = taskService.findByCondition(condition);
+        if(taskList == null || taskList.size() <= 0) {
+            throw new RuntimeException();
+        }
+
+        Integer prId = taskRecord1.getProcessRecordId();
+        if (prId == null || prId < 0) {
+            Logger.getLogger("").log(Level.INFO, "processrecord Id 为空");
+        } else {
+            //Update task record相关的状态
+            if(!commonService.updateTaskRecordRelatedStatus(taskRecord1)) {
+                //更新出错进行事务回退
+                throw new RuntimeException();
+            }
+        }
+
+        ProcessRecord pr = processRecordService.findById(prId);
+        Machine machine = machineService.findById(pr.getMachineId());
+        MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+        ServerToClientMsg msg = new ServerToClientMsg();
+        msg.setOrderNum(machineOrder.getOrderNum());
+        msg.setNameplate(machine.getNameplate());
+       if(taskRecord1.getStatus().equals(Constant.TASK_QUALITY_ABNORMAL)) {
+           //MQTT 发生质检异常时，通知安装组长以及生产部管理员
+           mqttMessageHelper.sendToClient(Constant.S2C_QUALITY_ABNORMAL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
         }
         return ResultGenerator.genSuccessResult("3个表 task_record + TaskQualityRecord + QualityRecordImage 更新成功");
     }
