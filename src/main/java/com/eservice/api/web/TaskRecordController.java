@@ -537,10 +537,12 @@ public class TaskRecordController {
             mqttMessageHelper.sendToClient(Constant.S2C_TASK_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
         } else if(tr.getStatus().equals(Constant.TASK_INSTALL_ABNORMAL)) {
             //MQTT 发生安装异常时，通知生产部管理员
-            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL, JSON.toJSONString(msg));
+            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
+            //MQTT 发生安装异常时，通知对应质检员
+            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL_TO_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
         } else if(tr.getStatus().equals(Constant.TASK_QUALITY_ABNORMAL)) {
             //MQTT 发生质检异常时，通知生产部管理员
-            mqttMessageHelper.sendToClient(Constant.S2C_QUALITY_ABNORMAL, JSON.toJSONString(msg));
+            mqttMessageHelper.sendToClient(Constant.S2C_QUALITY_ABNORMAL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
         }
         return ResultGenerator.genSuccessResult();
     }

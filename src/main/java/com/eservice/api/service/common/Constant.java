@@ -193,4 +193,9 @@ public class Constant {
      * 发生质检异常时，通知生产部管理员
      */
     public static final String S2C_QUALITY_ABNORMAL = "/s2c/quality_abnormal/";
+
+    /**
+     * 发生安装异常时，通知对应质检员
+     */
+    public static final String S2C_INSTALL_ABNORMAL_TO_QUALITY = "/s2c/install_abnormal/quality/";
 }
