@@ -14,6 +14,7 @@ import com.eservice.api.core.AbstractService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.common.LinkDataModel;
+import com.eservice.api.service.common.NodeDataModel;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
 import org.apache.tomcat.util.bcel.Const;
@@ -113,6 +114,33 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
 //                                machineService.update(machine);
 ///                            }
                             break;
+                        } else {
+                            //TODO:如果是重新配置流程项，比如：改单、拆单以后再最后增加了安装项，则需要设置成待安装状态
+                            List<Integer> parentNodeList = new ArrayList<>();
+                            String nodeData = processRecord.getNodeData();
+                            List<NodeDataModel> ndList = JSON.parseArray(nodeData, NodeDataModel.class);
+                            for (LinkDataModel tmp: linkDataList) {
+                                if(tmp.getTo().equals(taskRecord.getNodeKey())) {
+                                    parentNodeList.add(tmp.getFrom());
+                                }
+                            }
+                            boolean allParentFinished = true;
+                            for (Integer parentNodeKey:parentNodeList) {
+                                for (NodeDataModel nodeDataModel: ndList) {
+                                    if(parentNodeKey.equals(nodeDataModel.getKey())) {
+                                        if(!nodeDataModel.getTaskStatus().equals(Constant.TASK_QUALITY_DONE)) {
+                                            allParentFinished = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if(!allParentFinished) {
+                                    break;
+                                }
+                            }
+                            if(allParentFinished) {
+                                taskRecord.setStatus(Constant.TASK_INSTALL_WAITING);
+                            }
                         }
                     }
                 }
