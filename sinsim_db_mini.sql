@@ -815,7 +815,7 @@ INSERT INTO `user` VALUES ('155', 'scbgly', 'scbgly', '2', 'sinsim', null, '1');
 INSERT INTO `user` VALUES ('156', 'scbjl', 'scbjl', '4', 'sinsim', null, '1');
 INSERT INTO `user` VALUES ('157', 'jsy', 'jsy', '10', 'sinsim', null, '1');
 INSERT INTO `user` VALUES ('158', 'cwkj', 'cwkj-1', '15', 'sinsim', null, '1');
-INSERT INTO `user` VALUES ('159', 'azzz-xz', 'azzz-xz', '3', 'sinsim', '1', '1');
+INSERT INTO `user` VALUES ('159', 'azzz-xz', 'azzz-xz', '3', 'sinsim', '2', '1');
 INSERT INTO `user` VALUES ('160', 'azzz-qd', 'azzz-qd', '3', 'sinsim', '3', '1');
 INSERT INTO `user` VALUES ('161', 'azzz-tb', 'azzz-tb', '3', 'sinsim', '4', '1');
 INSERT INTO `user` VALUES ('162', 'azzz-dk', 'azzz-dk', '3', 'sinsim', '5', '1');
