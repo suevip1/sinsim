@@ -10,13 +10,16 @@ import java.util.List;
 
 public interface TaskQualityRecordMapper extends Mapper<TaskQualityRecord> {
     public List<TaskQualityRecordDetail> selectTaskQualityRecordDetails(@Param("taskRecordId") Integer taskRecordId);
-    public void saveAndGetID( TaskQualityRecord taskQualityRecord );
-    List<TaskQualityRecordDetail> selectTaskQualityList(@Param("nameplate")String nameplate,
-                                                              @Param("task_name")String taskName,
-                                                              @Param("submit_user")Integer submitUser,
-                                                              @Param("solution_user")Integer solutionUser,
-                                                              @Param("finish_status")Integer finishStatus,
-                                                              @Param("query_start_time")String queryStartTime,
-                                                              @Param("query_finish_time")String queryFinishTime);
+
+    public void saveAndGetID(TaskQualityRecord taskQualityRecord);
+
+    List<TaskQualityRecordDetail> selectTaskQualityList(@Param("nameplate") String nameplate,
+                                                        @Param("orderNum") String orderNum,
+                                                        @Param("task_name") String taskName,
+                                                        @Param("submit_user") Integer submitUser,
+                                                        @Param("solution_user") Integer solutionUser,
+                                                        @Param("finish_status") Integer finishStatus,
+                                                        @Param("query_start_time") String queryStartTime,
+                                                        @Param("query_finish_time") String queryFinishTime);
 
 }

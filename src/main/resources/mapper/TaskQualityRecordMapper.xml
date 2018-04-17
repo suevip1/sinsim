@@ -1,65 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eservice.api.dao.TaskQualityRecordMapper">
-  <resultMap id="BaseResultMap" type="com.eservice.api.model.task_quality_record.TaskQualityRecord">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="abnormal_type" jdbcType="INTEGER" property="abnormalType" />
-    <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
-    <result column="submit_user" jdbcType="VARCHAR" property="submitUser" />
-    <result column="solution_user" jdbcType="VARCHAR" property="solutionUser" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime" />
-    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
-    <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.eservice.api.model.task_quality_record.TaskQualityRecord">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="abnormal_type" jdbcType="INTEGER" property="abnormalType"/>
+        <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId"/>
+        <result column="submit_user" jdbcType="VARCHAR" property="submitUser"/>
+        <result column="solution_user" jdbcType="VARCHAR" property="solutionUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+        <result column="solution" jdbcType="LONGVARCHAR" property="solution"/>
+    </resultMap>
 
-  <resultMap id="TaskQualityRecordDetailResultMap" type="com.eservice.api.model.task_quality_record.TaskQualityRecordDetail">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="abnormal_type" jdbcType="INTEGER" property="abnormalType" />
-    <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
-    <result column="submit_user" jdbcType="VARCHAR" property="submitUser" />
-    <result column="solution_user" jdbcType="VARCHAR" property="solutionUser" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime" />
-    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
-    <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
-    <association property="qualityRecordImage" javaType="com.eservice.api.model.quality_record_image.QualityRecordImage">
-      <id column="quality_record_image_id" property="id" />
-      <result column="task_quality_record_id" jdbcType="INTEGER" property="taskQualityRecordId" />
-      <result column="image" jdbcType="VARCHAR" property="image" />
-      <result column="qri_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    </association>
-    <association property="taskRecord" javaType="com.eservice.api.model.task_record.TaskRecord">
-      <id column="task_record_id2"  property="id" />
-      <result column="task_name" jdbcType="VARCHAR" property="taskName" />
-      <result column="process_record_id" jdbcType="INTEGER" property="processRecordId" />
-      <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
-      <result column="leader" jdbcType="VARCHAR" property="leader" />
-      <result column="taskRecord_status" jdbcType="TINYINT" property="status" />
-      <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime" />
-      <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime" />
-      <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime" />
-      <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime" />
-      <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
-    </association>
-    <association property="machine" javaType="com.eservice.api.model.machine.Machine">
-      <id column="machine_id"  property="id" />
-      <result column="order_id" jdbcType="INTEGER" property="orderId" />
-      <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId" />
-      <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
-      <result column="location" jdbcType="VARCHAR" property="location" />
-      <result column="machine_status" jdbcType="TINYINT" property="status" />
-      <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime" />
-      <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-      <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime" />
-      <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
-    </association>
-  </resultMap>
+    <resultMap id="TaskQualityRecordDetailResultMap"
+               type="com.eservice.api.model.task_quality_record.TaskQualityRecordDetail">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="abnormal_type" jdbcType="INTEGER" property="abnormalType"/>
+        <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId"/>
+        <result column="submit_user" jdbcType="VARCHAR" property="submitUser"/>
+        <result column="solution_user" jdbcType="VARCHAR" property="solutionUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+        <result column="solution" jdbcType="LONGVARCHAR" property="solution"/>
+        <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
 
-  <select id="selectTaskQualityRecordDetails" resultMap="TaskQualityRecordDetailResultMap">
+        <association property="qualityRecordImage"
+                     javaType="com.eservice.api.model.quality_record_image.QualityRecordImage">
+            <id column="quality_record_image_id" property="id"/>
+            <result column="task_quality_record_id" jdbcType="INTEGER" property="taskQualityRecordId"/>
+            <result column="image" jdbcType="VARCHAR" property="image"/>
+            <result column="qri_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        </association>
+        <association property="taskRecord" javaType="com.eservice.api.model.task_record.TaskRecord">
+            <id column="task_record_id2" property="id"/>
+            <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+            <result column="process_record_id" jdbcType="INTEGER" property="processRecordId"/>
+            <result column="node_key" jdbcType="TINYINT" property="nodeKey"/>
+            <result column="leader" jdbcType="VARCHAR" property="leader"/>
+            <result column="taskRecord_status" jdbcType="TINYINT" property="status"/>
+            <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime"/>
+            <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime"/>
+            <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime"/>
+            <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime"/>
+            <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
+        </association>
+        <association property="machine" javaType="com.eservice.api.model.machine.Machine">
+            <id column="machine_id" property="id"/>
+            <result column="order_id" jdbcType="INTEGER" property="orderId"/>
+            <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId"/>
+            <result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
+            <result column="location" jdbcType="VARCHAR" property="location"/>
+            <result column="machine_status" jdbcType="TINYINT" property="status"/>
+            <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+            <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
+            <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+        </association>
+    </resultMap>
+
+    <select id="selectTaskQualityRecordDetails" resultMap="TaskQualityRecordDetailResultMap">
     SELECT
     qri.id quality_record_image_id, qri.task_quality_record_id, qri.image, qri.create_time,
     tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
@@ -71,7 +75,8 @@
     where tr.id = #{taskRecordId}
   </select>
 
-  <insert id="saveAndGetID"  parameterType="com.eservice.api.model.task_quality_record.TaskQualityRecord" useGeneratedKeys="true"  keyProperty="id">
+    <insert id="saveAndGetID" parameterType="com.eservice.api.model.task_quality_record.TaskQualityRecord"
+            useGeneratedKeys="true" keyProperty="id">
     insert into
     task_quality_record(
     task_record_id, abnormal_type, submit_user, solution_user, create_time, solve_time, comment, solution )
@@ -80,44 +85,76 @@
 
   </insert>
 
-  <select id="selectTaskQualityList" resultMap="TaskQualityRecordDetailResultMap">
-    SELECT
-    tr.id task_record_id2, tr.task_name, tr.process_record_id,  tr.leader, tr.worker_list, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
-    qri.id quality_record_image_id, qri.task_quality_record_id, qri.image, qri.create_time qri_create_time,
-    tqr.id, tqr.comment, tqr.solution, tqr.submit_user, tqr.solution_user,tqr.task_record_id, tqr.create_time, tqr.solve_time,
-    m.status machine_status, m.create_time m_create_time, m.id machine_id, m.machine_strid, m.nameplate, m.location, m.installed_time, m.ship_time, m.update_time m_update_time
-    FROM task_quality_record tqr
-    JOIN task_record tr on tr.id = tqr.task_record_id
-    LEFT JOIN quality_record_image qri on qri.task_quality_record_id = tqr.id
-    JOIN process_record pr on pr.id = tr.process_record_id
-    JOIN machine m on m.id = pr.machine_id
-    where 1 = 1
-    <if test="nameplate != null and nameplate != ''">
-      and m.nameplate like CONCAT('%','${nameplate}','%' )
-    </if>
-    <if test="task_name != null and task_name != ''">
-      and tr.task_name = #{task_name}
-    </if>
-    <if test="submit_user != null and submit_user != ''">
-      and tqr.submit_user = #{submit_user}
-    </if>
-    <if test="solution_user != null and solution_user != ''">
-      and tqr.solution_user = #{solution_user}
-    </if>
-    <if test="finish_status != null and finish_status == 1">
-      and tqr.solution != ""
-    </if>
-    <if test="finish_status != null and finish_status == 2">
-      and tqr.solution is null
-    </if>
-    <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-    <if test="query_start_time != null and query_start_time != '' ">
-      and DATE_FORMAT(tqr.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
-    </if>
-    <if test="query_finish_time!= null and query_finish_time != '' ">
-      and DATE_FORMAT(tqr.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
-    </if>
-    ORDER BY tqr.solve_time, tqr.create_time DESC
+    <select id="selectTaskQualityList" resultMap="TaskQualityRecordDetailResultMap">
+        SELECT
+        tr.id task_record_id2,
+        tr.task_name,
+        tr.process_record_id,
+        tr.leader,
+        tr.worker_list,
+        tr.install_begin_time,
+        tr.install_end_time,
+        tr.quality_begin_time,
+        tr.quality_end_time,
+        qri.id quality_record_image_id,
+        qri.task_quality_record_id,
+        qri.image,
+        qri.create_time qri_create_time,
+        tqr.id,
+        tqr. `COMMENT`,
+        tqr.solution,
+        tqr.submit_user,
+        tqr.solution_user,
+        tqr.task_record_id,
+        tqr.create_time,
+        tqr.solve_time,
+        m. `STATUS` machine_status,
+        m.create_time m_create_time,
+        m.id machine_id,
+        m.machine_strid,
+        m.nameplate,
+        m.location,
+        m.installed_time,
+        m.ship_time,
+        m.update_time m_update_time,
+        mo.order_num
+        FROM
+        task_quality_record tqr
+        JOIN task_record tr ON tr.id = tqr.task_record_id
+        LEFT JOIN quality_record_image qri ON qri.task_quality_record_id = tqr.id
+        JOIN process_record pr ON pr.id = tr.process_record_id
+        JOIN machine m ON m.id = pr.machine_id
+        LEFT JOIN machine_order AS mo ON m.order_id = mo.id
+        where 1 = 1
+        <if test="nameplate != null and nameplate != ''">
+            and m.nameplate like CONCAT('%','${nameplate}','%' )
+        </if>
+        <if test="orderNum != null and orderNum != ''">
+            and mo.order_num like CONCAT('%','${orderNum}','%' )
+        </if>
+        <if test="task_name != null and task_name != ''">
+            and tr.task_name = #{task_name}
+        </if>
+        <if test="submit_user != null and submit_user != ''">
+            and tqr.submit_user = #{submit_user}
+        </if>
+        <if test="solution_user != null and solution_user != ''">
+            and tqr.solution_user = #{solution_user}
+        </if>
+        <if test="finish_status != null and finish_status == 1">
+            and tqr.solution != ""
+        </if>
+        <if test="finish_status != null and finish_status == 2">
+            and tqr.solution is null
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time != null and query_start_time != '' ">
+            and DATE_FORMAT(tqr.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!= null and query_finish_time != '' ">
+            and DATE_FORMAT(tqr.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+        </if>
+        ORDER BY tqr.solve_time, tqr.create_time DESC
 
-  </select>
+    </select>
 </mapper>

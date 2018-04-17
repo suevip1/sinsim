@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
@@ -37,10 +38,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/11/24.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/11/24.
+ */
 @RestController
 @RequestMapping("/task/quality/record")
 public class TaskQualityRecordController {
@@ -68,7 +70,7 @@ public class TaskQualityRecordController {
 
     @PostMapping("/add")
     public Result add(String taskQualityRecord) {
-        TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord,TaskQualityRecord.class);
+        TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord, TaskQualityRecord.class);
         taskQualityRecordService.save(taskQualityRecord1);
         return ResultGenerator.genSuccessResult();
     }
@@ -80,20 +82,20 @@ public class TaskQualityRecordController {
     }
 
     @PostMapping("/update")
-    public Result update(String  taskQualityRecord) {
-        TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord,TaskQualityRecord.class);
+    public Result update(String taskQualityRecord) {
+        TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord, TaskQualityRecord.class);
         taskQualityRecord1.setSolveTime(new Date());
         //修改对应工序的状态为“质检中”
         TaskQualityRecord completeInfo = taskQualityRecordService.findById(taskQualityRecord1.getId());
         Integer taskRecordId = completeInfo.getTaskRecordId();
-        if(taskRecordId != null && taskRecordId > 0) {
+        if (taskRecordId != null && taskRecordId > 0) {
             TaskRecord tr = taskRecordService.findById(taskRecordId);
             //MQTT 异常解决后，通知工序的质检员
             String taskName = tr.getTaskName();
             Condition condition = new Condition(Task.class);
             condition.createCriteria().andCondition("task_name = ", taskName);
             List<Task> taskList = taskService.findByCondition(condition);
-            if(taskList == null || taskList.size() <= 0) {
+            if (taskList == null || taskList.size() <= 0) {
                 throw new RuntimeException();
             }
             tr.setStatus(Constant.TASK_QUALITY_DOING);
@@ -106,7 +108,7 @@ public class TaskQualityRecordController {
             msg.setOrderNum(machineOrder.getOrderNum());
             msg.setNameplate(machine.getNameplate());
             mqttMessageHelper.sendToClient(Constant.S2C_QUALITY_ABNORMAL_RESOLVE + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
-        }else {
+        } else {
             throw new RuntimeException();
         }
         taskQualityRecordService.update(taskQualityRecord1);
@@ -129,6 +131,7 @@ public class TaskQualityRecordController {
 
     /**
      * 根据  task_record.id 返回QualityRecordDetail，包括 qurlity_record_image,task_quality_record等
+     *
      * @param page
      * @param size
      * @param taskRecordId
@@ -136,7 +139,7 @@ public class TaskQualityRecordController {
      */
     @PostMapping("/selectTaskQualityRecordDetails")
     public Result selectTaskQualityRecordDetail(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
-                                       @RequestParam Integer taskRecordId) {
+                                                @RequestParam Integer taskRecordId) {
         PageHelper.startPage(page, size);
         List<TaskQualityRecordDetail> list = taskQualityRecordService.selectTaskQualityRecordDetails(taskRecordId);
         PageInfo pageInfo = new PageInfo(list);
@@ -150,16 +153,17 @@ public class TaskQualityRecordController {
      */
     @PostMapping("/selectTaskQualityList")
     public Result selectTaskQualityList(@RequestParam(defaultValue = "0") Integer page,
-                                                 @RequestParam(defaultValue = "0") Integer size,
-                                                 String nameplate,
-                                                 String taskName,
-                                                 Integer submitUser,
-                                                 Integer solutionUser,
-                                                 Integer finishStatus,
-                                                 String queryStartTime,
-                                                 String queryFinishTime) {
+                                        @RequestParam(defaultValue = "0") Integer size,
+                                        String nameplate,
+                                        String orderNum,
+                                        String taskName,
+                                        Integer submitUser,
+                                        Integer solutionUser,
+                                        Integer finishStatus,
+                                        String queryStartTime,
+                                        String queryFinishTime) {
         PageHelper.startPage(page, size);
-        List<TaskQualityRecordDetail> abnormalRecordDetailList = taskQualityRecordService.selectTaskQualityList(nameplate, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+        List<TaskQualityRecordDetail> abnormalRecordDetailList = taskQualityRecordService.selectTaskQualityList(nameplate, orderNum, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
         PageInfo pageInfo = new PageInfo(abnormalRecordDetailList);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
@@ -170,13 +174,14 @@ public class TaskQualityRecordController {
     @PostMapping("/export")
     public Result export(
             String nameplate,
+            String orderNum,
             String taskName,
             Integer submitUser,
             Integer solutionUser,
             Integer finishStatus,
             String queryStartTime,
             String queryFinishTime) {
-        List<TaskQualityRecordDetail> list = taskQualityRecordService.selectTaskQualityList(nameplate, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+        List<TaskQualityRecordDetail> list = taskQualityRecordService.selectTaskQualityList(nameplate, orderNum, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
 
         HSSFWorkbook wb = null;
         FileOutputStream out = null;
@@ -189,8 +194,8 @@ public class TaskQualityRecordController {
         String dateString;
         try {
             //生成一个空的Excel文件
-            wb=new HSSFWorkbook();
-            Sheet sheet1=wb.createSheet("sheet1");
+            wb = new HSSFWorkbook();
+            Sheet sheet1 = wb.createSheet("sheet1");
 
             //设置标题行格式
             HSSFCellStyle headcellstyle = wb.createCellStyle();
@@ -200,21 +205,21 @@ public class TaskQualityRecordController {
             headcellstyle.setFont(headfont);
             Row row;
             //创建行和列
-            for(int r=0;r<list.size() + 1; r++ ) {
+            for (int r = 0; r < list.size() + 1; r++) {
                 row = sheet1.createRow(r);
-                for(int c=0; c< 8; c++){
+                for (int c = 0; c < 8; c++) {
                     row.createCell(c);
                     sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
                 }
             }
-            sheet1.setColumnWidth(0,1500);
-            sheet1.setColumnWidth(1,4000);
-            sheet1.setColumnWidth(2,4000);
-            sheet1.setColumnWidth(3,4000);
-            sheet1.setColumnWidth(4,4000);
-            sheet1.setColumnWidth(5,10000);
-            sheet1.setColumnWidth(6,4000);
-            sheet1.setColumnWidth(7,4000);
+            sheet1.setColumnWidth(0, 1500);
+            sheet1.setColumnWidth(1, 4000);
+            sheet1.setColumnWidth(2, 4000);
+            sheet1.setColumnWidth(3, 4000);
+            sheet1.setColumnWidth(4, 4000);
+            sheet1.setColumnWidth(5, 10000);
+            sheet1.setColumnWidth(6, 4000);
+            sheet1.setColumnWidth(7, 4000);
             //第一行为标题
             sheet1.getRow(0).getCell(0).setCellValue("序号");
             sheet1.getRow(0).getCell(1).setCellValue("机器编号");
@@ -226,7 +231,7 @@ public class TaskQualityRecordController {
             sheet1.getRow(0).getCell(7).setCellValue("解决时间");
 
             //第二行开始，填入值
-            for(int r=0; r<list.size(); r++ ) {
+            for (int r = 0; r < list.size(); r++) {
                 row = sheet1.getRow(r + 1);
                 row.getCell(0).setCellValue(r + 1);
                 row.getCell(1).setCellValue(list.get(r).getMachine().getNameplate());
@@ -234,13 +239,13 @@ public class TaskQualityRecordController {
                 row.getCell(3).setCellValue(list.get(r).getSubmitUser());
 
                 //安装异常时， 还不知道SolutionUser， SolutionUser是null
-                if(list.get(r).getSolutionUser() != null) {
+                if (list.get(r).getSolutionUser() != null) {
                     row.getCell(4).setCellValue(list.get(r).getSolutionUser());
                 }
                 row.getCell(5).setCellValue(list.get(r).getSolution());
-                dateString= formatter.format(list.get(r).getCreateTime());
+                dateString = formatter.format(list.get(r).getCreateTime());
                 row.getCell(6).setCellValue(dateString);
-                if(list.get(r).getSolveTime() != null) {
+                if (list.get(r).getSolveTime() != null) {
                     dateString = formatter.format(list.get(r).getSolveTime());
                     row.getCell(7).setCellValue(dateString);
                 }
@@ -257,9 +262,9 @@ public class TaskQualityRecordController {
             e.printStackTrace();
         }
 
-        if("".equals(downloadPath)) {
+        if ("".equals(downloadPath)) {
             return ResultGenerator.genFailResult("质检异常导出失败!");
-        }else {
+        } else {
             return ResultGenerator.genSuccessResult(downloadPathForNginx);
         }
     }

@@ -54,6 +54,8 @@ public class AbnormalRecordDetail {
      */
     private String solution;
 
+    private String orderNum;
+
     /**
      * abnormal,abnormal_image,task_record作为 abnormalRecordDetail的构成
      * 在根据 taskRecord的ID查询时一并返回
@@ -203,6 +205,14 @@ public class AbnormalRecordDetail {
      */
     public void setSolution(String solution) {
         this.solution = solution;
+    }
+
+    public String getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(String orderNum) {
+        this.orderNum = orderNum;
     }
 
     public Abnormal getAbnormal(){ return this.abnormal;}

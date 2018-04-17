@@ -43,6 +43,9 @@ public class TaskQualityRecordDetail {
     @Column(name = "solve_time")
     private Date solveTime;
 
+    private String orderNum;
+
+
     /**
      * 异常备注
      */
@@ -203,6 +206,15 @@ public class TaskQualityRecordDetail {
         this.solution = solution;
     }
 
+    public String getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(String orderNum) {
+        this.orderNum = orderNum;
+    }
+
+
     /**
      * quality_record_image,task_record作为 TaskQualityRecordDetail的构成
      * 在根据 taskRecord的ID查询时一并返回
@@ -211,10 +223,21 @@ public class TaskQualityRecordDetail {
     private TaskRecord taskRecord;
     private Machine machine;
 
-    public QualityRecordImage getQualityRecordImage() { return  this.qualityRecordImage; }
-    public void setQualityRecordImage(QualityRecordImage qualityRecordImage) {this.qualityRecordImage = qualityRecordImage; }
-    public TaskRecord getTaskRecord() { return this.taskRecord; }
-    public void setTaskRecord(TaskRecord taskRecord) { this.taskRecord = taskRecord; }
+    public QualityRecordImage getQualityRecordImage() {
+        return this.qualityRecordImage;
+    }
+
+    public void setQualityRecordImage(QualityRecordImage qualityRecordImage) {
+        this.qualityRecordImage = qualityRecordImage;
+    }
+
+    public TaskRecord getTaskRecord() {
+        return this.taskRecord;
+    }
+
+    public void setTaskRecord(TaskRecord taskRecord) {
+        this.taskRecord = taskRecord;
+    }
 
     public Machine getMachine() {
         return machine;

@@ -101,14 +101,14 @@ public class AbnormalRecordController {
         //修改对应工序的状态为"安装中"或者“质检中”，需要检查安装开始时间和质检开始时间，质检已开始则状态为质检中
         AbnormalRecord completeInfo = abnormalRecordService.findById(abnormalRecord1.getId());
         Integer taskRecordId = completeInfo.getTaskRecordId();
-        if(taskRecordId != null && taskRecordId > 0) {
+        if (taskRecordId != null && taskRecordId > 0) {
             TaskRecord tr = taskRecordService.findById(taskRecordId);
             //MQTT 异常解决后，通知工序的安装组长
             String taskName = tr.getTaskName();
             Condition condition = new Condition(Task.class);
             condition.createCriteria().andCondition("task_name = ", taskName);
             List<Task> taskList = taskService.findByCondition(condition);
-            if(taskList == null || taskList.size() <= 0) {
+            if (taskList == null || taskList.size() <= 0) {
                 throw new RuntimeException();
             }
             tr.setStatus(Constant.TASK_INSTALLING);
@@ -120,7 +120,7 @@ public class AbnormalRecordController {
             msg.setOrderNum(machineOrder.getOrderNum());
             msg.setNameplate(machine.getNameplate());
             mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL_RESOLVE + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
-        }else {
+        } else {
             throw new RuntimeException();
         }
         abnormalRecordService.update(abnormalRecord1);
@@ -165,6 +165,7 @@ public class AbnormalRecordController {
     public Result selectAbnormalRecordDetailList(@RequestParam(defaultValue = "0") Integer page,
                                                  @RequestParam(defaultValue = "0") Integer size,
                                                  String nameplate,
+                                                 String orderNum,
                                                  Integer abnormalType,
                                                  String taskName,
                                                  Integer submitUser,
@@ -173,7 +174,7 @@ public class AbnormalRecordController {
                                                  String queryStartTime,
                                                  String queryFinishTime) {
         PageHelper.startPage(page, size);
-        List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetailList(nameplate, abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+        List<AbnormalRecordDetail> abnormalRecordDetailList = abnormalRecordService.selectAbnormalRecordDetailList(nameplate, orderNum, abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
         PageInfo pageInfo = new PageInfo(abnormalRecordDetailList);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
@@ -184,6 +185,7 @@ public class AbnormalRecordController {
     @PostMapping("/export")
     public Result export(
             String nameplate,
+            String orderNum,
             Integer abnormalType,
             String taskName,
             Integer submitUser,
@@ -191,7 +193,7 @@ public class AbnormalRecordController {
             Integer finishStatus,
             String queryStartTime,
             String queryFinishTime) {
-        List<AbnormalRecordDetail> list = abnormalRecordService.selectAbnormalRecordDetailList(nameplate, abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+        List<AbnormalRecordDetail> list = abnormalRecordService.selectAbnormalRecordDetailList(nameplate, orderNum, abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
 
         HSSFWorkbook wb = null;
         FileOutputStream out = null;
@@ -204,8 +206,8 @@ public class AbnormalRecordController {
         String dateString;
         try {
             //生成一个空的Excel文件
-            wb=new HSSFWorkbook();
-            Sheet sheet1=wb.createSheet("sheet1");
+            wb = new HSSFWorkbook();
+            Sheet sheet1 = wb.createSheet("sheet1");
 
             //设置标题行格式
             HSSFCellStyle headcellstyle = wb.createCellStyle();
@@ -215,22 +217,22 @@ public class AbnormalRecordController {
             headcellstyle.setFont(headfont);
             Row row;
             //创建行和列
-            for(int r=0;r<list.size() + 1; r++ ) {
+            for (int r = 0; r < list.size() + 1; r++) {
                 row = sheet1.createRow(r);
-                for(int c=0; c< 9; c++){
+                for (int c = 0; c < 9; c++) {
                     row.createCell(c);
                     sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
                 }
             }
-            sheet1.setColumnWidth(0,1500);
-            sheet1.setColumnWidth(1,4000);
-            sheet1.setColumnWidth(2,4000);
-            sheet1.setColumnWidth(3,4000);
-            sheet1.setColumnWidth(4,4000);
-            sheet1.setColumnWidth(5,4000);
-            sheet1.setColumnWidth(6,10000);
-            sheet1.setColumnWidth(7,4000);
-            sheet1.setColumnWidth(8,4000);
+            sheet1.setColumnWidth(0, 1500);
+            sheet1.setColumnWidth(1, 4000);
+            sheet1.setColumnWidth(2, 4000);
+            sheet1.setColumnWidth(3, 4000);
+            sheet1.setColumnWidth(4, 4000);
+            sheet1.setColumnWidth(5, 4000);
+            sheet1.setColumnWidth(6, 10000);
+            sheet1.setColumnWidth(7, 4000);
+            sheet1.setColumnWidth(8, 4000);
             //第一行为标题
             sheet1.getRow(0).getCell(0).setCellValue("序号");
             sheet1.getRow(0).getCell(1).setCellValue("机器编号");
@@ -243,7 +245,7 @@ public class AbnormalRecordController {
             sheet1.getRow(0).getCell(8).setCellValue("解决时间");
 
             //第二行开始，填入值
-            for(int r=0; r<list.size(); r++ ) {
+            for (int r = 0; r < list.size(); r++) {
                 row = sheet1.getRow(r + 1);
                 row.getCell(0).setCellValue(r + 1);
                 row.getCell(1).setCellValue(list.get(r).getMachine().getNameplate());
@@ -253,14 +255,14 @@ public class AbnormalRecordController {
                 row.getCell(4).setCellValue(userService.findById(userID).getName());
 
                 //安装异常时， 还不知道SolutionUser， SolutionUser是null
-                if(list.get(r).getSolutionUser() != null) {
+                if (list.get(r).getSolutionUser() != null) {
                     userID = list.get(r).getSolutionUser();
                     row.getCell(5).setCellValue(userService.findById(userID).getName());
                 }
                 row.getCell(6).setCellValue(list.get(r).getSolution());
-                dateString= formatter.format(list.get(r).getCreateTime());
+                dateString = formatter.format(list.get(r).getCreateTime());
                 row.getCell(7).setCellValue(dateString);
-                if(list.get(r).getSolveTime() != null) {
+                if (list.get(r).getSolveTime() != null) {
                     dateString = formatter.format(list.get(r).getSolveTime());
                     row.getCell(8).setCellValue(dateString);
                 }
@@ -277,9 +279,9 @@ public class AbnormalRecordController {
             e.printStackTrace();
         }
 
-        if("".equals(downloadPath)) {
+        if ("".equals(downloadPath)) {
             return ResultGenerator.genFailResult("异常导出失败!");
-        }else {
+        } else {
             return ResultGenerator.genSuccessResult(downloadPathForNginx);
         }
     }

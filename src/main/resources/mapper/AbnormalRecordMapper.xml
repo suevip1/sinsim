@@ -1,144 +1,189 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eservice.api.dao.AbnormalRecordMapper">
-  <resultMap id="BaseResultMap" type="com.eservice.api.model.abnormal_record.AbnormalRecord">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="abnormal_type" jdbcType="TINYINT" property="abnormalType" />
-    <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
-    <result column="submit_user" jdbcType="INTEGER" property="submitUser" />
-    <result column="solution_user" jdbcType="INTEGER" property="solutionUser" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime" />
-    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
-    <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.eservice.api.model.abnormal_record.AbnormalRecord">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="abnormal_type" jdbcType="TINYINT" property="abnormalType"/>
+        <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId"/>
+        <result column="submit_user" jdbcType="INTEGER" property="submitUser"/>
+        <result column="solution_user" jdbcType="INTEGER" property="solutionUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+        <result column="solution" jdbcType="LONGVARCHAR" property="solution"/>
+    </resultMap>
 
-  <resultMap id="AbnormalRecordDetailResultMap" type="com.eservice.api.model.abnormal_record.AbnormalRecordDetail">
-    <id column="id"  property="id" />
-    <result column="abnormal_type" jdbcType="TINYINT" property="abnormalType" />
-    <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId" />
-    <result column="submit_user" jdbcType="INTEGER" property="submitUser" />
-    <result column="solution_user" jdbcType="INTEGER" property="solutionUser" />
-    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
-    <result column="solution" jdbcType="LONGVARCHAR" property="solution" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime" />
-    <association javaType="com.eservice.api.model.task_record.TaskRecord" property="taskRecord">
-      <id column="task_record_id2"  property="id" />
-      <result column="task_name" jdbcType="VARCHAR" property="taskName" />
-      <result column="process_record_id" jdbcType="INTEGER" property="processRecordId" />
-      <result column="node_key" jdbcType="TINYINT" property="nodeKey" />
-      <result column="leader" jdbcType="VARCHAR" property="leader" />
-      <result column="taskRecord_status" jdbcType="TINYINT" property="status" />
-      <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime" />
-      <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime" />
-      <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime" />
-      <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime" />
-      <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList" />
-    </association>
-    <association javaType="com.eservice.api.model.abnormal.Abnormal" property="abnormal">
-      <id column="abnormal_id"  property="id" />
-      <result column="abnormal_name" jdbcType="VARCHAR" property="abnormalName" />
-    </association>
-    <association javaType="com.eservice.api.model.abnormal_image.AbnormalImage" property="abnormalImage">
-      <id column="abnormal_image_id"  property="id" />
-      <result column="abnormal_record_id" jdbcType="INTEGER" property="abnormalRecordId" />
-      <result column="image" jdbcType="VARCHAR" property="image" />
-      <result column="ai_create_time" jdbcType="TIMESTAMP" property="createTime" />
-    </association>
-    <association property="machine" javaType="com.eservice.api.model.machine.Machine">
-      <id column="machine_id"  property="id" />
-      <result column="order_id" jdbcType="INTEGER" property="orderId" />
-      <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId" />
-      <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
-      <result column="location" jdbcType="VARCHAR" property="location" />
-      <result column="machine_status" jdbcType="TINYINT" property="status" />
-      <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime" />
-      <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime" />
-      <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime" />
-      <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime" />
-    </association>
-  </resultMap>
+    <resultMap id="AbnormalRecordDetailResultMap" type="com.eservice.api.model.abnormal_record.AbnormalRecordDetail">
+        <id column="id" property="id"/>
+        <result column="abnormal_type" jdbcType="TINYINT" property="abnormalType"/>
+        <result column="task_record_id" jdbcType="INTEGER" property="taskRecordId"/>
+        <result column="submit_user" jdbcType="INTEGER" property="submitUser"/>
+        <result column="solution_user" jdbcType="INTEGER" property="solutionUser"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+        <result column="solution" jdbcType="LONGVARCHAR" property="solution"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="solve_time" jdbcType="TIMESTAMP" property="solveTime"/>
+        <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+
+        <association javaType="com.eservice.api.model.task_record.TaskRecord" property="taskRecord">
+            <id column="task_record_id2" property="id"/>
+            <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+            <result column="process_record_id" jdbcType="INTEGER" property="processRecordId"/>
+            <result column="node_key" jdbcType="TINYINT" property="nodeKey"/>
+            <result column="leader" jdbcType="VARCHAR" property="leader"/>
+            <result column="taskRecord_status" jdbcType="TINYINT" property="status"/>
+            <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime"/>
+            <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime"/>
+            <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime"/>
+            <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime"/>
+            <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
+        </association>
+        <association javaType="com.eservice.api.model.abnormal.Abnormal" property="abnormal">
+            <id column="abnormal_id" property="id"/>
+            <result column="abnormal_name" jdbcType="VARCHAR" property="abnormalName"/>
+        </association>
+        <association javaType="com.eservice.api.model.abnormal_image.AbnormalImage" property="abnormalImage">
+            <id column="abnormal_image_id" property="id"/>
+            <result column="abnormal_record_id" jdbcType="INTEGER" property="abnormalRecordId"/>
+            <result column="image" jdbcType="VARCHAR" property="image"/>
+            <result column="ai_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        </association>
+        <association property="machine" javaType="com.eservice.api.model.machine.Machine">
+            <id column="machine_id" property="id"/>
+            <result column="order_id" jdbcType="INTEGER" property="orderId"/>
+            <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId"/>
+            <result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
+            <result column="location" jdbcType="VARCHAR" property="location"/>
+            <result column="machine_status" jdbcType="TINYINT" property="status"/>
+            <result column="m_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+            <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
+            <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+        </association>
+    </resultMap>
 
 
-  <resultMap id="AbnormalMap" type="com.eservice.api.model.abnormal_record.AbnormalRecordStatistics">
-    <result column="abnormal_count" jdbcType="INTEGER" property="abnormalCount"/>
-    <result column="abnormal_name" jdbcType="INTEGER" property="abnormalName"/>
-    <result column="abnormal_type" jdbcType="INTEGER" property="abnormalType"/>
-    <result column="date_year" jdbcType="INTEGER" property="dateYear"/>
-    <result column="date_month" jdbcType="INTEGER" property="dateMonth"/>
-    <result column="date_day" jdbcType="INTEGER" property="dateDay"/>
-  </resultMap>
+    <resultMap id="AbnormalMap" type="com.eservice.api.model.abnormal_record.AbnormalRecordStatistics">
+        <result column="abnormal_count" jdbcType="INTEGER" property="abnormalCount"/>
+        <result column="abnormal_name" jdbcType="INTEGER" property="abnormalName"/>
+        <result column="abnormal_type" jdbcType="INTEGER" property="abnormalType"/>
+        <result column="date_year" jdbcType="INTEGER" property="dateYear"/>
+        <result column="date_month" jdbcType="INTEGER" property="dateMonth"/>
+        <result column="date_day" jdbcType="INTEGER" property="dateDay"/>
+    </resultMap>
 
-  <select id="selectAbnormalRecordDetails" resultMap="AbnormalRecordDetailResultMap">
-    SELECT
-    tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
-    a.id abnormal_id, a.abnormal_name,
-    ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time ai_create_time,
-    ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time ai_create_time,
-    m.status machine_status, m.create_time m_create_time, m.id machine_id, m.machine_strid, m.nameplate, m.location, m.installed_time, m.ship_time, m.update_time m_update_time,
-    ar.id, ar.abnormal_type, ar.comment, ar.solution, ar.submit_user, ar.solution_user, ar.task_record_id, ar.create_time, ar.solve_time
-    FROM abnormal_record ar
-    JOIN task_record tr on tr.id = ar.task_record_id
-    JOIN abnormal a on a.id = ar.abnormal_type
-    <!-- 加上LEFT 为了防止没有异常图片时候，返回数据为空的问题-->
-    LEFT JOIN abnormal_image ai on ai.abnormal_record_id = ar.id
-    JOIN process_record pr on pr.id = tr.process_record_id
-    JOIN machine m on m.id = pr.machine_id
-    where tr.id =#{taskRecordId}
+    <select id="selectAbnormalRecordDetails" resultMap="AbnormalRecordDetailResultMap">
+        SELECT
+        tr.id task_record_id2, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status
+        taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
+        a.id abnormal_id, a.abnormal_name,
+        ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time ai_create_time,
+        ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time ai_create_time,
+        m.status machine_status, m.create_time m_create_time, m.id machine_id, m.machine_strid, m.nameplate, m.location,
+        m.installed_time, m.ship_time, m.update_time m_update_time,
+        ar.id, ar.abnormal_type, ar.comment, ar.solution, ar.submit_user, ar.solution_user, ar.task_record_id,
+        ar.create_time, ar.solve_time
+        FROM abnormal_record ar
+        JOIN task_record tr on tr.id = ar.task_record_id
+        JOIN abnormal a on a.id = ar.abnormal_type
+        <!-- 加上LEFT 为了防止没有异常图片时候，返回数据为空的问题-->
+        LEFT JOIN abnormal_image ai on ai.abnormal_record_id = ar.id
+        JOIN process_record pr on pr.id = tr.process_record_id
+        JOIN machine m on m.id = pr.machine_id
+        where tr.id =#{taskRecordId}
 
-  </select>
+    </select>
 
-  <select id="selectAbnormalRecordDetailList" resultMap="AbnormalRecordDetailResultMap">
-    SELECT
-    tr.id task_record_id2, tr.task_name, tr.process_record_id,  tr.leader, tr.worker_list, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
-    a.id abnormal_id, a.abnormal_name,
-    ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time ai_create_time,
-    ar.id, ar.abnormal_type, ar.comment, ar.solution, ar.submit_user, ar.solution_user, ar.task_record_id, ar.create_time, ar.solve_time,
-    m.status machine_status, m.create_time m_create_time, m.id machine_id, m.machine_strid, m.nameplate, m.location, m.installed_time, m.ship_time, m.update_time m_update_time
-    FROM abnormal_record ar
-    JOIN task_record tr on tr.id = ar.task_record_id
-    JOIN abnormal a on a.id = ar.abnormal_type
-    LEFT JOIN abnormal_image ai on ai.abnormal_record_id = ar.id
-    JOIN process_record pr on pr.id = tr.process_record_id
-    JOIN machine m on m.id = pr.machine_id
-    where 1 = 1
-    <if test="nameplate != null and nameplate != ''">
-      and m.nameplate like CONCAT('%','${nameplate}','%' )
-    </if>
-    <if test="abnormal_type != null and abnormal_type != ''">
-      and ar.abnormal_type = #{abnormal_type}
-    </if>
-    <if test="task_name != null and task_name != ''">
-      and tr.task_name = #{task_name}
-    </if>
-    <if test="submit_user != null and submit_user != ''">
-      and ar.submit_user = #{submit_user}
-    </if>
-    <if test="solution_user != null and solution_user != ''">
-      and ar.solution_user = #{solution_user}
-    </if>
-    <if test="finish_status != null and finish_status == 1">
-      and ar.solution != ""
-    </if>
-    <if test="finish_status != null and finish_status == 2">
-      and ar.solution is null
-    </if>
-    <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-    <if test="query_start_time != null and query_start_time != '' ">
-      and DATE_FORMAT(ar.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
-    </if>
-    <if test="query_finish_time!= null and query_finish_time != '' ">
-      and DATE_FORMAT(ar.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
-    </if>
-    ORDER BY ar.solve_time, ar.create_time DESC
+    <select id="selectAbnormalRecordDetailList" resultMap="AbnormalRecordDetailResultMap">
+        SELECT
+        *
+        FROM
+        (
+        SELECT
+        tr.id task_record_id2,
+        tr.task_name,
+        tr.process_record_id,
+        tr.leader,
+        tr.worker_list,
+        tr.install_begin_time,
+        tr.install_end_time,
+        tr.quality_begin_time,
+        tr.quality_end_time,
+        a.id abnormal_id,
+        a.abnormal_name,
+        ai.id abnormal_image_id,
+        ai.abnormal_record_id,
+        ai.image,
+        ai.create_time ai_create_time,
+        ar.id,
+        ar.abnormal_type,
+        ar.`COMMENT`,
+        ar.solution,
+        ar.submit_user,
+        ar.solution_user,
+        ar.task_record_id,
+        ar.create_time,
+        ar.solve_time,
+        m.`STATUS` machine_status,
+        m.create_time m_create_time,
+        m.id machine_id,
+        m.machine_strid,
+        m.nameplate,
+        m.location,
+        m.installed_time,
+        m.ship_time,
+        m.update_time m_update_time,
+        mo.order_num
+        FROM
+        abnormal_record ar
+        JOIN task_record tr ON tr.id = ar.task_record_id
+        JOIN abnormal a ON a.id = ar.abnormal_type
+        LEFT JOIN abnormal_image ai ON ai.abnormal_record_id = ar.id
+        JOIN process_record pr ON pr.id = tr.process_record_id
+        JOIN machine m ON m.id = pr.machine_id
+        LEFT JOIN machine_order AS mo ON m.order_id = mo.id
+        ) AS V
+        where 1 = 1
+        <if test="nameplate != null and nameplate != ''">
+            and nameplate like CONCAT('%','${nameplate}','%' )
+        </if>
+        <if test="orderNum != null and orderNum != ''">
+            and order_num like CONCAT('%','${orderNum}','%' )
+        </if>
+        <if test="abnormal_type != null and abnormal_type != ''">
+            and abnormal_type = #{abnormal_type}
+        </if>
+        <if test="task_name != null and task_name != ''">
+            and task_name = #{task_name}
+        </if>
+        <if test="submit_user != null and submit_user != ''">
+            and submit_user = #{submit_user}
+        </if>
+        <if test="solution_user != null and solution_user != ''">
+            and solution_user = #{solution_user}
+        </if>
+        <if test="finish_status != null and finish_status == 1">
+            and solution != ""
+        </if>
+        <if test="finish_status != null and finish_status == 2">
+            and solution is null
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time != null and query_start_time != '' ">
+            and DATE_FORMAT(create_time,'%Y-%m-%d') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!= null and query_finish_time != '' ">
+            and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+        </if>
+        ORDER BY solve_time, create_time DESC
 
-  </select>
+    </select>
 
-  <insert id="saveAndGetID"  parameterType="com.eservice.api.model.abnormal_record.AbnormalRecord" useGeneratedKeys="true"  keyProperty="id">
+    <insert id="saveAndGetID" parameterType="com.eservice.api.model.abnormal_record.AbnormalRecord"
+            useGeneratedKeys="true" keyProperty="id">
     insert into
     abnormal_record(
     abnormal_type, task_record_id, submit_user, comment, solution, solution_user, create_time, solve_time)
@@ -147,24 +192,24 @@
 
   </insert>
 
-  <select id="getAbnormalStatistics" resultMap="AbnormalMap">
-    SELECT COUNT(*) AS abnormal_count,
-    abnormal_name,abnormal_type,
-    YEAR(create_time) AS date_year,
-    MONTH(create_time) AS date_month,
-    DAY(create_time) AS date_day
-    FROM
-    (
-    SELECT ar.*,ab.abnormal_name,ab.valid FROM abnormal_record ar
-    LEFT JOIN abnormal ab ON ab.id=ar.abnormal_type WHERE valid=1
-    ) v
-    GROUP BY abnormal_type,date_year
-    <if test="mode == 1">
-        ,date_month
-    </if>
-    <if test="mode == 2">
-        ,date_month,date_day
-    </if>
-  </select>
+    <select id="getAbnormalStatistics" resultMap="AbnormalMap">
+        SELECT COUNT(*) AS abnormal_count,
+        abnormal_name,abnormal_type,
+        YEAR(create_time) AS date_year,
+        MONTH(create_time) AS date_month,
+        DAY(create_time) AS date_day
+        FROM
+        (
+        SELECT ar.*,ab.abnormal_name,ab.valid FROM abnormal_record ar
+        LEFT JOIN abnormal ab ON ab.id=ar.abnormal_type WHERE valid=1
+        ) v
+        GROUP BY abnormal_type,date_year
+        <if test="mode == 1">
+            ,date_month
+        </if>
+        <if test="mode == 2">
+            ,date_month,date_day
+        </if>
+    </select>
 
 </mapper>

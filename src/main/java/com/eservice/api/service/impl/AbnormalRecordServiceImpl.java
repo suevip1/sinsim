@@ -15,28 +15,29 @@ import java.util.List;
 
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/12/27.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/12/27.
+ */
 @Service
 @Transactional
 public class AbnormalRecordServiceImpl extends AbstractService<AbnormalRecord> implements AbnormalRecordService {
     @Resource
     private AbnormalRecordMapper abnormalRecordMapper;
 
-    public List<AbnormalRecordDetail> selectAbnormalRecordDetails(Integer taskRecordId){
+    public List<AbnormalRecordDetail> selectAbnormalRecordDetails(Integer taskRecordId) {
         return abnormalRecordMapper.selectAbnormalRecordDetails(taskRecordId);
     }
 
-    public List<AbnormalRecordDetail> selectAbnormalRecordDetailList(String nameplate, Integer abnormalType, String taskName, Integer submitUser,  Integer solutionUser, Integer finishStatus, String queryStartTime,  String queryFinishTime) {
-        return abnormalRecordMapper.selectAbnormalRecordDetailList(nameplate, abnormalType,taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
+    public List<AbnormalRecordDetail> selectAbnormalRecordDetailList(String nameplate, String orderNum, Integer abnormalType, String taskName, Integer submitUser, Integer solutionUser, Integer finishStatus, String queryStartTime, String queryFinishTime) {
+        return abnormalRecordMapper.selectAbnormalRecordDetailList(nameplate, orderNum, abnormalType, taskName, submitUser, solutionUser, finishStatus, queryStartTime, queryFinishTime);
     }
 
     /**
      * 保存并得到id号
      */
-    public void saveAndGetID(AbnormalRecord abnormalRecord){
+    public void saveAndGetID(AbnormalRecord abnormalRecord) {
         abnormalRecordMapper.saveAndGetID(abnormalRecord);
     }
 
