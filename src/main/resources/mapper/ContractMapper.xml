@@ -1,101 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eservice.api.dao.ContractMapper">
-  <resultMap id="BaseResultMap" type="com.eservice.api.model.contract.Contract">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="contract_num" jdbcType="VARCHAR" property="contractNum" />
-    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
-    <result column="sellman" jdbcType="VARCHAR" property="sellman" />
-    <result column="pay_method" jdbcType="VARCHAR" property="payMethod" />
-    <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
-    <result column="mark" jdbcType="LONGVARCHAR" property="mark" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.eservice.api.model.contract.Contract">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="contract_num" jdbcType="VARCHAR" property="contractNum"/>
+        <result column="customer_name" jdbcType="VARCHAR" property="customerName"/>
+        <result column="sellman" jdbcType="VARCHAR" property="sellman"/>
+        <result column="pay_method" jdbcType="VARCHAR" property="payMethod"/>
+        <result column="currency_type" jdbcType="VARCHAR" property="currencyType"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
+        <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
 
-  <resultMap id="ContractDetailMap" type="com.eservice.api.model.contract.ContractDetail">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="contract_num" jdbcType="VARCHAR" property="contractNum" />
-    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
-    <result column="sellman" jdbcType="VARCHAR" property="sellman" />
-    <result column="pay_method" jdbcType="VARCHAR" property="payMethod" />
-    <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate" />
-    <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
-    <result column="status" jdbcType="TINYINT" property="status" />
-  </resultMap>
+    <resultMap id="ContractDetailMap" type="com.eservice.api.model.contract.ContractDetail">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="contract_num" jdbcType="VARCHAR" property="contractNum"/>
+        <result column="customer_name" jdbcType="VARCHAR" property="customerName"/>
+        <result column="sellman" jdbcType="VARCHAR" property="sellman"/>
+        <result column="pay_method" jdbcType="VARCHAR" property="payMethod"/>
+        <result column="currency_type" jdbcType="VARCHAR" property="currencyType"/>
+        <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
+        <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+    </resultMap>
 
-  <select id="selectContractsByFuzzy" resultMap="ContractDetailMap">
-    select cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
-    LEFT JOIN contract c ON c.id = cs.contract_id
-    LEFT JOIN machine_order mo ON mo.contract_id = c.id
-    WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
-    <if test="contract_num != null and contract_num != ''">
-      and c.contract_num like CONCAT('%','${contract_num}','%' )
-    </if>
-    <if test="status != null">
-      and c.status=${status}
-    </if>
-    <if test="sellman != null and sellman != '' ">
-      and c.sellman like CONCAT('%','${sellman}','%' )
-    </if>
-    <if test="role_name!=null and role_name != '' ">
-      and cs.current_step like CONCAT('%','${role_name}','%' )
-    </if>
-    <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-    <if test="query_start_time!=null and query_start_time != '' ">
-      and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
-    </if>
-    <if test="query_finish_time!=null and query_finish_time != '' ">
-      and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
-    </if>
-    GROUP BY c.id
-    ORDER BY cs.create_time DESC,cs.update_time DESC
-  </select>
+    <select id="selectContractsByFuzzy" resultMap="ContractDetailMap">
+        select cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
+        LEFT JOIN contract c ON c.id = cs.contract_id
+        LEFT JOIN machine_order mo ON mo.contract_id = c.id
+        WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
+        <if test="contract_num != null and contract_num != ''">
+            and c.contract_num like CONCAT('%','${contract_num}','%' )
+        </if>
+        <if test="status != null">
+            and c.status=${status}
+        </if>
+        <if test="sellman != null and sellman != '' ">
+            and c.sellman like CONCAT('%','${sellman}','%' )
+        </if>
+        <if test="role_name!=null and role_name != '' ">
+            and cs.current_step like CONCAT('%','${role_name}','%' )
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+        </if>
+        GROUP BY c.id
+        ORDER BY cs.create_time DESC,cs.update_time DESC
+    </select>
 
-  <select id="selectContracts" resultMap="ContractDetailMap">
-    select cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
-    LEFT JOIN contract c ON c.id = cs.contract_id
-    LEFT JOIN machine_order mo ON mo.contract_id = c.id
-    WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
-    <if test="contract_num != null and contract_num != ''">
-      and c.contract_num = CONCAT('%','${contract_num}','%' )
-    </if>
-    <if test="status != null">
-      and c.status=${status}
-    </if>
-    <if test="sellman != null and sellman != '' ">
-      and c.sellman = CONCAT('%','${sellman}','%' )
-    </if>
-    <if test="role_name!=null and role_name != '' ">
-      and cs.current_step = CONCAT('%','${role_name}','%' )
-    </if>
-    <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-    <if test="query_start_time!=null and query_start_time != '' ">
-      and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
-    </if>
-    <if test="query_finish_time!=null and query_finish_time != '' ">
-      and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
-    </if>
-    GROUP BY c.id
-    ORDER BY cs.create_time DESC,cs.update_time DESC
-  </select>
+    <select id="selectContracts" resultMap="ContractDetailMap">
+        select cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
+        LEFT JOIN contract c ON c.id = cs.contract_id
+        LEFT JOIN machine_order mo ON mo.contract_id = c.id
+        WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
+        <if test="contract_num != null and contract_num != ''">
+            and c.contract_num = CONCAT('%','${contract_num}','%' )
+        </if>
+        <if test="status != null">
+            and c.status=${status}
+        </if>
+        <if test="sellman != null and sellman != '' ">
+            and c.sellman = CONCAT('%','${sellman}','%' )
+        </if>
+        <if test="role_name!=null and role_name != '' ">
+            and cs.current_step = CONCAT('%','${role_name}','%' )
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+        </if>
+        GROUP BY c.id
+        ORDER BY cs.create_time DESC,cs.update_time DESC
+    </select>
 
-  <insert id="saveAndGetID"   useGeneratedKeys="true"  parameterType="com.eservice.api.model.contract.Contract" keyProperty="id">
+    <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contract.Contract"
+            keyProperty="id">
       insert into
-      contract(contract_num, customer_name, sellman, status, contract_ship_date, pay_method, mark, create_time)
+      contract(contract_num, currency_type, customer_name, sellman, status, contract_ship_date, pay_method, mark, create_time)
       values(
-      #{contractNum},#{customerName},#{sellman},#{status},#{contractShipDate},#{payMethod},#{mark},#{createTime})
-  </insert>
+      #{contractNum},#{currencyType},#{customerName},#{sellman},#{status},#{contractShipDate},#{payMethod},#{mark},#{createTime})
+    </insert>
     <select id="selectAllCustomer" resultMap="BaseResultMap">
         SELECT c.* FROM `contract` c WHERE 1=1
         <if test="name != null and name != '' ">

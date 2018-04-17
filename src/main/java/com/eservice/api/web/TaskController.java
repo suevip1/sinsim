@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.task.Task;
@@ -14,10 +15,11 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/12/18.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/12/18.
+ */
 @RestController
 @RequestMapping("/task")
 public class TaskController {
@@ -38,6 +40,9 @@ public class TaskController {
 
     @PostMapping("/update")
     public Result update(Task task) {
+        if (task.getQualityUserId() == null) {
+            task.setQualityUserId(0);
+        }
         taskService.update(task);
         return ResultGenerator.genSuccessResult();
     }

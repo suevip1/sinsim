@@ -56,6 +56,11 @@ public class ContractDetail {
     @Column(name="pay_method")
     private String payMethod;
 
+
+    @Column(name="currency_type")
+    private String currencyType;
+
+
     /**
      * 合同交货时间
      */
@@ -180,6 +185,14 @@ public class ContractDetail {
 
     public void setPayMethod(String payMethod) {
         this.payMethod = payMethod;
+    }
+
+    public String getCurrencyType() {
+        return currencyType;
+    }
+
+    public void setCurrencyType(String currencyType) {
+        this.currencyType = currencyType;
     }
 
     public Date getContractShipDate() {
