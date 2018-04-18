@@ -135,7 +135,11 @@
             <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
             <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         </association>
-
+        <association javaType="com.eservice.api.model.task.Task" property="task">
+            <id column="task_id" jdbcType="INTEGER" property="id"/>
+            <result column="quality_user_id" jdbcType="INTEGER" property="qualityUserId"/>
+            <result column="group_id" jdbcType="INTEGER" property="groupId"/>
+        </association>
     </resultMap>
     <!--根据 taskId查task record, process record, machine, machine_order-->
     <select id="selectTaskRecordDetail" resultMap="TaskRecordDetail">
@@ -176,7 +180,8 @@
         m.id machine_id1,m.status machine_status, m.*,
         mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
         oll.id order_loading_list_id,oll.*,
-        tp.id task_plan_id,tp.*
+        tp.id task_plan_id,tp.*,
+        t.id task_id, t.quality_user_id,t.group_id
 
         from task_record tr
         join task_plan tp on tp.task_record_id = tr.id
@@ -185,8 +190,8 @@
         join machine_order mo on mo.id = m.order_id
         left join order_loading_list oll on oll.order_id = mo.id
 
-        join task on task.task_name = tr.task_name
-        join install_group  on install_group.id = task.group_id
+        join task t on t.task_name = tr.task_name
+        join install_group  on install_group.id = t.group_id
         join user on user.group_id = install_group.id
         where user.account  = #{userAccount}
         and (tr.status=2 or tr.status=3 or tr.status=4 or tr.status=5 or tr.status=7 or tr.status=8)
@@ -198,15 +203,17 @@
         pr.id process_record_id_in_association, pr.*,
         m.id machine_id1, m.status machine_status, m.*,
         mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.*,
-        oll.id order_loading_list_id,oll.*
+        oll.id order_loading_list_id,oll.*,
+        t.id task_id, t.quality_user_id,t.group_id
+
         from task_record tr
         join process_record pr on tr.process_record_id = pr.id
         join machine m on m.id = pr.machine_id
         join machine_order mo on mo.id = m.order_id
         left join order_loading_list oll on oll.order_id = mo.id
 
-        join task on task.task_name = tr.task_name
-        join user on user.id = task.quality_user_id
+        join task t on t.task_name = tr.task_name
+        join user on user.id = t.quality_user_id
         where user.account = #{userAccount}
       -- 4:安装完成，5: 质检中 8:质检异常
         and (tr.status=4 or tr.status=5 or tr.status=8)

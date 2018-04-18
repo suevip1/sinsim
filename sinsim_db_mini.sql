@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50547
 File Encoding         : 65001
 
-Date: 2018-04-13 13:28:21
+Date: 2018-04-18 14:23:49
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -91,6 +91,7 @@ CREATE TABLE `contract` (
   `sellman` varchar(255) NOT NULL COMMENT '销售人员',
   `contract_ship_date` date NOT NULL COMMENT '合同交货日期',
   `pay_method` varchar(255) DEFAULT NULL COMMENT '支付方式',
+  `currency_type` varchar(255) NOT NULL COMMENT '币种',
   `mark` text COMMENT '合同备注信息，有填单员上填入',
   `status` tinyint(4) unsigned NOT NULL COMMENT '合同状态',
   `create_time` datetime NOT NULL COMMENT '填表时间',
@@ -559,8 +560,7 @@ CREATE TABLE `task` (
   KEY `fk_t_group_id` (`group_id`),
   KEY `task_name` (`task_name`),
   KEY `fk_t_quality_user_id` (`quality_user_id`),
-  CONSTRAINT `fk_t_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`),
-  CONSTRAINT `fk_t_quality_user_id` FOREIGN KEY (`quality_user_id`) REFERENCES `user` (`id`)
+  CONSTRAINT `fk_t_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------

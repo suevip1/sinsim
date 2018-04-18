@@ -4,6 +4,7 @@ import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_loading_list.OrderLoadingList;
 import com.eservice.api.model.process_record.ProcessRecord;
+import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_plan.TaskPlan;
 
 import javax.persistence.*;
@@ -32,6 +33,11 @@ public class TaskRecordDetail extends TaskRecord{
     private TaskPlan taskPlan;
 
     /**
+     * Task信息
+     */
+    private Task task;
+
+    /**
     获得Task_record的机器信息
      */
     public Machine getMachine(){ return  this.machine;}
@@ -49,4 +55,12 @@ public class TaskRecordDetail extends TaskRecord{
     public void setOrderLoadingList(OrderLoadingList orderLoadingList) { this.orderLoadingList = orderLoadingList; }
     public TaskPlan getTaskPlan() {return this.taskPlan; }
     public void setTaskPlan(TaskPlan taskPlan) {this.taskPlan = taskPlan;}
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
 }
