@@ -3,6 +3,8 @@ package com.eservice.api.model.user;
 import com.eservice.api.model.install_group.InstallGroup;
 import com.eservice.api.model.role.Role;
 
+import javax.persistence.Column;
+
 public class UserDetail {
 
     private Integer id;
@@ -31,6 +33,12 @@ public class UserDetail {
      * 账号
      */
     private String account;
+
+    /**
+     * 销售部信息（区分外贸、内贸一部、内贸二部）
+     */
+    private String marketGroupName;
+
 
     public String getName() {
         return name;
@@ -150,6 +158,15 @@ public class UserDetail {
 //    public void setGroupId(Integer groupId) {
 //        this.groupId = groupId;
 //    }
+
+
+    public String getMarketGroupName() {
+        return marketGroupName;
+    }
+
+    public void setMarketGroupName(String marketGroupName) {
+        this.marketGroupName = marketGroupName;
+    }
 
     /**
      * 获取员工是否在职，“1”==>在职, “0”==>离职

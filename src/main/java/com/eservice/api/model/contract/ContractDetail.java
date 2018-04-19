@@ -56,9 +56,17 @@ public class ContractDetail {
     @Column(name="pay_method")
     private String payMethod;
 
-
+    /**
+     * 币种
+     */
     @Column(name="currency_type")
     private String currencyType;
+
+    /**
+     * 销售组
+     */
+    @Column(name="market_group_name")
+    private String marketGroupName;
 
 
     /**
@@ -193,6 +201,14 @@ public class ContractDetail {
 
     public void setCurrencyType(String currencyType) {
         this.currencyType = currencyType;
+    }
+
+    public String getMarketGroupName() {
+        return marketGroupName;
+    }
+
+    public void setMarketGroupName(String marketGroupName) {
+        this.marketGroupName = marketGroupName;
     }
 
     public Date getContractShipDate() {

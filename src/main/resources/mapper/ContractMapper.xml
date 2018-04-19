@@ -11,6 +11,7 @@
         <result column="sellman" jdbcType="VARCHAR" property="sellman"/>
         <result column="pay_method" jdbcType="VARCHAR" property="payMethod"/>
         <result column="currency_type" jdbcType="VARCHAR" property="currencyType"/>
+        <result column="market_group_name" jdbcType="VARCHAR" property="marketGroupName"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
         <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
         <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
@@ -28,6 +29,7 @@
         <result column="sellman" jdbcType="VARCHAR" property="sellman"/>
         <result column="pay_method" jdbcType="VARCHAR" property="payMethod"/>
         <result column="currency_type" jdbcType="VARCHAR" property="currencyType"/>
+        <result column="market_group_name" jdbcType="VARCHAR" property="marketGroupName"/>
         <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
         <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -49,6 +51,9 @@
         </if>
         <if test="sellman != null and sellman != '' ">
             and c.sellman like CONCAT('%','${sellman}','%' )
+        </if>
+        <if test="market_group_name != null and market_group_name != '' ">
+            and c.market_group_name like CONCAT('%','${market_group_name}','%' )
         </if>
         <if test="role_name!=null and role_name != '' ">
             and cs.current_step like CONCAT('%','${role_name}','%' )
@@ -78,6 +83,9 @@
         <if test="sellman != null and sellman != '' ">
             and c.sellman = CONCAT('%','${sellman}','%' )
         </if>
+        <if test="market_group_name != null and market_group_name != '' ">
+            and c.market_group_name like CONCAT('%','${market_group_name}','%' )
+        </if>
         <if test="role_name!=null and role_name != '' ">
             and cs.current_step = CONCAT('%','${role_name}','%' )
         </if>
@@ -95,9 +103,9 @@
     <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contract.Contract"
             keyProperty="id">
       insert into
-      contract(contract_num, currency_type, customer_name, sellman, status, contract_ship_date, pay_method, mark, create_time)
+      contract(contract_num, currency_type, market_group_name, customer_name, sellman, status, contract_ship_date, pay_method, mark, create_time)
       values(
-      #{contractNum},#{currencyType},#{customerName},#{sellman},#{status},#{contractShipDate},#{payMethod},#{mark},#{createTime})
+      #{contractNum},#{currencyType},#{marketGroupName},#{customerName},#{sellman},#{status},#{contractShipDate},#{payMethod},#{mark},#{createTime})
     </insert>
     <select id="selectAllCustomer" resultMap="BaseResultMap">
         SELECT c.* FROM `contract` c WHERE 1=1

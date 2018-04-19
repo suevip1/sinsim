@@ -17,6 +17,7 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
                                                @Param("status") Integer status,
                                                @Param("sellman") String sellman,
                                                @Param("customer") String customer,
+                                               @Param("market_group_name") String marketGroupName,
                                                @Param("query_start_time") String query_start_time,
                                                @Param("query_finish_time") String query_finish_time,
                                                @Param("machine_name") String machine_name);
@@ -27,6 +28,7 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
                                    @Param("status") Integer status,
                                    @Param("sellman") String sellman,
                                    @Param("customer") String customer,
+                                   @Param("market_group_name") String marketGroupName,
                                    @Param("query_start_time") String query_start_time,
                                    @Param("query_finish_time") String query_finish_time,
                                    @Param("machine_name") String machine_name);

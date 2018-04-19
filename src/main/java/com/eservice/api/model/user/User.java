@@ -35,6 +35,12 @@ public class User {
     private Integer groupId;
 
     /**
+     * 销售部信息（区分外贸、内贸一部、内贸二部）
+     */
+    @Column(name = "market_group_name")
+    private String marketGroupName;
+
+    /**
      * 员工是否在职，“1”==>在职, “0”==>离职
      */
     private Byte valid;
@@ -141,6 +147,14 @@ public class User {
      */
     public void setGroupId(Integer groupId) {
         this.groupId = groupId;
+    }
+
+    public String getMarketGroupName() {
+        return marketGroupName;
+    }
+
+    public void setMarketGroupName(String marketGroupName) {
+        this.marketGroupName = marketGroupName;
     }
 
     /**

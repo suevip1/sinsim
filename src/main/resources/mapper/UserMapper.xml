@@ -11,6 +11,7 @@
     <result column="role_id" jdbcType="INTEGER" property="roleId" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="market_group_name" jdbcType="INTEGER" property="marketGroupName" />
     <result column="valid" jdbcType="TINYINT" property="valid" />
   </resultMap>
 
@@ -19,6 +20,7 @@
         <result column="account" jdbcType="VARCHAR" property="account" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <!--<result column="password" jdbcType="VARCHAR" property="password" />-->
+        <result column="market_group_name" jdbcType="INTEGER" property="marketGroupName" />
         <result column="valid" jdbcType="TINYINT" property="valid" />
         <association javaType="com.eservice.api.model.role.Role" property="role">
             <id column="role_id" property="id" />

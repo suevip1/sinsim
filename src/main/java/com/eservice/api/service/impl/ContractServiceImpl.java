@@ -35,13 +35,14 @@ public class ContractServiceImpl extends AbstractService<Contract> implements Co
                                                 Integer status,
                                                 String sellman,
                                                 String roleName,
+                                                String marketGroupName,
                                                 String query_start_time,
                                                 String query_finish_time,
                                                 Boolean is_fuzzy) {
         if (is_fuzzy) {
-            return contractMapper.selectContractsByFuzzy(contractNum, status, sellman, roleName, query_start_time, query_finish_time);
+            return contractMapper.selectContractsByFuzzy(contractNum, status, sellman, roleName, marketGroupName, query_start_time, query_finish_time);
         } else {
-            return contractMapper.selectContracts(contractNum, status, sellman, roleName, query_start_time, query_finish_time);
+            return contractMapper.selectContracts(contractNum, status, sellman, roleName,marketGroupName, query_start_time, query_finish_time);
         }
     }
 

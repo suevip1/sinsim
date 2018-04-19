@@ -105,12 +105,13 @@ public class MachineOrderController {
             Integer status,
             String sellman,
             String customer,
+            String marketGroupName,
             String query_start_time,
             String query_finish_time,
             String machine_name,
             @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page,size);
-        List<MachineOrderDetail> list = machineOrderService.selectOrder(id, contract_id,order_num, contract_num, status,sellman,customer,query_start_time,query_finish_time,machine_name,is_fuzzy);
+        List<MachineOrderDetail> list = machineOrderService.selectOrder(id, contract_id,order_num, contract_num, status,sellman,customer,marketGroupName,query_start_time,query_finish_time,machine_name,is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

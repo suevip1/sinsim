@@ -199,6 +199,9 @@
         <if test="contract_num != null and contract_num != ''">
             and con.contract_num like CONCAT('%','${contract_num}','%' )
         </if>
+        <if test="market_group_name != null and market_group_name != ''">
+            and con.market_group_name like CONCAT('%','${market_group_name}','%' )
+        </if>
         <if test="status != null">
             and mo.status=${status}
         </if>
@@ -260,6 +263,9 @@
         </if>
         <if test="contract_num != null and contract_num != ''">
             and con.contract_num = CONCAT('%','${contract_num}','%' )
+        </if>
+        <if test="market_group_name != null and market_group_name != ''">
+            and con.market_group_name like CONCAT('%','${market_group_name}','%' )
         </if>
         <if test="status != null">
             and mo.status=${status}

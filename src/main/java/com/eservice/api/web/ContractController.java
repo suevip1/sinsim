@@ -156,7 +156,7 @@ public class ContractController {
         List<MachineOrderWrapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
         //先获取当前合同的所有订单
         List<MachineOrderDetail> originalOrderList = machineOrderService.selectOrder(null, contract1.getId(), null, null, null,
-                null, null, null, null, null, false);
+                null, null, null,null, null, null, false);
         ///删除该合同下，不在本次保存范围内的需求单
         for (MachineOrderDetail item : originalOrderList) {
             boolean exist = false;
@@ -523,11 +523,12 @@ public class ContractController {
                                   Integer status,
                                   String sellman,
                                   String roleName,
+                                  String marketGroupName,
                                   String query_start_time,
                                   String query_finish_time,
                                   @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
-        List<ContractDetail> list = contractService.selectContracts(contractNum, status, sellman, roleName, query_start_time, query_finish_time, is_fuzzy);
+        List<ContractDetail> list = contractService.selectContracts(contractNum, status, sellman, roleName,marketGroupName, query_start_time, query_finish_time, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

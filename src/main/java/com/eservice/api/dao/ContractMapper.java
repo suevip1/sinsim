@@ -12,6 +12,7 @@ public interface ContractMapper extends Mapper<Contract> {
                                          @Param("status") Integer status,
                                          @Param("sellman") String sellman,
                                          @Param("role_name") String roleName,
+                                         @Param("market_group_name") String marketGroupName,
                                          @Param("query_start_time") String query_start_time,
                                          @Param("query_finish_time") String query_finish_time);
 
@@ -19,6 +20,7 @@ public interface ContractMapper extends Mapper<Contract> {
                                                 @Param("status") Integer status,
                                                 @Param("sellman") String sellman,
                                                 @Param("role_name") String roleName,
+                                                @Param("market_group_name") String marketGroupName,
                                                 @Param("query_start_time") String query_start_time,
                                                 @Param("query_finish_time") String query_finish_time);
 

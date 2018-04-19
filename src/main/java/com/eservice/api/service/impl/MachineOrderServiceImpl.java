@@ -27,11 +27,11 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
         return  machineOrderMapper.getOrderAllDetail(id);
     }
     public List<MachineOrderDetail> selectOrder(Integer id, Integer contract_id, String order_num, String contract_num, Integer status, String sellman,
-                                                String customer, String query_start_time, String query_finish_time, String machine_name, Boolean is_fuzzy){
+                                                String customer,String marketGroupName, String query_start_time, String query_finish_time, String machine_name, Boolean is_fuzzy){
         if (is_fuzzy){
-            return  machineOrderMapper.selectOrderFuzzy(id, contract_id, order_num, contract_num, status,sellman, customer, query_start_time, query_finish_time,machine_name);
+            return  machineOrderMapper.selectOrderFuzzy(id, contract_id, order_num, contract_num, status,sellman, customer,marketGroupName, query_start_time, query_finish_time,machine_name);
         } else {
-            return  machineOrderMapper.selectOrder(id, contract_id, order_num, contract_num, status, sellman, customer, query_start_time, query_finish_time, machine_name);
+            return  machineOrderMapper.selectOrder(id, contract_id, order_num, contract_num, status, sellman, customer,marketGroupName, query_start_time, query_finish_time, machine_name);
         }
     }
 
