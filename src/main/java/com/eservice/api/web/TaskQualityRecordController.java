@@ -190,7 +190,7 @@ public class TaskQualityRecordController {
         返回给docker外部下载
          */
         String downloadPathForNginx = "";
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         String dateString;
         try {
             //生成一个空的Excel文件

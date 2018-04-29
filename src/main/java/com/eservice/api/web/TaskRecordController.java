@@ -309,6 +309,7 @@ public class TaskRecordController {
          */
         String downloadPathForNginx = "";
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         String dateString;
         try {
             //生成一个空的Excel文件
@@ -410,22 +411,22 @@ public class TaskRecordController {
 
                 // 安装的开始时间
                 if( list.get(r).getInstallBeginTime() != null) {
-                    dateString = formatter.format(list.get(r).getInstallBeginTime());
+                    dateString = formatter2.format(list.get(r).getInstallBeginTime());
                     row.getCell(6).setCellValue(dateString);
                 }
                 // 安装的结束时间
                 if( list.get(r).getInstallEndTime() != null) {
-                    dateString = formatter.format(list.get(r).getInstallEndTime());
+                    dateString = formatter2.format(list.get(r).getInstallEndTime());
                     row.getCell(7).setCellValue(dateString);
                 }
                 // 质检的开始时间
                 if( list.get(r).getQualityBeginTime()  != null) {
-                    dateString = formatter.format(list.get(r).getQualityBeginTime());
+                    dateString = formatter2.format(list.get(r).getQualityBeginTime());
                     row.getCell(8).setCellValue(dateString);
                 }
                 // 质检的结束时间
                 if( list.get(r).getQualityEndTime() != null) {
-                    dateString = formatter.format(list.get(r).getQualityEndTime());
+                    dateString = formatter2.format(list.get(r).getQualityEndTime());
                     row.getCell(9).setCellValue(dateString);
                 }
                 //计划完成时间

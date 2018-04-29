@@ -709,6 +709,10 @@ public class ContractController {
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contract.getPayMethod()));
 
+            // 币种
+            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell.setCellValue(new HSSFRichTextString(contract.getCurrencyType()));
+
             // 合同交货日期
             String dateTimeString = formatter.format(contract.getContractShipDate());
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
