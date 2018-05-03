@@ -87,6 +87,16 @@ public class ContractDetail {
     @Column(name = "update_time")
     private Date updateTime;
 
+    public String getRecordUser() {
+        return recordUser;
+    }
+
+    public void setRecordUser(String recordUser) {
+        this.recordUser = recordUser;
+    }
+
+    private String recordUser;
+
     /**
      * @return id
      */
