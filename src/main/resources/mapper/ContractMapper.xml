@@ -18,6 +18,7 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="record_user" jdbcType="VARCHAR" property="recordUser"/>
+        <result column="is_valid" jdbcType="VARCHAR" property="isValid"/>
     </resultMap>
 
     <resultMap id="ContractDetailMap" type="com.eservice.api.model.contract.ContractDetail">
@@ -45,6 +46,7 @@
         LEFT JOIN contract c ON c.id = cs.contract_id
         LEFT JOIN machine_order mo ON mo.contract_id = c.id
         WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
+        AND c.is_valid!="0"
         <if test="contract_num != null and contract_num != ''">
             and c.contract_num like CONCAT('%','${contract_num}','%' )
         </if>
@@ -79,6 +81,7 @@
         LEFT JOIN contract c ON c.id = cs.contract_id
         LEFT JOIN machine_order mo ON mo.contract_id = c.id
         WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
+        AND c.is_valid!="0"
         <if test="contract_num != null and contract_num != ''">
             and c.contract_num = ${contract_num}
         </if>

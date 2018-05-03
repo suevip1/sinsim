@@ -81,6 +81,18 @@ public class Contract {
 
     private String recordUser;
 
+
+    public String getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(String isValid) {
+        this.isValid = isValid;
+    }
+
+    private String isValid;
+
+
     /**
      * @return id
      */

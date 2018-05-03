@@ -149,6 +149,19 @@ public class ContractController {
         return ResultGenerator.genSuccessResult();
     }
 
+    @PostMapping("/updateValid")
+    public Result updateValid(@RequestParam Integer id) {
+        if (id < 1) {
+            return ResultGenerator.genFailResult("合同编号不正确，请检查！");
+        }
+        Contract contractObj = new Contract();
+        contractObj.setId(id);
+        contractObj.setIsValid((Constant.ValidEnum.INVALID.getValue()).toString());
+        contractObj.setUpdateTime(new Date());
+        contractService.update(contractObj);
+        return ResultGenerator.genSuccessResult();
+    }
+
     @PostMapping("/update")
     @Transactional(rollbackFor = Exception.class)
     public Result update(String contract, String requisitionForms) {

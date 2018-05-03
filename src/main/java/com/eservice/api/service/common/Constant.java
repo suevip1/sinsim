@@ -109,14 +109,14 @@ public class Constant {
      * Task(工序)安装状态
      * "0" --> 初始化状态
      * "1" --> 已计划 （没轮到安装）
-	 * "2" --> 待安装
+     * "2" --> 待安装
      * "3" --> 开始安装
      * "4" --> 安装完成
      * "5" --> 质检中
      * "6" --> 质检完成
      * "7" --> 安装异常
      * "8" --> 质检异常
-	 * "9" --> 跳过
+     * "9" --> 跳过
      */
     public static final Byte TASK_INITIAL = 0;
     public static final Byte TASK_PLANED = 1;
@@ -139,7 +139,6 @@ public class Constant {
     public static final String STR_TASK_INSTALL_ABNORMAL = "安装异常";
     public static final String STR_TASK_QUALITY_ABNORMAL = "质检异常";
     public static final String STR_TASK_SKIP = "已跳过";
-
 
 
     /**
@@ -187,7 +186,7 @@ public class Constant {
     /**
      * 发生安装异常时，通知生产部管理员
      */
-	public static final String S2C_INSTALL_ABNORMAL = "/s2c/install_abnormal/";
+    public static final String S2C_INSTALL_ABNORMAL = "/s2c/install_abnormal/";
 
     /**
      * 发生质检异常时，通知生产部管理员
@@ -198,4 +197,17 @@ public class Constant {
      * 发生安装异常时，通知对应质检员
      */
     public static final String S2C_INSTALL_ABNORMAL_TO_QUALITY = "/s2c/install_abnormal/quality/";
+
+    public enum ValidEnum {
+        INVALID(0), VALID(1);
+        private Integer value;
+
+        private ValidEnum(Integer value) {
+            this.value = value;
+        }
+
+        public Integer getValue() {
+            return this.value;
+        }
+    }
 }
