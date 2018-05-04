@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : sinsim_remote
-Source Server Version : 50721
-Source Host           : 115.231.6.43:3306
+Source Server         : Local_sinsim
+Source Server Version : 50553
+Source Host           : localhost:3306
 Source Database       : sinsim_db
 
 Target Server Type    : MYSQL
-Target Server Version : 50721
+Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2018-04-29 13:27:33
+Date: 2018-05-04 15:41:03
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -103,17 +103,21 @@ CREATE TABLE `contract` (
   `status` tinyint(4) unsigned NOT NULL COMMENT '合同状态',
   `create_time` datetime NOT NULL COMMENT '填表时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新table的时间',
+  `record_user` varchar(255) DEFAULT NULL COMMENT '录单人员',
+  `is_valid` varchar(4) NOT NULL DEFAULT '1' COMMENT '指示合同是否有效，用于删除标记，可以理解为作废单据',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of contract
 -- ----------------------------
-INSERT INTO `contract` VALUES ('7', '曹443', '阿姆利泽HITESH', '曹建挺', '2018-05-30', 'DP', '', '美元', '1111', '1', '2018-04-27 09:00:53', '2018-04-27 09:01:20');
-INSERT INTO `contract` VALUES ('8', '骆951', '乌克兰POLLARDI', '骆晓军', '2018-05-04', '10000$定金，发货前30%定金，余款寄提单之前。 ', '外贸一部', '美元', '', '5', '2018-04-28 01:20:58', '2018-04-28 02:52:58');
-INSERT INTO `contract` VALUES ('9', 'LE90A', '印度迪立普', '曹建挺', '2018-04-30', 'D/P', '外贸二部', '人民币', '', '2', '2018-04-28 01:56:45', '2018-04-28 05:40:29');
-INSERT INTO `contract` VALUES ('10', 'C441', '阿富汗AF001 ', '骆晓军', '2018-04-02', 'TT', '外贸一部', '美元', '', '1', '2018-04-28 02:26:11', '2018-04-28 02:34:31');
-INSERT INTO `contract` VALUES ('11', 'XS-1801062', '绍兴立浙纺织有限公司', '郭洪勇', '2018-05-25', '租赁', '内贸部', '人民币', '付款：定金8万元，发货前16.6万元，租赁30万元。', '1', '2018-04-28 02:56:23', '2018-04-28 02:57:42');
+INSERT INTO `contract` VALUES ('7', '曹443', '阿姆利泽HITESH', '曹建挺', '2018-05-30', 'DP', '', '美元', '1111', '1', '2018-04-27 09:00:53', '2018-04-27 09:01:20', null, '1');
+INSERT INTO `contract` VALUES ('8', '骆951', '乌克兰POLLARDI', '骆晓军', '2018-05-04', '10000$定金，发货前30%定金，余款寄提单之前。 ', '外贸一部', '美元', '', '5', '2018-04-28 01:20:58', '2018-05-03 17:50:35', 'admin', '0');
+INSERT INTO `contract` VALUES ('9', 'LE90A', '印度迪立普', '曹建挺', '2018-04-30', 'D/P', '外贸二部', '人民币', '', '2', '2018-04-28 01:56:45', '2018-04-28 05:40:29', null, '1');
+INSERT INTO `contract` VALUES ('10', 'C441', '阿富汗AF001 ', '骆晓军', '2018-04-02', 'TT', '外贸一部', '美元', '', '1', '2018-04-28 02:26:11', '2018-04-28 02:34:31', 'admin', '1');
+INSERT INTO `contract` VALUES ('11', 'XS-1801062', '绍兴立浙纺织有限公司', '郭洪勇', '2018-05-25', '租赁', '内贸部', '人民币', '付款：定金8万元，发货前16.6万元，租赁30万元。', '2', '2018-04-28 02:56:23', '2018-05-03 10:50:43', null, '1');
+INSERT INTO `contract` VALUES ('12', 'con-0908', '乌克兰POLLARDI', '谢侃', '2018-05-18', 'sss', '', '人民币', '', '0', '2018-05-03 11:47:53', '2018-05-03 13:51:27', 'admin', '1');
+INSERT INTO `contract` VALUES ('21', 'sdfasdfasd', '绍兴立浙纺织有限公司', '斯雯', '2018-05-31', 'sdfsdf', '外贸一部', '美元', 'sdfsdf', '0', '2018-05-03 14:54:44', '2018-05-03 19:22:26', '谢侃', '0');
 
 -- ----------------------------
 -- Table structure for `contract_reject_record`
@@ -975,3 +979,9 @@ INSERT INTO `user` VALUES ('217', '何璐洁', '何璐洁', '15', '123456', null
 INSERT INTO `user` VALUES ('218', '袁海琼', '袁海琼', '15', '123456', null, '', '1');
 INSERT INTO `user` VALUES ('219', '楼叶平', '楼叶平', '15', '123456', '0', '', '1');
 INSERT INTO `user` VALUES ('220', '何晓婧', '何晓婧', '13', '123456', '0', '', '1');
+
+-- ----------------------------
+-- View structure for `machine_infos`
+-- ----------------------------
+DROP VIEW IF EXISTS `machine_infos`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `machine_infos` AS select `machine`.`id` AS `id`,`machine`.`order_id` AS `order_id`,`machine`.`machine_strid` AS `machine_strid`,`machine`.`nameplate` AS `nameplate`,`machine`.`location` AS `location`,`machine`.`status` AS `status`,`machine`.`machine_type` AS `machine_type`,`machine`.`create_time` AS `create_time`,`machine`.`update_time` AS `update_time`,`machine`.`installed_time` AS `installed_time`,`machine`.`ship_time` AS `ship_time` from `machine` ;
