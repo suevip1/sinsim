@@ -2,9 +2,13 @@ package com.eservice.api.web;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.task_plan.TaskPlan;
+import com.eservice.api.model.task_record.TaskRecord;
+import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.TaskPlanServiceImpl;
+import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +28,8 @@ import java.util.List;
 public class TaskPlanController {
     @Resource
     private TaskPlanServiceImpl taskPlanService;
+    @Resource
+    private TaskRecordServiceImpl taskRecordService;
 
     @PostMapping("/add")
     public Result add(TaskPlan taskPlan) {
@@ -34,6 +40,17 @@ public class TaskPlanController {
     @PostMapping("/delete")
     public Result delete(@RequestParam Integer id) {
         taskPlanService.deleteById(id);
+        return ResultGenerator.genSuccessResult();
+    }
+
+    @PostMapping("/deletePlan")
+    @Transactional(rollbackFor = Exception.class)
+    public Result deletePlan(@RequestParam Integer id, @RequestParam Integer taskRecordId) {
+        taskPlanService.deleteById(id);
+        TaskRecord record = new TaskRecord();
+        record.setId(taskRecordId);
+        record.setStatus(Constant.TASK_INITIAL);
+        taskRecordService.update(record);
         return ResultGenerator.genSuccessResult();
     }
 
