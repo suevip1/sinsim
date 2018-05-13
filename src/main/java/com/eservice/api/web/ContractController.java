@@ -19,6 +19,7 @@ import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.model.order_split_record.OrderSplitRecord;
 import com.eservice.api.model.user.User;
+import com.eservice.api.service.OrderSignService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
@@ -576,18 +577,30 @@ public class ContractController {
                     if (orderItem.getStatus().equals(Constant.ORDER_INITIAL)) {
                         orderItem.setStatus(Constant.ORDER_CHECKING);
                         machineOrderService.update(orderItem);
+                        Condition signCondition = new Condition(OrderSign.class);
+                        signCondition.createCriteria().andCondition("order_id = ", orderItem.getId());
+                        List<OrderSign> orderSignList = orderSignService.findByCondition(signCondition);
+                        //无签核记录
+                        if(orderSignList.size() == 0) {
+                            throw new RuntimeException();
+                        }else {
+                            OrderSign sign = orderSignList.get(orderSignList.size() -1);
+                            List<SignContentItem> orderSignContentList = JSON.parseArray(sign.getSignContent(), SignContentItem.class);
+                            sign.setCurrentStep(roleService.findById(orderSignContentList.get(0).getRoleId()).getRoleName());
+                            orderSignService.update(sign);
+                        }
                     }
                 }
 
                 //更新签核记录
-                contractSign.setUpdateTime(new Date());
-                String currentStep = commonService.getCurrentSignStep(contractId);
-                if (currentStep == null) {
-                    return ResultGenerator.genFailResult("获取当前签核steps失败！");
-                }
-                contractSign.setCurrentStep(currentStep);
-                //设置完状态后更新签核记录
-                contractSignService.update(contractSign);
+//                contractSign.setUpdateTime(new Date());
+//                String currentStep = commonService.getCurrentSignStep(contractId);
+//                if (currentStep == null) {
+//                    return ResultGenerator.genFailResult("获取当前签核steps失败！");
+//                }
+//                contractSign.setCurrentStep(currentStep);
+//                //设置完状态后更新签核记录
+//                contractSignService.update(contractSign);
             }
         }
         return ResultGenerator.genSuccessResult();
