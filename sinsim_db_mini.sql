@@ -743,7 +743,6 @@ INSERT INTO `user` VALUES ('14', 'jsbjl', 'jsb', '8', 'sinsim', null, null, '1')
 INSERT INTO `user` VALUES ('15', 'zjl', 'zjl', '6', 'sinsim', '0', null, '1');
 INSERT INTO `user` VALUES ('16', '谢侃', '谢侃', '9', 'sinsim', '0', '外贸一部', '1');
 INSERT INTO `user` VALUES ('17', 'pmc', 'pcm-1', '12', 'sinsim', '0', null, '1');
->>>>>>> 60c49d088ae1346435ce291dd386e141fb96abad
 INSERT INTO `user` VALUES ('18', 'cbhsy', 'cbhsy-1', '13', 'sinsim', '0', null, '1');
 INSERT INTO `user` VALUES ('19', 'cwjl', 'cwjl1', '14', 'sinsim', '0', null, '1');
 INSERT INTO `user` VALUES ('25', '徐锡康', '徐锡康', '11', 'sinsim', null, null, '1');
