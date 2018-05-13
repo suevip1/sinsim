@@ -42,16 +42,17 @@
     </resultMap>
 
     <select id="selectContractsByFuzzy" resultMap="ContractDetailMap">
-        select cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
-        LEFT JOIN contract c ON c.id = cs.contract_id
-        LEFT JOIN machine_order mo ON mo.contract_id = c.id
-        WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
-        AND c.is_valid!="0"
+        select c.id, c.contract_num,c.customer_name,c.sellman,c.record_user,c.pay_method,c.currency_type,c.market_group_name,c.market_group_name,
+        c.contract_ship_date,c.mark,c.create_time,c.update_time,
+        os.current_step, mo.order_num, mo.status from machine_order mo
+        LEFT JOIN contract c ON c.id = mo.contract_id
+        LEFT JOIN order_sign os ON os.order_id = mo.id
+        WHERE c.is_valid!="0"
         <if test="contract_num != null and contract_num != ''">
             and c.contract_num like CONCAT('%','${contract_num}','%' )
         </if>
         <if test="status != null">
-            and c.status=${status}
+            and mo.status=${status}
         </if>
         <if test="sellman != null and sellman != '' ">
             and c.sellman like CONCAT('%','${sellman}','%' )
@@ -63,7 +64,7 @@
             and c.market_group_name like CONCAT('%','${market_group_name}','%' )
         </if>
         <if test="role_name!=null and role_name != '' ">
-            and cs.current_step like CONCAT('%','${role_name}','%' )
+            and os.current_step like CONCAT('%','${role_name}','%' )
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
         <if test="query_start_time!=null and query_start_time != '' ">
@@ -72,21 +73,21 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
-        GROUP BY c.id
-        ORDER BY cs.create_time DESC,cs.update_time DESC
+        ORDER BY os.create_time DESC,os.update_time DESC
     </select>
 
     <select id="selectContracts" resultMap="ContractDetailMap">
-        select cs.current_step, c.*, COUNT(DISTINCT mo.id) as order_num from contract_sign cs
-        LEFT JOIN contract c ON c.id = cs.contract_id
-        LEFT JOIN machine_order mo ON mo.contract_id = c.id
-        WHERE cs.create_time IN (SELECT MAX(create_time) FROM contract_sign GROUP BY contract_id)
-        AND c.is_valid!="0"
+        select c.id, c.contract_num,c.customer_name,c.sellman,c.record_user,c.pay_method,c.currency_type,c.market_group_name,c.market_group_name,
+        c.contract_ship_date,c.mark,c.create_time,c.update_time,
+        os.current_step, mo.order_num, mo.status from machine_order mo
+        LEFT JOIN contract c ON c.id = mo.contract_id
+        LEFT JOIN order_sign os ON os.order_id = mo.id
+        WHERE c.is_valid!="0"
         <if test="contract_num != null and contract_num != ''">
             and c.contract_num = ${contract_num}
         </if>
         <if test="status != null">
-            and c.status=${status}
+            and mo.status=${status}
         </if>
         <if test="sellman != null and sellman != '' ">
             and c.sellman = ${sellman}
@@ -98,7 +99,7 @@
             and c.market_group_name = ${market_group_name}
         </if>
         <if test="role_name!=null and role_name != '' ">
-            and cs.current_step = ${role_name}
+            and os.current_step = ${role_name}
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
         <if test="query_start_time!=null and query_start_time != '' ">
@@ -107,8 +108,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        GROUP BY c.id
-        ORDER BY cs.create_time DESC,cs.update_time DESC
+        ORDER BY os.create_time DESC,os.update_time DESC
     </select>
 
     <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contract.Contract"

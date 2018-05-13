@@ -167,6 +167,31 @@ public class CommonService {
     }
 
     /**
+     * 生成需求单编号对应的机器
+     *
+     * @param orderItem
+     */
+    public void createMachineByOrderId(MachineOrder orderItem) {
+
+        //选取有效需求单，无效需求单对应的机器数不cover在内
+        Condition tempCondition = new Condition(Machine.class);
+        tempCondition.createCriteria().andCondition("order_id = ", orderItem.getId());
+        List<Machine> machineExistList = machineService.findByCondition(tempCondition);
+        int haveToCreate = orderItem.getMachineNum() - machineExistList.size();
+        int i = 1;
+        while (i <= haveToCreate) {
+            Machine machine = new Machine();
+            machine.setMachineStrId(Utils.createMachineBasicId() + i);
+            machine.setOrderId(orderItem.getId());
+            machine.setMachineType(orderItem.getMachineType());
+            machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_INITIAL)));
+            machine.setCreateTime(new Date());
+            machineService.save(machine);
+            i++;
+        }
+    }
+
+    /**
      * @param path      保存文件的总路径
      * @param file      文件名称
      * @param machineID 机器的具体ID（保存装车单时，machineId可以为NULL）

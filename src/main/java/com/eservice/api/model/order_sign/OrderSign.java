@@ -28,6 +28,12 @@ public class OrderSign {
     private Date updateTime;
 
     /**
+     * 当前签核步骤
+     */
+    @Column(name = "current_step")
+    private String currentStep;
+
+    /**
      * 签核内容，以json格式的数组形式存放, 所有项完成后更新status为完成
 [ 
     {"role_id": 1, "role_name":"销售经理"，“person”：“张三”，”comment“: "同意"， ”update_time“:"2017-11-05 12:08:55"},
@@ -137,5 +143,13 @@ public class OrderSign {
      */
     public void setSignContent(String signContent) {
         this.signContent = signContent;
+    }
+
+    public String getCurrentStep() {
+        return currentStep;
+    }
+
+    public void setCurrentStep(String currentStep) {
+        this.currentStep = currentStep;
     }
 }
