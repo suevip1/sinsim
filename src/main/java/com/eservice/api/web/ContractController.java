@@ -195,14 +195,16 @@ public class ContractController {
 
         for (MachineOrderWrapper item : machineOrderWapperlist) {
             if (item.getMachineOrder().getId() != null) {
-                //更新
+                //更新，只对initial和reject状态的需求单就是更新，其他状态的需求单不做更新
                 OrderDetail temp = item.getOrderDetail();
                 MachineOrder orderTemp = item.getMachineOrder();
                 if (orderTemp.getStatus().equals(Constant.ORDER_REJECTED)) {
                     orderTemp.setStatus(Constant.ORDER_INITIAL);
                 }
-                orderDetailService.update(temp);
-                machineOrderService.update(orderTemp);
+                if(orderTemp.getStatus().equals(Constant.ORDER_INITIAL)) {
+                    orderDetailService.update(temp);
+                    machineOrderService.update(orderTemp);
+                }
             } else {
                 //新增
                 OrderDetail temp = item.getOrderDetail();

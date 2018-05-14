@@ -115,8 +115,8 @@
         <association javaType="com.eservice.api.model.order_change_record.OrderChangeRecord"
                      property="orderChangeRecord">
             <id column="changeRecordId" jdbcType="INTEGER" property="id"/>
-            <result column="order_id" jdbcType="INTEGER" property="orderId"/>
-            <result column="user_id" jdbcType="INTEGER" property="userId"/>
+            <result column="change_order_id" jdbcType="INTEGER" property="orderId"/>
+            <result column="change_user_id" jdbcType="INTEGER" property="userId"/>
             <result column="change_time" jdbcType="TIMESTAMP" property="changeTime"/>
             <result column="change_reason" jdbcType="LONGVARCHAR" property="changeReason"/>
         </association>
@@ -175,17 +175,17 @@
         od.driver_reel,
         os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
         mt.id machineTypeID, mt.`name`, con.contract_num, con.customer_name as customer,
-        oll.id as order_loading_list_id,oll.file_name,oll.type as file_type
-
-        -- ,ocr.id changeRecordId,osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id
+        oll.id as order_loading_list_id,oll.file_name,oll.type as file_type,
+        osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id, osr.split_reason,
+        ocr.id changeRecordId, ocr.user_id change_user_id, ocr.order_id change_order_id, ocr.change_reason
         from machine_order mo
         LEFT JOIN order_sign os on mo.id = os.order_id
         LEFT JOIN order_detail od on mo.order_detail_id=od.id
         LEFT JOIN machine_type mt on mo.machine_type=mt.id
         LEFT JOIN contract con on mo.contract_id = con.id
         LEFT JOIN order_loading_list oll ON oll.order_id=mo.id
-        -- LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
-        -- LEFT JOIN order_split_record osr on osr.order_id = mo.original_order_id
+        LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
+        LEFT JOIN order_split_record osr on osr.order_id = mo.original_order_id
         where 1=1 AND con.is_valid!=0
         <if test="id != null and id != ''">
             and mo.id=#{id}
@@ -240,17 +240,17 @@
         od.driver_reel,
         os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
         mt.id machineTypeID, mt.`name`, con.contract_num, con.customer_name as customer,
-        oll.id as order_loading_list_id,oll.file_name,oll.type as file_type
-
-        -- ,ocr.id changeRecordId,osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id
+        oll.id as order_loading_list_id,oll.file_name,oll.type as file_type,
+        osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id, osr.split_reason,
+        ocr.id changeRecordId, ocr.user_id change_user_id, ocr.order_id change_order_id, ocr.change_reason
         from machine_order mo
         LEFT JOIN order_sign os on mo.id = os.order_id
         LEFT JOIN order_detail od on mo.order_detail_id=od.id
         LEFT JOIN machine_type mt on mo.machine_type=mt.id
         LEFT JOIN contract con on mo.contract_id = con.id
         LEFT JOIN order_loading_list oll ON oll.order_id=mo.id
-        -- LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
-        -- LEFT JOIN order_split_record osr on osr.order_id = mo.original_order_id
+        LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
+        LEFT JOIN order_split_record osr on osr.order_id = mo.original_order_id
         where 1=1 AND con.is_valid!=0
         <if test="id != null and id != ''">
             and mo.id=#{id}
