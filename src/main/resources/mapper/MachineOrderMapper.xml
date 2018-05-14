@@ -29,6 +29,7 @@
         <result column="sellman" jdbcType="VARCHAR" property="sellman"/>
         <result column="maintain_type" jdbcType="VARCHAR" property="maintainType"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="valid" jdbcType="TINYINT" property="valid"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
@@ -63,6 +64,7 @@
         <result column="sellman" jdbcType="VARCHAR" property="sellman"/>
         <result column="maintain_type" jdbcType="VARCHAR" property="maintainType"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="valid" jdbcType="TINYINT" property="valid"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
