@@ -187,6 +187,12 @@ public class MachineOrderDetail {
     private OrderSign orderSign;
 
     /**
+     * 订单是否有效
+     */
+    @Column(name = "valid")
+    private Integer valid;
+
+    /**
      * 改单记录
      */
     private OrderChangeRecord orderChangeRecord;
@@ -744,5 +750,13 @@ public class MachineOrderDetail {
 
     public void setMaintainType(String maintainType) {
         this.maintainType = maintainType;
+    }
+
+    public Integer getValid() {
+        return valid;
+    }
+
+    public void setValid(Integer valid) {
+        this.valid = valid;
     }
 }

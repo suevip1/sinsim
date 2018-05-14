@@ -2,10 +2,14 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.contract.Contract;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.order_detail.OrderDetail;
+import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.MachineOrderServiceImpl;
+import com.eservice.api.service.impl.MachineServiceImpl;
 import com.eservice.api.service.impl.OrderDetailServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,6 +38,9 @@ public class MachineOrderController {
 
     @Resource
     private OrderDetailServiceImpl orderDetailService;
+
+    @Resource
+    private MachineServiceImpl machineService;
 
     /*
         为保证 MachineOrder表和OrderDetail表的一致性，MachineOrder表和OrderDetail表，都在这里统一完成
@@ -128,6 +136,33 @@ public class MachineOrderController {
                 return ResultGenerator.genSuccessResult();
             } else {
                 return ResultGenerator.genFailResult("需求单编号已存在！");
+            }
+        }
+    }
+
+    @PostMapping("/updateValid")
+    public Result updateValid(@RequestParam String orderNum) {
+        if (orderNum == null || orderNum == "") {
+            return ResultGenerator.genFailResult("需求单编号不正确，请检查！");
+        }
+        Condition condition = new Condition(MachineOrder.class);
+        condition.createCriteria().andCondition("order_num = ", orderNum);
+        List<MachineOrder> list = machineOrderService.findByCondition(condition);
+        if (list.size() == 0) {
+            return ResultGenerator.genFailResult("需求单编号不存在！");
+        } else {
+            //检查需求单对应的机器是否生成，如果生成则不能删除
+            Condition machineCondition = new Condition(Machine.class);
+            condition.createCriteria().andCondition("order_id = ", list.get(0).getId());
+            List<Machine> machineList = machineService.findByCondition(machineCondition);
+            if(machineList.size() > 0) {
+                return ResultGenerator.genFailResult("需求单删除失败，对应机器已生成！");
+            } else {
+                MachineOrder machineOrder = list.get(0);
+                machineOrder.setValid(Constant.ValidEnum.INVALID.getValue());
+                machineOrder.setUpdateTime(new Date());
+                machineOrderService.update(machineOrder);
+                return ResultGenerator.genSuccessResult();
             }
         }
     }
