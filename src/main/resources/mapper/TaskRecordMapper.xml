@@ -297,6 +297,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(tp.plan_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
+        ORDER By tp.plan_time DESC,tp.update_time DESC
     </select>
     <select id="selectPlanedTaskRecords" resultMap="TaskRecordDetail">
         select
@@ -342,6 +343,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(tp.plan_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
+        ORDER By tp.plan_time DESC,tp.update_time DESC
     </select>
     <select id="selectTaskRecordByMachineNameplate" resultMap="TaskRecordDetail">
       select
