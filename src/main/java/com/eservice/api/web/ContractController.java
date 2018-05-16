@@ -659,8 +659,8 @@ public class ContractController {
             for (int i = 0; i < machineOrderService.findAll().size(); i++) {
                 mo = machineOrderService.findAll().get(i);
                 if (mo.getContractId().equals(contractId)) {
-                    // (已改的单，已拆的单，都是废弃的单，不用再显示在excel里)
-                    if (mo.getStatus() != Constant.ORDER_CHANGED && mo.getStatus() != Constant.ORDER_SPLITED) {
+                    // (已改的单，是废弃的单，不用再显示在excel里,已拆的单,因为是有效的，所以保留着)
+                    if (mo.getStatus() != Constant.ORDER_CHANGED) {
                         machineOrderIdList.add(mo.getId());
                     }
                 }
@@ -694,6 +694,7 @@ public class ContractController {
 
             System.out.println("======== machineOrderCount: " + machineOrderCount);
             Integer allSum = 0;
+            String machineInfo = "";
             for (int i = 0; i < machineOrderCount; i++) {
                 machineOrder = machineOrderService.findById(contractId);
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
@@ -701,9 +702,17 @@ public class ContractController {
                 cell = sheet1.getRow(5 + i).getCell((short) 0);
                 cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getBrand()));
 
-                //B5,B6,B7,...机型
+                //B5,B6,B7,...机型详细信息：机型/针数/头数/头距/x行程/y行程/剪线方式/电脑
                 cell = sheet1.getRow(5 + i).getCell((short) 1);
-                cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineType().getName()));
+                machineInfo = machineOrderDetail.getMachineType().getName() + "/"
+                + machineOrderDetail.getNeedleNum() + "/"
+                + machineOrderDetail.getHeadNum() + "/"
+                + machineOrderDetail.getHeadDistance() +"/"
+                + machineOrderDetail.getxDistance() + "/"
+                + machineOrderDetail.getyDistance() + "/"
+                + machineOrderDetail.getOrderDetail().getElectricTrim() + "/"
+                + machineOrderDetail.getOrderDetail().getElectricPc();
+                cell.setCellValue(new HSSFRichTextString(machineInfo));
 
                 //C5,C6,C7,...数量
                 cell = sheet1.getRow(5 + i).getCell((short) 2);
