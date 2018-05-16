@@ -659,7 +659,10 @@ public class ContractController {
             for (int i = 0; i < machineOrderService.findAll().size(); i++) {
                 mo = machineOrderService.findAll().get(i);
                 if (mo.getContractId().equals(contractId)) {
-                    machineOrderIdList.add(mo.getId());
+                    // (已改的单，已拆的单，都是废弃的单，不用再显示在excel里)
+                    if (mo.getStatus() != Constant.ORDER_CHANGED && mo.getStatus() != Constant.ORDER_SPLITED) {
+                        machineOrderIdList.add(mo.getId());
+                    }
                 }
             }
             MachineOrder machineOrder;
@@ -696,7 +699,7 @@ public class ContractController {
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
                 //A5,A6,A7,...品牌
                 cell = sheet1.getRow(5 + i).getCell((short) 0);
-                cell.setCellValue(new HSSFRichTextString(machineOrderService.findAll().get(i).getBrand()));
+                cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getBrand()));
 
                 //B5,B6,B7,...机型
                 cell = sheet1.getRow(5 + i).getCell((short) 1);
