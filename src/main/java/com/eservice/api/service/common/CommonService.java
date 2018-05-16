@@ -15,6 +15,7 @@ import com.eservice.api.service.impl.*;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
 import org.apache.log4j.Logger;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -297,8 +298,8 @@ public class CommonService {
                         ndItem.setWorkList(tr.getWorkerList());
                     }
                     ndList.set(index, ndItem);
-                    //TODO：如果当前工序是质检完成状态，需要检查其子节点是否可以开始
-                    if (tr.getStatus().intValue() == Constant.TASK_QUALITY_DONE.intValue()) {
+                    //如果当前工序是质检完成状态或者跳过状态，需要检查其子节点是否可以开始
+                    if (tr.getStatus().intValue() == Constant.TASK_QUALITY_DONE.intValue() || tr.getStatus().intValue() == Constant.TASK_SKIP.intValue()) {
                         List<LinkDataModel> linkDataList = JSON.parseArray(pr.getLinkData(), LinkDataModel.class);
                         for (LinkDataModel item : linkDataList) {
                             if (String.valueOf(item.getFrom()).equals(String.valueOf(ndItem.getKey()))) {
@@ -316,7 +317,8 @@ public class CommonService {
                                                     if (parentOfChildNode.getCategory().equals("Start") || parentOfChildNode.getCategory().equals("End") || !allParentFinished) {
                                                         break;
                                                     }
-                                                    if (Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()) {
+                                                    if (Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()
+                                                            || Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_SKIP.intValue()) {
                                                         allParentFinished = false;
                                                     }
                                                 }
