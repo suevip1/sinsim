@@ -314,12 +314,17 @@ public class CommonService {
                                             }
                                             if (String.valueOf(parentOfChild.getTo()).equals(childNode.getKey())) {
                                                 for (NodeDataModel parentOfChildNode : ndList) {
-                                                    if (parentOfChildNode.getCategory().equals("Start") || parentOfChildNode.getCategory().equals("End") || !allParentFinished) {
+                                                    if(!allParentFinished) {
                                                         break;
                                                     }
-                                                    if (Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()
-                                                            || Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_SKIP.intValue()) {
-                                                        allParentFinished = false;
+                                                    if(String.valueOf(parentOfChild.getFrom()).equals(parentOfChildNode.getKey())) {
+                                                        if (parentOfChildNode.getCategory() != null && (parentOfChildNode.getCategory().equals("Start") || parentOfChildNode.getCategory().equals("End"))) {
+                                                            break;
+                                                        }
+                                                        if (Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()
+                                                                && Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_SKIP.intValue()) {
+                                                            allParentFinished = false;
+                                                        }
                                                     }
                                                 }
                                             }
