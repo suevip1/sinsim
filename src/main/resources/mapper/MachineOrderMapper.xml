@@ -215,10 +215,10 @@
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
         <if test="query_start_time!=null and query_start_time != '' ">
-            and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
         </if>
         <if test="query_finish_time!=null and query_finish_time != '' ">
-            and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
 
         <if test="machine_name!=null and machine_name != '' ">
@@ -280,10 +280,10 @@
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
         <if test="query_start_time!=null and query_start_time != '' ">
-            and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &gt;= #{query_start_time}
+            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
         </if>
         <if test="query_finish_time!=null and query_finish_time != '' ">
-            and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
 
         <if test="machine_name!=null and machine_name != '' ">
