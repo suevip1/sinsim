@@ -375,7 +375,7 @@
         <if test="location != null and location != ''">
             and location=#{location}
         </if>
-        <if test="status != null and status != ''">
+        <if test="status != null">
             and status=#{status}
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
@@ -417,7 +417,7 @@
         <if test="location != null and location != ''">
             and location=#{location}
         </if>
-        <if test="status != null and status != ''">
+        <if test="status != null">
             and status=#{status}
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
