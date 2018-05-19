@@ -70,6 +70,8 @@ public class AbnormalRecordController {
     private MachineOrderServiceImpl machineOrderService;
     @Resource
     private MqttMessageHelper mqttMessageHelper;
+    @Resource
+    private CommonService commonService;
     /**
      * 异常管理excel表格，和合同excel表格放同个地方
      */
@@ -113,6 +115,8 @@ public class AbnormalRecordController {
             }
             tr.setStatus(Constant.TASK_INSTALLING);
             taskRecordService.update(tr);
+            //更新task record状态时候，必须去更新process record中对应task的状态
+            commonService.updateTaskRecordRelatedStatus(tr);
             ProcessRecord pr = processRecordService.findById(tr.getProcessRecordId());
             Machine machine = machineService.findById(pr.getMachineId());
             MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());

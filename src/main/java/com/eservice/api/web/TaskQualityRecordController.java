@@ -11,6 +11,7 @@ import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_quality_record.TaskQualityRecord;
 import com.eservice.api.model.task_quality_record.TaskQualityRecordDetail;
 import com.eservice.api.model.task_record.TaskRecord;
+import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
@@ -62,6 +63,8 @@ public class TaskQualityRecordController {
     private MachineOrderServiceImpl machineOrderService;
     @Resource
     private MqttMessageHelper mqttMessageHelper;
+    @Resource
+    private CommonService commonService;
     /**
      * 质检异常管理excel表格，和合同excel表格放同个地方
      */
@@ -100,6 +103,8 @@ public class TaskQualityRecordController {
             }
             tr.setStatus(Constant.TASK_QUALITY_DOING);
             taskRecordService.update(tr);
+            //更新task record状态时候，必须去更新process record中对应task的状态
+            commonService.updateTaskRecordRelatedStatus(tr);
 
             ProcessRecord pr = processRecordService.findById(tr.getProcessRecordId());
             Machine machine = machineService.findById(pr.getMachineId());
