@@ -169,6 +169,7 @@
         join process_record pr on tr.process_record_id = pr.id
         join machine m on m.id = pr.machine_id
         join machine_order mo on mo.id = m.order_id
+        join task_plan tp on tr.id = tp.task_record_id
         left join order_loading_list oll on oll.order_id = mo.id
         where tr.status !=0 and tr.status !=1 and tr.status !=6
   </select>
