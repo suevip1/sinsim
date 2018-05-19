@@ -278,10 +278,10 @@
         </if>
         <if test="install_status != null and install_status != ''">
             <if test="install_status == 1">
-                and tr.status = 4
+                and tr.status = 6
             </if>
             <if test="install_status == 2">
-                and tr.status != 4
+                and tr.status != 6
             </if>
         </if>
         <if test="task_name != null and task_name != ''">
@@ -324,10 +324,10 @@
         </if>
         <if test="install_status != null and install_status != ''">
             <if test="install_status == 1">
-                and tr.status = 4
+                and tr.status = 6
             </if>
             <if test="install_status == 2">
-                and tr.status != 4
+                and tr.status != 6
             </if>
         </if>
         <if test="task_name != null and task_name != ''">
