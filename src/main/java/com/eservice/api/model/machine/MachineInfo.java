@@ -50,6 +50,15 @@ public class MachineInfo extends Machine {
     @Column(name = "process_end_time")
     private Date processEndTime;
 
+    private Date contractShipDate;
+
+    public Date getContractShipDate() {
+        return contractShipDate;
+    }
+
+    public void setContractShipDate(Date contractShipDate) {
+        this.contractShipDate = contractShipDate;
+    }
     /*
     gets sets orderNum
      */

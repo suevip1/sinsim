@@ -178,7 +178,7 @@
         <if test="query_finish_time!= null and query_finish_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
-        ORDER BY solve_time, create_time DESC
+        ORDER BY create_time DESC
 
     </select>
 
