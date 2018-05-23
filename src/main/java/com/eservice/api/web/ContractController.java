@@ -748,7 +748,11 @@ public class ContractController {
 
             // 付款方式
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
-            cell.setCellValue(new HSSFRichTextString(contract.getPayMethod()));
+            if (displayPrice) {
+                cell.setCellValue(new HSSFRichTextString(contract.getPayMethod()));
+            } else {
+                cell.setCellValue(new HSSFRichTextString("/"));
+            }
 
             // 币种
             cell = sheet1.getRow(locationRow++).getCell((short) 1);
@@ -761,7 +765,11 @@ public class ContractController {
 
             // 备注
             cell = sheet1.getRow(locationRow++).getCell((short) 0);
-            cell.setCellValue(new HSSFRichTextString(contract.getMark()));
+            if (displayPrice) {
+                cell.setCellValue(new HSSFRichTextString(contract.getMark()));
+            } else {
+                cell.setCellValue(new HSSFRichTextString("/"));
+            }
 
             // 销售员
             locationRow = locationRow + 6;
@@ -826,6 +834,8 @@ public class ContractController {
             //sheet2，sheet3...,第1,2,...个需求单
             for (int i = 0; i < machineOrderCount; i++) {
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
+                //把sheet名称改为订单的编号
+                wb.setSheetName(i+1, machineOrderDetail.getOrderNum());
 
                 HSSFSheet sheetX = wb.getSheetAt(1 + i);
                 //在相应的单元格进行赋值
@@ -854,7 +864,8 @@ public class ContractController {
 
                 //C4
                 cell2 = sheetX.getRow(3).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getHeadNum().toString()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getNeedleNum()
+                        + "/" + machineOrderDetail.getHeadNum().toString() ));
                 //E4
                 cell2 = sheetX.getRow(3).getCell((short) 4);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getHeadDistance().toString()));
@@ -891,7 +902,7 @@ public class ContractController {
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricPc()));
                 //D8
                 cell2 = sheetX.getRow(7).getCell((short) 3);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getCountry()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricLanguage()));
                 //F8
                 cell2 = sheetX.getRow(7).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricMotor()));
@@ -975,6 +986,13 @@ public class ContractController {
                 //f17
                 cell2 = sheetX.getRow(16).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverMethod()));
+
+                //F18
+                cell2 = sheetX.getRow(17).getCell((short) 5);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverReelHole()));
+                //F19
+                cell2 = sheetX.getRow(18).getCell((short) 5);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverReel()));
 
                 //C18
                 cell2 = sheetX.getRow(17).getCell((short) 2);
