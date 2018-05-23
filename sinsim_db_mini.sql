@@ -253,7 +253,7 @@ CREATE TABLE `machine_order` (
   `machine_num` int(11) unsigned NOT NULL COMMENT '机器台数',
   `machine_type` int(10) unsigned NOT NULL COMMENT '机器类型',
   `needle_num` int(11) unsigned NOT NULL COMMENT '针数',
-  `head_num` int(11) unsigned NOT NULL COMMENT '头数',
+  `head_num` varchar(255) unsigned NOT NULL COMMENT '头数',
   `head_distance` int(11) unsigned NOT NULL COMMENT '头距(由销售预填、销售更改)',
   `x_distance` varchar(255) NOT NULL COMMENT 'X-行程',
   `y_distance` varchar(255) NOT NULL COMMENT 'Y-行程',

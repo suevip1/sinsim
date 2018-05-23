@@ -83,7 +83,7 @@ public class MachineOrderDetail {
      * 头数
      */
     @Column(name = "head_num")
-    private Integer headNum;
+    private String headNum;
 
     /**
      * 头距(由销售预填、销售更改)
@@ -450,7 +450,7 @@ public class MachineOrderDetail {
      *
      * @return head_num - 头数
      */
-    public Integer getHeadNum() {
+    public String getHeadNum() {
         return headNum;
     }
 
@@ -459,7 +459,7 @@ public class MachineOrderDetail {
      *
      * @param headNum 头数
      */
-    public void setHeadNum(Integer headNum) {
+    public void setHeadNum(String headNum) {
         this.headNum = headNum;
     }
 

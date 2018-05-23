@@ -16,7 +16,7 @@
         <result column="machine_num" jdbcType="INTEGER" property="machineNum"/>
         <result column="machine_type" jdbcType="INTEGER" property="machineType"/>
         <result column="needle_num" jdbcType="INTEGER" property="needleNum"/>
-        <result column="head_num" jdbcType="INTEGER" property="headNum"/>
+        <result column="head_num" jdbcType="VARCHAR" property="headNum"/>
         <result column="head_distance" jdbcType="INTEGER" property="headDistance"/>
         <result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
         <result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
@@ -50,7 +50,7 @@
         <result column="brand" jdbcType="VARCHAR" property="brand"/>
         <!--&amp;lt;result column="machine_type" jdbcType="INTEGER" property="machineType" /&amp;gt;-->
         <result column="needle_num" jdbcType="INTEGER" property="needleNum"/>
-        <result column="head_num" jdbcType="INTEGER" property="headNum"/>
+        <result column="head_num" jdbcType="VARCHAR" property="headNum"/>
         <result column="head_distance" jdbcType="INTEGER" property="headDistance"/>
         <result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
         <result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
