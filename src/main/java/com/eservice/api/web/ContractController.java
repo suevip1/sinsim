@@ -916,9 +916,9 @@ public class ContractController {
                 //F9
                 cell2 = sheetX.getRow(8).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricPower()));
-                //I9
+                //I9 改为了 换色方式
                 cell2 = sheetX.getRow(8).getCell((short) 8);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricSwitch()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getColorChangeMode()));
 
                 //C10
                 cell2 = sheetX.getRow(9).getCell((short) 2);
@@ -936,13 +936,13 @@ public class ContractController {
 
                 //C12
                 cell2 = sheetX.getRow(11).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleRail()));
-                //f12
-                cell2 = sheetX.getRow(11).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleDownCheck()));
-                //i12
-                cell2 = sheetX.getRow(11).getCell((short) 8);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleHook()));
+                //f12 取消
+//                cell2 = sheetX.getRow(11).getCell((short) 5);
+//                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleDownCheck()));
+                //i12 取消
+//                cell2 = sheetX.getRow(11).getCell((short) 8);
+//                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleHook()));
 
                 //C13
                 cell2 = sheetX.getRow(12).getCell((short) 2);
@@ -976,9 +976,9 @@ public class ContractController {
                 //f16
                 cell2 = sheetX.getRow(15).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkStop()));
-                //i16
-                cell2 = sheetX.getRow(15).getCell((short) 8);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkLight()));
+                //i16 取消
+//                cell2 = sheetX.getRow(15).getCell((short) 8);
+//                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkLight()));
 
                 //C17
                 cell2 = sheetX.getRow(16).getCell((short) 2);
