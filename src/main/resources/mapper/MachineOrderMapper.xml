@@ -15,9 +15,9 @@
         <result column="brand" jdbcType="VARCHAR" property="brand"/>
         <result column="machine_num" jdbcType="INTEGER" property="machineNum"/>
         <result column="machine_type" jdbcType="INTEGER" property="machineType"/>
-        <result column="needle_num" jdbcType="INTEGER" property="needleNum"/>
+        <result column="needle_num" jdbcType="VARCHAR" property="needleNum"/>
         <result column="head_num" jdbcType="VARCHAR" property="headNum"/>
-        <result column="head_distance" jdbcType="INTEGER" property="headDistance"/>
+        <result column="head_distance" jdbcType="VARCHAR" property="headDistance"/>
         <result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
         <result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
         <result column="package_method" jdbcType="VARCHAR" property="packageMethod"/>
@@ -49,9 +49,9 @@
         <result column="country" jdbcType="VARCHAR" property="country"/>
         <result column="brand" jdbcType="VARCHAR" property="brand"/>
         <!--&amp;lt;result column="machine_type" jdbcType="INTEGER" property="machineType" /&amp;gt;-->
-        <result column="needle_num" jdbcType="INTEGER" property="needleNum"/>
+        <result column="needle_num" jdbcType="VARCHAR" property="needleNum"/>
         <result column="head_num" jdbcType="VARCHAR" property="headNum"/>
-        <result column="head_distance" jdbcType="INTEGER" property="headDistance"/>
+        <result column="head_distance" jdbcType="VARCHAR" property="headDistance"/>
         <result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
         <result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
         <result column="package_method" jdbcType="VARCHAR" property="packageMethod"/>
@@ -85,6 +85,7 @@
             <result column="electric_trim" jdbcType="VARCHAR" property="electricTrim"/>
             <result column="electric_power" jdbcType="VARCHAR" property="electricPower"/>
             <result column="electric_switch" jdbcType="VARCHAR" property="electricSwitch"/>
+            <result column="color_change_mode" jdbcType="VARCHAR" property="colorChangeMode"/>
             <result column="electric_oil" jdbcType="VARCHAR" property="electricOil"/>
             <result column="axle_split" jdbcType="VARCHAR" property="axleSplit"/>
             <result column="axle_panel" jdbcType="VARCHAR" property="axlePanel"/>
@@ -169,7 +170,7 @@
         od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
         od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor,
         od.electric_motor_xy,
-        od.electric_trim, od.electric_power, od.electric_switch, od.electric_oil, od.axle_split,
+        od.electric_trim, od.electric_power, od.electric_switch,od.color_change_mode, od.electric_oil, od.axle_split,
         od.axle_panel, od.axle_needle,od.axle_needle_type, od.axle_rail, od.axle_down_check, od.axle_hook,
         od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
         od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
@@ -234,7 +235,7 @@
         od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
         od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor,
         od.electric_motor_xy,
-        od.electric_trim, od.electric_power, od.electric_switch, od.electric_oil, od.axle_split,
+        od.electric_trim, od.electric_power, od.electric_switch,od.color_change_mode, od.electric_oil, od.axle_split,
         od.axle_panel, od.axle_needle,od.axle_needle_type,od.axle_rail, od.axle_down_check, od.axle_hook,
         od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
         od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,

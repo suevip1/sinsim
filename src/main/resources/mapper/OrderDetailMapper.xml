@@ -19,6 +19,7 @@
     <result column="electric_trim" jdbcType="VARCHAR" property="electricTrim" />
     <result column="electric_power" jdbcType="VARCHAR" property="electricPower" />
     <result column="electric_switch" jdbcType="VARCHAR" property="electricSwitch" />
+    <result column="color_change_mode" jdbcType="VARCHAR" property="colorChangeMode"/>
     <result column="electric_oil" jdbcType="VARCHAR" property="electricOil" />
     <result column="axle_split" jdbcType="VARCHAR" property="axleSplit" />
     <result column="axle_panel" jdbcType="VARCHAR" property="axlePanel" />
@@ -50,7 +51,7 @@
     order_detail(
     special_towel_color,special_towel_daxle,special_towel_haxle,special_towel_motor,special_taping_head,
     special_towel_needle,electric_pc,electric_language,electric_motor,electric_motor_xy,electric_trim,
-    electric_power, electric_switch,electric_oil,axle_split,axle_panel,
+    electric_power, electric_switch,color_change_mode,electric_oil,axle_split,axle_panel,
     axle_needle,axle_needle_type,axle_rail,axle_down_check,axle_hook,axle_jump,
     axle_upper_thread,axle_addition,framework_color,framework_platen,framework_platen_color,
     framework_ring,framework_bracket,framework_stop,framework_light,driver_type,
@@ -58,7 +59,7 @@
     values(
     #{specialTowelColor},#{specialTowelDaxle},#{specialTowelHaxle},#{specialTowelMotor},#{specialTapingHead},
     #{specialTowelNeedle},#{electricPc},#{electricLanguage},#{electricMotor},#{electricMotorXy},#{electricTrim},
-    #{electricPower},#{electricSwitch},#{electricOil},#{axleSplit},#{axlePanel},
+    #{electricPower},#{electricSwitch},#{colorChangeMode},#{electricOil},#{axleSplit},#{axlePanel},
     #{axleNeedle},#{axleNeedleType},#{axleRail},#{axleDownCheck},#{axleHook},#{axleJump},
     #{axleUpperThread},#{axleAddition},#{frameworkColor},#{frameworkPlaten},#{frameworkPlatenColor},
     #{frameworkRing},#{frameworkBracket},#{frameworkStop},#{frameworkLight},#{driverType},

@@ -86,6 +86,12 @@ public class OrderDetail {
     @Column(name = "electric_switch")
     private String electricSwitch;
 
+
+    /**
+     * 换色方式
+     */
+    @Column(name = "color_change_mode")
+    private String colorChangeMode;
     /**
      * 电气： 加油系统
      */
@@ -467,6 +473,17 @@ public class OrderDetail {
     public void setElectricSwitch(String electricSwitch) {
         this.electricSwitch = electricSwitch;
     }
+
+
+
+    public String getColorChangeMode() {
+        return colorChangeMode;
+    }
+
+    public void setColorChangeMode(String colorChangeMode) {
+        this.colorChangeMode = colorChangeMode;
+    }
+
 
     /**
      * 获取电气： 加油系统

@@ -77,7 +77,7 @@ public class MachineOrderDetail {
      * 针数
      */
     @Column(name = "needle_num")
-    private Integer needleNum;
+    private String needleNum;
 
     /**
      * 头数
@@ -89,7 +89,7 @@ public class MachineOrderDetail {
      * 头距(由销售预填、销售更改)
      */
     @Column(name = "head_distance")
-    private Integer headDistance;
+    private String headDistance;
 
     /**
      * X-行程
@@ -432,7 +432,7 @@ public class MachineOrderDetail {
      *
      * @return needle_num - 针数
      */
-    public Integer getNeedleNum() {
+    public String getNeedleNum() {
         return needleNum;
     }
 
@@ -441,7 +441,7 @@ public class MachineOrderDetail {
      *
      * @param needleNum 针数
      */
-    public void setNeedleNum(Integer needleNum) {
+    public void setNeedleNum(String needleNum) {
         this.needleNum = needleNum;
     }
 
@@ -468,7 +468,7 @@ public class MachineOrderDetail {
      *
      * @return head_distance - 头距(由销售预填、销售更改)
      */
-    public Integer getHeadDistance() {
+    public String getHeadDistance() {
         return headDistance;
     }
 
@@ -477,7 +477,7 @@ public class MachineOrderDetail {
      *
      * @param headDistance 头距(由销售预填、销售更改)
      */
-    public void setHeadDistance(Integer headDistance) {
+    public void setHeadDistance(String headDistance) {
         this.headDistance = headDistance;
     }
 
