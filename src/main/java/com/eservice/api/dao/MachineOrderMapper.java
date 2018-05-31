@@ -37,4 +37,6 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
 
 
     MachineOrder searchOrderIdByOrderLoadingListId(@Param("ollId") Integer ollId);
+
+    List<Integer> getUsedMachineTypeCount(@Param("machineTypeId") Integer machineTypeId);
 }

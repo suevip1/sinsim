@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -20,5 +21,9 @@ import javax.annotation.Resource;
 public class MachineTypeServiceImpl extends AbstractService<MachineType> implements MachineTypeService {
     @Resource
     private MachineTypeMapper machineTypeMapper;
+    public List<MachineType> selectByName(String name)
+    {
+        return machineTypeMapper.selectByName(name);
+    }
 
 }

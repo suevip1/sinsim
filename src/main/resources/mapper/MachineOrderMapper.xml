@@ -1,153 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eservice.api.dao.MachineOrderMapper">
-    <resultMap id="BaseResultMap" type="com.eservice.api.model.machine_order.MachineOrder">
-        <!--
-          WARNING - @mbg.generated
-        -->
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
-        <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId"/>
-        <result column="contract_id" jdbcType="INTEGER" property="contractId"/>
-        <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId"/>
-        <result column="create_user_id" jdbcType="INTEGER" property="createUserId"/>
-        <result column="country" jdbcType="VARCHAR" property="country"/>
-        <result column="brand" jdbcType="VARCHAR" property="brand"/>
-        <result column="machine_num" jdbcType="INTEGER" property="machineNum"/>
-        <result column="machine_type" jdbcType="INTEGER" property="machineType"/>
-        <result column="needle_num" jdbcType="VARCHAR" property="needleNum"/>
-        <result column="head_num" jdbcType="VARCHAR" property="headNum"/>
-        <result column="head_distance" jdbcType="VARCHAR" property="headDistance"/>
-        <result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
-        <result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
-        <result column="package_method" jdbcType="VARCHAR" property="packageMethod"/>
-        <result column="package_mark" jdbcType="LONGVARCHAR" property="packageMark"/>
-        <result column="machine_price" jdbcType="VARCHAR" property="machinePrice"/>
-        <result column="equipment" jdbcType="VARCHAR" property="equipment"/>
-        <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
-        <result column="plan_ship_date" jdbcType="DATE" property="planShipDate"/>
-        <result column="sellman" jdbcType="VARCHAR" property="sellman"/>
-        <result column="maintain_type" jdbcType="VARCHAR" property="maintainType"/>
-        <result column="status" jdbcType="TINYINT" property="status"/>
-        <result column="valid" jdbcType="TINYINT" property="valid"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
-        <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
-    </resultMap>
+	<resultMap id="BaseResultMap" type="com.eservice.api.model.machine_order.MachineOrder">
+		<!--
+		  WARNING - @mbg.generated
+		-->
+		<id column="id" jdbcType="INTEGER" property="id"/>
+		<result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+		<result column="original_order_id" jdbcType="INTEGER" property="originalOrderId"/>
+		<result column="contract_id" jdbcType="INTEGER" property="contractId"/>
+		<result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId"/>
+		<result column="create_user_id" jdbcType="INTEGER" property="createUserId"/>
+		<result column="country" jdbcType="VARCHAR" property="country"/>
+		<result column="brand" jdbcType="VARCHAR" property="brand"/>
+		<result column="machine_num" jdbcType="INTEGER" property="machineNum"/>
+		<result column="machine_type" jdbcType="INTEGER" property="machineType"/>
+		<result column="needle_num" jdbcType="VARCHAR" property="needleNum"/>
+		<result column="head_num" jdbcType="VARCHAR" property="headNum"/>
+		<result column="head_distance" jdbcType="VARCHAR" property="headDistance"/>
+		<result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
+		<result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
+		<result column="package_method" jdbcType="VARCHAR" property="packageMethod"/>
+		<result column="package_mark" jdbcType="LONGVARCHAR" property="packageMark"/>
+		<result column="machine_price" jdbcType="VARCHAR" property="machinePrice"/>
+		<result column="equipment" jdbcType="VARCHAR" property="equipment"/>
+		<result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
+		<result column="plan_ship_date" jdbcType="DATE" property="planShipDate"/>
+		<result column="sellman" jdbcType="VARCHAR" property="sellman"/>
+		<result column="maintain_type" jdbcType="VARCHAR" property="maintainType"/>
+		<result column="status" jdbcType="TINYINT" property="status"/>
+		<result column="valid" jdbcType="TINYINT" property="valid"/>
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+		<result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+		<result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
+	</resultMap>
 
-    <resultMap id="MachineOrderDetailMap" type="com.eservice.api.model.machine_order.MachineOrderDetail">
-        <!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
-        <id column="id" property="id"/>
-        <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
-        <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId"/>
-        <result column="contract_id" jdbcType="INTEGER" property="contractId"/>
-        <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId"/>
-        <result column="create_user_id" jdbcType="INTEGER" property="createUserId"/>
-        <result column="contract_num" jdbcType="VARCHAR" property="contractNum"/>
-        <result column="customer" jdbcType="VARCHAR" property="customer"/>
-        <result column="country" jdbcType="VARCHAR" property="country"/>
-        <result column="brand" jdbcType="VARCHAR" property="brand"/>
-        <!--&amp;lt;result column="machine_type" jdbcType="INTEGER" property="machineType" /&amp;gt;-->
-        <result column="needle_num" jdbcType="VARCHAR" property="needleNum"/>
-        <result column="head_num" jdbcType="VARCHAR" property="headNum"/>
-        <result column="head_distance" jdbcType="VARCHAR" property="headDistance"/>
-        <result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
-        <result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
-        <result column="package_method" jdbcType="VARCHAR" property="packageMethod"/>
-        <result column="package_mark" jdbcType="LONGVARCHAR" property="packageMark"/>
-        <result column="machine_num" jdbcType="TINYINT" property="machineNum"/>
-        <result column="machine_price" jdbcType="VARCHAR" property="machinePrice"/>
-        <result column="equipment" jdbcType="VARCHAR" property="equipment"/>
-        <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
-        <result column="plan_ship_date" jdbcType="DATE" property="planShipDate"/>
-        <result column="sellman" jdbcType="VARCHAR" property="sellman"/>
-        <result column="maintain_type" jdbcType="VARCHAR" property="maintainType"/>
-        <result column="status" jdbcType="TINYINT" property="status"/>
-        <result column="valid" jdbcType="TINYINT" property="valid"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
-        <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
-        <association javaType="com.eservice.api.model.order_detail.OrderDetail" property="orderDetail">
-            <!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
-            <id column="detail_id" property="id"/>
-            <result column="special_towel_color" jdbcType="VARCHAR" property="specialTowelColor"/>
-            <result column="special_towel_daxle" jdbcType="VARCHAR" property="specialTowelDaxle"/>
-            <result column="special_towel_haxle" jdbcType="VARCHAR" property="specialTowelHaxle"/>
-            <result column="special_towel_motor" jdbcType="VARCHAR" property="specialTowelMotor"/>
-            <result column="special_taping_head" jdbcType="VARCHAR" property="specialTapingHead"/>
-            <result column="special_towel_needle" jdbcType="VARCHAR" property="specialTowelNeedle"/>
-            <result column="electric_pc" jdbcType="VARCHAR" property="electricPc"/>
-            <result column="electric_language" jdbcType="VARCHAR" property="electricLanguage"/>
-            <result column="electric_motor" jdbcType="VARCHAR" property="electricMotor"/>
-            <result column="electric_motor_xy" jdbcType="VARCHAR" property="electricMotorXy"/>
-            <result column="electric_trim" jdbcType="VARCHAR" property="electricTrim"/>
-            <result column="electric_power" jdbcType="VARCHAR" property="electricPower"/>
-            <result column="electric_switch" jdbcType="VARCHAR" property="electricSwitch"/>
-            <result column="color_change_mode" jdbcType="VARCHAR" property="colorChangeMode"/>
-            <result column="electric_oil" jdbcType="VARCHAR" property="electricOil"/>
-            <result column="axle_split" jdbcType="VARCHAR" property="axleSplit"/>
-            <result column="axle_panel" jdbcType="VARCHAR" property="axlePanel"/>
-            <result column="axle_needle" jdbcType="VARCHAR" property="axleNeedle"/>
-            <result column="axle_needle_type" jdbcType="VARCHAR" property="axleNeedleType" />
-            <result column="axle_rail" jdbcType="VARCHAR" property="axleRail"/>
-            <result column="axle_down_check" jdbcType="VARCHAR" property="axleDownCheck"/>
-            <result column="axle_hook" jdbcType="VARCHAR" property="axleHook"/>
-            <result column="axle_jump" jdbcType="VARCHAR" property="axleJump"/>
-            <result column="axle_upper_thread" jdbcType="VARCHAR" property="axleUpperThread"/>
-            <result column="axle_addition" jdbcType="VARCHAR" property="axleAddition"/>
-            <result column="framework_color" jdbcType="VARCHAR" property="frameworkColor"/>
-            <result column="framework_platen" jdbcType="VARCHAR" property="frameworkPlaten"/>
-            <result column="framework_platen_color" jdbcType="VARCHAR" property="frameworkPlatenColor"/>
-            <result column="framework_ring" jdbcType="VARCHAR" property="frameworkRing"/>
-            <result column="framework_bracket" jdbcType="VARCHAR" property="frameworkBracket"/>
-            <result column="framework_stop" jdbcType="VARCHAR" property="frameworkStop"/>
-            <result column="framework_light" jdbcType="VARCHAR" property="frameworkLight"/>
-            <result column="driver_type" jdbcType="VARCHAR" property="driverType"/>
-            <result column="driver_method" jdbcType="VARCHAR" property="driverMethod"/>
-            <result column="driver_reel_hole" jdbcType="VARCHAR" property="driverReelHole"/>
-            <result column="driver_horizon_num" jdbcType="TINYINT" property="driverHorizonNum"/>
-            <result column="driver_vertical_num" jdbcType="TINYINT" property="driverVerticalNum"/>
-            <result column="driver_reel" jdbcType="VARCHAR" property="driverReel"/>
-        </association>
-        <association javaType="com.eservice.api.model.machine_type.MachineType" property="machineType">
-            <id column="machineTypeID" property="id"/>
-            <result column="name" jdbcType="VARCHAR" property="name"/>
-        </association>
-        <association javaType="com.eservice.api.model.order_change_record.OrderChangeRecord"
-                     property="orderChangeRecord">
-            <id column="changeRecordId" jdbcType="INTEGER" property="id"/>
-            <result column="change_order_id" jdbcType="INTEGER" property="orderId"/>
-            <result column="change_user_id" jdbcType="INTEGER" property="userId"/>
-            <result column="change_time" jdbcType="TIMESTAMP" property="changeTime"/>
-            <result column="change_reason" jdbcType="LONGVARCHAR" property="changeReason"/>
-        </association>
-        <association javaType="com.eservice.api.model.order_split_record.OrderSplitRecord" property="orderSplitRecord">
-            <id column="splitRecordId" jdbcType="INTEGER" property="id"/>
-            <result column="split_order_id" jdbcType="INTEGER" property="orderId"/>
-            <result column="split_user_id" jdbcType="INTEGER" property="userId"/>
-            <result column="split_time" jdbcType="TIMESTAMP" property="splitTime"/>
-            <result column="split_reason" jdbcType="LONGVARCHAR" property="splitReason"/>
-        </association>
-        <association javaType="com.eservice.api.model.order_sign.OrderSign" property="orderSign">
-            <id column="order_sign_id" property="id"/>
-            <result column="order_id" jdbcType="INTEGER" property="orderId"/>
-            <result column="os_create_time" jdbcType="TIMESTAMP" property="createTime"/>
-            <result column="os_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-            <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent"/>
-        </association>
-        <association javaType="com.eservice.api.model.order_loading_list.OrderLoadingList" property="orderLoadingList">
-            <id column="order_loading_list_id" jdbcType="INTEGER" property="id"/>
-            <result column="order_id" jdbcType="INTEGER" property="orderId"/>
-            <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
-            <result column="file_type" jdbcType="TINYINT" property="type"/>
-            <!--<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />-->
-        </association>
-    </resultMap>
+	<resultMap id="MachineOrderDetailMap" type="com.eservice.api.model.machine_order.MachineOrderDetail">
+		<!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
+		<id column="id" property="id"/>
+		<result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+		<result column="original_order_id" jdbcType="INTEGER" property="originalOrderId"/>
+		<result column="contract_id" jdbcType="INTEGER" property="contractId"/>
+		<result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId"/>
+		<result column="create_user_id" jdbcType="INTEGER" property="createUserId"/>
+		<result column="contract_num" jdbcType="VARCHAR" property="contractNum"/>
+		<result column="customer" jdbcType="VARCHAR" property="customer"/>
+		<result column="country" jdbcType="VARCHAR" property="country"/>
+		<result column="brand" jdbcType="VARCHAR" property="brand"/>
+		<!--&amp;lt;result column="machine_type" jdbcType="INTEGER" property="machineType" /&amp;gt;-->
+		<result column="needle_num" jdbcType="VARCHAR" property="needleNum"/>
+		<result column="head_num" jdbcType="VARCHAR" property="headNum"/>
+		<result column="head_distance" jdbcType="VARCHAR" property="headDistance"/>
+		<result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
+		<result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
+		<result column="package_method" jdbcType="VARCHAR" property="packageMethod"/>
+		<result column="package_mark" jdbcType="LONGVARCHAR" property="packageMark"/>
+		<result column="machine_num" jdbcType="TINYINT" property="machineNum"/>
+		<result column="machine_price" jdbcType="VARCHAR" property="machinePrice"/>
+		<result column="equipment" jdbcType="VARCHAR" property="equipment"/>
+		<result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
+		<result column="plan_ship_date" jdbcType="DATE" property="planShipDate"/>
+		<result column="sellman" jdbcType="VARCHAR" property="sellman"/>
+		<result column="maintain_type" jdbcType="VARCHAR" property="maintainType"/>
+		<result column="status" jdbcType="TINYINT" property="status"/>
+		<result column="valid" jdbcType="TINYINT" property="valid"/>
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+		<result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+		<result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
+		<association javaType="com.eservice.api.model.order_detail.OrderDetail" property="orderDetail">
+			<!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
+			<id column="detail_id" property="id"/>
+			<result column="special_towel_color" jdbcType="VARCHAR" property="specialTowelColor"/>
+			<result column="special_towel_daxle" jdbcType="VARCHAR" property="specialTowelDaxle"/>
+			<result column="special_towel_haxle" jdbcType="VARCHAR" property="specialTowelHaxle"/>
+			<result column="special_towel_motor" jdbcType="VARCHAR" property="specialTowelMotor"/>
+			<result column="special_taping_head" jdbcType="VARCHAR" property="specialTapingHead"/>
+			<result column="special_towel_needle" jdbcType="VARCHAR" property="specialTowelNeedle"/>
+			<result column="electric_pc" jdbcType="VARCHAR" property="electricPc"/>
+			<result column="electric_language" jdbcType="VARCHAR" property="electricLanguage"/>
+			<result column="electric_motor" jdbcType="VARCHAR" property="electricMotor"/>
+			<result column="electric_motor_xy" jdbcType="VARCHAR" property="electricMotorXy"/>
+			<result column="electric_trim" jdbcType="VARCHAR" property="electricTrim"/>
+			<result column="electric_power" jdbcType="VARCHAR" property="electricPower"/>
+			<result column="electric_switch" jdbcType="VARCHAR" property="electricSwitch"/>
+			<result column="color_change_mode" jdbcType="VARCHAR" property="colorChangeMode"/>
+			<result column="electric_oil" jdbcType="VARCHAR" property="electricOil"/>
+			<result column="axle_split" jdbcType="VARCHAR" property="axleSplit"/>
+			<result column="axle_panel" jdbcType="VARCHAR" property="axlePanel"/>
+			<result column="axle_needle" jdbcType="VARCHAR" property="axleNeedle"/>
+			<result column="axle_needle_type" jdbcType="VARCHAR" property="axleNeedleType"/>
+			<result column="axle_rail" jdbcType="VARCHAR" property="axleRail"/>
+			<result column="axle_down_check" jdbcType="VARCHAR" property="axleDownCheck"/>
+			<result column="axle_hook" jdbcType="VARCHAR" property="axleHook"/>
+			<result column="axle_jump" jdbcType="VARCHAR" property="axleJump"/>
+			<result column="axle_upper_thread" jdbcType="VARCHAR" property="axleUpperThread"/>
+			<result column="axle_addition" jdbcType="VARCHAR" property="axleAddition"/>
+			<result column="framework_color" jdbcType="VARCHAR" property="frameworkColor"/>
+			<result column="framework_platen" jdbcType="VARCHAR" property="frameworkPlaten"/>
+			<result column="framework_platen_color" jdbcType="VARCHAR" property="frameworkPlatenColor"/>
+			<result column="framework_ring" jdbcType="VARCHAR" property="frameworkRing"/>
+			<result column="framework_bracket" jdbcType="VARCHAR" property="frameworkBracket"/>
+			<result column="framework_stop" jdbcType="VARCHAR" property="frameworkStop"/>
+			<result column="framework_light" jdbcType="VARCHAR" property="frameworkLight"/>
+			<result column="driver_type" jdbcType="VARCHAR" property="driverType"/>
+			<result column="driver_method" jdbcType="VARCHAR" property="driverMethod"/>
+			<result column="driver_reel_hole" jdbcType="VARCHAR" property="driverReelHole"/>
+			<result column="driver_horizon_num" jdbcType="TINYINT" property="driverHorizonNum"/>
+			<result column="driver_vertical_num" jdbcType="TINYINT" property="driverVerticalNum"/>
+			<result column="driver_reel" jdbcType="VARCHAR" property="driverReel"/>
+		</association>
+		<association javaType="com.eservice.api.model.machine_type.MachineType" property="machineType">
+			<id column="machineTypeID" property="id"/>
+			<result column="name" jdbcType="VARCHAR" property="name"/>
+		</association>
+		<association javaType="com.eservice.api.model.order_change_record.OrderChangeRecord"
+					 property="orderChangeRecord">
+			<id column="changeRecordId" jdbcType="INTEGER" property="id"/>
+			<result column="change_order_id" jdbcType="INTEGER" property="orderId"/>
+			<result column="change_user_id" jdbcType="INTEGER" property="userId"/>
+			<result column="change_time" jdbcType="TIMESTAMP" property="changeTime"/>
+			<result column="change_reason" jdbcType="LONGVARCHAR" property="changeReason"/>
+		</association>
+		<association javaType="com.eservice.api.model.order_split_record.OrderSplitRecord" property="orderSplitRecord">
+			<id column="splitRecordId" jdbcType="INTEGER" property="id"/>
+			<result column="split_order_id" jdbcType="INTEGER" property="orderId"/>
+			<result column="split_user_id" jdbcType="INTEGER" property="userId"/>
+			<result column="split_time" jdbcType="TIMESTAMP" property="splitTime"/>
+			<result column="split_reason" jdbcType="LONGVARCHAR" property="splitReason"/>
+		</association>
+		<association javaType="com.eservice.api.model.order_sign.OrderSign" property="orderSign">
+			<id column="order_sign_id" property="id"/>
+			<result column="order_id" jdbcType="INTEGER" property="orderId"/>
+			<result column="os_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+			<result column="os_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+			<result column="sign_content" jdbcType="LONGVARCHAR" property="signContent"/>
+		</association>
+		<association javaType="com.eservice.api.model.order_loading_list.OrderLoadingList" property="orderLoadingList">
+			<id column="order_loading_list_id" jdbcType="INTEGER" property="id"/>
+			<result column="order_id" jdbcType="INTEGER" property="orderId"/>
+			<result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+			<result column="file_type" jdbcType="TINYINT" property="type"/>
+			<!--<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />-->
+		</association>
+	</resultMap>
 
-    <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.machine_order.MachineOrder"
-            keyProperty="id">
+	<insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.machine_order.MachineOrder"
+			keyProperty="id">
     insert into
     machine_order(order_num, original_order_id, contract_id, order_detail_id, create_user_id,country, brand, needle_num, head_num, head_distance, x_distance, y_distance,
     package_method,package_mark,machine_num,machine_type, machine_price, equipment, contract_ship_date, plan_ship_date, sellman, maintain_type, status,create_time, update_time, end_time, mark)
@@ -156,7 +156,7 @@
     #{yDistance},#{packageMethod},#{packageMark},#{machineNum},#{machineType},#{machinePrice},#{equipment},#{contractShipDate},#{planShipDate},#{sellman},#{maintainType},#{status},#{createTime},#{updateTime},#{endTime},#{mark})
   </insert>
 
-    <select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
+	<select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
     select  mo.*, od.*, od.id order_detail_id, mt.id machineTypeID, mt.name, con.id, con.contract_num, con.customer_name as customer
     from machine_order mo
      join order_detail od  on mo.order_detail_id=od.id
@@ -165,139 +165,143 @@
      where mo.id = ${id};
   </select>
 
-    <select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
-        select mo.*,
-        od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
-        od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor,
-        od.electric_motor_xy,
-        od.electric_trim, od.electric_power, od.electric_switch,od.color_change_mode, od.electric_oil, od.axle_split,
-        od.axle_panel, od.axle_needle,od.axle_needle_type, od.axle_rail, od.axle_down_check, od.axle_hook,
-        od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
-        od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
-        od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
-        od.driver_reel,
-        os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
-        mt.id machineTypeID, mt.`name`, con.contract_num, con.customer_name as customer,
-        oll.id as order_loading_list_id,oll.file_name,oll.type as file_type,
-        osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id, osr.split_reason,
-        ocr.id changeRecordId, ocr.user_id change_user_id, ocr.order_id change_order_id, ocr.change_reason
-        from machine_order mo
-        LEFT JOIN order_sign os on mo.id = os.order_id
-        LEFT JOIN order_detail od on mo.order_detail_id=od.id
-        LEFT JOIN machine_type mt on mo.machine_type=mt.id
-        LEFT JOIN contract con on mo.contract_id = con.id
-        LEFT JOIN order_loading_list oll ON oll.order_id=mo.id
-        LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
-        LEFT JOIN order_split_record osr on osr.order_id = mo.original_order_id
-        where 1=1 AND mo.valid!=0
-        <if test="id != null and id != ''">
-            and mo.id=#{id}
-        </if>
-        <if test="contract_id != null and contract_id != ''">
-            and mo.contract_id=#{contract_id}
-        </if>
-        <if test="order_num != null and order_num != ''">
-            and mo.order_num like CONCAT('%','${order_num}','%' )
-        </if>
-        <if test="contract_num != null and contract_num != ''">
-            and con.contract_num like CONCAT('%','${contract_num}','%' )
-        </if>
-        <if test="market_group_name != null and market_group_name != ''">
-            and con.market_group_name like CONCAT('%','${market_group_name}','%' )
-        </if>
-        <if test="status != null">
-            and mo.status=${status}
-        </if>
-        <if test="sellman != null and sellman != '' ">
-            and mo.sellman like CONCAT('%','${sellman}','%' )
-        </if>
-        <if test="customer!=null and customer != '' ">
-            and con.customer_name like CONCAT('%','${customer}','%' )
-        </if>
-        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-        <if test="query_start_time!=null and query_start_time != '' ">
-            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
-        </if>
-        <if test="query_finish_time!=null and query_finish_time != '' ">
-            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
-        </if>
+	<select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
+		select mo.*,
+		od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
+		od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor,
+		od.electric_motor_xy,
+		od.electric_trim, od.electric_power, od.electric_switch,od.color_change_mode, od.electric_oil, od.axle_split,
+		od.axle_panel, od.axle_needle,od.axle_needle_type, od.axle_rail, od.axle_down_check, od.axle_hook,
+		od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
+		od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
+		od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
+		od.driver_reel,
+		os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
+		mt.id machineTypeID, mt.`name`, con.contract_num, con.customer_name as customer,
+		oll.id as order_loading_list_id,oll.file_name,oll.type as file_type,
+		osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id, osr.split_reason,
+		ocr.id changeRecordId, ocr.user_id change_user_id, ocr.order_id change_order_id, ocr.change_reason
+		from machine_order mo
+		LEFT JOIN order_sign os on mo.id = os.order_id
+		LEFT JOIN order_detail od on mo.order_detail_id=od.id
+		LEFT JOIN machine_type mt on mo.machine_type=mt.id
+		LEFT JOIN contract con on mo.contract_id = con.id
+		LEFT JOIN order_loading_list oll ON oll.order_id=mo.id
+		LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
+		LEFT JOIN order_split_record osr on osr.order_id = mo.original_order_id
+		where 1=1 AND mo.valid!=0
+		<if test="id != null and id != ''">
+			and mo.id=#{id}
+		</if>
+		<if test="contract_id != null and contract_id != ''">
+			and mo.contract_id=#{contract_id}
+		</if>
+		<if test="order_num != null and order_num != ''">
+			and mo.order_num like CONCAT('%','${order_num}','%' )
+		</if>
+		<if test="contract_num != null and contract_num != ''">
+			and con.contract_num like CONCAT('%','${contract_num}','%' )
+		</if>
+		<if test="market_group_name != null and market_group_name != ''">
+			and con.market_group_name like CONCAT('%','${market_group_name}','%' )
+		</if>
+		<if test="status != null">
+			and mo.status=${status}
+		</if>
+		<if test="sellman != null and sellman != '' ">
+			and mo.sellman like CONCAT('%','${sellman}','%' )
+		</if>
+		<if test="customer!=null and customer != '' ">
+			and con.customer_name like CONCAT('%','${customer}','%' )
+		</if>
+		<!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+		<if test="query_start_time!=null and query_start_time != '' ">
+			and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
+		</if>
+		<if test="query_finish_time!=null and query_finish_time != '' ">
+			and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+		</if>
 
-        <if test="machine_name!=null and machine_name != '' ">
-            and mt.name like CONCAT('%','${machine_name}','%' )
-        </if>
-        GROUP BY mo.id
-        ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
-    </select>
+		<if test="machine_name!=null and machine_name != '' ">
+			and mt.name like CONCAT('%','${machine_name}','%' )
+		</if>
+		GROUP BY mo.id
+		ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
+	</select>
 
 
-    <select id="selectOrder" resultMap="MachineOrderDetailMap">
-        select mo.*,
-        od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
-        od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor,
-        od.electric_motor_xy,
-        od.electric_trim, od.electric_power, od.electric_switch,od.color_change_mode, od.electric_oil, od.axle_split,
-        od.axle_panel, od.axle_needle,od.axle_needle_type,od.axle_rail, od.axle_down_check, od.axle_hook,
-        od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
-        od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
-        od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
-        od.driver_reel,
-        os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
-        mt.id machineTypeID, mt.`name`, con.contract_num, con.customer_name as customer,
-        oll.id as order_loading_list_id,oll.file_name,oll.type as file_type,
-        osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id, osr.split_reason,
-        ocr.id changeRecordId, ocr.user_id change_user_id, ocr.order_id change_order_id, ocr.change_reason
-        from machine_order mo
-        LEFT JOIN order_sign os on mo.id = os.order_id
-        LEFT JOIN order_detail od on mo.order_detail_id=od.id
-        LEFT JOIN machine_type mt on mo.machine_type=mt.id
-        LEFT JOIN contract con on mo.contract_id = con.id
-        LEFT JOIN order_loading_list oll ON oll.order_id=mo.id
-        LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
-        LEFT JOIN order_split_record osr on osr.order_id = mo.original_order_id
-        where 1=1 AND mo.valid!=0
-        <if test="id != null and id != ''">
-            and mo.id=#{id}
-        </if>
-        <if test="contract_id != null and contract_id != ''">
-            and mo.contract_id=#{contract_id}
-        </if>
-        <if test="order_num != null and order_num != ''">
-            and mo.order_num like CONCAT('%','${order_num}','%' )
-        </if>
-        <if test="contract_num != null and contract_num != ''">
-            and con.contract_num = CONCAT('%','${contract_num}','%' )
-        </if>
-        <if test="market_group_name != null and market_group_name != ''">
-            and con.market_group_name like CONCAT('%','${market_group_name}','%' )
-        </if>
-        <if test="status != null">
-            and mo.status=${status}
-        </if>
-        <if test="sellman != null and sellman != '' ">
-            and mo.sellman = CONCAT('%','${sellman}','%' )
-        </if>
-        <if test="customer!=null and customer != '' ">
-            and con.customer_name = CONCAT('%','${customer}','%' )
-        </if>
-        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
-        <if test="query_start_time!=null and query_start_time != '' ">
-            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
-        </if>
-        <if test="query_finish_time!=null and query_finish_time != '' ">
-            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
-        </if>
+	<select id="selectOrder" resultMap="MachineOrderDetailMap">
+		select mo.*,
+		od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
+		od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor,
+		od.electric_motor_xy,
+		od.electric_trim, od.electric_power, od.electric_switch,od.color_change_mode, od.electric_oil, od.axle_split,
+		od.axle_panel, od.axle_needle,od.axle_needle_type,od.axle_rail, od.axle_down_check, od.axle_hook,
+		od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
+		od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
+		od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
+		od.driver_reel,
+		os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
+		mt.id machineTypeID, mt.`name`, con.contract_num, con.customer_name as customer,
+		oll.id as order_loading_list_id,oll.file_name,oll.type as file_type,
+		osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id, osr.split_reason,
+		ocr.id changeRecordId, ocr.user_id change_user_id, ocr.order_id change_order_id, ocr.change_reason
+		from machine_order mo
+		LEFT JOIN order_sign os on mo.id = os.order_id
+		LEFT JOIN order_detail od on mo.order_detail_id=od.id
+		LEFT JOIN machine_type mt on mo.machine_type=mt.id
+		LEFT JOIN contract con on mo.contract_id = con.id
+		LEFT JOIN order_loading_list oll ON oll.order_id=mo.id
+		LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
+		LEFT JOIN order_split_record osr on osr.order_id = mo.original_order_id
+		where 1=1 AND mo.valid!=0
+		<if test="id != null and id != ''">
+			and mo.id=#{id}
+		</if>
+		<if test="contract_id != null and contract_id != ''">
+			and mo.contract_id=#{contract_id}
+		</if>
+		<if test="order_num != null and order_num != ''">
+			and mo.order_num like CONCAT('%','${order_num}','%' )
+		</if>
+		<if test="contract_num != null and contract_num != ''">
+			and con.contract_num = CONCAT('%','${contract_num}','%' )
+		</if>
+		<if test="market_group_name != null and market_group_name != ''">
+			and con.market_group_name like CONCAT('%','${market_group_name}','%' )
+		</if>
+		<if test="status != null">
+			and mo.status=${status}
+		</if>
+		<if test="sellman != null and sellman != '' ">
+			and mo.sellman = CONCAT('%','${sellman}','%' )
+		</if>
+		<if test="customer!=null and customer != '' ">
+			and con.customer_name = CONCAT('%','${customer}','%' )
+		</if>
+		<!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+		<if test="query_start_time!=null and query_start_time != '' ">
+			and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
+		</if>
+		<if test="query_finish_time!=null and query_finish_time != '' ">
+			and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+		</if>
 
-        <if test="machine_name!=null and machine_name != '' ">
-            and mt.name = CONCAT('%','${machine_name}','%' )
-        </if>
-        GROUP BY mo.id
-        ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
-    </select>
+		<if test="machine_name!=null and machine_name != '' ">
+			and mt.name = CONCAT('%','${machine_name}','%' )
+		</if>
+		GROUP BY mo.id
+		ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
+	</select>
 
-    <select id="searchOrderIdByOrderLoadingListId" resultMap="BaseResultMap">
-    SELECT * from order_loading_list oll
-    join machine_order mo on mo.id=oll.order_id
-    WHERE oll.id = #{ollId};
-  </select>
+	<select id="searchOrderIdByOrderLoadingListId" resultMap="BaseResultMap">
+		SELECT * from order_loading_list oll
+		join machine_order mo on mo.id=oll.order_id
+		WHERE oll.id = #{ollId};
+	 </select>
+
+	<select id="getUsedMachineTypeCount"  resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM machine_order where 1=1 AND machine_type=#{machineTypeId}
+	</select>
 
 </mapper>

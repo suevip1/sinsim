@@ -42,4 +42,10 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
     public MachineOrder searchOrderIdByOrderLoadingListId( Integer ollId){
         return machineOrderMapper.searchOrderIdByOrderLoadingListId(ollId);
     }
+
+    public Integer getUsedMachineTypeCount(Integer machineTypeId)
+    {
+        return machineOrderMapper.getUsedMachineTypeCount(machineTypeId).get(0);//SQL查询出来的结构是List<Integer>,第一个元素就是查询出来的count
+    }
+
 }
