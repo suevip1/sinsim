@@ -133,6 +133,7 @@
 		<association javaType="com.eservice.api.model.order_sign.OrderSign" property="orderSign">
 			<id column="order_sign_id" property="id"/>
 			<result column="order_id" jdbcType="INTEGER" property="orderId"/>
+			<result column="current_step" jdbcType="VARCHAR" property="currentStep"/>
 			<result column="os_create_time" jdbcType="TIMESTAMP" property="createTime"/>
 			<result column="os_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
 			<result column="sign_content" jdbcType="LONGVARCHAR" property="signContent"/>
@@ -176,7 +177,7 @@
 		od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
 		od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
 		od.driver_reel,
-		os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
+		os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,os.current_step,
 		mt.id machineTypeID, mt.`name`, con.contract_num, con.customer_name as customer,
 		oll.id as order_loading_list_id,oll.file_name,oll.type as file_type,
 		osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id, osr.split_reason,
@@ -241,7 +242,7 @@
 		od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
 		od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
 		od.driver_reel,
-		os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,
+		os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,os.current_step,
 		mt.id machineTypeID, mt.`name`, con.contract_num, con.customer_name as customer,
 		oll.id as order_loading_list_id,oll.file_name,oll.type as file_type,
 		osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id, osr.split_reason,
