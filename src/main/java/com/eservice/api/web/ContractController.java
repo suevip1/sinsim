@@ -194,21 +194,20 @@ public class ContractController {
         }
 
         for (MachineOrderWrapper item : machineOrderWapperlist) {
-            if (item.getMachineOrder().getId() != null) {
+            MachineOrder orderTemp = item.getMachineOrder();
+            if (orderTemp.getId() != null && orderTemp.getId() != 0) {
                 //更新，只对initial和reject状态的需求单就是更新，其他状态的需求单不做更新
                 OrderDetail temp = item.getOrderDetail();
-                MachineOrder orderTemp = item.getMachineOrder();
                 if (orderTemp.getStatus().equals(Constant.ORDER_REJECTED)) {
                     orderTemp.setStatus(Constant.ORDER_INITIAL);
                 }
-                if(orderTemp.getStatus().equals(Constant.ORDER_INITIAL)) {
+                if (orderTemp.getStatus().equals(Constant.ORDER_INITIAL)) {
                     orderDetailService.update(temp);
                     machineOrderService.update(orderTemp);
                 }
             } else {
                 //新增
                 OrderDetail temp = item.getOrderDetail();
-                MachineOrder orderTemp = item.getMachineOrder();
                 orderDetailService.saveAndGetID(temp);
                 orderTemp.setOrderDetailId(temp.getId());
                 orderTemp.setContractId(contract1.getId());
@@ -583,10 +582,10 @@ public class ContractController {
                         signCondition.createCriteria().andCondition("order_id = ", orderItem.getId());
                         List<OrderSign> orderSignList = orderSignService.findByCondition(signCondition);
                         //无签核记录
-                        if(orderSignList.size() == 0) {
+                        if (orderSignList.size() == 0) {
                             throw new RuntimeException();
-                        }else {
-                            OrderSign sign = orderSignList.get(orderSignList.size() -1);
+                        } else {
+                            OrderSign sign = orderSignList.get(orderSignList.size() - 1);
                             List<SignContentItem> orderSignContentList = JSON.parseArray(sign.getSignContent(), SignContentItem.class);
                             sign.setCurrentStep(roleService.findById(orderSignContentList.get(0).getRoleId()).getRoleName());
                             orderSignService.update(sign);
@@ -705,13 +704,13 @@ public class ContractController {
                 //B5,B6,B7,...机型详细信息：机型/针数/头数/头距/x行程/y行程/剪线方式/电脑
                 cell = sheet1.getRow(5 + i).getCell((short) 1);
                 machineInfo = machineOrderDetail.getMachineType().getName() + "/"
-                + machineOrderDetail.getNeedleNum() + "/"
-                + machineOrderDetail.getHeadNum() + "/"
-                + machineOrderDetail.getHeadDistance() +"/"
-                + machineOrderDetail.getxDistance() + "/"
-                + machineOrderDetail.getyDistance() + "/"
-                + machineOrderDetail.getOrderDetail().getElectricTrim() + "/"
-                + machineOrderDetail.getOrderDetail().getElectricPc();
+                        + machineOrderDetail.getNeedleNum() + "/"
+                        + machineOrderDetail.getHeadNum() + "/"
+                        + machineOrderDetail.getHeadDistance() + "/"
+                        + machineOrderDetail.getxDistance() + "/"
+                        + machineOrderDetail.getyDistance() + "/"
+                        + machineOrderDetail.getOrderDetail().getElectricTrim() + "/"
+                        + machineOrderDetail.getOrderDetail().getElectricPc();
                 cell.setCellValue(new HSSFRichTextString(machineInfo));
 
                 //C5,C6,C7,...数量
@@ -835,7 +834,7 @@ public class ContractController {
             for (int i = 0; i < machineOrderCount; i++) {
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
                 //把sheet名称改为订单的编号
-                wb.setSheetName(i+1, machineOrderDetail.getOrderNum());
+                wb.setSheetName(i + 1, machineOrderDetail.getOrderNum());
 
                 HSSFSheet sheetX = wb.getSheetAt(1 + i);
                 //在相应的单元格进行赋值
@@ -865,7 +864,7 @@ public class ContractController {
                 //C4
                 cell2 = sheetX.getRow(3).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getNeedleNum()
-                        + "/" + machineOrderDetail.getHeadNum().toString() ));
+                        + "/" + machineOrderDetail.getHeadNum().toString()));
                 //E4
                 cell2 = sheetX.getRow(3).getCell((short) 4);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getHeadDistance().toString()));
