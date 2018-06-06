@@ -398,7 +398,7 @@ CREATE TABLE `order_detail` (
   `axle_hook` varchar(255) DEFAULT NULL COMMENT '上下轴：旋梭',
   `axle_jump` varchar(255) DEFAULT NULL COMMENT '上下轴：跳跃方式',
   `axle_upper_thread` varchar(255) DEFAULT NULL COMMENT '上下轴：面线夹持',
-  `axle_addition` varchar(255) DEFAULT NULL COMMENT '上下轴：附加装置（该部分由销售预填，技术进行确认或更改）',
+  `axle_addition` longtext COMMENT '上下轴：附加装置（该部分由销售预填，技术进行确认或更改）',
   `framework_color` varchar(255) DEFAULT NULL COMMENT '机架台板：机架颜色 ',
   `framework_platen` varchar(255) DEFAULT NULL COMMENT '机架台板：台板',
   `framework_platen_color` varchar(255) DEFAULT NULL COMMENT '机架台板：台板颜色',
