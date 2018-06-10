@@ -110,6 +110,13 @@ public class MachineOrder {
     private String machinePrice;
 
     /**
+     * 居间费用
+     */
+    @Column(name = "intermediary_price")
+    private String intermediaryPrice;
+
+
+    /**
      * 机器装置信息，以JSON字符串的形式进行保存（name/number/price）
      */
     @Column(name = "equipment")
@@ -478,6 +485,15 @@ public class MachineOrder {
      */
     public void setMachinePrice(String machinePrice) {
         this.machinePrice = machinePrice;
+    }
+
+
+    public String getIntermediaryPrice() {
+        return intermediaryPrice;
+    }
+
+    public void setIntermediaryPrice(String intermediaryPrice) {
+        this.intermediaryPrice = intermediaryPrice;
     }
 
     /**
