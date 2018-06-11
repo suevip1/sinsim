@@ -261,6 +261,7 @@ CREATE TABLE `machine_order` (
   `equipment` text COMMENT '机器装置，json的字符串，包含装置名称、数量、单价',
   `machine_price` varchar(255) NOT NULL COMMENT '机器价格（不包括装置）',
   `Intermediary_price` varchar(255) NOT NULL DEFAULT '0' COMMENT '居间费用',
+  `discounts` varchar(255) NOT NULL DEFAULT '0',
   `contract_ship_date` date NOT NULL,
   `plan_ship_date` date NOT NULL,
   `mark` text COMMENT '备注信息',

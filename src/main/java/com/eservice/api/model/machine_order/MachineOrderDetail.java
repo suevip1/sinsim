@@ -132,6 +132,12 @@ public class MachineOrderDetail {
     private String intermediaryPrice;
 
     /**
+     * 价格优惠
+     */
+    @Column(name = "discounts")
+    private String discounts;
+
+    /**
      * 机器装置信息，以JSON字符串的形式进行保存（name/number/price）
      */
     @Column(name = "equipment")
@@ -596,6 +602,14 @@ public class MachineOrderDetail {
 
     public void setIntermediaryPrice(String intermediaryPrice) {
         this.intermediaryPrice = intermediaryPrice;
+    }
+
+    public String getDiscounts() {
+        return discounts;
+    }
+
+    public void setDiscounts(String discounts) {
+        this.discounts = discounts;
     }
 
     /**
