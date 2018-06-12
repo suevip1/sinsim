@@ -104,6 +104,7 @@ public class OrderSignController {
             orderSignService.update(orderSignObj);
 
             MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
+            Contract contract = contractService.findById(contractId);
             if (haveReject) {
                 machineOrder.setStatus(Constant.ORDER_REJECTED);
                 //需要把之前的签核状态result设置为初始状态“SIGN_INITIAL”，但是签核内容不变(contract & machineOrder)
@@ -125,6 +126,8 @@ public class OrderSignController {
                 orderSignObj.setSignContent(JSONObject.toJSONString(orderSignContentList));
                 orderSignService.update(orderSignObj);
 
+                //如果有订单驳回，则设置合同为initial状态
+                contract.setStatus(Constant.CONTRACT_INITIAL);
             } else {
                 if (machineOrder.getStatus().equals(Constant.ORDER_INITIAL)) {
                     machineOrder.setStatus(Constant.ORDER_CHECKING);
@@ -143,7 +146,6 @@ public class OrderSignController {
             if (step == null || contractSign == null) {
                 throw new RuntimeException();
             } else {
-                Contract contract = contractService.findById(contractId);
                 if (step.equals(Constant.SIGN_FINISHED)) {
                     //表示签核已经完成，合同设置“CONTRACT_CHECKING_FINISHED”
                     contract.setStatus(Constant.CONTRACT_CHECKING_FINISHED);
