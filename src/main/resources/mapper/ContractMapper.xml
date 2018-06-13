@@ -74,7 +74,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
-        ORDER BY os.create_time DESC,os.update_time DESC
+        ORDER BY os.update_time DESC,os.create_time DESC
     </select>
 
     <select id="selectContracts" resultMap="ContractDetailMap">
@@ -110,7 +110,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        ORDER BY os.create_time DESC,os.update_time DESC
+        ORDER BY os.update_time DESC, os.create_time DESC
     </select>
 
     <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contract.Contract"
