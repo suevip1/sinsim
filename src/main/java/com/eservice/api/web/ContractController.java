@@ -725,20 +725,52 @@ public class ContractController {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
 
-                //E5,E6,E7...总价
+                //E5,E6,E7,..居间费用/台
                 cell = sheet1.getRow(5 + i).getCell((short) 4);
                 if (displayPrice) {
-                    Integer sum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum();
-                    allSum = allSum + sum;
-                    cell.setCellValue(new HSSFRichTextString(sum.toString()));
+                    cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getIntermediaryPrice()));
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
+				///to hutong: 貌似是前面插入行时，所生成的单元格有问题，导致这里写时单元格为Null。
+                //F5,F6,F7,..居间费用总计  
+//                cell = sheet1.getRow(5 + i).getCell((short) 5);
+//                if (displayPrice) {
+//                    Integer sumOfIntermediary =Integer.parseInt(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
+//                    cell.setCellValue(new HSSFRichTextString(sumOfIntermediary.toString()));
+//                } else {
+//                    cell.setCellValue(new HSSFRichTextString("/"));
+//                }
+//                //G5,G6,G7,..优惠价格/台
+//                cell = sheet1.getRow(5 + i).getCell((short) 6);
+//                if (displayPrice) {
+//                    cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getDiscounts()));
+//                } else {
+//                    cell.setCellValue(new HSSFRichTextString("/"));
+//                }
+//                //H5,H6,H7,..优惠总计
+//                cell = sheet1.getRow(5 + i).getCell((short) 7);
+//                if (displayPrice) {
+//                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
+//                    cell.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
+//                } else {
+//                    cell.setCellValue(new HSSFRichTextString("/"));
+//                }
+                //I5,I6,I7...总价
+//                cell = sheet1.getRow(5 + i).getCell((short) 8);
+//                if (displayPrice) {
+//                    Integer sum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum()
+//                            - Integer.parseInt(machineOrderDetail.getDiscounts())*machineOrderDetail.getMachineNum();
+//                    allSum = allSum + sum;
+//                    cell.setCellValue(new HSSFRichTextString(sum.toString()));
+//                } else {
+//                    cell.setCellValue(new HSSFRichTextString("/"));
+//                }
             }
 
             Integer locationRow = 6 + machineOrderCount;
             // 总计
-            cell = sheet1.getRow(locationRow++).getCell((short) 4);
+            cell = sheet1.getRow(locationRow++).getCell((short) 8);
             if (displayPrice) {
                 cell.setCellValue(new HSSFRichTextString(allSum.toString()));
             } else {
@@ -1045,11 +1077,11 @@ public class ContractController {
                     System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted 000 line");
                 }//装置end
 
-                // 订机数量
-                cell2 = sheetX.getRow(21 + equipmentCount).getCell((short) 2);
+                // 订机数量  这里后续用变量代替
+                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineNum().toString()));
                 // 机器单价
-                cell2 = sheetX.getRow(21 + equipmentCount).getCell((short) 3);
+                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 3);
                 if (displayPrice) {
                     cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachinePrice()));
                 } else {
@@ -1057,7 +1089,7 @@ public class ContractController {
                 }
                 // 机器总价
                 Integer machineOrderSum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum();
-                cell2 = sheetX.getRow(21 + equipmentCount).getCell((short) 4);
+                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 4);
                 if (displayPrice) {
                     cell2.setCellValue(new HSSFRichTextString(machineOrderSum.toString()));
                 } else {
@@ -1066,7 +1098,7 @@ public class ContractController {
 
                 // 需求单总价
                 totalPriceOfOrder += machineOrderSum;
-                cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 4);
+                cell2 = sheetX.getRow(24 + equipmentCount).getCell((short) 4);
                 if (displayPrice) {
                     cell2.setCellValue(new HSSFRichTextString(totalPriceOfOrder.toString()));
                 } else {
@@ -1074,15 +1106,15 @@ public class ContractController {
                 }
 
                 // 合同的交货日期
-                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 2);
+                cell2 = sheetX.getRow(25 + equipmentCount).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(formatter2.format(contract.getContractShipDate())));
 
                 // 计划发货日期
-                cell2 = sheetX.getRow(24 + equipmentCount).getCell((short) 2);
+                cell2 = sheetX.getRow(26 + equipmentCount).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(formatter2.format(machineOrderDetail.getPlanShipDate())));
 
                 // 备注
-                cell2 = sheetX.getRow(25 + equipmentCount).getCell((short) 0);
+                cell2 = sheetX.getRow(27 + equipmentCount).getCell((short) 0);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMark()));
 
                 /**
@@ -1097,7 +1129,7 @@ public class ContractController {
 
                     //需求单的N个签核，插入N行
                     Integer orderSignCount = signContentItemList.size();
-                    insertRow2(wb, sheetX, 33 + equipmentCount, orderSignCount);
+                    insertRow2(wb, sheetX, 35 + equipmentCount, orderSignCount);
                     for (int k = 0; k < orderSignCount; k++) {
                         /**
                          * 需求单签核的： 角色（部门）/人/时间/意见
@@ -1106,27 +1138,27 @@ public class ContractController {
                         int roleId = signContentItemList.get(k).getRoleId();
                         //根据roleId返回角色（部门）
                         String roleName = roleService.findById(roleId).getRoleName();
-                        cell = sheetX.getRow(33 + equipmentCount + k).getCell((short) 0);
+                        cell = sheetX.getRow(35 + equipmentCount + k).getCell((short) 0);
                         cell.setCellValue(new HSSFRichTextString(roleName));
                         //2.签核人
-                        cell = sheetX.getRow(33 + equipmentCount + k).getCell((short) 1);
+                        cell = sheetX.getRow(35 + equipmentCount + k).getCell((short) 1);
                         cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getUser()));
                         //3.签核时间
-                        cell = sheetX.getRow(33 + equipmentCount + k).getCell((short) 2);
+                        cell = sheetX.getRow(35 + equipmentCount + k).getCell((short) 2);
                         if (null != signContentItemList.get(k).getDate()) {
                             cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
                         }
-                        cell = sheetX.getRow(33 + equipmentCount + k).getCell((short) 3);
+                        cell = sheetX.getRow(35 + equipmentCount + k).getCell((short) 3);
                         cell.setCellValue(new HSSFRichTextString("意见"));
                         //4.签核意见
-                        cell = sheetX.getRow(33 + equipmentCount + k).getCell((short) 4);
+                        cell = sheetX.getRow(35 + equipmentCount + k).getCell((short) 4);
                         cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
                         //合并单元格
-                        sheetX.addMergedRegion(new CellRangeAddress(33 + equipmentCount + k,
-                                33 + equipmentCount + k, 4, 10));
+                        sheetX.addMergedRegion(new CellRangeAddress(35 + equipmentCount + k,
+                                35 + equipmentCount + k, 4, 10));
                     }
                     //最后删除多余一行
-                    sheetX.shiftRows(33 + equipmentCount + orderSignCount + 1,
+                    sheetX.shiftRows(35 + equipmentCount + orderSignCount + 1,
                             sheetX.getLastRowNum(),
                             -1);
                 }
