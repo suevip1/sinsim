@@ -692,7 +692,9 @@ public class ContractController {
             insertRow(wb, sheet1, 5, machineOrderCount);
 
             System.out.println("======== machineOrderCount: " + machineOrderCount);
-            Integer allSum = 0;
+            //订单总价 = 机器价格*台数 + 装置价格*台数 - 优惠总价
+            Integer allSumOfOrder = 0;
+            Integer allSumOfContract = 0;
             String machineInfo = "";
             for (int i = 0; i < machineOrderCount; i++) {
                 machineOrder = machineOrderService.findById(contractId);
@@ -733,7 +735,7 @@ public class ContractController {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
 
-                //F5,F6,F7,..居间费用总计  
+                //F5,F6,F7,..居间费用总计,不计入订单总价
                 cell = sheet1.getRow(5 + i).getCell((short) 5);
                 if (displayPrice) {
                     Integer sumOfIntermediary =Integer.parseInt(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
@@ -756,23 +758,47 @@ public class ContractController {
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
-               // I5,I6,I7...总价
+
+                //计算在合同sheet用到装置价格信息，
+                JSONArray jsonArray = JSON.parseArray(machineOrderDetail.getEquipment());
+                Integer equipmentCount = 0;
+                //订单的设备总价
+                Integer equipmentSumOfOrder = 0;
+                if (null != jsonArray) {
+                    equipmentCount = jsonArray.size();
+                    for (int j = 0; j < equipmentCount; j++) {
+                        Equipment eq = JSON.parseObject((String) jsonArray.get(j).toString(), Equipment.class);
+
+                        //该类型的设备总价
+                        int eqSum = eq.getNumber() * eq.getPrice();
+                        equipmentSumOfOrder += eqSum;
+                    }
+                }
+                // I5,I6,I7...装置总价。
                 cell = sheet1.getRow(5 + i).getCell((short) 8);
                 if (displayPrice) {
-                    Integer sum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum()
-                            - Integer.parseInt(machineOrderDetail.getDiscounts())*machineOrderDetail.getMachineNum();
-                    allSum = allSum + sum;
-                    cell.setCellValue(new HSSFRichTextString(sum.toString()));
+                    cell.setCellValue(new HSSFRichTextString(equipmentSumOfOrder.toString() ));
+                } else {
+                    cell.setCellValue(new HSSFRichTextString("/"));
+                }
+               // J5,J6,J7...订单总价
+                cell = sheet1.getRow(5 + i).getCell((short) 9);
+                if (displayPrice) {
+                    allSumOfOrder = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum()
+                            - Integer.parseInt(machineOrderDetail.getDiscounts())*machineOrderDetail.getMachineNum()
+                            + equipmentSumOfOrder;
+                    allSumOfContract = allSumOfContract + allSumOfOrder;
+                    cell.setCellValue(new HSSFRichTextString(allSumOfOrder.toString()));
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
             }
 
             Integer locationRow = 6 + machineOrderCount;
-            // 总计
-            cell = sheet1.getRow(locationRow++).getCell((short) 8);
+            // 合同总计
+            cell = sheet1.getRow(locationRow++).getCell((short) 9);
             if (displayPrice) {
-                cell.setCellValue(new HSSFRichTextString(allSum.toString()));
+                cell.setCellValue(new HSSFRichTextString(allSumOfContract.toString()));
             } else {
                 cell.setCellValue(new HSSFRichTextString("/"));
             }
@@ -1081,7 +1107,6 @@ public class ContractController {
                     System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted 000 line");
                 }//装置end
 
-                //居间，优惠
                 //居间费用/台
                 cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 1);
                 if (displayPrice) {
@@ -1243,7 +1268,7 @@ public class ContractController {
             targetRow.setHeight(sourceRow.getHeight());
 
             //创建多列
-            for (m = sourceRow.getFirstCellNum(); m < 9; m++) {
+            for (m = sourceRow.getFirstCellNum(); m < 10; m++) {
 
                 targetCell = targetRow.createCell(m);
                 sourceCell = sourceRow.getCell(m);
