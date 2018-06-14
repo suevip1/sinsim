@@ -732,40 +732,40 @@ public class ContractController {
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
-				///to hutong: 貌似是前面插入行时，所生成的单元格有问题，导致这里写时单元格为Null。
+
                 //F5,F6,F7,..居间费用总计  
-//                cell = sheet1.getRow(5 + i).getCell((short) 5);
-//                if (displayPrice) {
-//                    Integer sumOfIntermediary =Integer.parseInt(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
-//                    cell.setCellValue(new HSSFRichTextString(sumOfIntermediary.toString()));
-//                } else {
-//                    cell.setCellValue(new HSSFRichTextString("/"));
-//                }
-//                //G5,G6,G7,..优惠价格/台
-//                cell = sheet1.getRow(5 + i).getCell((short) 6);
-//                if (displayPrice) {
-//                    cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getDiscounts()));
-//                } else {
-//                    cell.setCellValue(new HSSFRichTextString("/"));
-//                }
-//                //H5,H6,H7,..优惠总计
-//                cell = sheet1.getRow(5 + i).getCell((short) 7);
-//                if (displayPrice) {
-//                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
-//                    cell.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
-//                } else {
-//                    cell.setCellValue(new HSSFRichTextString("/"));
-//                }
-                //I5,I6,I7...总价
-//                cell = sheet1.getRow(5 + i).getCell((short) 8);
-//                if (displayPrice) {
-//                    Integer sum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum()
-//                            - Integer.parseInt(machineOrderDetail.getDiscounts())*machineOrderDetail.getMachineNum();
-//                    allSum = allSum + sum;
-//                    cell.setCellValue(new HSSFRichTextString(sum.toString()));
-//                } else {
-//                    cell.setCellValue(new HSSFRichTextString("/"));
-//                }
+                cell = sheet1.getRow(5 + i).getCell((short) 5);
+                if (displayPrice) {
+                    Integer sumOfIntermediary =Integer.parseInt(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
+                    cell.setCellValue(new HSSFRichTextString(sumOfIntermediary.toString()));
+                } else {
+                    cell.setCellValue(new HSSFRichTextString("/"));
+                }
+                //G5,G6,G7,..优惠价格/台
+                cell = sheet1.getRow(5 + i).getCell((short) 6);
+                if (displayPrice) {
+                    cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getDiscounts()));
+                } else {
+                    cell.setCellValue(new HSSFRichTextString("/"));
+                }
+                //H5,H6,H7,..优惠总计
+                cell = sheet1.getRow(5 + i).getCell((short) 7);
+                if (displayPrice) {
+                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
+                    cell.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
+                } else {
+                    cell.setCellValue(new HSSFRichTextString("/"));
+                }
+               // I5,I6,I7...总价
+                cell = sheet1.getRow(5 + i).getCell((short) 8);
+                if (displayPrice) {
+                    Integer sum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum()
+                            - Integer.parseInt(machineOrderDetail.getDiscounts())*machineOrderDetail.getMachineNum();
+                    allSum = allSum + sum;
+                    cell.setCellValue(new HSSFRichTextString(sum.toString()));
+                } else {
+                    cell.setCellValue(new HSSFRichTextString("/"));
+                }
             }
 
             Integer locationRow = 6 + machineOrderCount;
@@ -847,8 +847,12 @@ public class ContractController {
                 cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
 
             }
-            //最后删除多余一行
+            //删除最后多余一行
             sheet1.shiftRows(locationRow + 1,
+                    sheet1.getLastRowNum(),
+                    -1);
+            //删除需求单行的空白的多余一行
+            sheet1.shiftRows(6 + machineOrderCount ,
                     sheet1.getLastRowNum(),
                     -1);
 
@@ -1077,6 +1081,39 @@ public class ContractController {
                     System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted 000 line");
                 }//装置end
 
+                //居间，优惠
+                //居间费用/台
+                cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 1);
+                if (displayPrice) {
+                    cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getIntermediaryPrice()));
+                }else {
+                    cell2.setCellValue(new HSSFRichTextString("/"));
+                }
+                //居间费用总计
+                cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 2);
+                if (displayPrice) {
+                    Integer sumOfIntermediary =Integer.parseInt(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
+                    cell2.setCellValue(new HSSFRichTextString(sumOfIntermediary.toString()));
+                } else {
+                    cell2.setCellValue(new HSSFRichTextString("/"));
+                }
+                //优惠价格/台
+                cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 3);
+                if (displayPrice) {
+                    cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getDiscounts()));
+                } else {
+                    cell2.setCellValue(new HSSFRichTextString("/"));
+                }
+                //优惠总计
+                cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 4);
+                if (displayPrice) {
+                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
+                    cell2.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
+                    totalPriceOfOrder -= sumOfDiscounts;
+                } else {
+                    cell2.setCellValue(new HSSFRichTextString("/"));
+                }
+
                 // 订机数量  这里后续用变量代替
                 cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineNum().toString()));
@@ -1206,7 +1243,7 @@ public class ContractController {
             targetRow.setHeight(sourceRow.getHeight());
 
             //创建多列
-            for (m = sourceRow.getFirstCellNum(); m < 5; m++) {
+            for (m = sourceRow.getFirstCellNum(); m < 9; m++) {
 
                 targetCell = targetRow.createCell(m);
                 sourceCell = sourceRow.getCell(m);
