@@ -43,8 +43,8 @@
 
     <select id="selectContractsByFuzzy" resultMap="ContractDetailMap">
         select c.id, c.contract_num,c.customer_name,c.sellman,c.record_user,c.pay_method,c.currency_type,c.market_group_name,c.market_group_name,
-        c.contract_ship_date,c.mark,c.create_time,c.update_time,
-        os.current_step, mo.order_num, mo.status from machine_order mo
+        c.contract_ship_date,c.mark,c.create_time,
+        os.current_step,os.update_time, mo.order_num, mo.status from machine_order mo
         LEFT JOIN contract c ON c.id = mo.contract_id
         LEFT JOIN order_sign os ON os.order_id = mo.id
 	    WHERE os.create_time IN (SELECT MAX(create_time) FROM order_sign GROUP BY order_id)
@@ -74,13 +74,13 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
-        ORDER BY os.update_time DESC,os.create_time DESC
+        ORDER BY os.update_time DESC,c.create_time DESC
     </select>
 
     <select id="selectContracts" resultMap="ContractDetailMap">
         select c.id, c.contract_num,c.customer_name,c.sellman,c.record_user,c.pay_method,c.currency_type,c.market_group_name,c.market_group_name,
-        c.contract_ship_date,c.mark,c.create_time,c.update_time,
-        os.current_step, mo.order_num, mo.status from machine_order mo
+        c.contract_ship_date,c.mark,c.create_time,
+        os.current_step,os.update_time, mo.order_num, mo.status from machine_order mo
         LEFT JOIN contract c ON c.id = mo.contract_id
         LEFT JOIN order_sign os ON os.order_id = mo.id
 	    WHERE os.create_time IN (SELECT MAX(create_time) FROM order_sign GROUP BY order_id)
@@ -110,7 +110,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(mo.create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        ORDER BY os.update_time DESC, os.create_time DESC
+        ORDER BY os.update_time DESC, c.create_time DESC
     </select>
 
     <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contract.Contract"
