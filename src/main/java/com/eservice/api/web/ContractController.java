@@ -195,6 +195,7 @@ public class ContractController {
 
         for (MachineOrderWrapper item : machineOrderWapperlist) {
             MachineOrder orderTemp = item.getMachineOrder();
+            OrderChangeRecord changeRecord = item.getOrderChangeRecord();
             if (orderTemp.getId() != null && orderTemp.getId() != 0) {
                 //更新，只对initial和reject状态的需求单就是更新，其他状态的需求单不做更新
                 OrderDetail temp = item.getOrderDetail();
@@ -204,6 +205,8 @@ public class ContractController {
                 if (orderTemp.getStatus().equals(Constant.ORDER_INITIAL)) {
                     orderDetailService.update(temp);
                     machineOrderService.update(orderTemp);
+                    // 在改单之后，在重新提交之前，允许修改改单原因，即：改单原因不仅仅在改单时允许修改，在上述情况下也允许修改。
+                    orderChangeRecordService.update(changeRecord);
                 }
             } else {
                 //新增
