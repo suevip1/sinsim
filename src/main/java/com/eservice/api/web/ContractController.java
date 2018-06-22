@@ -206,7 +206,9 @@ public class ContractController {
                     orderDetailService.update(temp);
                     machineOrderService.update(orderTemp);
                     // 在改单之后，在重新提交之前，允许修改改单原因，即：改单原因不仅仅在改单时允许修改，在上述情况下也允许修改。
-                    orderChangeRecordService.update(changeRecord);
+                    if( null != changeRecord ) {
+                        orderChangeRecordService.update(changeRecord);
+                    }
                 }
             } else {
                 //新增
@@ -1067,6 +1069,10 @@ public class ContractController {
                 //C20
                 cell2 = sheetX.getRow(19).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getPackageMethod()));
+
+                //C21
+                cell2 = sheetX.getRow(19).getCell((short) 5);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getPackageMark()));
 
                 //C22，23 ... N 装置名称
                 String str = machineOrderDetail.getEquipment();

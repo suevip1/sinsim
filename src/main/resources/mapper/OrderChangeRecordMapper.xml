@@ -41,5 +41,6 @@
         <if test="orderId != null and orderId != ''">
             AND order_id=#{orderId}
         </if>
+        ORDER BY change_time DESC
     </select>
 </mapper>
