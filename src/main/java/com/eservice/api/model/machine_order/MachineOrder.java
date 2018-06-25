@@ -98,6 +98,17 @@ public class MachineOrder {
     private String packageMethod;
 
     /**
+     * 绕线机配置
+     */
+    @Column(name = "wrap_machine")
+    private String wrapMachine;
+    /**
+     * 绕线机置换
+     */
+    @Column(name = "wrap_machine_change")
+    private String wrapMachineChange;
+
+    /**
      * 包装备注
      */
     @Column(name = "package_mark")
@@ -207,6 +218,22 @@ public class MachineOrder {
 
     public void setEquipment(String equipment) {
         this.equipment = equipment;
+    }
+
+    public String getWrapMachine() {
+        return wrapMachine;
+    }
+
+    public void setWrapMachine(String wrapMachine) {
+        this.wrapMachine = wrapMachine;
+    }
+
+    public String getWrapMachineChange() {
+        return wrapMachineChange;
+    }
+
+    public void setWrapMachineChange(String wrapMachineChange) {
+        this.wrapMachineChange = wrapMachineChange;
     }
 
     /**

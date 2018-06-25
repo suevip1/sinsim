@@ -109,6 +109,16 @@ public class MachineOrderDetail {
     @Column(name = "package_method")
     private String packageMethod;
 
+    /**
+     * 绕线机配置
+     */
+    @Column(name = "wrap_machine")
+    private String wrapMachine;
+    /**
+     * 绕线机置换
+     */
+    @Column(name = "wrap_machine_change")
+    private String wrapMachineChange;
 
     @Column(name = "package_mark")
     private String packageMark;
@@ -248,6 +258,23 @@ public class MachineOrderDetail {
 //    机器类型，和machine_type关联
 //     */
 //    private MachineType machineType;
+
+
+    public String getWrapMachine() {
+        return wrapMachine;
+    }
+
+    public void setWrapMachine(String wrapMachine) {
+        this.wrapMachine = wrapMachine;
+    }
+
+    public String getWrapMachineChange() {
+        return wrapMachineChange;
+    }
+
+    public void setWrapMachineChange(String wrapMachineChange) {
+        this.wrapMachineChange = wrapMachineChange;
+    }
 
     /**
      * @return id
