@@ -1147,7 +1147,7 @@ public class ContractController {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
                 //优惠总计
-                cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 4);
+                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 4);
                 if (displayPrice) {
                     Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
                     cell2.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
