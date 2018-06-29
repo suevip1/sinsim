@@ -141,24 +141,19 @@ public class MachineOrderController {
     }
 
     @PostMapping("/updateValid")
-    public Result updateValid(@RequestParam String orderNum) {
-        if (orderNum == null || orderNum == "") {
-            return ResultGenerator.genFailResult("需求单编号不正确，请检查！");
+    public Result updateValid(@RequestParam Integer orderId) {
+        if (orderId == null || orderId <= 0) {
+            return ResultGenerator.genFailResult("需求单对应ID不正确，请联系管理员！");
         }
-        Condition condition = new Condition(MachineOrder.class);
-        condition.createCriteria().andCondition("order_num = ", orderNum);
-        List<MachineOrder> list = machineOrderService.findByCondition(condition);
-        if (list.size() == 0) {
+        MachineOrder machineOrder = machineOrderService.findById(orderId);
+        if (machineOrder == null) {
             return ResultGenerator.genFailResult("需求单编号不存在！");
         } else {
             //检查需求单对应的机器是否生成，如果生成则不能删除
-            Condition machineCondition = new Condition(Machine.class);
-            condition.createCriteria().andCondition("order_id = ", list.get(0).getId());
-            List<Machine> machineList = machineService.findByCondition(machineCondition);
+            List<Machine> machineList = machineService.selectMachines(null,orderId,null,null,null,null,null,null,null,false);
             if(machineList.size() > 0) {
                 return ResultGenerator.genFailResult("需求单删除失败，对应机器已生成！");
             } else {
-                MachineOrder machineOrder = list.get(0);
                 machineOrder.setValid(Constant.ValidEnum.INVALID.getValue());
                 machineOrder.setUpdateTime(new Date());
                 machineOrderService.update(machineOrder);

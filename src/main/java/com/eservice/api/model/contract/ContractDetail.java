@@ -35,6 +35,11 @@ public class ContractDetail {
     private String orderNum;
 
     /**
+     * 订单ID
+     */
+    private String orderId;
+
+    /**
      * 当前合同审核进度
      */
     private String currentStep;
@@ -171,6 +176,14 @@ public class ContractDetail {
 
     public void setOrderNum(String orderNum) {
         this.orderNum = orderNum;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getCurrentStep() {
