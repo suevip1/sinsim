@@ -901,7 +901,7 @@ public class ContractController {
             for (int i = 0; i < machineOrderCount; i++) {
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
                 //把sheet名称改为订单的编号
-                wb.setSheetName(i + 1, machineOrderDetail.getOrderNum().replace("/", "-"));
+                wb.setSheetName(i + 1, machineOrderDetail.getOrderNum().replaceAll("/", "-"));
 
                 HSSFSheet sheetX = wb.getSheetAt(1 + i);
                 //在相应的单元格进行赋值
@@ -1244,8 +1244,8 @@ public class ContractController {
             }
 
             //修改模板内容导出新模板,生成路径供前端下载
-            downloadPath = contractOutputDir + contract.getContractNum() + ".xls";
-            downloadPathForNginx = "/excel/" + contract.getContractNum() + ".xls";
+            downloadPath = contractOutputDir + contract.getContractNum().replaceAll("/", "-") + ".xls";
+            downloadPathForNginx = "/excel/" + contract.getContractNum().replaceAll("/", "-") + ".xls";
             out = new FileOutputStream(downloadPath);
             wb.write(out);
             out.close();
