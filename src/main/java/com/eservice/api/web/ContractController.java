@@ -901,7 +901,7 @@ public class ContractController {
             for (int i = 0; i < machineOrderCount; i++) {
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
                 //把sheet名称改为订单的编号
-                wb.setSheetName(i + 1, machineOrderDetail.getOrderNum());
+                wb.setSheetName(i + 1, machineOrderDetail.getOrderNum().replace("/", "-"));
 
                 HSSFSheet sheetX = wb.getSheetAt(1 + i);
                 //在相应的单元格进行赋值
