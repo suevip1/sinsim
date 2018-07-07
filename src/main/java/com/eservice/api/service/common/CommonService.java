@@ -212,7 +212,7 @@ public class CommonService {
             if (path != null && !file.isEmpty()) {
                 //取后缀名
                 String fileName = file.getOriginalFilename();
-                targetFileName = path + formatFileName(type, fileName, machineID, orderNum, number);
+                targetFileName = path + formatFileName(type, fileName.replaceAll("/", "-"), machineID, orderNum.replaceAll("/", "-"), number);
                 BufferedOutputStream out = new BufferedOutputStream(
                         new FileOutputStream(new File(targetFileName)));
                 out.write(file.getBytes());
