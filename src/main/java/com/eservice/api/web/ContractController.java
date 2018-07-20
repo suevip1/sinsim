@@ -778,8 +778,9 @@ public class ContractController {
                         int eqSum = eq.getNumber() * eq.getPrice();
                         equipmentSumOfOrder += eqSum;
                     }
+                    equipmentSumOfOrder = equipmentSumOfOrder * machineOrderDetail.getMachineNum();
                 }
-                // I5,I6,I7...装置总价。
+                // I5,I6,I7...订单的装置总价。
                 cell = sheet1.getRow(5 + i).getCell((short) 8);
                 if (displayPrice) {
                     cell.setCellValue(new HSSFRichTextString(equipmentSumOfOrder.toString() ));
@@ -1111,7 +1112,7 @@ public class ContractController {
                             cell2.setCellValue(new HSSFRichTextString("/"));
                         }
                         cell2 = sheetX.getRow(22 + j).getCell((short) 4);
-                        int eqSum = eq.getNumber() * eq.getPrice();
+                        int eqSum = eq.getNumber() * eq.getPrice() * machineOrderDetail.getMachineNum();
                         totalPriceOfOrder += eqSum;
                         if (displayPrice) {
                             cell2.setCellValue(new HSSFRichTextString((Integer.toString(eqSum))));
