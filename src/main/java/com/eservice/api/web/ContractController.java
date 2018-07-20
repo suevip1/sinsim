@@ -640,6 +640,7 @@ public class ContractController {
             if ((6 == roleId)
                     || (7 == roleId)
                     || (9 == roleId)
+                    || (13 == roleId)
                     || (14 == roleId)
                     || (15 == roleId)) {
                 displayPrice = true;
