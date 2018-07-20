@@ -645,6 +645,8 @@ public class ContractController {
                     || (15 == roleId)) {
                 displayPrice = true;
             }
+        } else {
+            return ResultGenerator.genFailResult("用户不存在！");
         }
 
         try {
