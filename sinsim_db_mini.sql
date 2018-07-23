@@ -268,6 +268,7 @@ CREATE TABLE `machine_order` (
   `sellman` varchar(255) NOT NULL COMMENT '订单中文字输入的销售员，一般以创建订单销售员作为sellman，这边是sinsim的特殊需求',
   `valid` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `maintain_type` varchar(255) NOT NULL COMMENT '保修方式',
+  `maintain_person` varchar(255) DEFAULT '',
   `create_time` datetime NOT NULL COMMENT '订单创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '订单信息更新时间',
   `end_time` datetime DEFAULT NULL COMMENT '订单结束时间',
@@ -923,9 +924,3 @@ INSERT INTO `user` VALUES ('234', '毛陈波', '毛陈波', '5', 'sinsim', '11',
 INSERT INTO `user` VALUES ('235', '余鉴泽', '余鉴泽', '5', 'sinsim', '3', '', '1');
 INSERT INTO `user` VALUES ('239', '王新全2', '王新全2', '3', 'sinsim', '17', '', '1');
 INSERT INTO `user` VALUES ('240', '王煊波', '王煊波', '17', '', '7', '', '1');
-
--- ----------------------------
--- View structure for `machine_infos`
--- ----------------------------
-DROP VIEW IF EXISTS `machine_infos`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `machine_infos` AS select `machine`.`id` AS `id`,`machine`.`order_id` AS `order_id`,`machine`.`machine_strid` AS `machine_strid`,`machine`.`nameplate` AS `nameplate`,`machine`.`location` AS `location`,`machine`.`status` AS `status`,`machine`.`machine_type` AS `machine_type`,`machine`.`create_time` AS `create_time`,`machine`.`update_time` AS `update_time`,`machine`.`installed_time` AS `installed_time`,`machine`.`ship_time` AS `ship_time` from `machine` ;

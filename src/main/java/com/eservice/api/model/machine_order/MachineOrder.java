@@ -185,6 +185,12 @@ public class MachineOrder {
     private String maintainType;
 
     /**
+     * 保修人员
+     */
+    @Column(name = "maintain_person")
+    private String maintainPerson;
+
+    /**
      * 订单是否有效
      */
     @Column(name = "valid")
@@ -678,6 +684,14 @@ public class MachineOrder {
 
     public void setMaintainType(String maintainType) {
         this.maintainType = maintainType;
+    }
+
+    public String getMaintainPerson() {
+        return maintainPerson;
+    }
+
+    public void setMaintainPerson(String maintainPerson) {
+        this.maintainPerson = maintainPerson;
     }
 
     public Integer getValid() {

@@ -426,6 +426,7 @@ CREATE TABLE `machine_order` (
   `sellman` varchar(255) NOT NULL COMMENT '订单中文字输入的销售员，一般以创建订单销售员作为sellman，这边是sinsim的特殊需求',
   `valid` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `maintain_type` varchar(255) NOT NULL COMMENT '保修方式',
+  `maintain_person` varchar(255) DEFAULT '',
   `create_time` datetime NOT NULL COMMENT '订单创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '订单信息更新时间',
   `end_time` datetime DEFAULT NULL COMMENT '订单结束时间',

@@ -170,6 +170,13 @@ public class MachineOrderDetail {
     private String maintainType;
 
     /**
+     * 保修人员
+     */
+    @Column(name = "maintain_person")
+    private String maintainPerson;
+
+
+    /**
      * 表示订单状态，默认是“1”，表示订单还未签核完成，签核完成则为“2”， 在改单后状态变为“3”， 拆单后订单状态变成“4”，取消后状态为“5”。取消时，需要检查订单中机器的安装状态，如果有机器已经开始安装，则需要先改变机器状态为取消后才能进行删除操作。如果取消时，签核还未开始，处于编辑状态，则可以直接取消，但是只要有后续部分完成签核时候，都需要填写取消原因以及记录取消的人、时间等。在order_cancel_record表中进行维护。因为order表和order_detail表中的内容比较多，所以建议在前端session中保存，这样也方便销售员在下一次填写订单时，只需要改部分内容即可
      */
     private Byte status;
@@ -805,6 +812,14 @@ public class MachineOrderDetail {
 
     public void setMaintainType(String maintainType) {
         this.maintainType = maintainType;
+    }
+
+    public String getMaintainPerson() {
+        return maintainPerson;
+    }
+
+    public void setMaintainPerson(String maintainPerson) {
+        this.maintainPerson = maintainPerson;
     }
 
     public Integer getValid() {

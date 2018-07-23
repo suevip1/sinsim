@@ -32,6 +32,7 @@
 		<result column="plan_ship_date" jdbcType="DATE" property="planShipDate"/>
 		<result column="sellman" jdbcType="VARCHAR" property="sellman"/>
 		<result column="maintain_type" jdbcType="VARCHAR" property="maintainType"/>
+		<result column="maintain_person" jdbcType="VARCHAR" property="maintainPerson"/>
 		<result column="status" jdbcType="TINYINT" property="status"/>
 		<result column="valid" jdbcType="TINYINT" property="valid"/>
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -71,6 +72,7 @@
 		<result column="plan_ship_date" jdbcType="DATE" property="planShipDate"/>
 		<result column="sellman" jdbcType="VARCHAR" property="sellman"/>
 		<result column="maintain_type" jdbcType="VARCHAR" property="maintainType"/>
+		<result column="maintain_person" jdbcType="VARCHAR" property="maintainPerson"/>
 		<result column="status" jdbcType="TINYINT" property="status"/>
 		<result column="valid" jdbcType="TINYINT" property="valid"/>
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -159,10 +161,10 @@
 			keyProperty="id">
     insert into
     machine_order(order_num, original_order_id, contract_id, order_detail_id, create_user_id,country, brand, needle_num, head_num, head_distance, x_distance, y_distance,
-    package_method,wrap_machine,wrap_machine_change,package_mark,machine_num,machine_type, machine_price,intermediary_price,discounts, equipment, contract_ship_date, plan_ship_date, sellman, maintain_type, status,create_time, update_time, end_time, mark)
+    package_method,wrap_machine,wrap_machine_change,package_mark,machine_num,machine_type, machine_price,intermediary_price,discounts, equipment, contract_ship_date, plan_ship_date, sellman, maintain_type, maintain_person,status,create_time, update_time, end_time, mark)
     values(
     #{orderNum},#{originalOrderId},#{contractId},#{orderDetailId},#{createUserId},#{country},#{brand},#{needleNum},#{headNum},#{headDistance},#{xDistance},
-    #{yDistance},#{packageMethod},#{wrapMachine},#{wrapMachineChange},#{packageMark},#{machineNum},#{machineType},#{machinePrice},#{intermediaryPrice},#{discounts},#{equipment},#{contractShipDate},#{planShipDate},#{sellman},#{maintainType},#{status},#{createTime},#{updateTime},#{endTime},#{mark})
+    #{yDistance},#{packageMethod},#{wrapMachine},#{wrapMachineChange},#{packageMark},#{machineNum},#{machineType},#{machinePrice},#{intermediaryPrice},#{discounts},#{equipment},#{contractShipDate},#{planShipDate},#{sellman},#{maintainType},#{maintainPerson},#{status},#{createTime},#{updateTime},#{endTime},#{mark})
   </insert>
 
 	<select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
