@@ -19,7 +19,6 @@ import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.model.order_split_record.OrderSplitRecord;
 import com.eservice.api.model.user.User;
-import com.eservice.api.service.OrderSignService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
@@ -29,6 +28,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -86,6 +88,7 @@ public class ContractController {
 
     @Value("${contract_excel_output_dir}")
     private String contractOutputDir;
+    private boolean isDebug = false;
 
     @PostMapping("/add")
     @Transactional(rollbackFor = Exception.class)
@@ -632,6 +635,22 @@ public class ContractController {
          */
         String downloadPathForNginx = "";
 
+        int focusLine = 0;
+        /**
+         * 某订单总价 = 机器价格*台数 + 装置价格*台数 - 优惠总价
+         */
+        Integer totalPriceOfOrder = 0;
+
+        /**
+         * 某订单的机器总价
+         */
+        Integer machineOrderSum = 0;
+        /**
+         * 合同总价 = 各订单总价之和
+         */
+        Integer totalPriceOfContract = 0;
+
+
         //只有总经理，销售，财务等用户，生成的excel里才显示金额信息. '6','7','9','14','15'
         Boolean displayPrice = false;
         User user = userService.selectByAccount(account);
@@ -654,6 +673,16 @@ public class ContractController {
             fs = resource.getInputStream();
             pfs = new POIFSFileSystem(fs);
             wb = new HSSFWorkbook(pfs);
+            HSSFFont fontSlim = wb.createFont();
+            fontSlim.setBold(false);
+            HSSFCellStyle cellStyleSlim= wb.createCellStyle();
+            cellStyleSlim.setFont(fontSlim);
+            cellStyleSlim.setBorderBottom(BorderStyle.THIN);
+            cellStyleSlim.setBorderLeft(BorderStyle.THIN);
+            cellStyleSlim.setBorderTop(BorderStyle.THIN);
+            cellStyleSlim.setBorderRight(BorderStyle.THIN);
+            cellStyleSlim.setAlignment(HorizontalAlignment.CENTER);
+            cellStyleSlim.setVerticalAlignment(VerticalAlignment.CENTER);
 
             Contract contract = contractService.findById(contractId);
             if (contract == null) {
@@ -672,7 +701,6 @@ public class ContractController {
                     }
                 }
             }
-            MachineOrder machineOrder;
             MachineOrderDetail machineOrderDetail;
             //需求单签核,一个需求单对应0个或多个签核
             List<OrderSign> orderSignList;
@@ -695,24 +723,48 @@ public class ContractController {
             cell = sheet1.getRow(2).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contract.getCustomerName()));
 
-            //N个需求单，插入N行
+            //N个需求单，插入N行（机器）
             Integer machineOrderCount = machineOrderIdList.size();
             insertRow(wb, sheet1, 5, machineOrderCount);
+            if (isDebug) {
+                System.out.println("======== insert Rows machineOrderCount: " + machineOrderCount);
+            }
 
-            System.out.println("======== machineOrderCount: " + machineOrderCount);
-            //订单总价 = 机器价格*台数 + 装置价格*台数 - 优惠总价
-            Integer allSumOfOrder = 0;
-            Integer allSumOfContract = 0;
+            /**
+             * 记录各个订单的装置数量
+             */
+            int[] equipmentNumArr = new int[machineOrderCount];
+
+            for (int i = 0; i < machineOrderCount; i++) {
+                machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
+
+                //计算在合同sheet用到装置价格信息，
+                JSONArray jsonArray = JSON.parseArray(machineOrderDetail.getEquipment());
+                Integer equipmentCount = 0;
+
+                if (null != jsonArray) {
+                    //该需求单的X个装置，插入X + 2行 (2是优惠和居间)
+                    equipmentCount = jsonArray.size();
+                    insertRow(wb, sheet1, 5 , equipmentCount+2 );
+                    equipmentNumArr[i] = equipmentCount;
+                    if (isDebug) {
+                        System.out.println("======== insert Rows: " + (equipmentCount + 2) + "for equipments");
+                    }
+                }
+            }
+
             String machineInfo = "";
             for (int i = 0; i < machineOrderCount; i++) {
-                machineOrder = machineOrderService.findById(contractId);
+                totalPriceOfOrder = 0;
+                machineOrderSum = 0;
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
-                //A5,A6,A7,...品牌
-                cell = sheet1.getRow(5 + i).getCell((short) 0);
-                cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getBrand()));
+                focusLine = 5 + i + getLinesSum(equipmentNumArr, i ) ;
 
-                //B5,B6,B7,...机型详细信息：机型/针数/头数/头距/x行程/y行程/剪线方式/电脑
-                cell = sheet1.getRow(5 + i).getCell((short) 1);
+                //A5,,...订单号
+                cell = sheet1.getRow(focusLine).getCell((short) 0);
+                cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderNum()));
+                //B5,...机型详细信息：机型/针数/头数/头距/x行程/y行程/剪线方式/电脑
+                cell = sheet1.getRow(focusLine).getCell((short) 1);
                 machineInfo = machineOrderDetail.getMachineType().getName() + "/"
                         + machineOrderDetail.getNeedleNum() + "/"
                         + machineOrderDetail.getHeadNum() + "/"
@@ -723,97 +775,156 @@ public class ContractController {
                         + machineOrderDetail.getOrderDetail().getElectricPc();
                 cell.setCellValue(new HSSFRichTextString(machineInfo));
 
-                //C5,C6,C7,...数量
-                cell = sheet1.getRow(5 + i).getCell((short) 2);
+                //C5,,...数量
+                cell = sheet1.getRow(focusLine).getCell((short) 2);
                 cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineNum().toString()));
 
-                //D5,D6,D7,...单价
-                cell = sheet1.getRow(5 + i).getCell((short) 3);
+                //D5,,...单价
+                cell = sheet1.getRow(focusLine).getCell((short) 3);
                 if (displayPrice) {
                     cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachinePrice()));
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
 
-                //E5,E6,E7,..居间费用/台
-                cell = sheet1.getRow(5 + i).getCell((short) 4);
+                //E5,,..机器总价
+                cell = sheet1.getRow(focusLine).getCell((short) 4);
+                machineOrderSum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum();
+                totalPriceOfOrder += machineOrderSum;
+                if (displayPrice) {
+                    cell.setCellValue(machineOrderSum);
+                } else {
+                    cell.setCellValue(new HSSFRichTextString("/"));
+                }
+                if (isDebug) {
+                    System.out.println("===order: " + machineOrderDetail.getOrderNum() + " inserted machine @" + focusLine);
+                }
+
+                /**
+                 * 该订单的各个装置
+                 */
+                JSONArray jsonArray = JSON.parseArray(machineOrderDetail.getEquipment());
+                Integer equipmentCount = 0;
+
+                if (null != jsonArray) {
+
+                    focusLine = 6 + i + getLinesSum(equipmentNumArr, i );
+                    equipmentCount = jsonArray.size();
+
+                    for (int j = 0; j < equipmentCount; j++) {
+                        Equipment eq = JSON.parseObject((String) jsonArray.get(j).toString(), Equipment.class);
+
+                        cell = sheet1.getRow(focusLine + j).getCell((short) 1);
+                        cell.setCellValue(new HSSFRichTextString(eq.getName()));
+                        cell.setCellStyle(cellStyleSlim);
+
+                        /**
+                         * 这里的数量是：每台机器的装置数*机器台数
+                         */
+                        cell = sheet1.getRow(focusLine + j).getCell((short) 2);
+                        cell.setCellValue(eq.getNumber() * machineOrderDetail.getMachineNum());
+                        cell.setCellStyle(cellStyleSlim);
+
+                        cell = sheet1.getRow(focusLine + j).getCell((short) 3);
+                        if (displayPrice) {
+                            cell.setCellValue(new HSSFRichTextString(eq.getPrice().toString()));
+                        } else {
+                            cell.setCellValue(new HSSFRichTextString("/"));
+                        }
+                        cell.setCellStyle(cellStyleSlim);
+
+                        /**
+                         * 订单内该种装置的总价
+                         */
+                        cell = sheet1.getRow(focusLine + j).getCell((short) 4);
+                        int eqSum = eq.getNumber() * eq.getPrice() * machineOrderDetail.getMachineNum();
+                        totalPriceOfOrder += eqSum;
+                        if (displayPrice) {
+                            cell.setCellValue(new HSSFRichTextString((Integer.toString(eqSum))));
+                        } else {
+                            cell.setCellValue(new HSSFRichTextString("/"));
+                        }
+
+                    }
+                    focusLine += equipmentCount;
+
+                }
+
+                /**
+                 * 该订单的优惠
+                 */
+                if (isDebug) {
+                    System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted 优惠 @" + focusLine);
+                }
+                cell = sheet1.getRow(focusLine).getCell((short) 0);
+                cell.setCellValue(new HSSFRichTextString("优惠金额:"));
+
+                cell = sheet1.getRow(focusLine).getCell((short) 4);
+                Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
+                if (displayPrice) {
+                    cell.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
+                } else {
+                    cell.setCellValue(new HSSFRichTextString("/"));
+                }
+                totalPriceOfOrder -= sumOfDiscounts;
+                if (isDebug) {
+                    System.out.println("========order: " + machineOrderDetail.getOrderNum() + "  old totalPriceOfContract:" + totalPriceOfContract);
+                }
+                totalPriceOfContract += totalPriceOfOrder;
+                if (isDebug) {
+                    System.out.println("========order: " + machineOrderDetail.getOrderNum() + " now totalPriceOfContract:" + totalPriceOfContract + "by added:  " + totalPriceOfOrder);
+                }
+
+                focusLine++;
+                cell = sheet1.getRow(focusLine).getCell((short) 0);
+                cell.setCellValue(new HSSFRichTextString("居间费用"));
+
+                //居间费用的台数
+                cell = sheet1.getRow(focusLine).getCell((short) 2);
                 if (displayPrice) {
                     cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getIntermediaryPrice()));
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
 
-                //F5,F6,F7,..居间费用总计,不计入订单总价
-                cell = sheet1.getRow(5 + i).getCell((short) 5);
+                //居间费用/台 (单价)
+                cell = sheet1.getRow(focusLine).getCell((short) 3);
+                if (displayPrice) {
+                    cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getIntermediaryPrice()));
+                } else {
+                    cell.setCellValue(new HSSFRichTextString("/"));
+                }
+
+                // 居间费用总计,不计入订单总价
+                cell = sheet1.getRow(focusLine).getCell((short) 4);
                 if (displayPrice) {
                     Integer sumOfIntermediary =Integer.parseInt(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
                     cell.setCellValue(new HSSFRichTextString(sumOfIntermediary.toString()));
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
-                //G5,G6,G7,..优惠价格/台
-                cell = sheet1.getRow(5 + i).getCell((short) 6);
-                if (displayPrice) {
-                    cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getDiscounts()));
-                } else {
-                    cell.setCellValue(new HSSFRichTextString("/"));
+                if (isDebug) {
+                    System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted 居间 @" + focusLine);
                 }
-                //H5,H6,H7,..优惠总计
-                cell = sheet1.getRow(5 + i).getCell((short) 7);
-                if (displayPrice) {
-                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
-                    cell.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
-                } else {
-                    cell.setCellValue(new HSSFRichTextString("/"));
-                }
+            }//end of order
 
-                //计算在合同sheet用到装置价格信息，
-                JSONArray jsonArray = JSON.parseArray(machineOrderDetail.getEquipment());
-                Integer equipmentCount = 0;
-                //订单的设备总价
-                Integer equipmentSumOfOrder = 0;
-                if (null != jsonArray) {
-                    equipmentCount = jsonArray.size();
-                    for (int j = 0; j < equipmentCount; j++) {
-                        Equipment eq = JSON.parseObject((String) jsonArray.get(j).toString(), Equipment.class);
+            //删除需求单行的空白的多余一行
+            sheet1.shiftRows(focusLine , sheet1.getLastRowNum(),-1);
 
-                        //该类型的设备总价
-                        int eqSum = eq.getNumber() * eq.getPrice();
-                        equipmentSumOfOrder += eqSum;
-                    }
-                    equipmentSumOfOrder = equipmentSumOfOrder * machineOrderDetail.getMachineNum();
-                }
-                // I5,I6,I7...订单的装置总价。
-                cell = sheet1.getRow(5 + i).getCell((short) 8);
-                if (displayPrice) {
-                    cell.setCellValue(new HSSFRichTextString(equipmentSumOfOrder.toString() ));
-                } else {
-                    cell.setCellValue(new HSSFRichTextString("/"));
-                }
-               // J5,J6,J7...订单总价
-                cell = sheet1.getRow(5 + i).getCell((short) 9);
-                if (displayPrice) {
-                    allSumOfOrder = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum()
-                            - Integer.parseInt(machineOrderDetail.getDiscounts())*machineOrderDetail.getMachineNum()
-                            + equipmentSumOfOrder;
-                    allSumOfContract = allSumOfContract + allSumOfOrder;
-                    cell.setCellValue(new HSSFRichTextString(allSumOfOrder.toString()));
-                } else {
-                    cell.setCellValue(new HSSFRichTextString("/"));
-                }
-            }
-
-            Integer locationRow = 6 + machineOrderCount;
             // 合同总计
-            cell = sheet1.getRow(locationRow++).getCell((short) 9);
+            focusLine ++;
+            if (isDebug) {
+                System.out.println("===============合同总价 @" + focusLine + " line, focusLine is: " + focusLine);
+            }
+            cell = sheet1.getRow(focusLine++).getCell((short) 4);
             if (displayPrice) {
-                cell.setCellValue(new HSSFRichTextString(allSumOfContract.toString()));
+                cell.setCellValue(new HSSFRichTextString(totalPriceOfContract.toString()));
             } else {
                 cell.setCellValue(new HSSFRichTextString("/"));
             }
 
             // 付款方式
-            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell = sheet1.getRow(focusLine++).getCell((short) 1);
             if (displayPrice) {
                 cell.setCellValue(new HSSFRichTextString(contract.getPayMethod()));
             } else {
@@ -821,16 +932,16 @@ public class ContractController {
             }
 
             // 币种
-            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell = sheet1.getRow(focusLine++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contract.getCurrencyType()));
 
             // 合同交货日期
             String dateTimeString = formatter.format(contract.getContractShipDate());
-            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            cell = sheet1.getRow(focusLine++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(dateTimeString));
 
             // 备注
-            cell = sheet1.getRow(locationRow++).getCell((short) 0);
+            cell = sheet1.getRow(focusLine++).getCell((short) 0);
             if (displayPrice) {
                 cell.setCellValue(new HSSFRichTextString(contract.getMark()));
             } else {
@@ -838,8 +949,8 @@ public class ContractController {
             }
 
             // 销售员
-            locationRow = locationRow + 6;
-            cell = sheet1.getRow(locationRow++).getCell((short) 1);
+            focusLine = focusLine + 6;
+            cell = sheet1.getRow(focusLine++).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contract.getSellman()));
 
             //一个合同对应多个签核 TODO:多个签核时如何选择，contractSignService.detailByContractId 可能要改。
@@ -856,7 +967,7 @@ public class ContractController {
              */
             //合同的N个签核，插入N行
             Integer contractSignCount = signContentItemList.size();
-            insertRow(wb, sheet1, locationRow, contractSignCount);
+            insertRow(wb, sheet1, focusLine, contractSignCount);
             for (int k = 0; k < contractSignCount; k++) {
                 /**
                  * 合同签核的： 角色（部门）/人/时间/意见
@@ -865,33 +976,32 @@ public class ContractController {
                 int roleId = signContentItemList.get(k).getRoleId();
                 //根据roleId返回角色（部门）
                 String roleName = roleService.findById(roleId).getRoleName();
-                cell = sheet1.getRow(locationRow).getCell((short) 0);
+                cell = sheet1.getRow(focusLine).getCell((short) 0);
                 cell.setCellValue(new HSSFRichTextString(roleName));
                 //2.签核人
-                cell = sheet1.getRow(locationRow).getCell((short) 1);
+                cell = sheet1.getRow(focusLine).getCell((short) 1);
                 cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getUser()));
                 //3.签核时间
-                cell = sheet1.getRow(locationRow).getCell((short) 2);
+                cell = sheet1.getRow(focusLine).getCell((short) 2);
                 if (null != signContentItemList.get(k).getDate()) {
                     cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
                 }
-                cell = sheet1.getRow(locationRow).getCell((short) 3);
+                cell = sheet1.getRow(focusLine).getCell((short) 3);
                 cell.setCellValue(new HSSFRichTextString("意见"));
                 //4.签核意见
-                cell = sheet1.getRow(locationRow++).getCell((short) 4);
+                cell = sheet1.getRow(focusLine++).getCell((short) 4);
                 cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
 
             }
             //删除最后多余一行
-            sheet1.shiftRows(locationRow + 1,
-                    sheet1.getLastRowNum(),
-                    -1);
-            //删除需求单行的空白的多余一行
-            sheet1.shiftRows(6 + machineOrderCount ,
+            sheet1.shiftRows(focusLine + 1,
                     sheet1.getLastRowNum(),
                     -1);
 
-            //需求单
+
+            /**
+             * 需求单
+             */
             //根据实际需求单数量，动态复制生成新的sheet;
             for (int i = 0; i < machineOrderCount - 1; i++) {
                 // clone已经包含copy+paste
@@ -903,6 +1013,8 @@ public class ContractController {
 
             //sheet2，sheet3...,第1,2,...个需求单
             for (int i = 0; i < machineOrderCount; i++) {
+                totalPriceOfOrder = 0;
+                machineOrderSum = 0;
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
                 //把sheet名称改为订单的编号
                 wb.setSheetName(i + 1, machineOrderDetail.getOrderNum().replaceAll("/", "-"));
@@ -914,7 +1026,7 @@ public class ContractController {
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getSellman()));
                 //D2
                 cell2 = sheetX.getRow(1).getCell((short) 3);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMaintainType()));
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMaintainPerson()));
                 //F2
                 cell2 = sheetX.getRow(1).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderNum()));
@@ -1090,13 +1202,13 @@ public class ContractController {
                 String str = machineOrderDetail.getEquipment();
                 JSONArray jsonArray = JSON.parseArray(str);
                 Integer equipmentCount = 0;
-                Integer totalPriceOfOrder = 0;
                 if (null != jsonArray) {
                     //该需求单的N个装置，插入N行
                     equipmentCount = jsonArray.size();
                     insertRow2(wb, sheetX, 22, equipmentCount - 1);
-                    System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted " + equipmentCount + " line");
-
+                    if (isDebug) {
+                        System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted " + equipmentCount + " line");
+                    }
                     for (int j = 0; j < equipmentCount; j++) {
                         Equipment eq = JSON.parseObject((String) jsonArray.get(j).toString(), Equipment.class);
                         cell2 = sheetX.getRow(22 + j).getCell((short) 0);
@@ -1106,14 +1218,19 @@ public class ContractController {
                         cell2.setCellValue(new HSSFRichTextString(eq.getName()));
 
                         cell2 = sheetX.getRow(22 + j).getCell((short) 2);
-                        cell2.setCellValue(new HSSFRichTextString(eq.getNumber().toString()));
+                        /**
+                         * 这里的数量是：每台机器的装置数*机器台数
+                         */
+                        cell2.setCellValue(eq.getNumber()* machineOrderDetail.getMachineNum());
 
+                        //单价
                         cell2 = sheetX.getRow(22 + j).getCell((short) 3);
                         if (displayPrice) {
                             cell2.setCellValue(new HSSFRichTextString(eq.getPrice().toString()));
                         } else {
                             cell2.setCellValue(new HSSFRichTextString("/"));
                         }
+                        //总价
                         cell2 = sheetX.getRow(22 + j).getCell((short) 4);
                         int eqSum = eq.getNumber() * eq.getPrice() * machineOrderDetail.getMachineNum();
                         totalPriceOfOrder += eqSum;
@@ -1125,7 +1242,9 @@ public class ContractController {
                     }
 
                 } else {
-                    System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted 000 line");
+                    if (isDebug) {
+                        System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted 000 line");
+                    }
                 }//装置end
 
                 //居间费用/台
@@ -1171,10 +1290,10 @@ public class ContractController {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
                 // 机器总价
-                Integer machineOrderSum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum();
+                machineOrderSum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum();
                 cell2 = sheetX.getRow(24 + equipmentCount).getCell((short) 4);
                 if (displayPrice) {
-                    cell2.setCellValue(new HSSFRichTextString(machineOrderSum.toString()));
+                    cell2.setCellValue(machineOrderSum);
                 } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
@@ -1183,7 +1302,7 @@ public class ContractController {
                 totalPriceOfOrder += machineOrderSum;
                 cell2 = sheetX.getRow(25 + equipmentCount).getCell((short) 4);
                 if (displayPrice) {
-                    cell2.setCellValue(new HSSFRichTextString(totalPriceOfOrder.toString()));
+                    cell2.setCellValue(totalPriceOfOrder);
                 } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
@@ -1272,6 +1391,33 @@ public class ContractController {
         }
     }
 
+    /**
+     *
+     * @param equipmentNumArr:  装置数量的数组
+     * @param i: 第i个订单
+     * @return 返回前面i-1个订单的： 装置总数+居间+优惠的总量
+     */
+    private int getLinesSum(int[] equipmentNumArr, int i){
+        int sum = 0;
+        if(i == 0){
+            /**
+             * 第一个订单
+             */
+            sum = 0;
+        } else {
+            /**
+             * 从第2个订单开始,要加上前面订单所占的行数
+             */
+            for (int j = 0; j < i ; j++) {
+                sum += equipmentNumArr[j];
+                sum += 2; //居间费用和优惠各一行，机器本身一行
+            }
+        }
+        if (isDebug) {
+            System.out.println("订单_" + i + "前面的行数" + " getLinesSum: " + sum);
+        }
+        return sum;
+    }
     private void insertRow(HSSFWorkbook wb, HSSFSheet sheet, int starRow, int rows) {
         sheet.shiftRows(starRow + 1, sheet.getLastRowNum(), rows, true, false);
         starRow = starRow - 1;
@@ -1289,7 +1435,7 @@ public class ContractController {
             targetRow.setHeight(sourceRow.getHeight());
 
             //创建多列
-            for (m = sourceRow.getFirstCellNum(); m < 10; m++) {
+            for (m = sourceRow.getFirstCellNum(); m < 5; m++) {
 
                 targetCell = targetRow.createCell(m);
                 sourceCell = sourceRow.getCell(m);
