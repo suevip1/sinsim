@@ -743,12 +743,12 @@ public class ContractController {
                 Integer equipmentCount = 0;
 
                 if (null != jsonArray) {
-                    //该需求单的X个装置，插入X + 2行 (2是优惠和居间)
+                    //该需求单的X个装置，插入X + 3行 (3是优惠/居间/需求单小计)
                     equipmentCount = jsonArray.size();
-                    insertRow(wb, sheet1, 5 , equipmentCount+2 );
+                    insertRow(wb, sheet1, 5 , equipmentCount+3 );
                     equipmentNumArr[i] = equipmentCount;
                     if (isDebug) {
-                        System.out.println("======== insert Rows: " + (equipmentCount + 2) + "for equipments");
+                        System.out.println("======== insert Rows: " + (equipmentCount + 3) + "for equipments");
                     }
                 }
             }
@@ -805,7 +805,7 @@ public class ContractController {
                  */
                 JSONArray jsonArray = JSON.parseArray(machineOrderDetail.getEquipment());
                 Integer equipmentCount = 0;
-
+                int orderEquipmentTotal = 0;
                 if (null != jsonArray) {
 
                     focusLine = 6 + i + getLinesSum(equipmentNumArr, i );
@@ -838,6 +838,7 @@ public class ContractController {
                          */
                         cell = sheet1.getRow(focusLine + j).getCell((short) 4);
                         int eqSum = eq.getNumber() * eq.getPrice() * machineOrderDetail.getMachineNum();
+                        orderEquipmentTotal = orderEquipmentTotal + eqSum;
                         totalPriceOfOrder += eqSum;
                         if (displayPrice) {
                             cell.setCellValue(new HSSFRichTextString((Integer.toString(eqSum))));
@@ -906,6 +907,32 @@ public class ContractController {
                 if (isDebug) {
                     System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted 居间 @" + focusLine);
                 }
+
+                /**
+                 * 需求单小计
+                 */
+                focusLine++;
+                cell = sheet1.getRow(focusLine).getCell((short) 0);
+                cell.setCellValue(new HSSFRichTextString("小 计"));
+
+                cell = sheet1.getRow(focusLine).getCell((short) 2);
+                cell.setCellValue(new HSSFRichTextString("/"));
+
+                cell = sheet1.getRow(focusLine).getCell((short) 3);
+                cell.setCellValue(new HSSFRichTextString("/"));
+
+                //需求单小计
+                cell = sheet1.getRow(focusLine).getCell((short) 4);
+                if (displayPrice) {
+                    Integer orderTotalPrice = machineOrderSum + orderEquipmentTotal - sumOfDiscounts;
+                    cell.setCellValue(new HSSFRichTextString(orderTotalPrice.toString()));
+                } else {
+                    cell.setCellValue(new HSSFRichTextString("/"));
+                }
+                if (isDebug) {
+                    System.out.println("========order: " + machineOrderDetail.getOrderNum() + " inserted 小计 @" + focusLine);
+                }
+
             }//end of order
 
             //删除需求单行的空白的多余一行
@@ -1410,7 +1437,7 @@ public class ContractController {
              */
             for (int j = 0; j < i ; j++) {
                 sum += equipmentNumArr[j];
-                sum += 2; //居间费用和优惠各一行，机器本身一行
+                sum += 3; //居间费用/优惠/小计各一行，机器本身一行
             }
         }
         if (isDebug) {

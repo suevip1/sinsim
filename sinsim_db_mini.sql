@@ -262,6 +262,7 @@ CREATE TABLE `machine_order` (
   `machine_price` varchar(255) NOT NULL COMMENT '机器价格（不包括装置）',
   `Intermediary_price` varchar(255) NOT NULL DEFAULT '0' COMMENT '居间费用',
   `discounts` varchar(255) NOT NULL DEFAULT '0' COMMENT '价格优惠',
+  `order_total_discounts` varchar(255) NOT NULL DEFAULT '0' COMMENT '需求单总优惠金额，内贸需要',
   `contract_ship_date` date NOT NULL,
   `plan_ship_date` date NOT NULL,
   `mark` text COMMENT '备注信息',
