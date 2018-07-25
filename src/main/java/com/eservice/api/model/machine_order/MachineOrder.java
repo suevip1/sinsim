@@ -133,6 +133,12 @@ public class MachineOrder {
     private String discounts;
 
     /**
+     * 需求单总价格优惠金额，内贸使用
+     */
+    @Column(name = "order_total_discounts")
+    private String orderTotalDiscounts;
+
+    /**
      * 机器装置信息，以JSON字符串的形式进行保存（name/number/price）
      */
     @Column(name = "equipment")
@@ -540,6 +546,14 @@ public class MachineOrder {
 
     public void setDiscounts(String discounts) {
         this.discounts = discounts;
+    }
+
+    public String getOrderTotalDiscounts() {
+        return orderTotalDiscounts;
+    }
+
+    public void setOrderTotalDiscounts(String orderTotalDiscounts) {
+        this.orderTotalDiscounts = orderTotalDiscounts;
     }
 
     /**
