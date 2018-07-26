@@ -169,7 +169,7 @@
             and solution != ""
         </if>
         <if test="finish_status != null and finish_status == 2">
-            and solution is null
+            and solution = ""
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
         <if test="query_start_time != null and query_start_time != '' ">

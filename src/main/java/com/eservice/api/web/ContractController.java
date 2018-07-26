@@ -692,13 +692,14 @@ public class ContractController {
             //一个合同可能对应多个需求单
             List<Integer> machineOrderIdList = new ArrayList<Integer>();
             MachineOrder mo;
-            for (int i = 0; i < machineOrderService.findAll().size(); i++) {
-                mo = machineOrderService.findAll().get(i);
-                if (mo.getContractId().equals(contractId)) {
-                    // (已改的单，是废弃的单，不用再显示在excel里,已拆的单,因为是有效的，所以保留着)
-                    if (mo.getStatus() != Constant.ORDER_CHANGED) {
-                        machineOrderIdList.add(mo.getId());
-                    }
+            Condition tempCondition = new Condition(MachineOrder.class);
+            tempCondition.createCriteria().andCondition("contract_id = ", contractId);
+            List<MachineOrder> validOrderList = machineOrderService.findByCondition(tempCondition);
+            for (int i = 0; i < validOrderList.size(); i++) {
+                mo = validOrderList.get(i);
+                // (已改的单，是废弃的单，不用再显示在excel里,已拆的单,因为是有效的，所以保留着)
+                if (mo.getStatus().intValue() != Constant.ORDER_CHANGED.intValue() && mo.getValid().intValue() == 1) {
+                    machineOrderIdList.add(mo.getId());
                 }
             }
             MachineOrderDetail machineOrderDetail;
