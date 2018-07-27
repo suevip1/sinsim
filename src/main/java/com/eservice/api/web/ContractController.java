@@ -275,7 +275,9 @@ public class ContractController {
         List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
         for (MachineOrderWrapper orderItem : machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
-            if (machineOrder.getStatus().equals(Constant.ORDER_INITIAL) && machineOrder.getOriginalOrderId() != 0) {
+            //检查时候存在有效的需求单,如果需求单中存在ID,则表示其已经在数据库中存在;修复同一个合同中多次改单（未提交审核）出现重复的需求单的问题
+            if (machineOrder.getStatus().equals(Constant.ORDER_INITIAL) && machineOrder.getOriginalOrderId() != 0
+                    && (machineOrder.getId() == null || machineOrder.getId() == 0)) {
                 //插入新增改单项的detail
                 OrderDetail temp = orderItem.getOrderDetail();
                 orderDetailService.saveAndGetID(temp);
@@ -309,6 +311,7 @@ public class ContractController {
             //设置被改单的需求单状态(machine_order/order_sign)
             if (machineOrder.getStatus().equals(Constant.ORDER_CHANGED)) {
                 //更新了被改的需求单为“改单”，持久化至数据库
+                machineOrder.setUpdateTime(new Date());
                 machineOrderService.update(machineOrder);
                 //获取被改单对应机器，设置改单状态(machine)
                 Condition tempCondition = new Condition(Machine.class);
@@ -698,7 +701,7 @@ public class ContractController {
             for (int i = 0; i < validOrderList.size(); i++) {
                 mo = validOrderList.get(i);
                 // (已改的单，是废弃的单，不用再显示在excel里,已拆的单,因为是有效的，所以保留着)
-                if (mo.getStatus().intValue() != Constant.ORDER_CHANGED.intValue() && mo.getValid().intValue() == 1) {
+                if (mo.getValid().intValue() == 1) {
                     machineOrderIdList.add(mo.getId());
                 }
             }
@@ -1347,6 +1350,29 @@ public class ContractController {
                 cell2 = sheetX.getRow(28 + equipmentCount).getCell((short) 0);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMark()));
 
+                //判断改单还是拆单
+                if(machineOrderDetail.getOriginalOrderId() != null && machineOrderDetail.getOriginalOrderId() != 0) {
+                    int status = machineOrderService.findById(machineOrderDetail.getOriginalOrderId()).getStatus();
+                    if( status == Constant.ORDER_CHANGED.intValue()) {
+                        Condition condition = new Condition(OrderChangeRecord.class);
+                        condition.createCriteria().andCondition("order_id = ", machineOrderDetail.getOriginalOrderId());
+                        List<OrderChangeRecord> list = orderChangeRecordService.findByCondition(condition);
+                        if(list != null && list.size() == 1) {
+                            cell2 = sheetX.getRow(35 + equipmentCount).getCell((short) 2);
+                            cell2.setCellValue(new HSSFRichTextString(list.get(0).getChangeReason()));
+                        }
+                    } else if(status == Constant.ORDER_SPLITED.intValue()) {
+                        // 拆单
+                        Condition condition = new Condition(OrderSplitRecord.class);
+                        condition.createCriteria().andCondition("order_id = ", machineOrderDetail.getOriginalOrderId());
+                        List<OrderSplitRecord> list = orderSplitRecordService.findByCondition(condition);
+                        if(list != null && list.size() == 1) {
+                            cell2 = sheetX.getRow(36 + equipmentCount).getCell((short) 2);
+                            cell2.setCellValue(new HSSFRichTextString(list.get(0).getSplitReason()));
+                        }
+                    }
+                }
+
                 /**
                  *  需求单审核信息，来自 order_sign， 具体有几个签核步骤，可以动态填入表格
                  */
@@ -1359,7 +1385,7 @@ public class ContractController {
 
                     //需求单的N个签核，插入N行
                     Integer orderSignCount = signContentItemList.size();
-                    insertRow2(wb, sheetX, 36 + equipmentCount, orderSignCount);
+                    insertRow2(wb, sheetX, 38 + equipmentCount, orderSignCount);
                     for (int k = 0; k < orderSignCount; k++) {
                         /**
                          * 需求单签核的： 角色（部门）/人/时间/意见
@@ -1368,27 +1394,27 @@ public class ContractController {
                         int roleId = signContentItemList.get(k).getRoleId();
                         //根据roleId返回角色（部门）
                         String roleName = roleService.findById(roleId).getRoleName();
-                        cell = sheetX.getRow(36 + equipmentCount + k).getCell((short) 0);
+                        cell = sheetX.getRow(38 + equipmentCount + k).getCell((short) 0);
                         cell.setCellValue(new HSSFRichTextString(roleName));
                         //2.签核人
-                        cell = sheetX.getRow(36 + equipmentCount + k).getCell((short) 1);
+                        cell = sheetX.getRow(38 + equipmentCount + k).getCell((short) 1);
                         cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getUser()));
                         //3.签核时间
-                        cell = sheetX.getRow(36 + equipmentCount + k).getCell((short) 2);
+                        cell = sheetX.getRow(38 + equipmentCount + k).getCell((short) 2);
                         if (null != signContentItemList.get(k).getDate()) {
                             cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
                         }
-                        cell = sheetX.getRow(36 + equipmentCount + k).getCell((short) 3);
+                        cell = sheetX.getRow(38 + equipmentCount + k).getCell((short) 3);
                         cell.setCellValue(new HSSFRichTextString("意见"));
                         //4.签核意见
-                        cell = sheetX.getRow(36 + equipmentCount + k).getCell((short) 4);
+                        cell = sheetX.getRow(38 + equipmentCount + k).getCell((short) 4);
                         cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
                         //合并单元格
-                        sheetX.addMergedRegion(new CellRangeAddress(36 + equipmentCount + k,
-                                36 + equipmentCount + k, 4, 10));
+                        sheetX.addMergedRegion(new CellRangeAddress(38 + equipmentCount + k,
+                                38 + equipmentCount + k, 4, 10));
                     }
                     //最后删除多余一行
-                    sheetX.shiftRows(36 + equipmentCount + orderSignCount + 1,
+                    sheetX.shiftRows(38 + equipmentCount + orderSignCount + 1,
                             sheetX.getLastRowNum(),
                             -1);
                 }
