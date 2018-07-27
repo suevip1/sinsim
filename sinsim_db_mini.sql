@@ -472,12 +472,14 @@ DROP TABLE IF EXISTS `order_split_record`;
 CREATE TABLE `order_split_record` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` int(10) unsigned NOT NULL COMMENT '订单编号',
+  `original_order_id` int(10) unsigned NOT NULL,
   `split_reason` text NOT NULL COMMENT '取消原因',
   `user_id` int(10) unsigned NOT NULL COMMENT '拆分订单操作的用户ID，只有创建订单的销售员可以拆分改订单，或者销售经理',
   `split_time` datetime NOT NULL COMMENT '拆分订单的时间',
   PRIMARY KEY (`id`),
   KEY `fk_oc_order_id` (`order_id`),
   KEY `fk_oc_user_id` (`user_id`),
+  CONSTRAINT `order_split_record_ibfk_3` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`),
   CONSTRAINT `order_split_record_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`),
   CONSTRAINT `order_split_record_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

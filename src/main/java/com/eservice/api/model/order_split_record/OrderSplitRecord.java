@@ -10,10 +10,16 @@ public class OrderSplitRecord {
     private Integer id;
 
     /**
-     * 订单编号
+     * 新订单编号
      */
     @Column(name = "order_id")
     private Integer orderId;
+
+    /**
+     * 被拆需求单编号
+     */
+    @Column(name = "original_order_id")
+    private Integer originalOrderId;
 
     /**
      * 拆分订单操作的用户ID，只有创建订单的销售员可以拆分改订单，或者销售经理
@@ -63,6 +69,14 @@ public class OrderSplitRecord {
      */
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
+    }
+
+    public Integer getOriginalOrderId() {
+        return originalOrderId;
+    }
+
+    public void setOriginalOrderId(Integer originalOrderId) {
+        this.originalOrderId = originalOrderId;
     }
 
     /**

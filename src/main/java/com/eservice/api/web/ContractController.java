@@ -507,6 +507,7 @@ public class ContractController {
                 OrderSplitRecord splitRecord = orderItem.getOrderSplitRecord();
                 if (splitRecord.getId() == null) {
                     splitRecord.setSplitTime(new Date());
+                    splitRecord.setOrderId(machineOrder.getId());
                     orderSplitRecordService.save(splitRecord);
                 } else {
                     splitRecord.setSplitTime(new Date());
@@ -1364,7 +1365,7 @@ public class ContractController {
                     } else if(status == Constant.ORDER_SPLITED.intValue()) {
                         // 拆单
                         Condition condition = new Condition(OrderSplitRecord.class);
-                        condition.createCriteria().andCondition("order_id = ", machineOrderDetail.getOriginalOrderId());
+                        condition.createCriteria().andCondition("order_id = ", machineOrderDetail.getId());
                         List<OrderSplitRecord> list = orderSplitRecordService.findByCondition(condition);
                         if(list != null && list.size() == 1) {
                             cell2 = sheetX.getRow(36 + equipmentCount).getCell((short) 2);
