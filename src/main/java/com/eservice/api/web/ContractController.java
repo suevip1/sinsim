@@ -236,6 +236,17 @@ public class ContractController {
         contract1.setUpdateTime(new Date());
         contractService.update(contract1);
 
+        //检查需求单中的销售员和合同中销售员是否一致，如果不一致则更新需求单中的销售员
+        for (MachineOrderWrapper item : machineOrderWapperlist) {
+            if(!item.getMachineOrder().getSellman().equals(contract1.getSellman())) {
+                MachineOrder order = new MachineOrder();
+                order.setId(item.getMachineOrder().getId());
+                //只更新销售员
+                order.setSellman(contract1.getSellman());
+                machineOrderService.update(order);
+            }
+        }
+
         return ResultGenerator.genSuccessResult();
     }
 
