@@ -70,17 +70,12 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                                     String query_finish_time,
                                                     Boolean is_fuzzy) {
         List<MachinePlan> machinePlanList = new ArrayList<>();
-        List<MachinePlan> tempList = new ArrayList<>();
         if (is_fuzzy) {
-            tempList = machineMapper.selectPlanningMachinesFuzzy(orderNum, machine_strid, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time);
+            machinePlanList = machineMapper.selectPlanningMachinesFuzzy(orderNum, machine_strid, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time);
         } else {
-            tempList = machineMapper.selectPlanningMachines(orderNum, machine_strid, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time);
+            machinePlanList = machineMapper.selectPlanningMachines(orderNum, machine_strid, nameplate, location, status, machineType, dateType, query_start_time, query_finish_time);
         }
-        for (MachinePlan itemPlan : tempList) {
-            if (itemPlan.getPlanedTaskNum() < itemPlan.getTotalTaskNum()) {
-                machinePlanList.add(itemPlan);
-            }
-        }
+
         for (MachinePlan itemPlan : machinePlanList) {
 
             //获取机器对应task record,
