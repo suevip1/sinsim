@@ -57,7 +57,15 @@ public class MachineTypeController {
         MachineType model = JSON.parseObject(machineType, MachineType.class);
         Integer count = machineOrderService.getUsedMachineTypeCount(model.getId());
         if (count > 0) {
-            return ResultGenerator.genFailResult("此机型已在使用中，不能修改！");
+            //机器被使用，检查机型的名称是否更改
+            MachineType typeInDB = machineTypeService.findById(model.getId());
+            if(typeInDB != null && typeInDB.getName().equals(model.getName())) {
+                //名称没变，变的可能是是否成品机信息
+                machineTypeService.update(model);
+                ResultGenerator.genSuccessResult();
+            } else {
+                return ResultGenerator.genFailResult("此机型已在使用中，不能修改！");
+            }
         }
         List<MachineType> dataList = machineTypeService.selectByName(model.getName());
         if (dataList.size() > 0) {

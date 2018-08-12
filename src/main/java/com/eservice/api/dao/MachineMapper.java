@@ -34,12 +34,12 @@ public interface MachineMapper extends Mapper<Machine> {
     //selectConfigMachine
     List<MachineInfo> selectConfigMachine(
             @Param("order_id") Integer order_id, @Param("order_num") String orderNum, @Param("contract_num") String contractNum, @Param("machine_strid") String machine_strid, @Param("nameplate") String nameplate,
-            @Param("location") String location, @Param("status") Byte status,
+            @Param("machineType") Integer machineType,@Param("location") String location, @Param("status") Byte status,
             @Param("query_start_time") String query_start_time, @Param("query_finish_time") String query_finish_time, @Param("configStatus") Integer configStatus);
 
     List<MachineInfo> selectConfigMachineFuzzy(
             @Param("order_id") Integer order_id, @Param("order_num") String orderNum, @Param("contract_num") String contractNum, @Param("machine_strid") String machine_strid, @Param("nameplate") String nameplate,
-            @Param("location") String location, @Param("status") Byte status,
+            @Param("machineType") Integer machineType,@Param("location") String location, @Param("status") Byte status,
             @Param("query_start_time") String query_start_time, @Param("query_finish_time") String query_finish_time, @Param("configStatus") Integer configStatus);
 
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,6 +66,7 @@ public class MachineController {
     @PostMapping("/update")
     public Result update(String machine) {
         Machine machine1 = JSON.parseObject(machine, Machine.class);
+        machine1.setUpdateTime(new Date());
         machineService.update(machine1);
         return ResultGenerator.genSuccessResult();
     }
@@ -131,6 +133,7 @@ public class MachineController {
             String contractNum,
             String machine_strid,
             String nameplate,
+            Integer machineType,
             String location,
             Byte status,
             String query_start_time,
@@ -138,8 +141,7 @@ public class MachineController {
             @RequestParam(defaultValue = "0") Integer configStatus,
             @RequestParam(defaultValue = "true") Boolean is_fuzzy
     ) {
-        PageHelper.startPage(page, size);
-        List<MachineInfo> list = machineService.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, configStatus, is_fuzzy);
+        PageHelper.startPage(page, size);List<MachineInfo> list = machineService.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, machineType, location, status, query_start_time, query_finish_time, configStatus, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

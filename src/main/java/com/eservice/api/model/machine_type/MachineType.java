@@ -14,6 +14,11 @@ public class MachineType {
     private String name;
 
     /**
+     * 是否为成品机
+     */
+    private Integer finished;
+
+    /**
      * @return id
      */
     public Integer getId() {
@@ -43,5 +48,13 @@ public class MachineType {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Integer finished) {
+        this.finished = finished;
     }
 }

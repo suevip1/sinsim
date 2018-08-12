@@ -148,6 +148,7 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
             String contractNum,
             String machine_strid,
             String nameplate,
+            Integer machineType,
             String location,
             Byte status,
             String query_start_time,
@@ -156,9 +157,9 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
             Boolean is_fuzzy
     ) {
         if (is_fuzzy) {
-            return machineMapper.selectConfigMachineFuzzy(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, configStatus);
+            return machineMapper.selectConfigMachineFuzzy(order_id, orderNum, contractNum, machine_strid, nameplate, machineType, location, status, query_start_time, query_finish_time, configStatus);
         } else {
-            return machineMapper.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, configStatus);
+            return machineMapper.selectConfigMachine(order_id, orderNum, contractNum, machine_strid, nameplate, machineType, location, status, query_start_time, query_finish_time, configStatus);
         }
     }
 

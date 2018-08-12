@@ -287,6 +287,9 @@
         <if test="nameplate != null and nameplate != ''">
             and nameplate=#{nameplate}
         </if>
+        <if test="machineType != null and machineType != ''">
+            and machine_type = #{machineType}
+        </if>
         <if test="location != null and location != ''">
             and location=#{location}
         </if>
@@ -334,6 +337,9 @@
         </if>
         <if test="nameplate != null and nameplate != ''">
             and nameplate like CONCAT('%','${nameplate}','%' )
+        </if>
+        <if test="machineType != null and machineType != ''">
+            and machine_type = #{machineType}
         </if>
         <if test="location != null and location != ''">
             and location=#{location}
