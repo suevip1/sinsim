@@ -45,6 +45,7 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -505,6 +506,10 @@ public class TaskRecordController {
         Integer id = tr.getId();
         if (id == null || id < 0) {
             return ResultGenerator.genFailResult("TaskRecord的ID为空，数据更新失败！");
+        }
+        //防止开始安装时间为空的问题
+        if(tr.getStatus().intValue() == Constant.TASK_INSTALLING.intValue()) {
+            tr.setInstallBeginTime(new Date());
         }
         taskRecordService.update(tr);
 

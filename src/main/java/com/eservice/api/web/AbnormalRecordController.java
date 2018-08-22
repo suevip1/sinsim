@@ -223,55 +223,58 @@ public class AbnormalRecordController {
             //创建行和列
             for (int r = 0; r < list.size() + 1; r++) {
                 row = sheet1.createRow(r);
-                for (int c = 0; c < 10; c++) {
+                for (int c = 0; c < 11; c++) {
                     row.createCell(c);
                     sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
                 }
             }
             sheet1.setColumnWidth(0, 1500);
             sheet1.setColumnWidth(1, 4000);
-            sheet1.setColumnWidth(2, 4000);
+            sheet1.setColumnWidth(2, 6000);
             sheet1.setColumnWidth(3, 4000);
-            sheet1.setColumnWidth(4, 15000);
-            sheet1.setColumnWidth(5, 4000);
+            sheet1.setColumnWidth(4, 4000);
+            sheet1.setColumnWidth(5, 15000);
             sheet1.setColumnWidth(6, 4000);
-            sheet1.setColumnWidth(7, 10000);
-            sheet1.setColumnWidth(8, 4000);
+            sheet1.setColumnWidth(7, 4000);
+            sheet1.setColumnWidth(8, 10000);
             sheet1.setColumnWidth(9, 4000);
+            sheet1.setColumnWidth(10, 4000);
             //第一行为标题
             sheet1.getRow(0).getCell(0).setCellValue("序号");
             sheet1.getRow(0).getCell(1).setCellValue("机器编号");
-            sheet1.getRow(0).getCell(2).setCellValue("异常类型");
-            sheet1.getRow(0).getCell(3).setCellValue("工序");
-            sheet1.getRow(0).getCell(4).setCellValue("异常描述");
-            sheet1.getRow(0).getCell(5).setCellValue("提交者");
-            sheet1.getRow(0).getCell(6).setCellValue("解决者");
-            sheet1.getRow(0).getCell(7).setCellValue("解决方法");
-            sheet1.getRow(0).getCell(8).setCellValue("创建时间");
-            sheet1.getRow(0).getCell(9).setCellValue("解决时间");
+            sheet1.getRow(0).getCell(2).setCellValue("订单编号");
+            sheet1.getRow(0).getCell(3).setCellValue("异常类型");
+            sheet1.getRow(0).getCell(4).setCellValue("工序");
+            sheet1.getRow(0).getCell(5).setCellValue("异常描述");
+            sheet1.getRow(0).getCell(6).setCellValue("提交者");
+            sheet1.getRow(0).getCell(7).setCellValue("解决者");
+            sheet1.getRow(0).getCell(8).setCellValue("解决方法");
+            sheet1.getRow(0).getCell(9).setCellValue("创建时间");
+            sheet1.getRow(0).getCell(10).setCellValue("解决时间");
 
             //第二行开始，填入值
             for (int r = 0; r < list.size(); r++) {
                 row = sheet1.getRow(r + 1);
                 row.getCell(0).setCellValue(r + 1);
                 row.getCell(1).setCellValue(list.get(r).getMachine().getNameplate());
-                row.getCell(2).setCellValue(list.get(r).getAbnormal().getAbnormalName());
-                row.getCell(3).setCellValue(list.get(r).getTaskRecord().getTaskName());
-                row.getCell(4).setCellValue(list.get(r).getComment());
+                row.getCell(2).setCellValue(list.get(r).getOrderNum());
+                row.getCell(3).setCellValue(list.get(r).getAbnormal().getAbnormalName());
+                row.getCell(4).setCellValue(list.get(r).getTaskRecord().getTaskName());
+                row.getCell(5).setCellValue(list.get(r).getComment());
                 int userID = list.get(r).getSubmitUser();
-                row.getCell(5).setCellValue(userService.findById(userID).getName());
+                row.getCell(6).setCellValue(userService.findById(userID).getName());
 
                 //安装异常时， 还不知道SolutionUser， SolutionUser是null
                 if (list.get(r).getSolutionUser() != null) {
                     userID = list.get(r).getSolutionUser();
-                    row.getCell(6).setCellValue(userService.findById(userID).getName());
+                    row.getCell(7).setCellValue(userService.findById(userID).getName());
                 }
-                row.getCell(7).setCellValue(list.get(r).getSolution());
+                row.getCell(8).setCellValue(list.get(r).getSolution());
                 dateString = formatter.format(list.get(r).getCreateTime());
-                row.getCell(8).setCellValue(dateString);
+                row.getCell(9).setCellValue(dateString);
                 if (list.get(r).getSolveTime() != null) {
                     dateString = formatter.format(list.get(r).getSolveTime());
-                    row.getCell(9).setCellValue(dateString);
+                    row.getCell(10).setCellValue(dateString);
                 }
             }
             downloadPath = abnoramlExcelOutputDir + "安装异常统计" + ".xls";
