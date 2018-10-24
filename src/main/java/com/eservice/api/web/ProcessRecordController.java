@@ -161,7 +161,7 @@ public class ProcessRecordController {
                 //添加新的task record
                 List<TaskRecord> newAddedList = new ArrayList<>();
                 for (NodeDataModel item : nodeDataModelList) {
-                    if(Integer.valueOf(item.getKey()).intValue() != -1 || Integer.valueOf(item.getKey()).intValue() != -4) {
+                    if(Integer.valueOf(item.getKey()).intValue() == -1 || Integer.valueOf(item.getKey()).intValue() == -4) {
                         continue;
                     }
                     boolean newAdded = true;
