@@ -1158,6 +1158,8 @@ public class ContractController {
                 //i11
                 cell2 = sheetX.getRow(10).getCell((short) 8);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleNeedle()));
+                cell2 = sheetX.getRow(10).getCell((short) 10);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getAxleNeedleType()));
 
                 //C12
                 cell2 = sheetX.getRow(11).getCell((short) 2);
