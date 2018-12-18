@@ -877,7 +877,11 @@ public class ContractController {
                 cell.setCellValue(new HSSFRichTextString("优惠金额:"));
 
                 cell = sheet1.getRow(focusLine).getCell((short) 4);
-                Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
+                /**
+                 * 该订单的 总优惠 = 优惠金额/台 * 台数 +  优惠金额 (用于抹零等)
+                 * 既有 优惠金额/台，又有优惠金额 。类似折上折的意思
+                 */
+                Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum() + Integer.parseInt(machineOrderDetail.getOrderTotalDiscounts());
                 if (displayPrice) {
                     cell.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
                 } else {
@@ -1315,9 +1319,13 @@ public class ContractController {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
                 //优惠总计
+                /**
+                 * 该订单的 总优惠 = 优惠金额/台 * 台数 +  优惠金额 (用于抹零等)
+                 * 既有 优惠金额/台，又有优惠金额 。类似折上折的意思
+                 */
                 cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 4);
                 if (displayPrice) {
-                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
+                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum() + Integer.parseInt(machineOrderDetail.getOrderTotalDiscounts());
                     cell2.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
                     totalPriceOfOrder -= sumOfDiscounts;
                 } else {
