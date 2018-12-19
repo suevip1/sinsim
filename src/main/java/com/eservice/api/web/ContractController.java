@@ -903,7 +903,7 @@ public class ContractController {
                 //居间费用的台数
                 cell = sheet1.getRow(focusLine).getCell((short) 2);
                 if (displayPrice) {
-                    cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getIntermediaryPrice()));
+                    cell.setCellValue( machineOrderDetail.getMachineNum() );
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
                 }
@@ -1296,43 +1296,59 @@ public class ContractController {
                     }
                 }//装置end
 
+                /**
+                 *  空表格里是斜线，不用显示
+                 */
+//                //优惠价格/台
+//                cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 3);
+//                if (displayPrice) {
+//                    cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getDiscounts()));
+//                } else {
+//                    cell2.setCellValue(new HSSFRichTextString("/"));
+//                }
+
+                /**
+                 * 优惠总计
+                 * 该订单的 总优惠 = 优惠金额/台 * 台数 +  优惠金额 (用于抹零等)
+                 * 既有 优惠金额/台，又有优惠金额 。类似折上折的意思
+                 */
+                cell2 = sheetX.getRow(22 + equipmentCount).getCell((short) 4);
+                if (displayPrice) {
+                    //Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum() + Integer.parseInt(machineOrderDetail.getOrderTotalDiscounts());
+                    /**
+                     * 用 xx + yy 的形式展示具体的值，如果存在折上折时，可以清楚看到具体情况：  xx(即优惠金额/台 * 台数) + yy（即优惠金额）
+                     */
+                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
+                    cell2.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()) + " + " + machineOrderDetail.getOrderTotalDiscounts());
+                    totalPriceOfOrder -= (sumOfDiscounts + Integer.parseInt( machineOrderDetail.getOrderTotalDiscounts()));
+                } else {
+                    cell2.setCellValue(new HSSFRichTextString("/"));
+                }
+                //居间费用的台数
+                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 2);
+                if (displayPrice) {
+                    cell2.setCellValue( machineOrderDetail.getMachineNum() );
+                } else {
+                    cell2.setCellValue(new HSSFRichTextString("/"));
+                }
                 //居间费用/台
-                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 1);
+                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 3);
                 if (displayPrice) {
                     cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getIntermediaryPrice()));
                 }else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
-                //居间费用总计
-                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 2);
+
+                //居间费用总计  不计入订单总价
+                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 4);
                 if (displayPrice) {
                     Integer sumOfIntermediary =Integer.parseInt(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
                     cell2.setCellValue(new HSSFRichTextString(sumOfIntermediary.toString()));
                 } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
-                //优惠价格/台
-                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 3);
-                if (displayPrice) {
-                    cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getDiscounts()));
-                } else {
-                    cell2.setCellValue(new HSSFRichTextString("/"));
-                }
-                //优惠总计
-                /**
-                 * 该订单的 总优惠 = 优惠金额/台 * 台数 +  优惠金额 (用于抹零等)
-                 * 既有 优惠金额/台，又有优惠金额 。类似折上折的意思
-                 */
-                cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 4);
-                if (displayPrice) {
-                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum() + Integer.parseInt(machineOrderDetail.getOrderTotalDiscounts());
-                    cell2.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
-                    totalPriceOfOrder -= sumOfDiscounts;
-                } else {
-                    cell2.setCellValue(new HSSFRichTextString("/"));
-                }
 
-                // 订机数量  这里后续用变量代替
+                // 订机数量
                 cell2 = sheetX.getRow(24 + equipmentCount).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineNum().toString()));
                 // 机器单价
