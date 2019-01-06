@@ -5,6 +5,7 @@ public class Equipment {
     private String name;
     private Integer number;
     private Integer price;
+    private String type;
 
     public void setName(String name) {
         this.name = name;
@@ -28,5 +29,13 @@ public class Equipment {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

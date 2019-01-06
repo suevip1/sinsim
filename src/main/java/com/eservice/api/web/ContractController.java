@@ -706,6 +706,7 @@ public class ContractController {
 
             //一个合同可能对应多个需求单
             List<Integer> machineOrderIdList = new ArrayList<Integer>();
+            List<Integer> validMachineOrderIdList = new ArrayList<Integer>();
             MachineOrder mo;
             Condition tempCondition = new Condition(MachineOrder.class);
             tempCondition.createCriteria().andCondition("contract_id = ", contractId);
@@ -715,6 +716,9 @@ public class ContractController {
                 // (已改的单，是废弃的单，不用再显示在excel里,已拆的单,因为是有效的，所以保留着)
                 if (mo.getValid().intValue() == 1) {
                     machineOrderIdList.add(mo.getId());
+                    if(mo.getStatus().intValue() != Constant.ORDER_CHANGED.intValue()) {
+                        validMachineOrderIdList.add(mo.getId());
+                    }
                 }
             }
             MachineOrderDetail machineOrderDetail;
@@ -739,20 +743,20 @@ public class ContractController {
             cell = sheet1.getRow(2).getCell((short) 1);
             cell.setCellValue(new HSSFRichTextString(contract.getCustomerName()));
 
-            //N个需求单，插入N行（机器）
-            Integer machineOrderCount = machineOrderIdList.size();
-            insertRow(wb, sheet1, 5, machineOrderCount);
+            //N个需求单，插入N行（机器）,不包括已改单的需求单
+            Integer validMachineOrderCount = validMachineOrderIdList.size();
+            insertRow(wb, sheet1, 5, validMachineOrderCount);
             if (isDebug) {
-                System.out.println("======== insert Rows machineOrderCount: " + machineOrderCount);
+                System.out.println("======== insert Rows validMachineOrderCount: " + validMachineOrderCount);
             }
 
             /**
              * 记录各个订单的装置数量
              */
-            int[] equipmentNumArr = new int[machineOrderCount];
+            int[] equipmentNumArr = new int[validMachineOrderCount];
 
-            for (int i = 0; i < machineOrderCount; i++) {
-                machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
+            for (int i = 0; i < validMachineOrderCount; i++) {
+                machineOrderDetail = machineOrderService.getOrderAllDetail(validMachineOrderIdList.get(i));
 
                 //计算在合同sheet用到装置价格信息，
                 JSONArray jsonArray = JSON.parseArray(machineOrderDetail.getEquipment());
@@ -770,10 +774,10 @@ public class ContractController {
             }
 
             String machineInfo = "";
-            for (int i = 0; i < machineOrderCount; i++) {
+            for (int i = 0; i < validMachineOrderCount; i++) {
                 totalPriceOfOrder = 0;
                 machineOrderSum = 0;
-                machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
+                machineOrderDetail = machineOrderService.getOrderAllDetail(validMachineOrderIdList.get(i));
                 focusLine = 5 + i + getLinesSum(equipmentNumArr, i ) ;
 
                 //A5,,...订单号
@@ -831,7 +835,7 @@ public class ContractController {
                         Equipment eq = JSON.parseObject((String) jsonArray.get(j).toString(), Equipment.class);
 
                         cell = sheet1.getRow(focusLine + j).getCell((short) 1);
-                        cell.setCellValue(new HSSFRichTextString(eq.getName()));
+                        cell.setCellValue(new HSSFRichTextString(eq.getName() + (eq.getType() != null && !"".equals(eq.getType()) ? "(" + eq.getType() + ")" : "")));
                         cell.setCellStyle(cellStyleSlim);
 
                         /**
@@ -1045,7 +1049,7 @@ public class ContractController {
                     sheet1.getLastRowNum(),
                     -1);
 
-
+            Integer machineOrderCount = machineOrderIdList.size();
             /**
              * 需求单
              */
@@ -1264,7 +1268,7 @@ public class ContractController {
                         cell2.setCellValue(new HSSFRichTextString(Integer.toString(j + 1)));
 
                         cell2 = sheetX.getRow(22 + j).getCell((short) 1);
-                        cell2.setCellValue(new HSSFRichTextString(eq.getName()));
+                        cell2.setCellValue(new HSSFRichTextString(eq.getName() + (eq.getType() != null && !"".equals(eq.getType()) ? "(" + eq.getType() + ")" : "")));
 
                         cell2 = sheetX.getRow(22 + j).getCell((short) 2);
                         /**
