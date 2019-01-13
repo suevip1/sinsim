@@ -391,10 +391,10 @@
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
         <if test="query_start_time!=null and query_start_time != '' ">
-            and DATE_FORMAT(process_create_time,'%Y-%m-%d') &gt;= #{query_start_time}
+            and DATE_FORMAT(process_end_time,'%Y-%m-%d') &gt;= #{query_start_time}
         </if>
         <if test="query_finish_time!=null and query_finish_time != '' ">
-            and DATE_FORMAT(process_create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+            and DATE_FORMAT(process_end_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
         ORDER By process_create_time DESC, update_time DESC,create_time DESC
     </select>
@@ -433,10 +433,10 @@
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
         <if test="query_start_time!=null and query_start_time != '' ">
-            and DATE_FORMAT(process_create_time,'%Y-%m-%d') &gt;= #{query_start_time}
+            and DATE_FORMAT(process_end_time,'%Y-%m-%d') &gt;= #{query_start_time}
         </if>
         <if test="query_finish_time!=null and query_finish_time != '' ">
-            and DATE_FORMAT(process_create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+            and DATE_FORMAT(process_end_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
         ORDER By process_create_time DESC, update_time DESC,create_time DESC
     </select>
