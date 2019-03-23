@@ -13,6 +13,7 @@ import com.eservice.api.service.impl.MachineServiceImpl;
 import com.eservice.api.service.impl.OrderDetailServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
 
@@ -42,14 +44,36 @@ public class MachineOrderController {
     @Resource
     private MachineServiceImpl machineService;
 
+    private Logger logger = Logger.getLogger(MachineOrderController.class);
     /*
         为保证 MachineOrder表和OrderDetail表的一致性，MachineOrder表和OrderDetail表，都在这里统一完成
      */
     @PostMapping("/add")
     @Transactional(rollbackFor = Exception.class)
     public Result add(String  machineOrder, String orderDetail) {
-        MachineOrder machineOrder1 = JSON.parseObject(machineOrder,MachineOrder.class);
-        OrderDetail orderDetail1 = JSON.parseObject(orderDetail,OrderDetail.class);
+        MachineOrder machineOrder1 = JSON.parseObject(machineOrder, MachineOrder.class);
+        OrderDetail orderDetail1 = JSON.parseObject(orderDetail, OrderDetail.class);
+        /**
+         * 订单 不允许同名
+         * 带下划线的字段，不能用findBy(fieldName,....)
+         */
+        try {
+            Class cl = Class.forName("com.eservice.api.model.machine_order.MachineOrder");
+            Field fieldOrderNum = cl.getDeclaredField("orderNum");
+
+            MachineOrder mo = null;
+            mo = machineOrderService.findBy(fieldOrderNum.getName(), machineOrder1.getOrderNum());
+            if (mo != null) {
+                logger.error( "/machine/order/add fail: 该 order_num 已存在 " +  machineOrder1.getOrderNum() );
+                return ResultGenerator.genFailResult(machineOrder1.getOrderNum() + " 该 order_num 已存在");
+            }
+        } catch (ClassNotFoundException e) {
+            logger.error( "/machine/order/add fail: " +e.getMessage());
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            logger.error( "/machine/order/add fail: " +e.getMessage());
+            e.printStackTrace();
+        }
         orderDetailService.saveAndGetID(orderDetail1);
         Integer savedOrderDetailID = orderDetail1.getId();
 

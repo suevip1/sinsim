@@ -26,6 +26,7 @@ import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -47,6 +48,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,6 +90,7 @@ public class ContractController {
 
     @Value("${contract_excel_output_dir}")
     private String contractOutputDir;
+    private Logger logger = Logger.getLogger(ContractController.class);
     private boolean isDebug = false;
 
     @PostMapping("/add")
@@ -177,7 +180,19 @@ public class ContractController {
         ///删除该合同下，不在本次保存范围内的需求单
         for (MachineOrderDetail item : originalOrderList) {
             boolean exist = false;
-            for (MachineOrderWrapper wapperItem : machineOrderWapperlist) {
+            /**
+             * web有时会发来有问题的requisitionForms
+             */
+            if(machineOrderWapperlist == null){
+                logger.error("machineOrderWapperlist is null, return;");
+                return ResultGenerator.genFailResult("machineOrderWapperlist is null, nothing updated");
+            }
+            if(requisitionForms.isEmpty() || requisitionForms==null){
+                logger.error("requisitionForms is empty/null, return;");
+                return ResultGenerator.genFailResult("requisitionForms is empty/null, nothing updated");
+            }
+
+            for (MachineOrderWrapper wapperItem : machineOrderWapperlist) { //null
                 if (wapperItem.getMachineOrder().getId().equals(item.getId())) {
                     exist = true;
                     break;
@@ -490,6 +505,29 @@ public class ContractController {
                 machineOrder.setOrderDetailId(temp.getId());
                 machineOrder.setContractId(contractObj.getId());
                 machineOrder.setStatus(Constant.ORDER_INITIAL);
+
+                /**
+                 * 订单 不允许同名
+                 * 带下划线的字段，不能用findBy(fieldName,....)
+                 */
+                try {
+                    Class cl = Class.forName("com.eservice.api.model.machine_order.MachineOrder");
+                    Field fieldOrderNum = cl.getDeclaredField("orderNum");
+
+                    MachineOrder mo = null;
+                    mo = machineOrderService.findBy(fieldOrderNum.getName(), machineOrder.getOrderNum());
+                    if (mo != null) {
+                        logger.error( " splitOrder 该 订单号已存在，请确认是否重名 " +  machineOrder.getOrderNum() );
+                        return ResultGenerator.genFailResult(machineOrder.getOrderNum() + " 该订单号已存在，请确认是否重名 ");
+                    }
+                } catch (ClassNotFoundException e) {
+                    logger.error( "splitOrder fail: " +e.getMessage());
+                    e.printStackTrace();
+                } catch (NoSuchFieldException e) {
+                    logger.error( "splitOrder fail: " +e.getMessage());
+                    e.printStackTrace();
+                }
+
                 machineOrderService.saveAndGetID(machineOrder);
 
                 //初始化需求单审核记录
