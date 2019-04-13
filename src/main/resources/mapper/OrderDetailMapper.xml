@@ -37,6 +37,7 @@
     <result column="framework_ring" jdbcType="VARCHAR" property="frameworkRing" />
     <result column="framework_bracket" jdbcType="VARCHAR" property="frameworkBracket" />
     <result column="framework_stop" jdbcType="VARCHAR" property="frameworkStop" />
+    <result column="framework_pole_height" jdbcType="VARCHAR" property="frameworkPoleHeight" />
     <result column="framework_light" jdbcType="VARCHAR" property="frameworkLight" />
     <result column="driver_type" jdbcType="VARCHAR" property="driverType" />
     <result column="driver_method" jdbcType="VARCHAR" property="driverMethod" />
@@ -54,7 +55,7 @@
     electric_power, electric_switch,color_change_mode,electric_oil,axle_split,axle_panel,
     axle_needle,axle_needle_type,axle_rail,axle_down_check,axle_hook,axle_jump,
     axle_upper_thread,axle_addition,framework_color,framework_platen,framework_platen_color,
-    framework_ring,framework_bracket,framework_stop,framework_light,driver_type,
+    framework_ring,framework_bracket,framework_stop,framework_pole_height,framework_light,driver_type,
     driver_method,driver_reel_hole,driver_horizon_num,driver_vertical_num,driver_reel)
     values(
     #{specialTowelColor},#{specialTowelDaxle},#{specialTowelHaxle},#{specialTowelMotor},#{specialTapingHead},
@@ -62,7 +63,7 @@
     #{electricPower},#{electricSwitch},#{colorChangeMode},#{electricOil},#{axleSplit},#{axlePanel},
     #{axleNeedle},#{axleNeedleType},#{axleRail},#{axleDownCheck},#{axleHook},#{axleJump},
     #{axleUpperThread},#{axleAddition},#{frameworkColor},#{frameworkPlaten},#{frameworkPlatenColor},
-    #{frameworkRing},#{frameworkBracket},#{frameworkStop},#{frameworkLight},#{driverType},
+    #{frameworkRing},#{frameworkBracket},#{frameworkStop},#{frameworkPoleHeight},#{frameworkLight},#{driverType},
     #{driverMethod},#{driverReelHole},#{driverHorizonNum},#{driverVerticalNum},#{driverReel})
 
   </insert>

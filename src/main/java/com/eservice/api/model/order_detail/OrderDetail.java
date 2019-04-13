@@ -195,6 +195,20 @@ public class OrderDetail {
     private String frameworkStop;
 
     /**
+     * 机架台板：线架立柱高度
+     */
+    @Column(name = "framework_pole_height")
+    private String frameworkPoleHeight;
+
+    public String getFrameworkPoleHeight() {
+        return frameworkPoleHeight;
+    }
+
+    public void setFrameworkPoleHeight(String frameworkPoleHeight) {
+        this.frameworkPoleHeight = frameworkPoleHeight;
+    }
+
+    /**
      * 机架台板：日光灯
      */
     @Column(name = "framework_light")

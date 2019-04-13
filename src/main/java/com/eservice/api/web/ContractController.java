@@ -1249,6 +1249,9 @@ public class ContractController {
                 //f16
                 cell2 = sheetX.getRow(15).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkStop()));
+                //i16
+                cell2 = sheetX.getRow(15).getCell((short) 8);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkPoleHeight()));
                 //i16 取消
 //                cell2 = sheetX.getRow(15).getCell((short) 8);
 //                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkLight()));

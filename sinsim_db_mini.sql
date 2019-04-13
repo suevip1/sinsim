@@ -411,6 +411,7 @@ CREATE TABLE `order_detail` (
   `framework_ring` varchar(255) DEFAULT NULL COMMENT '机架台板：吊环',
   `framework_bracket` varchar(255) DEFAULT NULL COMMENT '机架台板：电脑托架',
   `framework_stop` varchar(255) DEFAULT NULL COMMENT '机架台板：急停装置',
+  `framework_pole_height` varchar(255) DEFAULT NULL COMMENT '线架立柱高度',
   `framework_light` varchar(255) DEFAULT NULL COMMENT '机架台板：日光灯',
   `driver_type` varchar(255) DEFAULT NULL COMMENT '驱动：类型',
   `driver_method` varchar(255) DEFAULT NULL COMMENT '驱动：方式',

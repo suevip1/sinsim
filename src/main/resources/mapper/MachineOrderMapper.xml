@@ -115,6 +115,7 @@
 			<result column="framework_ring" jdbcType="VARCHAR" property="frameworkRing"/>
 			<result column="framework_bracket" jdbcType="VARCHAR" property="frameworkBracket"/>
 			<result column="framework_stop" jdbcType="VARCHAR" property="frameworkStop"/>
+			<result column="framework_pole_height" jdbcType="VARCHAR" property="frameworkPoleHeight" />
 			<result column="framework_light" jdbcType="VARCHAR" property="frameworkLight"/>
 			<result column="driver_type" jdbcType="VARCHAR" property="driverType"/>
 			<result column="driver_method" jdbcType="VARCHAR" property="driverMethod"/>
@@ -187,7 +188,7 @@
 		od.electric_trim, od.electric_power, od.electric_switch,od.color_change_mode, od.electric_oil, od.axle_split,
 		od.axle_panel, od.axle_needle,od.axle_needle_type, od.axle_rail, od.axle_down_check, od.axle_hook,
 		od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
-		od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
+		od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_pole_height, od.framework_light,
 		od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
 		od.driver_reel,
 		os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,os.current_step,
@@ -252,7 +253,7 @@
 		od.electric_trim, od.electric_power, od.electric_switch,od.color_change_mode, od.electric_oil, od.axle_split,
 		od.axle_panel, od.axle_needle,od.axle_needle_type,od.axle_rail, od.axle_down_check, od.axle_hook,
 		od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
-		od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_light,
+		od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_pole_height, od.framework_light,
 		od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
 		od.driver_reel,
 		os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,os.current_step,
