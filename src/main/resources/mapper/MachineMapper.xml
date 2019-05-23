@@ -59,6 +59,7 @@
         <result column="node_data" jdbcType="VARCHAR" property="nodeData"/>
         <result column="process_create_time" jdbcType="VARCHAR" property="processCreateTime"/>
         <result column="process_end_time" jdbcType="VARCHAR" property="processEndTime"/>
+        <result column="plan_ship_date" jdbcType="TIMESTAMP" property="planShipDate"/>
     </resultMap>
 
     <select id="searchMachineByAbnormalRecordId" resultMap="BaseResultMap">
@@ -360,7 +361,7 @@
     <!--selectProcessMachineFuzzy-->
     <select id="selectProcessMachineFuzzy" resultMap="MachineInfoMap">
         SELECT * FROM
-        (SELECT m.*,mo.contract_id,mo.order_num,mo.contract_ship_date,c.contract_num,pr.id as
+        (SELECT m.*,mo.contract_id,mo.order_num,mo.contract_ship_date,mo.plan_ship_date,c.contract_num,pr.id as
         process_record_id,pr.node_data,pr.link_data,pr.process_id,
         pr.create_time as process_create_time,pr.end_time as process_end_time
         FROM machine m
@@ -402,7 +403,7 @@
     <!--selectProcessMachine-->
     <select id="selectProcessMachine" resultMap="MachineInfoMap">
         SELECT * FROM
-        (SELECT m.*,mo.contract_id,mo.order_num,mo.contract_ship_date,c.contract_num,pr.id as
+        (SELECT m.*,mo.contract_id,mo.order_num,mo.contract_ship_date,mo.plan_ship_date,c.contract_num,pr.id as
         process_record_id,pr.node_data,pr.link_data,pr.process_id,
         pr.create_time as process_create_time,pr.end_time as process_end_time
         FROM machine m

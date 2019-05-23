@@ -59,6 +59,20 @@ public class MachineInfo extends Machine {
     public void setContractShipDate(Date contractShipDate) {
         this.contractShipDate = contractShipDate;
     }
+
+    /**
+     * machineOrder里的计划发货日期
+     */
+    private Date planShipDate;
+
+    public Date getPlanShipDate() {
+        return planShipDate;
+    }
+
+    public void setPlanShipDate(Date planShipDate) {
+        this.planShipDate = planShipDate;
+    }
+
     /*
     gets sets orderNum
      */
