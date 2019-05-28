@@ -16,6 +16,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
         <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+        <result column="is_urgent" jdbcType="VARCHAR" property="isUrgent"/>
     </resultMap>
     <resultMap id="PlaningResultMap" type="com.eservice.api.model.machine.MachinePlan">
         <id column="id" jdbcType="INTEGER" property="id"/>
@@ -33,6 +34,7 @@
         <result column="plan_ship_date" jdbcType="TIMESTAMP" property="planShipDate"/>
         <result column="contract_ship_date" jdbcType="TIMESTAMP" property="contractShipDate"/>
         <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+        <result column="is_urgent" jdbcType="VARCHAR" property="isUrgent"/>
     </resultMap>
     <resultMap id="MachineInfoMap" type="com.eservice.api.model.machine.MachineInfo">
         <!--
@@ -49,6 +51,8 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
         <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+        <result column="is_urgent" jdbcType="VARCHAR" property="isUrgent"/>
+
         <result column="contract_ship_date" jdbcType="TIMESTAMP" property="contractShipDate"/>
         <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
         <result column="contract_id" jdbcType="INTEGER" property="contractId"/>

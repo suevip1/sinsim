@@ -222,6 +222,7 @@ CREATE TABLE `machine` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `installed_time` datetime DEFAULT NULL COMMENT '安装完成时间',
   `ship_time` datetime DEFAULT NULL COMMENT '发货时间（如果分批交付，需要用到，否则已订单交付为准）',
+  `is_urgent` varchar(255) DEFAULT NULL COMMENT '是否加急；true表示加急。否则非加急',
   PRIMARY KEY (`id`),
   KEY `idx_m_order_id` (`order_id`) USING BTREE,
   KEY `fk_m_machine_type` (`machine_type`),

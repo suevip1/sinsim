@@ -251,4 +251,18 @@ public class Machine {
     public void setShipTime(Date shipTime) {
         this.shipTime = shipTime;
     }
+
+    /**
+     * 是否加急
+     */
+    @Column(name = "order_id")
+    private String isUrgent;
+
+    public String getIsUrgent() {
+        return isUrgent;
+    }
+
+    public void setIsUrgent(String isUrgent) {
+        this.isUrgent = isUrgent;
+    }
 }

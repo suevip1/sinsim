@@ -95,6 +95,7 @@ public class Constant {
      * "5" --> 改单
      * "6" --> 拆单
      * "7" --> 取消
+     * "8" --> 已发货
      */
     public static final Byte MACHINE_INITIAL = 0;
     public static final Byte MACHINE_CONFIGURED = 1;
@@ -104,6 +105,7 @@ public class Constant {
     public static final Byte MACHINE_CHANGED = 5;
     public static final Byte MACHINE_SPLITED = 6;
     public static final Byte MACHINE_CANCELED = 7;
+    public static final Byte MACHINE_SHIPPED = 8;
 
     /**
      * Task(工序)安装状态
