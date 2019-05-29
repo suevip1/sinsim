@@ -401,7 +401,8 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(process_end_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
-        ORDER By process_create_time DESC, update_time DESC,create_time DESC
+      <!-- 急单需要置顶，取消加急后is_urgent为0，从未设置过加急的null当作为0，这样不影响原先的排序  -->
+        ORDER By IFNULL (is_urgent,0) DESC, process_create_time DESC, update_time DESC,create_time DESC
     </select>
 
     <!--selectProcessMachine-->
@@ -443,7 +444,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(process_end_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
-        ORDER By process_create_time DESC, update_time DESC,create_time DESC
+        ORDER By IFNULL (is_urgent,0) DESC, process_create_time DESC, update_time DESC,create_time DESC
     </select>
 
     <select id="selectMachinesByNameplate" resultMap="BaseResultMap">

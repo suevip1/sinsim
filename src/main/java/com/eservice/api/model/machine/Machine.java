@@ -255,7 +255,7 @@ public class Machine {
     /**
      * 是否加急
      */
-    @Column(name = "order_id")
+    @Column(name = "is_urgent")
     private String isUrgent;
 
     public String getIsUrgent() {
