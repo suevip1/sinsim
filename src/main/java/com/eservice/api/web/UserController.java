@@ -11,6 +11,7 @@ import com.eservice.api.service.impl.UserServiceImpl;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,6 +44,7 @@ public class UserController {
      * 该值为default值， Android端传入的参数不能为“0”
      */
     private static String ZERO_STRING = "0";
+    private Logger logger = Logger.getLogger(UserController.class);
 
     @PostMapping("/add")
     public Result add(String user) {
@@ -151,8 +153,10 @@ public class UserController {
             }
             UserDetail userDetail = userService.requestLogin(account, password);
             if(userDetail == null) {
+                logger.info(account + "login 账号或密码不正确");
                 return ResultGenerator.genFailResult("账号或密码不正确！");
             }else {
+                logger.info(account + "login success");
                 ///mqttMessageHelper.sendToClient("topic/client/2", JSON.toJSONString(userDetail));
                 return ResultGenerator.genSuccessResult(userDetail);
             }

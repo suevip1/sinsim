@@ -6,7 +6,10 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine.MachinePlan;
 import com.eservice.api.model.machine.MachineInfo;
+import com.eservice.api.model.task_record.TaskRecordDetail;
+import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.MachineServiceImpl;
+import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +33,8 @@ import java.util.List;
 public class MachineController {
     @Resource
     private MachineServiceImpl machineService;
+    @Resource
+    private TaskRecordServiceImpl taskRecordService;
 
     @PostMapping("/add")
     public Result add(String machine) {
@@ -67,6 +72,14 @@ public class MachineController {
     public Result update(String machine) {
         Machine machine1 = JSON.parseObject(machine, Machine.class);
         machine1.setUpdateTime(new Date());
+        if(!machine1.getNameplate().isEmpty() && machine1.getNameplate()!= null) {
+            List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineNameplate(machine1.getNameplate());
+            for (int i = 0; i <list.size() ; i++) {
+                if(list.get(i).getStatus().equals(Constant.TASK_SKIP)){
+                    return ResultGenerator.genFailResult("该机器还有处于跳过状态的工序:" + list.get(i).getTaskName() + "，不允许设置为完成!");
+                }
+            }
+        }
         machineService.update(machine1);
         return ResultGenerator.genSuccessResult();
     }
