@@ -105,7 +105,8 @@ public class Constant {
     public static final Byte MACHINE_CHANGED = 5;
     public static final Byte MACHINE_SPLITED = 6;
     public static final Byte MACHINE_CANCELED = 7;
-    public static final Byte MACHINE_SHIPPED = 8;
+    public static final Byte MACHINE_INSTALLING_INCLUDE_SKIP_TASK = 8;
+    public static final Byte MACHINE_SHIPPED = 9;
 
     /**
      * Task(工序)安装状态

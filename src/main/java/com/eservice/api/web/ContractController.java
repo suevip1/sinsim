@@ -549,6 +549,9 @@ public class ContractController {
                     msg.setType(ServerToClientMsg.MsgType.ORDER_SPLIT);
                     mqttMessageHelper.sendToClient(Constant.S2C_MACHINE_STATUS_CHANGE, JSON.toJSONString(msg));
                     splitMachine.setUpdateTime(new Date());
+                    if(splitMachine.getIsUrgent().equals("")){
+                        splitMachine.setIsUrgent(null);
+                    }
                     machineService.update(splitMachine);
                 }
 
