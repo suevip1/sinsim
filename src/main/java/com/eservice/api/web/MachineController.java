@@ -159,10 +159,11 @@ public class MachineController {
             Byte status,
             String query_start_time,
             String query_finish_time,
+            String taskNameList, //工序集合，逗号分隔，支持UI按多个工序查询
             @RequestParam(defaultValue = "true") Boolean is_fuzzy
     ) {
         PageHelper.startPage(page, size);
-        List<MachineInfo> list = machineService.selectProcessMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time, is_fuzzy);
+        List<MachineInfo> list = machineService.selectProcessMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time,taskNameList, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

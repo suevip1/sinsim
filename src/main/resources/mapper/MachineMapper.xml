@@ -364,87 +364,123 @@
 
     <!--selectProcessMachineFuzzy-->
     <select id="selectProcessMachineFuzzy" resultMap="MachineInfoMap">
-        SELECT * FROM
-        (SELECT m.*,mo.contract_id,mo.order_num,mo.contract_ship_date,mo.plan_ship_date,c.contract_num,pr.id as
-        process_record_id,pr.node_data,pr.link_data,pr.process_id,
-        pr.create_time as process_create_time,pr.end_time as process_end_time
-        FROM machine m
-        LEFT JOIN machine_order mo ON m.order_id=mo.id
-        LEFT JOIN contract c ON mo.contract_id=c.id
-        LEFT JOIN process_record pr ON m.id=pr.machine_id) V
-        WHERE process_record_id!=""
+        SELECT 
+        v.*
+        FROM
+        (SELECT 
+            m.*,
+                mo.contract_id,
+                mo.order_num,
+                mo.contract_ship_date,
+                mo.plan_ship_date,
+                c.contract_num,
+                pr.id AS process_record_id,
+                pr.node_data,
+                pr.link_data,
+                pr.process_id,
+                pr.create_time AS process_create_time,
+                pr.end_time AS process_end_time
+        FROM
+            machine m
+        LEFT JOIN machine_order mo ON m.order_id = mo.id
+        LEFT JOIN contract c ON mo.contract_id = c.id
+        LEFT JOIN process_record pr ON m.id = pr.machine_id) v
+        JOIN task_record tr ON tr.process_record_id = v.process_record_id
+        WHERE v.process_record_id!=""
         <if test="order_id != null and order_id != ''">
-            and order_id like #{order_id}
+            and v.order_id like #{order_id}
         </if>
         <if test="order_num != null and order_num != ''">
-            and order_num like CONCAT('%','${order_num}','%' )
+            and v.order_num like CONCAT('%','${order_num}','%' )
         </if>
         <if test="contract_num != null and contract_num != ''">
-            and contract_num like CONCAT('%','${contract_num}','%' )
+            and v.contract_num like CONCAT('%','${contract_num}','%' )
         </if>
         <if test="machine_strid != null and machine_strid != ''">
-            and machine_strid like CONCAT('%','${machine_strid}','%' )
+            and v.machine_strid like CONCAT('%','${machine_strid}','%' )
         </if>
         <if test="nameplate != null and nameplate != ''">
-            and nameplate like CONCAT('%','${nameplate}','%' )
+            and v.nameplate like CONCAT('%','${nameplate}','%' )
         </if>
         <if test="location != null and location != ''">
-            and location=#{location}
+            and v.location=#{location}
         </if>
         <if test="status != null">
-            and status=#{status}
+            and v.status=#{status}
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
         <if test="query_start_time!=null and query_start_time != '' ">
-            and DATE_FORMAT(process_end_time,'%Y-%m-%d') &gt;= #{query_start_time}
+            and DATE_FORMAT(v.process_end_time,'%Y-%m-%d') &gt;= #{query_start_time}
         </if>
         <if test="query_finish_time!=null and query_finish_time != '' ">
-            and DATE_FORMAT(process_end_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+            and DATE_FORMAT(v.process_end_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+        </if>
+        <if test="taskNameList != null and taskNameList != ''">
+            and  tr.task_name IN (${taskNameList})
         </if>
       <!-- 急单需要置顶，取消加急后is_urgent为0，从未设置过加急的null当作为0，这样不影响原先的排序  -->
-        ORDER By IFNULL (is_urgent,0) DESC, process_create_time DESC, update_time DESC,create_time DESC
+        GROUP BY v.nameplate
+        ORDER By IFNULL (v.is_urgent,0) DESC, v.process_create_time DESC, v.update_time DESC,v.create_time DESC
     </select>
 
     <!--selectProcessMachine-->
     <select id="selectProcessMachine" resultMap="MachineInfoMap">
-        SELECT * FROM
-        (SELECT m.*,mo.contract_id,mo.order_num,mo.contract_ship_date,mo.plan_ship_date,c.contract_num,pr.id as
-        process_record_id,pr.node_data,pr.link_data,pr.process_id,
-        pr.create_time as process_create_time,pr.end_time as process_end_time
-        FROM machine m
-        LEFT JOIN machine_order mo ON m.order_id=mo.id
-        LEFT JOIN contract c ON mo.contract_id=c.id
-        LEFT JOIN process_record pr ON m.id=pr.machine_id) V
-        WHERE process_record_id!=""
+        SELECT 
+        v.*
+        FROM
+        (SELECT 
+            m.*,
+                mo.contract_id,
+                mo.order_num,
+                mo.contract_ship_date,
+                mo.plan_ship_date,
+                c.contract_num,
+                pr.id AS process_record_id,
+                pr.node_data,
+                pr.link_data,
+                pr.process_id,
+                pr.create_time AS process_create_time,
+                pr.end_time AS process_end_time
+        FROM
+            machine m
+        LEFT JOIN machine_order mo ON m.order_id = mo.id
+        LEFT JOIN contract c ON mo.contract_id = c.id
+        LEFT JOIN process_record pr ON m.id = pr.machine_id) v
+        JOIN task_record tr ON tr.process_record_id = v.process_record_id
+        WHERE v.process_record_id!=""
         <if test="order_num != null and order_num != ''">
-            and order_num=#{order_num}
+            and v.order_num=#{order_num}
         </if>
         <if test="contract_num != null and contract_num != ''">
-            and contract_num=#{contract_num}
+            and v.contract_num=#{contract_num}
         </if>
         <if test="machine_strid != null and machine_strid != ''">
-            and machine_strid=#{machine_strid}
+            and v.machine_strid=#{machine_strid}
         </if>
         <if test="order_id != null and order_id != ''">
-            and order_id=#{order_id}
+            and v.order_id=#{order_id}
         </if>
         <if test="nameplate != null and nameplate != ''">
-            and nameplate=#{nameplate}
+            and v.nameplate=#{nameplate}
         </if>
         <if test="location != null and location != ''">
-            and location=#{location}
+            and v.location=#{location}
         </if>
         <if test="status != null">
-            and status=#{status}
+            and v.status=#{status}
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
         <if test="query_start_time!=null and query_start_time != '' ">
-            and DATE_FORMAT(process_end_time,'%Y-%m-%d') &gt;= #{query_start_time}
+            and DATE_FORMAT(v.process_end_time,'%Y-%m-%d') &gt;= #{query_start_time}
         </if>
         <if test="query_finish_time!=null and query_finish_time != '' ">
-            and DATE_FORMAT(process_end_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+            and DATE_FORMAT(v.process_end_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
-        ORDER By IFNULL (is_urgent,0) DESC, process_create_time DESC, update_time DESC,create_time DESC
+        <if test="taskNameList != null and taskNameList != ''">
+            and  tr.task_name IN (${taskNameList})
+        </if>
+        GROUP BY v.nameplate
+        ORDER By IFNULL (v.is_urgent,0) DESC, v.process_create_time DESC, v.update_time DESC,v.create_time DESC
     </select>
 
     <select id="selectMachinesByNameplate" resultMap="BaseResultMap">
