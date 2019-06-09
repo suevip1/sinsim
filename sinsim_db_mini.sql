@@ -222,7 +222,7 @@ CREATE TABLE `machine` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `installed_time` datetime DEFAULT NULL COMMENT '安装完成时间',
   `ship_time` datetime DEFAULT NULL COMMENT '发货时间（如果分批交付，需要用到，否则已订单交付为准）',
-  `is_urgent` varchar(255) DEFAULT NULL COMMENT '是否加急；1表示加急,0表示取消加急，默认为null',
+  `is_urgent` tinyint(1) DEFAULT NULL COMMENT '是否加急；1表示加急,0表示取消加急，默认为null',
   PRIMARY KEY (`id`),
   KEY `idx_m_order_id` (`order_id`) USING BTREE,
   KEY `fk_m_machine_type` (`machine_type`),
@@ -274,6 +274,7 @@ CREATE TABLE `machine_order` (
   `create_time` datetime NOT NULL COMMENT '订单创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '订单信息更新时间',
   `end_time` datetime DEFAULT NULL COMMENT '订单结束时间',
+  `all_urgent` tinyint(4) DEFAULT NULL COMMENT '该订单的机器全部加急；1表示加急,0表示取消加急(曾经加急后来取消了)，默认为null',
   PRIMARY KEY (`id`),
   KEY `fk_o_machine_type` (`machine_type`),
   KEY `fk_o_order_detail_id` (`order_detail_id`),
@@ -294,27 +295,13 @@ DROP TABLE IF EXISTS `machine_type`;
 CREATE TABLE `machine_type` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '机器类型',
+  `finished` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of machine_type
 -- ----------------------------
-INSERT INTO `machine_type` VALUES ('1', '单凸轮双驱动');
-INSERT INTO `machine_type` VALUES ('2', '高速双凸轮');
-INSERT INTO `machine_type` VALUES ('3', '普通平绣');
-INSERT INTO `machine_type` VALUES ('4', '纯毛巾');
-INSERT INTO `machine_type` VALUES ('5', '纯盘带');
-INSERT INTO `machine_type` VALUES ('6', '帽绣');
-INSERT INTO `machine_type` VALUES ('7', '平绣+盘带');
-INSERT INTO `machine_type` VALUES ('8', '平绣+毛巾');
-INSERT INTO `machine_type` VALUES ('9', '单凸轮+盘带');
-INSERT INTO `machine_type` VALUES ('10', '单凸轮+毛巾');
-INSERT INTO `machine_type` VALUES ('11', '高速双凸轮+盘带');
-INSERT INTO `machine_type` VALUES ('12', '高速双凸轮+毛巾');
-INSERT INTO `machine_type` VALUES ('13', '盘带+毛巾');
-INSERT INTO `machine_type` VALUES ('14', '高速纯毛巾');
-INSERT INTO `machine_type` VALUES ('15', '单凸轮');
 
 -- ----------------------------
 -- Table structure for `market_group`

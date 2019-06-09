@@ -137,6 +137,7 @@ public class CommonService {
 
     /**
      * 根据合同编号对应的需求单的机器
+     * 目前 合同签核已经不存在了，即，只对订单进行签核。
      *
      * @param contractId
      */
@@ -187,6 +188,12 @@ public class CommonService {
             machine.setMachineType(orderItem.getMachineType());
             machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_INITIAL)));
             machine.setCreateTime(new Date());
+            //如果合同加急，则对合同内的所有机器都加急。
+            if (orderItem.getAllUrgent()) {
+                machine.setIsUrgent(true);
+            } else {
+                machine.setIsUrgent(false);
+            }
             machineService.save(machine);
             i++;
         }

@@ -797,6 +797,18 @@ public class MachineOrderDetail {
         this.mark = mark;
     }
 
+    /**
+     * 该订单的机器全部加急；1表示加急,0表示取消加急(曾经加急后来取消了)，默认为null
+     */
+    private Boolean allUrgent;
+
+    public Boolean getAllUrgent() {
+        return allUrgent;
+    }
+
+    public void setAllUrgent(Boolean allUrgent) {
+        this.allUrgent = allUrgent;
+    }
 
     /**
     获取订单详情

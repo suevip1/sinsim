@@ -253,16 +253,16 @@ public class Machine {
     }
 
     /**
-     * 是否加急
+     * 是否加急；checkBox,用Boolean
      */
     @Column(name = "is_urgent")
-    private String isUrgent;
+    private Boolean isUrgent;
 
-    public String getIsUrgent() {
+    public Boolean getIsUrgent() {
         return isUrgent;
     }
 
-    public void setIsUrgent(String isUrgent) {
+    public void setIsUrgent(Boolean isUrgent) {
         this.isUrgent = isUrgent;
     }
 }

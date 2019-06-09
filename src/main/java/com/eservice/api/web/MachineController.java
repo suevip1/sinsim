@@ -72,6 +72,7 @@ public class MachineController {
     public Result update(String machine) {
         Machine machine1 = JSON.parseObject(machine, Machine.class);
         machine1.setUpdateTime(new Date());
+        // 如果该机器有对应的工序是跳过未完成的，不允许设置为已完成。
         if(!machine1.getNameplate().isEmpty() && machine1.getNameplate()!= null) {
             List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineNameplate(machine1.getNameplate());
             for (int i = 0; i <list.size() ; i++) {
