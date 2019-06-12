@@ -1,9 +1,11 @@
 package com.eservice.api.web;
+
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.common.TaskRcordPlanTime;
 import com.eservice.api.service.impl.TaskPlanServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.alibaba.fastjson.JSON;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -75,11 +78,12 @@ public class TaskPlanController {
     }
 
     @PostMapping("/addTaskPlans")
-    public Result addTaskPlans(@RequestParam List<Integer> taskRecordIds, Integer planType, String machineStrId, @RequestParam Date planDate, Integer userId){
+    public Result addTaskPlans(@RequestParam List<Integer> taskRecordIds,String planTaskList, Integer planType, String machineStrId, @RequestParam Date planDate, Integer userId){
         if(taskRecordIds == null || planType == null || machineStrId == null || "".equals(machineStrId) || planDate == null || userId == null) {
             return ResultGenerator.genFailResult("参数错误！");
         }else {
-            boolean result = taskPlanService.addTaskPlans(taskRecordIds, planType, machineStrId, planDate, userId);
+            List<TaskRcordPlanTime> taskList = JSON.parseArray(planTaskList, TaskRcordPlanTime.class);
+            boolean result = taskPlanService.addTaskPlans(taskRecordIds,taskList, planType, machineStrId, planDate, userId);
             if(result) {
                 return ResultGenerator.genSuccessResult();
             }else {

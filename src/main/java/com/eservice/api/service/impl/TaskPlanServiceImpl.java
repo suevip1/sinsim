@@ -15,11 +15,13 @@ import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.common.LinkDataModel;
 import com.eservice.api.service.common.NodeDataModel;
+import com.eservice.api.service.common.TaskRcordPlanTime;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestParam;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -56,10 +58,12 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
     @Resource
     private MqttMessageHelper mqttMessageHelper;
 
-    public boolean addTaskPlans(@RequestParam List<Integer> taskRecordIds, Integer planType, String machineStrId, Date planDate, Integer userId) {
-        for (int i = 0; i < taskRecordIds.size(); i++) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean addTaskPlans(@RequestParam List<Integer> taskRecordIds,List<TaskRcordPlanTime> planTaskList, Integer planType, String machineStrId, Date planDate, Integer userId) {
+        for (int i = 0; i < planTaskList.size(); i++) {
             Condition tempCondition = new Condition(TaskPlan.class);
-            tempCondition.createCriteria().andCondition("task_record_id = ", taskRecordIds.get(i));
+            Integer id=planTaskList.get(i).getId();
+            tempCondition.createCriteria().andCondition("task_record_id = ",id);
             List<TaskPlan> existPlans = findByCondition(tempCondition);
             if(existPlans.size() > 0) {
                 return false;
@@ -68,7 +72,7 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
             TaskPlan plan = new TaskPlan();
             plan.setCreateTime(new Date());
             plan.setUserId(userId);
-            plan.setTaskRecordId(taskRecordIds.get(i));
+            plan.setTaskRecordId(id);
             plan.setPlanType(Constant.DAILY_PLAN);
 
             if(planType.intValue() == Constant.DAILY_PLAN.intValue()) {
@@ -78,7 +82,8 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
             }
             save(plan);
             //更改task record状态为已计划
-            TaskRecord taskRecord = taskRecordService.findById(taskRecordIds.get(i));
+            TaskRecord taskRecord = taskRecordService.findById(id);
+            taskRecord.setPlanTimespan(planTaskList.get(i).getPlanTimespan());//设置工序计划工时
             if(taskRecord != null) {
                 //检查是否为第一个计划项，如果是，需要设置为待安装状态
                 Integer processRecordId =  taskRecord.getProcessRecordId();
@@ -148,10 +153,11 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
 
             }else {
                 //进行事务操作
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 throw new RuntimeException();
             }
         }
-        if(taskRecordIds.size() > 0 && machineStrId != null) {
+        if(planTaskList.size() > 0 && machineStrId != null) {
             List<Machine> machineList = machineService.selectMachines(null, null, machineStrId, null, null, null, null, null, null, false);
             if(machineList.size() == 1) {
                 //如果机器状态小于计划中，则更新为计划中
@@ -162,6 +168,7 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                 }
             }else {
                 //进行事务rollback操作
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 throw new RuntimeException();
             }
         }
