@@ -60,6 +60,7 @@
             <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
             <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
             <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+            <result column="is_urgent" jdbcType="TINYINT" property="isUrgent"/>
         </association>
     </resultMap>
 
@@ -117,6 +118,7 @@
         m.installed_time,
         m.ship_time,
         m.update_time m_update_time,
+        m.is_urgent,
         mo.order_num
         FROM
         task_quality_record tqr

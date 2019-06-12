@@ -189,10 +189,10 @@ public class CommonService {
             machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_INITIAL)));
             machine.setCreateTime(new Date());
             //如果合同加急，则对合同内的所有机器都加急。
-            if (orderItem.getAllUrgent()) {
-                machine.setIsUrgent(true);
-            } else {
+            if (orderItem.getAllUrgent() == null || !orderItem.getAllUrgent()) {
                 machine.setIsUrgent(false);
+            } else {
+                machine.setIsUrgent(true);
             }
             machineService.save(machine);
             i++;

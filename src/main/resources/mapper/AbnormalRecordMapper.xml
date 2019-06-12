@@ -62,6 +62,7 @@
             <result column="m_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
             <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
             <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+            <result column="is_urgent" jdbcType="TINYINT" property="isUrgent"/>
         </association>
     </resultMap>
 
@@ -83,7 +84,7 @@
         ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time ai_create_time,
         ai.id abnormal_image_id, ai.abnormal_record_id, ai.image, ai.create_time ai_create_time,
         m.status machine_status, m.create_time m_create_time, m.id machine_id, m.machine_strid, m.nameplate, m.location,
-        m.installed_time, m.ship_time, m.update_time m_update_time,
+        m.installed_time, m.ship_time, m.update_time m_update_time, m.is_urgent,
         ar.id, ar.abnormal_type, ar.comment, ar.solution, ar.submit_user, ar.solution_user, ar.task_record_id,
         ar.create_time, ar.solve_time
         FROM abnormal_record ar
@@ -136,6 +137,7 @@
         m.installed_time,
         m.ship_time,
         m.update_time m_update_time,
+        m.is_urgent,
         mo.order_num
         FROM
         abnormal_record ar
