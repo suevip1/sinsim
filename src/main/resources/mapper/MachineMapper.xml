@@ -64,6 +64,8 @@
         <result column="process_create_time" jdbcType="VARCHAR" property="processCreateTime"/>
         <result column="process_end_time" jdbcType="VARCHAR" property="processEndTime"/>
         <result column="plan_ship_date" jdbcType="TIMESTAMP" property="planShipDate"/>
+        <result column="diffday" jdbcType="VARCHAR" property="diffday"/>
+        <result column="warning" jdbcType="INTEGER" property="warning"/>
     </resultMap>
 
     <select id="searchMachineByAbnormalRecordId" resultMap="BaseResultMap">
@@ -365,29 +367,40 @@
 
     <!--selectProcessMachineFuzzy-->
     <select id="selectProcessMachineFuzzy" resultMap="MachineInfoMap">
-        SELECT 
-        v.*
-        FROM
-        (SELECT 
-            m.*,
-                mo.contract_id,
-                mo.order_num,
-                mo.contract_ship_date,
-                mo.plan_ship_date,
-                c.contract_num,
-                pr.id AS process_record_id,
-                pr.node_data,
-                pr.link_data,
-                pr.process_id,
-                pr.create_time AS process_create_time,
-                pr.end_time AS process_end_time
-        FROM
-            machine m
-        LEFT JOIN machine_order mo ON m.order_id = mo.id
-        LEFT JOIN contract c ON mo.contract_id = c.id
-        LEFT JOIN process_record pr ON m.id = pr.machine_id) v
-        JOIN task_record tr ON tr.process_record_id = v.process_record_id
-        WHERE v.process_record_id!=""
+    SELECT 
+    v.*,
+    CASE
+        WHEN v.plan_ship_date!=null AND v.`status` &lt; 4 AND v.diffday &lt; 5
+        AND v.diffday &gt; 1
+        THEN '1'
+        WHEN v.plan_ship_date!=null AND v.`status` &lt; 4 AND v.diffday &lt; 1 
+        THEN '2'
+        ELSE '0'
+    END AS warning
+    FROM
+    (SELECT 
+        m.*,
+            mo.contract_id,
+            mo.order_num,
+            mo.contract_ship_date,
+            mo.plan_ship_date,
+            c.contract_num,
+            pr.id AS process_record_id,
+            pr.node_data,
+            pr.link_data,
+            pr.process_id,
+            pr.create_time AS process_create_time,
+            pr.end_time AS process_end_time,
+            DATEDIFF(mo.plan_ship_date, SYSDATE()) AS diffday
+    FROM
+        machine m
+    LEFT JOIN machine_order mo ON m.order_id = mo.id
+    LEFT JOIN contract c ON mo.contract_id = c.id
+    LEFT JOIN process_record pr ON m.id = pr.machine_id) v
+        JOIN
+    task_record tr ON tr.process_record_id = v.process_record_id
+    WHERE
+    v.process_record_id != ''
         <if test="order_id != null and order_id != ''">
             and v.order_id like #{order_id}
         </if>
@@ -427,7 +440,15 @@
     <!--selectProcessMachine-->
     <select id="selectProcessMachine" resultMap="MachineInfoMap">
         SELECT 
-        v.*
+        v.*,
+        CASE
+            WHEN v.plan_ship_date!=null AND v.`status` &lt; 4 AND v.diffday &lt; 5
+                 AND v.diffday &gt; 1
+            THEN '1'
+            WHEN v.plan_ship_date!=null AND v.`status` &lt; 4 AND v.diffday &lt; 1 
+            THEN '2'
+            ELSE '0'
+        END AS warning
         FROM
         (SELECT 
             m.*,
@@ -441,14 +462,17 @@
                 pr.link_data,
                 pr.process_id,
                 pr.create_time AS process_create_time,
-                pr.end_time AS process_end_time
+                pr.end_time AS process_end_time,
+                DATEDIFF(mo.plan_ship_date, SYSDATE()) AS diffday
         FROM
             machine m
         LEFT JOIN machine_order mo ON m.order_id = mo.id
         LEFT JOIN contract c ON mo.contract_id = c.id
         LEFT JOIN process_record pr ON m.id = pr.machine_id) v
-        JOIN task_record tr ON tr.process_record_id = v.process_record_id
-        WHERE v.process_record_id!=""
+            JOIN
+        task_record tr ON tr.process_record_id = v.process_record_id
+        WHERE
+        v.process_record_id != ''
         <if test="order_num != null and order_num != ''">
             and v.order_num=#{order_num}
         </if>

@@ -50,6 +50,24 @@ public class MachineInfo extends Machine {
     @Column(name = "process_end_time")
     private Date processEndTime;
 
+    private String diffday;
+    public String getDiffday() {
+        return diffday;
+    }
+
+    public void setDiffday(String diffday) {
+        this.diffday = diffday;
+    }
+
+    private Integer warning;
+    public Integer getWarning() {
+        return warning;
+    }
+
+    public void setWarning(Integer warning) {
+        this.warning = warning;
+    }
+
     private Date contractShipDate;
 
     public Date getContractShipDate() {

@@ -78,12 +78,11 @@ public class TaskPlanController {
     }
 
     @PostMapping("/addTaskPlans")
-    public Result addTaskPlans(@RequestParam List<Integer> taskRecordIds,String planTaskList, Integer planType, String machineStrId, @RequestParam Date planDate, Integer userId){
+    public Result addTaskPlans(@RequestParam List<Integer> taskRecordIds,Integer planType, String machineStrId, @RequestParam Date planDate, Integer userId){
         if(taskRecordIds == null || planType == null || machineStrId == null || "".equals(machineStrId) || planDate == null || userId == null) {
             return ResultGenerator.genFailResult("参数错误！");
         }else {
-            List<TaskRcordPlanTime> taskList = JSON.parseArray(planTaskList, TaskRcordPlanTime.class);
-            boolean result = taskPlanService.addTaskPlans(taskRecordIds,taskList, planType, machineStrId, planDate, userId);
+            boolean result = taskPlanService.addTaskPlans(taskRecordIds, planType, machineStrId, planDate, userId);
             if(result) {
                 return ResultGenerator.genSuccessResult();
             }else {

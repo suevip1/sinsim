@@ -68,7 +68,6 @@
         <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime"/>
         <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime"/>
         <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
-        <result column="plan_timespan" jdbcType="INTEGER" property="planTimespan"/>
         <association javaType="com.eservice.api.model.process_record.ProcessRecord" property="processRecord">
             <id column="process_record_id_in_association" property="id"/>
             <result column="machine_id" jdbcType="INTEGER" property="machineId"/>
@@ -261,7 +260,7 @@
     <select id="selectPlanedTaskRecordsByFuzzy" resultMap="TaskRecordDetail">
         select
         tr.id, tr.task_name,tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time,
-        tr.install_end_time,tr.quality_begin_time, tr.quality_end_time, tr.plan_timespan,
+        tr.install_end_time,tr.quality_begin_time, tr.quality_end_time, 
         m.machine_strid,m.nameplate,m.machine_type,m.is_urgent,
         mo.order_num,mo.contract_ship_date, mo.plan_ship_date,mo.all_urgent,
         tp.plan_time, tp.plan_type, tp.deadline,tp.id task_plan_id
@@ -307,7 +306,7 @@
     <select id="selectPlanedTaskRecords" resultMap="TaskRecordDetail">
         select
         tr.id, tr.task_name,tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time,
-        tr.install_end_time,tr.quality_begin_time, tr.quality_end_time, tr.plan_timespan,
+        tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
         m.machine_strid,m.nameplate,m.machine_type,m.is_urgent,
         mo.order_num,mo.contract_ship_date, mo.plan_ship_date,mo.all_urgent,
         tp.plan_time, tp.plan_type, tp.deadline,tp.id task_plan_id

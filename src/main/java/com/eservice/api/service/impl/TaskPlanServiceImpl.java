@@ -59,10 +59,10 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
     private MqttMessageHelper mqttMessageHelper;
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean addTaskPlans(@RequestParam List<Integer> taskRecordIds,List<TaskRcordPlanTime> planTaskList, Integer planType, String machineStrId, Date planDate, Integer userId) {
-        for (int i = 0; i < planTaskList.size(); i++) {
+    public boolean addTaskPlans(@RequestParam List<Integer> taskRecordIds, Integer planType, String machineStrId, Date planDate, Integer userId) {
+        for (int i = 0; i < taskRecordIds.size(); i++) {
             Condition tempCondition = new Condition(TaskPlan.class);
-            Integer id=planTaskList.get(i).getId();
+            Integer id=taskRecordIds.get(i);
             tempCondition.createCriteria().andCondition("task_record_id = ",id);
             List<TaskPlan> existPlans = findByCondition(tempCondition);
             if(existPlans.size() > 0) {
@@ -83,7 +83,6 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
             save(plan);
             //更改task record状态为已计划
             TaskRecord taskRecord = taskRecordService.findById(id);
-            taskRecord.setPlanTimespan(planTaskList.get(i).getPlanTimespan());//设置工序计划工时
             if(taskRecord != null) {
                 //检查是否为第一个计划项，如果是，需要设置为待安装状态
                 Integer processRecordId =  taskRecord.getProcessRecordId();
@@ -157,7 +156,7 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                 throw new RuntimeException();
             }
         }
-        if(planTaskList.size() > 0 && machineStrId != null) {
+        if(taskRecordIds.size() > 0 && machineStrId != null) {
             List<Machine> machineList = machineService.selectMachines(null, null, machineStrId, null, null, null, null, null, null, false);
             if(machineList.size() == 1) {
                 //如果机器状态小于计划中，则更新为计划中

@@ -62,16 +62,6 @@ public class TaskRecord {
     @Column(name = "worker_list")
     private String workerList;
 
-    @Column(name = "plan_timespan")
-    private Integer planTimespan;
-
-    public Integer getPlanTimespan() {
-        return planTimespan;
-    }
-
-    public void setPlanTimespan(Integer planTimespan) {
-        this.planTimespan = planTimespan;
-    }
 
     /**
      * @return id

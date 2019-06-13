@@ -693,7 +693,6 @@ CREATE TABLE `task_record` (
   `install_end_time` datetime DEFAULT NULL,
   `quality_begin_time` datetime DEFAULT NULL COMMENT 'task开始时间',
   `quality_end_time` datetime DEFAULT NULL COMMENT 'task结束时间',
-  `plan_timespan` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_tr_process_record_id` (`process_record_id`),
   KEY `fk_tr_task_name` (`task_name`),
