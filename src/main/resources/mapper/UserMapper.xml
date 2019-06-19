@@ -13,6 +13,8 @@
     <result column="group_id" jdbcType="INTEGER" property="groupId" />
     <result column="market_group_name" jdbcType="INTEGER" property="marketGroupName" />
     <result column="valid" jdbcType="TINYINT" property="valid" />
+    <result column="extranet_permit" jdbcType="TINYINT" property="extranetPermit" />
+
   </resultMap>
 
     <resultMap id="UserDetailMap" type="com.eservice.api.model.user.UserDetail">
@@ -22,6 +24,7 @@
         <!--<result column="password" jdbcType="VARCHAR" property="password" />-->
         <result column="market_group_name" jdbcType="INTEGER" property="marketGroupName" />
         <result column="valid" jdbcType="TINYINT" property="valid" />
+        <result column="extranet_permit" jdbcType="TINYINT" property="extranetPermit" />
         <association javaType="com.eservice.api.model.role.Role" property="role">
             <id column="role_id" property="id" />
             <result column="role_name" jdbcType="VARCHAR" property="roleName" />

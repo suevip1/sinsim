@@ -136,9 +136,37 @@ public class UserController {
 
     }
 
+    /**
+     *
+     * @param account
+     * @param password
+     * @param meid
+     * @param isExtranet 如果是外网，则该参数有值true， 没有该参数，则是内网。 其他原有接口不影响
+     * @return
+     */
     @PostMapping("/requestLogin")
-    public Result requestLogin(@RequestParam String account, @RequestParam String password, @RequestParam(defaultValue = "0") String meid) {
-        boolean result = true;
+    public Result requestLogin(@RequestParam String account,
+                               @RequestParam String password,
+                               @RequestParam(defaultValue = "0") String meid,
+                               @RequestParam(defaultValue = "false") Boolean isExtranet) {
+        boolean isPermitted = false;
+
+        if(isExtranet) {
+            Condition condition = new Condition(User.class);
+            condition.createCriteria().andEqualTo("extranetPermit", 1);
+            List<User> userAllowExtranetList = userService.findByCondition(condition);
+
+            for (int i = 0; i < userAllowExtranetList.size(); i++) {
+                if (userAllowExtranetList.get(i).getAccount().equals(account)) {
+                    isPermitted = true;
+                    break;
+                }
+
+            }
+            if(!isPermitted){
+                return ResultGenerator.genFailResult(account + " is not permitted login from extranet");
+            }
+        }
 
         if(account == null || "".equals(account)) {
             return ResultGenerator.genFailResult("账号不能为空！");

@@ -185,4 +185,17 @@ public class UserDetail {
     public void setValid(Byte valid) {
         this.valid = valid;
     }
+
+    /**
+     * 外网时，检查用户权限是否允许外网登录; 0:不允许，1:允许。
+     */
+    private Byte extranetPermit;
+
+    public Byte getExtranetPermit() {
+        return extranetPermit;
+    }
+
+    public void setExtranetPermit(Byte extranetPermit) {
+        this.extranetPermit = extranetPermit;
+    }
 }
