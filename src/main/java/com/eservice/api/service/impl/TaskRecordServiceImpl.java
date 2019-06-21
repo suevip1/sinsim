@@ -5,6 +5,7 @@ import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.model.task_record.TaskRecordExpired;
+import com.eservice.api.model.task_record.TaskReport;
 import com.eservice.api.service.TaskRecordService;
 import com.eservice.api.core.AbstractService;
 import com.eservice.api.service.common.Constant;
@@ -98,5 +99,9 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
 
     public List<TaskRecordExpired> getExpiredTaskStatistics(Integer mode) {
         return taskRecordMapper.getExpiredTaskStatistics(mode);
+    }
+
+    public List<TaskReport> selectTaskReports(String taskName, String installStartTime, String installFinishTime) {
+        return taskRecordMapper.selectTaskReports(taskName, installStartTime, installFinishTime);
     }
 }

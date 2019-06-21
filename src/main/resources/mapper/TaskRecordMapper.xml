@@ -25,7 +25,21 @@
         <result column="date_month" jdbcType="INTEGER" property="dateMonth"/>
         <result column="date_day" jdbcType="INTEGER" property="dateDay"/>
     </resultMap>
-
+    <resultMap id="TaskReportMap" type="com.eservice.api.model.task_record.TaskReport">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+        <result column="process_record_id" jdbcType="INTEGER" property="processRecordId"/>
+        <result column="node_key" jdbcType="TINYINT" property="nodeKey"/>
+        <result column="leader" jdbcType="VARCHAR" property="leader"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime"/>
+        <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime"/>
+        <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime"/>
+        <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime"/>
+        <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
+        <result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
+        <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+    </resultMap>
     <!--根据user.account查 task_record OK-->
     <select id="selectTaskReocords" resultMap="BaseResultMap">
   select
@@ -499,4 +513,26 @@
             ,date_month,date_day
         </if>
     </select>
+
+    <select id="selectTaskReports" resultMap="TaskReportMap">
+        SELECT
+        tr.*, m.nameplate,
+        mo.order_num
+        FROM
+        task_record tr
+        RIGHT JOIN process_record pr ON tr.process_record_id = pr.id
+        RIGHT JOIN machine m ON m.id = pr.machine_id
+        RIGHT JOIN machine_order mo ON mo.id = m.order_id
+        WHERE
+        tr.task_name = #{task_name}
+        AND DATE_FORMAT(install_begin_time, '%Y-%m-%d') &gt;= #{install_start_time}
+        <if test="install_finish_time!=null and install_finish_time != '' ">
+            AND DATE_FORMAT(install_begin_time, '%Y-%m-%d') &lt;= #{install_finish_time}
+        </if>
+        ORDER BY
+        order_num DESC,
+        install_begin_time;
+
+    </select>
+
 </mapper>

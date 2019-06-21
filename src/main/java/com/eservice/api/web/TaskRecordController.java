@@ -15,6 +15,7 @@ import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_quality_record.TaskQualityRecord;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
+import com.eservice.api.model.task_record.TaskReport;
 import com.eservice.api.service.MachineTypeService;
 import com.eservice.api.service.QualityRecordImageService;
 import com.eservice.api.service.UserService;
@@ -842,5 +843,29 @@ public class TaskRecordController {
            mqttMessageHelper.sendToClient(Constant.S2C_QUALITY_ABNORMAL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
         }
         return ResultGenerator.genSuccessResult("3个表 task_record + TaskQualityRecord + QualityRecordImage 更新成功");
+    }
+
+    /**
+     * 返回时间段内某安装工序taskName的安装记录
+     *
+     * @param page
+     * @param size
+     * @param taskName
+     * @param installStartTime
+     * @param installFinishTime
+     * @return
+     */
+    @PostMapping("selectTaskReports")
+    public Result selectTaskReports(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            String taskName,
+            String installStartTime,
+            String installFinishTime
+    ) {
+        PageHelper.startPage(page, size);
+        List<TaskReport> list = taskRecordService.selectTaskReports(taskName, installStartTime, installFinishTime);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

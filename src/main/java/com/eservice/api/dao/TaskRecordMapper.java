@@ -5,6 +5,7 @@ import com.eservice.api.model.task_plan.TaskPlan;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.model.task_record.TaskRecordExpired;
+import com.eservice.api.model.task_record.TaskReport;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -65,5 +66,8 @@ public interface TaskRecordMapper extends Mapper<TaskRecord> {
                                                    @Param("query_finish_time") String query_finish_time);
 
     List<TaskRecordExpired> getExpiredTaskStatistics(@Param("mode") Integer mode);
+    List<TaskReport> selectTaskReports(@Param("task_name") String taskName,
+                                       @Param("install_start_time") String installStartTime,
+                                       @Param("install_finish_time") String installFinishTime);
 
 }
