@@ -186,7 +186,7 @@ CREATE TABLE `install_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) NOT NULL COMMENT '公司部门',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of install_group
@@ -911,3 +911,46 @@ INSERT INTO `user` VALUES ('304', '丁海丽', '丁海丽', '18', 'sinsim', '0',
 INSERT INTO `user` VALUES ('305', '傅筱玲', '傅筱玲', '9', 'sinsim', null, '', '1', '0');
 INSERT INTO `user` VALUES ('306', '詹栋', '詹栋', '15', 'sinsim', null, '', '1', '0');
 INSERT INTO `user` VALUES ('307', '吕满芳', '吕满芳', '17', '', '1', '', '1', '0');
+
+- ----------------------------
+-- Table structure for whole_install_acutual
+-- ----------------------------
+DROP TABLE IF EXISTS `whole_install_acutual`;
+CREATE TABLE `whole_install_acutual` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '整装排产的实际反馈',
+  `whole_install_plan_id` int(10) unsigned NOT NULL COMMENT '1个排产计划，可以有多次反馈，比如第一天没完成，第二天继续，每天都要反馈',
+  `head_count_done` int(10) DEFAULT NULL COMMENT '这次（今天）完成的头数',
+  `cmt_feedback` varchar(255) DEFAULT NULL COMMENT '这次（今天）安装组长反馈的备注',
+  `create_date` datetime DEFAULT NULL COMMENT '记录的生成时间',
+  `update_date` datetime DEFAULT NULL COMMENT '记录的更新时间',
+  `attendance_member` varchar(255) DEFAULT NULL COMMENT '今日上班人数，这些用varchar, varchar方便处理，而且可以考虑以后改为写名字',
+  `overtime_member` varchar(255) DEFAULT NULL COMMENT '今日加班人数',
+  `absence_member` varchar(255) DEFAULT NULL COMMENT '请假人数',
+  `attendance_tomorrow` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_ig_id` (`whole_install_plan_id`),
+  CONSTRAINT `fk_whole_install_plan_id` FOREIGN KEY (`whole_install_plan_id`) REFERENCES `whole_install_plan` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for whole_install_plan
+-- ----------------------------
+DROP TABLE IF EXISTS `whole_install_plan`;
+CREATE TABLE `whole_install_plan` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '整装排产',
+  `install_group_id` int(10) unsigned NOT NULL COMMENT '安装小组ID',
+  `install_date_plan` datetime NOT NULL COMMENT '安排的开始安装日期',
+  `order_id` int(10) unsigned NOT NULL COMMENT '该整装记录对应的订单号',
+  `machine_id` int(10) unsigned NOT NULL COMMENT '该整装记录对应的机器id',
+  `cmt_send` varchar(255) DEFAULT NULL COMMENT '计划的备注',
+  `valid` tinyint(4) DEFAULT NULL COMMENT '0: 无效 1:有效',
+  `create_date` datetime DEFAULT NULL COMMENT '记录的生成时间',
+  `update_date` datetime DEFAULT NULL COMMENT '记录的更新时间',
+  PRIMARY KEY (`id`),
+  KEY `fk_ig_id` (`install_group_id`) USING BTREE,
+  KEY `fk_order_id` (`order_id`),
+  KEY `fk_machine_id` (`machine_id`),
+  CONSTRAINT `fk_ig_id` FOREIGN KEY (`install_group_id`) REFERENCES `install_group` (`id`),
+  CONSTRAINT `fk_machine_id` FOREIGN KEY (`machine_id`) REFERENCES `machine` (`id`),
+  CONSTRAINT `fk_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
