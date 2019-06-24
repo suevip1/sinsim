@@ -164,7 +164,7 @@ public class UserController {
 
             }
             if(!isPermitted){
-                return ResultGenerator.genFailResult(account + " is not permitted login from extranet");
+                return ResultGenerator.genFailResult(account + " 用户没有外网登入权限！");
             }
         }
 
