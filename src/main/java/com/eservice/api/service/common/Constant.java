@@ -95,7 +95,9 @@ public class Constant {
      * "5" --> 改单
      * "6" --> 拆单
      * "7" --> 取消
-     * "8" --> 已发货
+     * "8" --> 安装中且包含跳过工序的机器（包含跳过工序的机器不会被允许设置为完成，也即一定是在安装中）
+     * "9" --> 已发货
+     *  是否加急不作为一个状态，而作为一个属性。(订单加急，则该订单所有机器的加急属性也设为加急)
      */
     public static final Byte MACHINE_INITIAL = 0;
     public static final Byte MACHINE_CONFIGURED = 1;
@@ -107,6 +109,17 @@ public class Constant {
     public static final Byte MACHINE_CANCELED = 7;
     public static final Byte MACHINE_INSTALLING_INCLUDE_SKIP_TASK = 8;
     public static final Byte MACHINE_SHIPPED = 9;
+
+    public static final String STR_MACHINE_INITIAL = "初始化";
+    public static final String STR_MACHINE_CONFIGURED = "待计划";
+    public static final String STR_MACHINE_PLANING = "已计划";
+    public static final String STR_MACHINE_INSTALLING = "安装中";
+    public static final String STR_MACHINE_INSTALLED = "安装完成";
+    public static final String STR_MACHINE_CHANGED = "改单";
+    public static final String STR_MACHINE_SPLITED = "拆单";
+    public static final String STR_MACHINE_CANCELED = "取消";
+    public static final String STR_MACHINE_INSTALLING_INCLUDE_SKIP_TASK = "安装中且包含跳过工序的机器";
+    public static final String STR_MACHINE_SHIPPED = "已发货";
 
     /**
      * Task(工序)安装状态
