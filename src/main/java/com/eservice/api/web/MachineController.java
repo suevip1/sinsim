@@ -216,8 +216,6 @@ public class MachineController {
     // todo: 安装进度 这个界面可能会改，如果改了这里也要相应地改。
     @PostMapping("/processMachineExport")
     public Result processMachineExport(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "0") Integer size,
             Integer order_id,
             String orderNum,
             String contractNum,
@@ -230,7 +228,6 @@ public class MachineController {
             String taskNameList, //工序集合，逗号分隔，支持UI按多个工序查询
             @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
 
-        PageHelper.startPage(page, size);
         List<MachineInfo> list = machineService.selectProcessMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time,taskNameList, is_fuzzy);
 
         InputStream fs = null;
