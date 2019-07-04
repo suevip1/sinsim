@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -21,4 +22,7 @@ public class WholeInstallPlanServiceImpl extends AbstractService<WholeInstallPla
     @Resource
     private WholeInstallPlanMapper wholeInstallPlanMapper;
 
+    public List<WholeInstallPlan> selectUnSendWIPs(){
+       return wholeInstallPlanMapper.selectUnSendWIPs();
+    }
 }

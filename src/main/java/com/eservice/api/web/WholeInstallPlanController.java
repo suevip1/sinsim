@@ -2,7 +2,7 @@ package com.eservice.api.web;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.whole_install_plan.WholeInstallPlan;
-import com.eservice.api.service.WholeInstallPlanService;
+import com.eservice.api.service.impl.WholeInstallPlanServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping("/whole/install/plan")
 public class WholeInstallPlanController {
     @Resource
-    private WholeInstallPlanService wholeInstallPlanService;
+    private WholeInstallPlanServiceImpl wholeInstallPlanService;
 
     @PostMapping("/add")
     public Result add(WholeInstallPlan wholeInstallPlan) {
@@ -55,4 +55,16 @@ public class WholeInstallPlanController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    //获取所有未发送的总装计划
+    @PostMapping("/selectUnSendWIPs")
+    public Result selectUnSendWIPs(@RequestParam(defaultValue = "0") Integer page,
+                             @RequestParam(defaultValue = "0") Integer size) {
+        PageHelper.startPage(page, size);
+        List<WholeInstallPlan> list = wholeInstallPlanService.selectUnSendWIPs();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+
 }

@@ -15,4 +15,9 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+
+  <select id="selectUnSendWIPs" resultMap="BaseResultMap">
+    SELECT * from whole_install_plan wip
+    WHERE send_time is null
+  </select>
 </mapper>
