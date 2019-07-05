@@ -1,6 +1,7 @@
 package com.eservice.api.service.mqtt;
 
 import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.mqtt.support.MqttHeaders;
 import org.springframework.messaging.Message;
@@ -18,6 +19,8 @@ public class MqttMessageHelper {
     @Autowired
     MqttService.MyGateway myGateway;
 
+    private final static org.slf4j.Logger logger = LoggerFactory.getLogger(MqttMessageHelper.class);
+
     /**
      * 向MQTT发送数据
      * @param topic
@@ -26,6 +29,7 @@ public class MqttMessageHelper {
     public void sendToClient(String topic, String msg){
         try {
             myGateway.sendToMqtt(topic, msg);
+            logger.info("mqtt topic: " + topic + ", msg: " + msg);
         } catch (Exception e) {
             Logger logger = Logger.getLogger(MqttMessageHelper.class);
             logger.error("MQTT消息发送异常", e);

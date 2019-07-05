@@ -66,5 +66,12 @@ public class WholeInstallPlanController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
-
+    /**
+     * 发送 所有未发送的总装排产
+     */
+    @PostMapping("/sendUnDeliveryWIPs")
+    public Result sendUnDeliveryWIPs() {
+        Result result = wholeInstallPlanService.sendUnDeliveryWIPs();
+        return result;
+    }
 }

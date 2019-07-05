@@ -14,6 +14,7 @@
     <result column="valid" jdbcType="TINYINT" property="valid" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
   </resultMap>
 
   <select id="selectUnSendWIPs" resultMap="BaseResultMap">

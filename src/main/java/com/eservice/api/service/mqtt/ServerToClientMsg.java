@@ -1,5 +1,7 @@
 package com.eservice.api.service.mqtt;
 
+import java.util.Date;
+
 /**
  * 服务端发给App的消息格式
  */
@@ -12,6 +14,10 @@ public class ServerToClientMsg {
         public static final Integer ORDER_SPLIT = 2;
         ///取消
         public static final Integer ORDER_CANCEL = 3;
+
+        //总装排产
+        public static final Integer WHOLE_INSTALL_PLAN = 4;
+
     }
 
     /**
@@ -51,5 +57,27 @@ public class ServerToClientMsg {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    //计划日期
+    private Date installDatePlan;
+
+    //备注信息
+    private String cmtSend;
+
+    public Date getInstallDatePlan() {
+        return installDatePlan;
+    }
+
+    public void setInstallDatePlan(Date installDatePlan) {
+        this.installDatePlan = installDatePlan;
+    }
+
+    public String getCmtSend() {
+        return cmtSend;
+    }
+
+    public void setCmtSend(String cmtSend) {
+        this.cmtSend = cmtSend;
     }
 }
