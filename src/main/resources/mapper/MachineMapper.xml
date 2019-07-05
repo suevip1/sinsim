@@ -370,10 +370,9 @@
     SELECT 
     v.*,
     CASE
-        WHEN v.plan_ship_date!=null AND v.`status` &lt; 4 AND v.diffday &lt; 5
-        AND v.diffday &gt; 1
+        WHEN !isnull(v.plan_ship_date) AND v.`status` &lt; 4 AND (v.diffday between 1 and 5)
         THEN '1'
-        WHEN v.plan_ship_date!=null AND v.`status` &lt; 4 AND v.diffday &lt; 1 
+        WHEN !isnull(v.plan_ship_date) AND v.`status` &lt; 4 AND v.diffday &lt; 1
         THEN '2'
         ELSE '0'
     END AS warning
@@ -442,10 +441,9 @@
         SELECT 
         v.*,
         CASE
-            WHEN v.plan_ship_date!=null AND v.`status` &lt; 4 AND v.diffday &lt; 5
-                 AND v.diffday &gt; 1
+            WHEN !isnull(v.plan_ship_date) AND v.`status` &lt; 4 AND (v.diffday between 1 and 5)
             THEN '1'
-            WHEN v.plan_ship_date!=null AND v.`status` &lt; 4 AND v.diffday &lt; 1 
+            WHEN !isnull(v.plan_ship_date) AND v.`status` &lt; 4 AND v.diffday &lt; 1
             THEN '2'
             ELSE '0'
         END AS warning
