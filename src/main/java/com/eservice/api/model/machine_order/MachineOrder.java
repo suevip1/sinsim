@@ -718,6 +718,7 @@ public class MachineOrder {
 
     /**
      * 该订单的机器全部加急；1表示加急,0表示取消加急(曾经加急后来取消了)，默认为null
+     * checkbox 用Boolean
      */
     private Boolean allUrgent;
 

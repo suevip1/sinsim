@@ -184,7 +184,6 @@ public class MachineController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
-    /// todo: status和taskNameList 需要支持多个个
     @PostMapping("/selectProcessMachine")
     public Result selectProcessMachine(
             @RequestParam(defaultValue = "0") Integer page,
@@ -195,7 +194,7 @@ public class MachineController {
             String machine_strid,
             String nameplate,
             String location,
-            Byte status,
+            String status, ///支持多个状态用逗号隔开， "2,3,4"
             String query_start_time,
             String query_finish_time,
             String taskNameList, //工序集合，逗号分隔，支持UI按多个工序查询
@@ -222,7 +221,7 @@ public class MachineController {
             String machine_strid,
             String nameplate,
             String location,
-            Byte status,
+            String status,
             String query_start_time,
             String query_finish_time,
             String taskNameList, //工序集合，逗号分隔，支持UI按多个工序查询

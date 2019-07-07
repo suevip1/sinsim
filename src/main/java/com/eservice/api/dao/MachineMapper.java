@@ -46,14 +46,16 @@ public interface MachineMapper extends Mapper<Machine> {
     //selectProcessMachine
     List<MachineInfo> selectProcessMachineFuzzy(
             @Param("order_id") Integer order_id, @Param("order_num") String orderNum, @Param("contract_num") String contractNum, @Param("machine_strid") String machine_strid, @Param("nameplate") String nameplate,
-            @Param("location") String location, @Param("status") Byte status,
+            @Param("location") String location,
+            @Param("statusArr") String[] statusArr,
             @Param("query_start_time") String query_start_time, @Param("query_finish_time") String query_finish_time,
             @Param("taskNameList") String taskNameList//工序集合，逗号分隔，支持UI按多个工序查询
             );
 
     List<MachineInfo> selectProcessMachine(
             @Param("order_id") Integer order_id, @Param("order_num") String orderNum, @Param("contract_num") String contractNum, @Param("machine_strid") String machine_strid, @Param("nameplate") String nameplate,
-            @Param("location") String location, @Param("status") Byte status,
+            @Param("location") String location,
+            @Param("statusArr") String[] statusArr,
             @Param("query_start_time") String query_start_time, @Param("query_finish_time") String query_finish_time,
             @Param("taskNameList") String taskNameList//工序集合，逗号分隔，支持UI按多个工序查询
             );

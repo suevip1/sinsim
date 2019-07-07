@@ -171,16 +171,22 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
             String machine_strid,
             String nameplate,
             String location,
-            Byte status,
+            String status,
             String query_start_time,
             String query_finish_time,
             String taskNameList, //工序集合，逗号分隔，支持UI按多个工序查询
             Boolean is_fuzzy
     ) {
-        if (is_fuzzy) {
-            return machineMapper.selectProcessMachineFuzzy(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time,taskNameList);
+        String[] arr;
+        if(status == null){
+            arr = null;
         } else {
-            return machineMapper.selectProcessMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, status, query_start_time, query_finish_time,taskNameList);
+            arr = status.split(",");
+        }
+        if (is_fuzzy) {
+            return machineMapper.selectProcessMachineFuzzy(order_id, orderNum, contractNum, machine_strid, nameplate, location, arr, query_start_time, query_finish_time,taskNameList);
+        } else {
+            return machineMapper.selectProcessMachine(order_id, orderNum, contractNum, machine_strid, nameplate, location, arr, query_start_time, query_finish_time,taskNameList);
         }
     }
 

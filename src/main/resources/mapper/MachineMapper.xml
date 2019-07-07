@@ -418,8 +418,11 @@
         <if test="location != null and location != ''">
             and v.location=#{location}
         </if>
-        <if test="status != null">
-            and v.status=#{status}
+        <if test="statusArr != null">
+            and v.status in
+            <foreach collection="statusArr" item="item" open="(" close=")"  separator="," >
+                #{item}
+            </foreach>
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
         <if test="query_start_time!=null and query_start_time != '' ">
@@ -489,8 +492,11 @@
         <if test="location != null and location != ''">
             and v.location=#{location}
         </if>
-        <if test="status != null">
-            and v.status=#{status}
+        <if test="statusArr != null">
+            and v.status in
+            <foreach collection="statusArr" item="item" open="(" close=")"  separator="," >
+                #{item}
+            </foreach>
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time -->
         <if test="query_start_time!=null and query_start_time != '' ">
