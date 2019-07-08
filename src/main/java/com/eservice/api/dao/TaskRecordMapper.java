@@ -17,6 +17,12 @@ public interface TaskRecordMapper extends Mapper<TaskRecord> {
 
     TaskRecordDetail selectTaskRecordDetail(@Param("taskRecordId") Integer taskRecordId);
 
+    List<TaskRecordDetail> searchTaskRecordDetail(@Param("taskRecordId") Integer taskRecordId,
+                                            @Param("taskName") String taskName,
+                                            @Param("machineOrderNumber") String machineOrderNumber,
+                                            @Param("queryStartTime") String queryStartTime,
+                                            @Param("queryFinishTime") String queryFinishTime);
+
     List<TaskRecordDetail> selectAllTaskRecordDetail();
 
     List<TaskRecordDetail> selectAllInstallTaskRecordDetailByUserAccount(@Param("userAccount") String userAccount);

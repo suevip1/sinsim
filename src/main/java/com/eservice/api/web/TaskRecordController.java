@@ -177,6 +177,23 @@ public class TaskRecordController {
     }
 
     /**
+     * 根据条件返回 安装开始时间，结束时间，安装组长，机器铭牌号，订单号，安装任务名称，工序的标准耗时。
+     * （和 selectTaskRecordDetail 类似，为避免前端app修改，后端另外新建了这个接口）
+     */
+    @PostMapping("searchTaskRecordDetail")
+    public Result searchTaskRecordDetail(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                         Integer taskRecordId,
+                                         String taskName,
+                                         String machineOrderNumber,
+                                         String queryStartTime,
+                                         String queryFinishTime) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail>  taskRecordDetailList = taskRecordService.searchTaskRecordDetail(taskRecordId,taskName,machineOrderNumber,queryStartTime,queryFinishTime);
+        PageInfo pageInfo = new PageInfo(taskRecordDetailList);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
      * 给生产部管理员返回所有detail，其中不限于包括：
      * {
      * "machine_id":"",

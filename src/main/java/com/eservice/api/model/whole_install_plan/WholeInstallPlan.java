@@ -13,10 +13,10 @@ public class WholeInstallPlan {
     private Integer id;
 
     /**
-     * 安装小组ID
+     * 安装任务ID
      */
-    @Column(name = "install_group_id")
-    private Integer installGroupId;
+    @Column(name = "install_task_id")
+    private Integer installTaskId;
 
     /**
      * 安排的开始安装日期
@@ -77,22 +77,12 @@ public class WholeInstallPlan {
         this.id = id;
     }
 
-    /**
-     * 获取安装小组ID
-     *
-     * @return install_group_id - 安装小组ID
-     */
-    public Integer getInstallGroupId() {
-        return installGroupId;
+    public Integer getInstallTaskId() {
+        return installTaskId;
     }
 
-    /**
-     * 设置安装小组ID
-     *
-     * @param installGroupId 安装小组ID
-     */
-    public void setInstallGroupId(Integer installGroupId) {
-        this.installGroupId = installGroupId;
+    public void setInstallTaskId(Integer installTaskId) {
+        this.installTaskId = installTaskId;
     }
 
     /**

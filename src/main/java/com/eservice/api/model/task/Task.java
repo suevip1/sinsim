@@ -115,4 +115,17 @@ public class Task {
     public void setGuidance(String guidance) {
         this.guidance = guidance;
     }
+
+    // 该工序的标准用时,单位分钟
+    @Column(name = "standard_minutes")
+    private Integer standardMinutes;
+
+    public Integer getStandardMinutes() {
+        return standardMinutes;
+    }
+
+    public void setStandardMinutes(Integer standardMinutes) {
+        this.standardMinutes = standardMinutes;
+    }
+
 }

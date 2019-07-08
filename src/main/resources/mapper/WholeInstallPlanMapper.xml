@@ -6,7 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="install_group_id" jdbcType="INTEGER" property="installGroupId" />
+    <result column="install_task_id" jdbcType="INTEGER" property="installTaskId" />
     <result column="install_date_plan" jdbcType="TIMESTAMP" property="installDatePlan" />
     <result column="order_id" jdbcType="INTEGER" property="orderId" />
     <result column="machine_id" jdbcType="INTEGER" property="machineId" />

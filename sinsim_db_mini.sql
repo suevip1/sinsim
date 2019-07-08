@@ -606,6 +606,7 @@ CREATE TABLE `task` (
   `quality_user_id` int(10) unsigned DEFAULT NULL COMMENT '质检用户的ID',
   `group_id` int(10) unsigned DEFAULT NULL COMMENT '安装小组id',
   `guidance` text COMMENT '作业指导，后续可能会需要（一般是html格式）',
+  `standard_minutes` int(10) unsigned DEFAULT NULL COMMENT '该工序的标准用时,单位分钟',
   PRIMARY KEY (`id`),
   KEY `fk_t_group_id` (`group_id`),
   KEY `task_name` (`task_name`),
@@ -938,7 +939,7 @@ CREATE TABLE `whole_install_acutual` (
 DROP TABLE IF EXISTS `whole_install_plan`;
 CREATE TABLE `whole_install_plan` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '整装排产',
-  `install_group_id` int(10) unsigned NOT NULL COMMENT '安装小组ID',
+  `install_task_id` int(10) unsigned NOT NULL COMMENT '安装任务ID',
   `install_date_plan` date NOT NULL COMMENT '安排的开始安装日期',
   `order_id` int(10) unsigned NOT NULL COMMENT '该整装记录对应的订单号',
   `machine_id` int(10) unsigned NOT NULL COMMENT '该整装记录对应的机器id',
@@ -948,10 +949,10 @@ CREATE TABLE `whole_install_plan` (
   `update_date` datetime DEFAULT NULL COMMENT '记录的更新时间',
   `send_time` datetime DEFAULT NULL COMMENT '空表示该排产还未发送，发送后填发送时间',
   PRIMARY KEY (`id`),
-  KEY `fk_ig_id` (`install_group_id`) USING BTREE,
+  KEY `fk_ig_id` (`install_task_id`) USING BTREE,
   KEY `fk_order_id` (`order_id`),
   KEY `fk_machine_id` (`machine_id`),
-  CONSTRAINT `fk_ig_id` FOREIGN KEY (`install_group_id`) REFERENCES `install_group` (`id`),
+  CONSTRAINT `fk_it_id` FOREIGN KEY (`install_task_id`) REFERENCES `task` (`id`),
   CONSTRAINT `fk_machine_id` FOREIGN KEY (`machine_id`) REFERENCES `machine` (`id`),
   CONSTRAINT `fk_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

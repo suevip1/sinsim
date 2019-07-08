@@ -41,6 +41,14 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
         return taskRecordMapper.selectTaskRecordDetail(taskRecordId);
     }
 
+    public List<TaskRecordDetail>  searchTaskRecordDetail(Integer taskRecordId,
+                                                   String taskName,
+                                                   String machineOrderNumber,
+                                                   String queryStartTime,
+                                                   String queryFinishTime) {
+        return taskRecordMapper.searchTaskRecordDetail(taskRecordId, taskName, machineOrderNumber, queryStartTime, queryFinishTime);
+    }
+
     public List<TaskRecordDetail> selectAllTaskRecordDetail() {
         return taskRecordMapper.selectAllTaskRecordDetail();
     }

@@ -156,6 +156,7 @@
             <id column="task_id" jdbcType="INTEGER" property="id"/>
             <result column="quality_user_id" jdbcType="INTEGER" property="qualityUserId"/>
             <result column="group_id" jdbcType="INTEGER" property="groupId"/>
+            <result column="standard_minutes" jdbcType="INTEGER" property="standardMinutes" />
         </association>
     </resultMap>
     <!--根据 taskId查task record, process record, machine, machine_order-->
@@ -174,6 +175,37 @@
         left join order_loading_list oll on oll.order_id = mo.id
         where tr.id = #{taskRecordId}
     </select>
+
+    <select id="searchTaskRecordDetail" resultMap="TaskRecordDetail">
+        SELECT
+        tr.id, tr.task_name, tr.leader, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,
+        m.status machine_status, m.nameplate,
+        mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.order_num,
+        task.standard_minutes
+        FROM
+        task_record tr
+        join process_record pr on tr.process_record_id = pr.id
+        join machine m on m.id = pr.machine_id
+        join machine_order mo on mo.id = m.order_id
+        join task on task.task_name = tr.task_name
+        where 1=1
+        <if test="taskRecordId != null and taskRecordId != '' ">
+          and tr.id = #{taskRecordId}
+        </if>
+        <if test="taskName != null and taskName !='' ">
+          and task.task_name = #{taskName}
+        </if>
+        <if test="machineOrderNumber != null and machineOrderNumber !='' ">
+          and mo.order_num = #{machineOrderNumber}
+        </if>
+        <if test="queryStartTime!=null and queryStartTime != '' ">
+          and DATE_FORMAT(tr.install_begin_time,'%Y-%m-%d') &gt;= #{queryStartTime}
+        </if>
+        <if test="queryFinishTime != null and queryFinishTime != '' ">
+          and DATE_FORMAT(tr.install_end_time,'%Y-%m-%d') &lt;= #{queryFinishTime}
+        </if>
+    </select>
+
     <select id="selectAllTaskRecordDetail" resultMap="TaskRecordDetail">
        SELECT
         tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,

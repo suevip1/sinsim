@@ -10,5 +10,6 @@
     <result column="quality_user_id" jdbcType="INTEGER" property="qualityUserId" />
     <result column="group_id" jdbcType="INTEGER" property="groupId" />
     <result column="guidance" jdbcType="LONGVARCHAR" property="guidance" />
+    <result column="standard_minutes" jdbcType="INTEGER" property="standardMinutes" />
   </resultMap>
 </mapper>

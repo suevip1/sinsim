@@ -178,7 +178,7 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
             Boolean is_fuzzy
     ) {
         String[] arr;
-        if(status == null){
+        if(status == null || status.equals("")){
             arr = null;
         } else {
             arr = status.split(",");
