@@ -350,8 +350,8 @@ public class MachineController {
                     row.getCell(9).setCellValue(dateString);
                 }
             }
-            downloadPath = machinePorcessExcelOutputDir + "导出安装进度" + ".xls";
-            downloadPathForNginx = "/excel/" + "导出安装进度" + ".xls";
+            downloadPath = machinePorcessExcelOutputDir + "安装进度" + ".xls";
+            downloadPathForNginx = "/excel/" + "安装进度" + ".xls";
             out = new FileOutputStream(downloadPath);
             wb.write(out);
             out.close();

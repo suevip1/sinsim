@@ -177,7 +177,19 @@ INSERT INTO `device` VALUES ('19', 'sinsim-12', '868619034158848');
 INSERT INTO `device` VALUES ('20', 'sinsim-13', '868619034190205');
 INSERT INTO `device` VALUES ('21', 'sinsim-14', '868619033852243');
 INSERT INTO `device` VALUES ('22', 'sinsim-15', '868208033128422');
-
+-- ----------------------------
+-- Records of domestic_trade_zone
+-- ----------------------------
+INSERT INTO `domestic_trade_zone` VALUES ('1', '绍兴(柯桥、杨汛桥)', '186');
+INSERT INTO `domestic_trade_zone` VALUES ('2', '云南贵州', '186');
+INSERT INTO `domestic_trade_zone` VALUES ('3', '萧山', '184');
+INSERT INTO `domestic_trade_zone` VALUES ('4', '嘉兴、余杭', '184');
+INSERT INTO `domestic_trade_zone` VALUES ('5', '湖北', '184');
+INSERT INTO `domestic_trade_zone` VALUES ('6', '江苏', '187');
+INSERT INTO `domestic_trade_zone` VALUES ('7', '江苏以北(山东、河南、辽宁)', '187');
+INSERT INTO `domestic_trade_zone` VALUES ('8', '孙情区域', '187');
+INSERT INTO `domestic_trade_zone` VALUES ('9', '何绍华区域', '187');
+INSERT INTO `domestic_trade_zone` VALUES ('10', '宁波慈溪金华其其他地区', '186');
 -- ----------------------------
 -- Table structure for `install_group`
 -- ----------------------------
@@ -275,10 +287,13 @@ CREATE TABLE `machine_order` (
   `update_time` datetime DEFAULT NULL COMMENT '订单信息更新时间',
   `end_time` datetime DEFAULT NULL COMMENT '订单结束时间',
   `all_urgent` tinyint(4) DEFAULT NULL COMMENT '该订单的机器全部加急；1表示加急,0表示取消加急(曾经加急后来取消了)，默认为null',
+  `domestic_trade_zone` int(10) unsigned DEFAULT NULL COMMENT '内贸部哪个区,外贸时为空',
   PRIMARY KEY (`id`),
   KEY `fk_o_machine_type` (`machine_type`),
   KEY `fk_o_order_detail_id` (`order_detail_id`),
   KEY `fk_o_contract_id` (`contract_id`),
+  KEY `fk_o_dtz` (`domestic_trade_zone`),
+  CONSTRAINT `fk_o_dtz` FOREIGN KEY (`domestic_trade_zone`) REFERENCES `domestic_trade_zone` (`id`),
   CONSTRAINT `fk_o_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `contract` (`id`),
   CONSTRAINT `fk_o_machine_type` FOREIGN KEY (`machine_type`) REFERENCES `machine_type` (`id`),
   CONSTRAINT `fk_o_order_detail_id` FOREIGN KEY (`order_detail_id`) REFERENCES `order_detail` (`id`)

@@ -729,4 +729,16 @@ public class MachineOrder {
     public void setAllUrgent(Boolean allUrgent) {
         this.allUrgent = allUrgent;
     }
+
+    //内贸部分区
+    @Column(name = "domestic_trade_zone")
+    private Integer domesticTradeZone;
+
+    public Integer getDomesticTradeZone() {
+        return domesticTradeZone;
+    }
+
+    public void setDomesticTradeZone(Integer domesticTradeZone) {
+        this.domesticTradeZone = domesticTradeZone;
+    }
 }

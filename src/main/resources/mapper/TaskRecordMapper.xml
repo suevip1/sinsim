@@ -133,6 +133,7 @@
             <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
             <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
             <result column="all_urgent" jdbcType="TINYINT" property="allUrgent"/>
+            <result column="domestic_trade_zone" jdbcType="INTEGER" property="domesticTradeZone"/>
 
         </association>
         <association javaType="com.eservice.api.model.order_loading_list.OrderLoadingList" property="orderLoadingList">

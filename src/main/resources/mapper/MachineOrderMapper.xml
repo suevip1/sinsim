@@ -41,6 +41,7 @@
 		<result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
 		<result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
 		<result column="all_urgent" jdbcType="TINYINT" property="allUrgent"/>
+		<result column="domestic_trade_zone" jdbcType="INTEGER" property="domesticTradeZone"/>
 	</resultMap>
 
 	<resultMap id="MachineOrderDetailMap" type="com.eservice.api.model.machine_order.MachineOrderDetail">
@@ -83,6 +84,7 @@
 		<result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
 		<result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
 		<result column="all_urgent" jdbcType="TINYINT" property="allUrgent"/>
+		<result column="domestic_trade_zone" jdbcType="INTEGER" property="domesticTradeZone"/>
 		<association javaType="com.eservice.api.model.order_detail.OrderDetail" property="orderDetail">
 			<!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
 			<id column="detail_id" property="id"/>
@@ -167,10 +169,10 @@
 			keyProperty="id">
     insert into
     machine_order(order_num, original_order_id, contract_id, order_detail_id, create_user_id,country, brand, needle_num, head_num, head_distance, x_distance, y_distance,
-    package_method,wrap_machine,wrap_machine_change,package_mark,machine_num,machine_type, machine_price,intermediary_price,discounts, order_total_discounts, equipment, contract_ship_date, plan_ship_date, sellman, maintain_type, maintain_person,status,create_time, update_time, end_time, mark,all_urgent)
+    package_method,wrap_machine,wrap_machine_change,package_mark,machine_num,machine_type, machine_price,intermediary_price,discounts, order_total_discounts, equipment, contract_ship_date, plan_ship_date, sellman, maintain_type, maintain_person,status,create_time, update_time, end_time, mark, all_urgent,domestic_trade_zone)
     values(
     #{orderNum},#{originalOrderId},#{contractId},#{orderDetailId},#{createUserId},#{country},#{brand},#{needleNum},#{headNum},#{headDistance},#{xDistance},
-    #{yDistance},#{packageMethod},#{wrapMachine},#{wrapMachineChange},#{packageMark},#{machineNum},#{machineType},#{machinePrice},#{intermediaryPrice},#{discounts},#{orderTotalDiscounts},#{equipment},#{contractShipDate},#{planShipDate},#{sellman},#{maintainType},#{maintainPerson},#{status},#{createTime},#{updateTime},#{endTime},#{mark},#{allUrgent})
+    #{yDistance},#{packageMethod},#{wrapMachine},#{wrapMachineChange},#{packageMark},#{machineNum},#{machineType},#{machinePrice},#{intermediaryPrice},#{discounts},#{orderTotalDiscounts},#{equipment},#{contractShipDate},#{planShipDate},#{sellman},#{maintainType},#{maintainPerson},#{status},#{createTime},#{updateTime},#{endTime},#{mark},#{allUrgent},#{domesticTradeZone})
   </insert>
 
 	<select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
