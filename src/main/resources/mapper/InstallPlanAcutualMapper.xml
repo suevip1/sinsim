@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.InstallPlanAcutualMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.install_plan_acutual.InstallPlanAcutual">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="install_plan_id" jdbcType="INTEGER" property="installPlanId" />
+    <result column="head_count_done" jdbcType="INTEGER" property="headCountDone" />
+    <result column="cmt_feedback" jdbcType="VARCHAR" property="cmtFeedback" />
+    <result column="pc_wire_num" jdbcType="VARCHAR" property="pcWireNum" />
+    <result column="kouxian_num" jdbcType="VARCHAR" property="kouxianNum" />
+    <result column="light_wire_num" jdbcType="VARCHAR" property="lightWireNum" />
+    <result column="warn_signal_num" jdbcType="VARCHAR" property="warnSignalNum" />
+    <result column="device_signal_num" jdbcType="VARCHAR" property="deviceSignalNum" />
+    <result column="warn_power_num" jdbcType="VARCHAR" property="warnPowerNum" />
+    <result column="device_power_num" jdbcType="VARCHAR" property="devicePowerNum" />
+    <result column="device_buxiu_num" jdbcType="VARCHAR" property="deviceBuxiuNum" />
+    <result column="device_switch_num" jdbcType="VARCHAR" property="deviceSwitchNum" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+</mapper>
