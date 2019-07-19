@@ -81,8 +81,20 @@ CREATE TABLE `abnormal_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of abnormal_record
+-- Table structure for attendance
 -- ----------------------------
+DROP TABLE IF EXISTS `attendance`;
+CREATE TABLE `attendance` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '整装排产的实际反馈',
+  `user_id` int(10) unsigned NOT NULL COMMENT '谁上传',
+  `install_group_id` int(10) unsigned NOT NULL COMMENT '安装组',
+  `date` datetime NOT NULL COMMENT '记录的生成时间',
+  `attendance_member` varchar(255) DEFAULT NULL COMMENT '今日上班人数，这些用varchar, varchar方便处理，而且可以考虑以后改为写名字',
+  `overtime_member` varchar(255) DEFAULT NULL COMMENT '今日加班人数',
+  `absence_member` varchar(255) DEFAULT NULL COMMENT '请假人数',
+  `attendance_tomorrow` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for `contract`
@@ -178,7 +190,20 @@ INSERT INTO `device` VALUES ('20', 'sinsim-13', '868619034190205');
 INSERT INTO `device` VALUES ('21', 'sinsim-14', '868619033852243');
 INSERT INTO `device` VALUES ('22', 'sinsim-15', '868208033128422');
 -- ----------------------------
+-- Table structure for domestic_trade_zone
+-- ----------------------------
+DROP TABLE IF EXISTS `domestic_trade_zone`;
+CREATE TABLE `domestic_trade_zone` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '内贸部门分区',
+  `zone_name` varchar(20) NOT NULL COMMENT '分区名字',
+  `owner_id` int(10) unsigned DEFAULT NULL COMMENT '负责人',
+  PRIMARY KEY (`id`),
+  KEY `fk_ower` (`owner_id`),
+  CONSTRAINT `fk_ower` FOREIGN KEY (`owner_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+
 -- Records of domestic_trade_zone
+-- Table structure for domestic_trade_zone
 -- ----------------------------
 INSERT INTO `domestic_trade_zone` VALUES ('1', '绍兴(柯桥、杨汛桥)', '186');
 INSERT INTO `domestic_trade_zone` VALUES ('2', '云南贵州', '186');
@@ -197,7 +222,9 @@ DROP TABLE IF EXISTS `install_group`;
 CREATE TABLE `install_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) NOT NULL COMMENT '公司部门',
-  PRIMARY KEY (`id`)
+  `type` varchar(10) DEFAULT '其他' COMMENT '总装；部装；其他',
+  PRIMARY KEY (`id`),
+  KEY `group_name` (`group_name`(191))
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -217,6 +244,53 @@ INSERT INTO `install_group` VALUES ('14', '出厂检验组');
 INSERT INTO `install_group` VALUES ('16', '毛巾安装组');
 INSERT INTO `install_group` VALUES ('17', '毛巾调试');
 INSERT INTO `install_group` VALUES ('18', '线架组');
+- ----------------------------
+-- Table structure for install_plan
+-- ----------------------------
+DROP TABLE IF EXISTS `install_plan`;
+CREATE TABLE `install_plan` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '排产(总装,部装)',
+  `type` varchar(10) DEFAULT NULL COMMENT '总装；部装；其他. (虽然从安装组里也可以读取该信息)',
+  `install_group_id` int(10) unsigned NOT NULL COMMENT '安装小组名称',
+  `install_date_plan` date NOT NULL COMMENT '安排的开始安装日期',
+  `order_id` int(10) unsigned NOT NULL COMMENT '该整装记录对应的订单号',
+  `machine_id` int(10) unsigned NOT NULL COMMENT '该整装记录对应的机器id',
+  `cmt_send` varchar(255) DEFAULT NULL COMMENT '计划的备注',
+  `valid` tinyint(4) DEFAULT NULL COMMENT '0: 无效 1:有效。 删掉时为0',
+  `create_date` datetime DEFAULT NULL COMMENT '记录的生成时间',
+  `update_date` datetime DEFAULT NULL COMMENT '记录的更新时间',
+  `send_time` datetime DEFAULT NULL COMMENT '空表示该排产还未发送，发送后填发送时间',
+  PRIMARY KEY (`id`),
+  KEY `fk_order_id` (`order_id`),
+  KEY `fk_machine_id` (`machine_id`),
+  CONSTRAINT `fk_machine_id` FOREIGN KEY (`machine_id`) REFERENCES `machine` (`id`),
+  CONSTRAINT `fk_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for install_plan_acutual
+-- ----------------------------
+DROP TABLE IF EXISTS `install_plan_acutual`;
+CREATE TABLE `install_plan_acutual` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '排产的实际反馈(总装，部装)',
+  `install_plan_id` int(10) unsigned NOT NULL COMMENT '1个排产计划，可以有多次反馈，比如第一天没完成，第二天继续，每天都要反馈',
+  `head_count_done` int(10) DEFAULT NULL COMMENT '这次（今天）完成的头数',
+  `cmt_feedback` varchar(255) DEFAULT NULL COMMENT '这次（今天）安装组长反馈的备注',
+  `pc_wire_num` varchar(10) DEFAULT NULL COMMENT '电脑线， 这些焊线，都用varchar（10），方便处理，占用也不大',
+  `kouxian_num` varchar(10) DEFAULT NULL COMMENT '扣线',
+  `light_wire_num` varchar(10) DEFAULT NULL COMMENT '灯线',
+  `warn_signal_num` varchar(10) DEFAULT NULL COMMENT '报警信号',
+  `device_signal_num` varchar(10) DEFAULT NULL COMMENT '整装信号',
+  `warn_power_num` varchar(10) DEFAULT NULL COMMENT '报警电源',
+  `device_power_num` varchar(10) DEFAULT NULL COMMENT '装置电源',
+  `device_buxiu_num` varchar(10) DEFAULT NULL COMMENT '装置补秀',
+  `device_switch_num` varchar(10) DEFAULT NULL COMMENT '装置开关',
+  `create_date` datetime DEFAULT NULL COMMENT '记录的生成时间',
+  `update_date` datetime DEFAULT NULL COMMENT '记录的更新时间',
+  PRIMARY KEY (`id`),
+  KEY `fk_ig_id` (`install_plan_id`) USING BTREE,
+  CONSTRAINT `fk_install_plan_id` FOREIGN KEY (`install_plan_id`) REFERENCES `install_plan` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for `machine`
@@ -929,45 +1003,3 @@ INSERT INTO `user` VALUES ('306', '詹栋', '詹栋', '15', 'sinsim', null, '', 
 INSERT INTO `user` VALUES ('307', '吕满芳', '吕满芳', '17', '', '1', '', '1', '0');
 
 - ----------------------------
--- Table structure for whole_install_acutual
--- ----------------------------
-DROP TABLE IF EXISTS `whole_install_acutual`;
-CREATE TABLE `whole_install_acutual` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '整装排产的实际反馈',
-  `whole_install_plan_id` int(10) unsigned NOT NULL COMMENT '1个排产计划，可以有多次反馈，比如第一天没完成，第二天继续，每天都要反馈',
-  `head_count_done` int(10) DEFAULT NULL COMMENT '这次（今天）完成的头数',
-  `cmt_feedback` varchar(255) DEFAULT NULL COMMENT '这次（今天）安装组长反馈的备注',
-  `create_date` datetime DEFAULT NULL COMMENT '记录的生成时间',
-  `update_date` datetime DEFAULT NULL COMMENT '记录的更新时间',
-  `attendance_member` varchar(255) DEFAULT NULL COMMENT '今日上班人数，这些用varchar, varchar方便处理，而且可以考虑以后改为写名字',
-  `overtime_member` varchar(255) DEFAULT NULL COMMENT '今日加班人数',
-  `absence_member` varchar(255) DEFAULT NULL COMMENT '请假人数',
-  `attendance_tomorrow` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_ig_id` (`whole_install_plan_id`),
-  CONSTRAINT `fk_whole_install_plan_id` FOREIGN KEY (`whole_install_plan_id`) REFERENCES `whole_install_plan` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Table structure for whole_install_plan
--- ----------------------------
-DROP TABLE IF EXISTS `whole_install_plan`;
-CREATE TABLE `whole_install_plan` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '整装排产',
-  `install_task_id` int(10) unsigned NOT NULL COMMENT '安装任务ID',
-  `install_date_plan` date NOT NULL COMMENT '安排的开始安装日期',
-  `order_id` int(10) unsigned NOT NULL COMMENT '该整装记录对应的订单号',
-  `machine_id` int(10) unsigned NOT NULL COMMENT '该整装记录对应的机器id',
-  `cmt_send` varchar(255) DEFAULT NULL COMMENT '计划的备注',
-  `valid` tinyint(4) DEFAULT NULL COMMENT '0: 无效 1:有效',
-  `create_date` datetime DEFAULT NULL COMMENT '记录的生成时间',
-  `update_date` datetime DEFAULT NULL COMMENT '记录的更新时间',
-  `send_time` datetime DEFAULT NULL COMMENT '空表示该排产还未发送，发送后填发送时间',
-  PRIMARY KEY (`id`),
-  KEY `fk_ig_id` (`install_task_id`) USING BTREE,
-  KEY `fk_order_id` (`order_id`),
-  KEY `fk_machine_id` (`machine_id`),
-  CONSTRAINT `fk_it_id` FOREIGN KEY (`install_task_id`) REFERENCES `task` (`id`),
-  CONSTRAINT `fk_machine_id` FOREIGN KEY (`machine_id`) REFERENCES `machine` (`id`),
-  CONSTRAINT `fk_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
