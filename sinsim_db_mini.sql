@@ -270,8 +270,8 @@ CREATE TABLE `install_plan` (
 -- ----------------------------
 -- Table structure for install_plan_acutual
 -- ----------------------------
-DROP TABLE IF EXISTS `install_plan_acutual`;
-CREATE TABLE `install_plan_acutual` (
+DROP TABLE IF EXISTS `install_plan_actual`;
+CREATE TABLE `install_plan_actual` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '排产的实际反馈(总装，部装)',
   `install_plan_id` int(10) unsigned NOT NULL COMMENT '1个排产计划，可以有多次反馈，比如第一天没完成，第二天继续，每天都要反馈',
   `head_count_done` int(10) DEFAULT NULL COMMENT '这次（今天）完成的头数',

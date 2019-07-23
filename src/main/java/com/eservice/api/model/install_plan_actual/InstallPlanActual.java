@@ -1,10 +1,10 @@
-package com.eservice.api.model.install_plan_acutual;
+package com.eservice.api.model.install_plan_actual;
 
 import java.util.Date;
 import javax.persistence.*;
 
-@Table(name = "install_plan_acutual")
-public class InstallPlanAcutual {
+@Table(name = "install_plan_actual")
+public class InstallPlanActual {
     /**
      * 排产的实际反馈(总装，部装)
      */
