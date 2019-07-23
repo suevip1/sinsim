@@ -215,9 +215,9 @@ public class Constant {
     public static final String S2C_INSTALL_ABNORMAL_TO_QUALITY = "/s2c/install_abnormal/quality/";
 
     /**
-     * MQTT Topic: 总装排产计划，发送给对应的安装组长
+     * MQTT Topic: 排产计划，发送给对应的安装组长
      */
-    public static final String S2C_WHOLE_INSTALL_PLAN = "/s2c/whole_install_plan/";
+    public static final String S2C_INSTALL_PLAN = "/s2c/install_plan/";
 
     public enum ValidEnum {
         INVALID(0), VALID(1);

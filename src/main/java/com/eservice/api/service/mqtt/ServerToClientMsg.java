@@ -16,7 +16,7 @@ public class ServerToClientMsg {
         public static final Integer ORDER_CANCEL = 3;
 
         //总装排产
-        public static final Integer WHOLE_INSTALL_PLAN = 4;
+        public static final Integer INSTALL_PLAN = 4;
 
     }
 

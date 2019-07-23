@@ -8,6 +8,7 @@ import com.eservice.api.service.InstallPlanService;
 import com.eservice.api.service.MachineOrderService;
 import com.eservice.api.service.MachineService;
 import com.eservice.api.service.impl.InstallGroupServiceImpl;
+import com.eservice.api.service.impl.InstallPlanServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -29,7 +30,7 @@ import java.util.List;
 @RequestMapping("/install/plan")
 public class InstallPlanController {
     @Resource
-    private InstallPlanService installPlanService;
+    private InstallPlanServiceImpl installPlanService;
 
     @Resource
     private InstallGroupServiceImpl installGroupService;
@@ -163,4 +164,24 @@ public class InstallPlanController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    //获取所有未发送的排产计划
+    @PostMapping("/selectUnSendInstallPlans")
+    public Result selectUnSendInstallPlans(@RequestParam(defaultValue = "0") Integer page,
+                                           @RequestParam(defaultValue = "0") Integer size) {
+        PageHelper.startPage(page, size);
+        List<InstallPlan> list = installPlanService.selectUnSendInstallPlans();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     * 发送 所有未发送的排产计划
+     */
+    @PostMapping("/sendUnDeliveryWIPs")
+    public Result sendUnDeliveryWIPs() {
+        Result result = installPlanService.sendUnDeliveryInstallPlans();
+        return result;
+    }
+
 }

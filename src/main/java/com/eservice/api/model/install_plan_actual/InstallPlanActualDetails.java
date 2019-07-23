@@ -1,10 +1,10 @@
-package com.eservice.api.model.whole_install_acutual;
+package com.eservice.api.model.install_plan_actual;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Table(name = "whole_install_acutual")
-public class WholeInstallAcutualDetails extends WholeInstallAcutual {
+@Table(name = "install_plan_actual")
+public class InstallPlanActualDetails extends InstallPlanActual{
     /**
      * 订单编号
      */

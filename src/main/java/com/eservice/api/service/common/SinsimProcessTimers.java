@@ -1,6 +1,6 @@
 package com.eservice.api.service.common;
 
-import com.eservice.api.service.impl.WholeInstallPlanServiceImpl;
+import com.eservice.api.service.impl.InstallPlanServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,7 +16,7 @@ public class SinsimProcessTimers {
     private final static Logger logger = LoggerFactory.getLogger(SinsimProcessTimers.class);
 
     @Resource
-    private WholeInstallPlanServiceImpl wholeInstallPlanService;
+    private InstallPlanServiceImpl installPlanService;
 
     /**
      * 每分钟          0 0/1 * * * ?
@@ -30,7 +30,7 @@ public class SinsimProcessTimers {
         /**
          * 发送所有未发送的总装排产计划
          */
-        wholeInstallPlanService.sendUnDeliveryWIPs();
+        installPlanService.sendUnDeliveryInstallPlans();
     }
 }
 

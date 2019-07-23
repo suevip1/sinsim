@@ -17,4 +17,9 @@
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
   </resultMap>
+
+  <select id="selectUnSendInstallPlans" resultMap="BaseResultMap">
+    SELECT * from install_plan
+    WHERE send_time is null
+  </select>
 </mapper>

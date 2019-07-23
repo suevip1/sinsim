@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.install_plan_actual.InstallPlanActual;
+import com.eservice.api.model.install_plan_actual.InstallPlanActualDetails;
 import com.eservice.api.service.InstallPlanActualService;
 import com.eservice.api.service.InstallPlanService;
 import com.github.pagehelper.PageHelper;
@@ -83,6 +84,18 @@ public class InstallPlanActualController {
         PageHelper.startPage(page, size);
         List<InstallPlanActual> list = installPlanActualService.findAll();
         PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+    @PostMapping("/selectWholeInstallDetails")
+    public Result selectWholeInstallDetails(@RequestParam(defaultValue = "0") Integer page,
+                                            @RequestParam(defaultValue = "0") Integer size,
+                                            String orderNum,
+                                            String nameplate,
+                                            String installGroupName) {
+        PageHelper.startPage(page, size);
+        //todo
+//        List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanDetails(orderNum,nameplate,installGroupName);
+        PageInfo pageInfo = new PageInfo(null);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }
