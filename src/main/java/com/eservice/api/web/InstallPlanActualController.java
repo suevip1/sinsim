@@ -6,6 +6,7 @@ import com.eservice.api.model.install_plan_actual.InstallPlanActual;
 import com.eservice.api.model.install_plan_actual.InstallPlanActualDetails;
 import com.eservice.api.service.InstallPlanActualService;
 import com.eservice.api.service.InstallPlanService;
+import com.eservice.api.service.impl.InstallPlanActualServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +27,7 @@ import java.util.List;
 @RequestMapping("/install/plan/actual")
 public class InstallPlanActualController {
     @Resource
-    private InstallPlanActualService installPlanActualService;
+    private InstallPlanActualServiceImpl installPlanActualService;
 
     @Resource
     private InstallPlanService installPlanService;
@@ -36,9 +37,9 @@ public class InstallPlanActualController {
         InstallPlanActual installPlanActual1 = JSON.parseObject(installPlanActual, InstallPlanActual.class);
         if (installPlanActual1 != null) {
             if (installPlanActual1.getInstallPlanId() == null) {
-                return ResultGenerator.genFailResult("错误，WholeInstallPlanId为null！");
+                return ResultGenerator.genFailResult("错误，InstallPlanId为null！");
             } else if (installPlanService.findById(installPlanActual1.getInstallPlanId()) == null) {
-                return ResultGenerator.genFailResult("错误，根据该 WholeInstallPlanId " + installPlanActual1.getInstallPlanId() + " 找不到对应的plan ！");
+                return ResultGenerator.genFailResult("错误，根据该InstallPlanId " + installPlanActual1.getInstallPlanId() + " 找不到对应的plan ！");
             } else {
                 installPlanActual1.setCreateDate(new Date());
                 installPlanActualService.save(installPlanActual1);
@@ -86,16 +87,25 @@ public class InstallPlanActualController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
-    @PostMapping("/selectWholeInstallDetails")
-    public Result selectWholeInstallDetails(@RequestParam(defaultValue = "0") Integer page,
+
+    /**
+     * 根据条件查询排产计划及其完成情况细节。
+     * @param page
+     * @param size
+     * @param orderNum
+     * @param nameplate
+     * @param installGroupName
+     * @return
+     */
+    @PostMapping("/selectInstallPlanActualDetails")
+    public Result selectInstallPlanActualDetails(@RequestParam(defaultValue = "0") Integer page,
                                             @RequestParam(defaultValue = "0") Integer size,
                                             String orderNum,
                                             String nameplate,
                                             String installGroupName) {
         PageHelper.startPage(page, size);
-        //todo
-//        List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanDetails(orderNum,nameplate,installGroupName);
-        PageInfo pageInfo = new PageInfo(null);
+        List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanActualDetails(orderNum,nameplate,installGroupName);
+        PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

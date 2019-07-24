@@ -2,12 +2,14 @@ package com.eservice.api.service.impl;
 
 import com.eservice.api.dao.InstallPlanActualMapper;
 import com.eservice.api.model.install_plan_actual.InstallPlanActual;
+import com.eservice.api.model.install_plan_actual.InstallPlanActualDetails;
 import com.eservice.api.service.InstallPlanActualService;
 import com.eservice.api.core.AbstractService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -21,4 +23,9 @@ public class InstallPlanActualServiceImpl extends AbstractService<InstallPlanAct
     @Resource
     private InstallPlanActualMapper installPlanActualMapper;
 
+    public List<InstallPlanActualDetails> selectInstallPlanActualDetails(String orderNum,
+                                                                         String nameplate,
+                                                                         String installGroupName) {
+        return installPlanActualMapper.selectInstallPlanActualDetails(orderNum, nameplate, installGroupName);
+    }
 }

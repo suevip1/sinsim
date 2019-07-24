@@ -178,8 +178,8 @@ public class InstallPlanController {
     /**
      * 发送 所有未发送的排产计划
      */
-    @PostMapping("/sendUnDeliveryWIPs")
-    public Result sendUnDeliveryWIPs() {
+    @PostMapping("/sendUnDeliveryInstallPlans")
+    public Result sendUnDeliveryInstallPlans() {
         Result result = installPlanService.sendUnDeliveryInstallPlans();
         return result;
     }
