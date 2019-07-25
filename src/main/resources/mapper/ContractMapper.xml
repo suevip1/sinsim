@@ -19,6 +19,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="record_user" jdbcType="VARCHAR" property="recordUser"/>
         <result column="is_valid" jdbcType="VARCHAR" property="isValid"/>
+        <result column="domestic_trade_zone" jdbcType="INTEGER" property="domesticTradeZone"/>
     </resultMap>
 
     <resultMap id="ContractDetailMap" type="com.eservice.api.model.contract.ContractDetail">
@@ -40,6 +41,7 @@
         <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
         <result column="order_id" jdbcType="VARCHAR" property="orderId"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="domestic_trade_zone" jdbcType="INTEGER" property="domesticTradeZone"/>
     </resultMap>
 
     <select id="selectContractsByFuzzy" resultMap="ContractDetailMap">
@@ -117,9 +119,9 @@
     <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contract.Contract"
             keyProperty="id">
       insert into
-      contract(contract_num, currency_type, market_group_name, customer_name, sellman, status, contract_ship_date, pay_method, mark, create_time,record_user)
+      contract(contract_num, currency_type, market_group_name, customer_name, sellman, status, contract_ship_date, pay_method, mark, create_time,record_user,domestic_trade_zone)
       values(
-      #{contractNum},#{currencyType},#{marketGroupName},#{customerName},#{sellman},#{status},#{contractShipDate},#{payMethod},#{mark},#{createTime},#{recordUser})
+      #{contractNum},#{currencyType},#{marketGroupName},#{customerName},#{sellman},#{status},#{contractShipDate},#{payMethod},#{mark},#{createTime},#{recordUser},#{domesticTradeZone})
     </insert>
     <select id="selectAllCustomer" resultMap="BaseResultMap">
         SELECT c.* FROM `contract` c WHERE 1=1

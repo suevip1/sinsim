@@ -115,8 +115,11 @@ CREATE TABLE `contract` (
   `update_time` datetime DEFAULT NULL COMMENT '更新table的时间',
   `record_user` varchar(255) DEFAULT NULL COMMENT '录单人员',
   `is_valid` varchar(4) NOT NULL DEFAULT '1' COMMENT '指示合同是否有效，用于删除标记，可以理解为作废单据',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `domestic_trade_zone` int(10) unsigned DEFAULT NULL COMMENT '内贸分区,外贸该字段为空',
+  PRIMARY KEY (`id`),
+  KEY `fk_dtz` (`domestic_trade_zone`),
+  CONSTRAINT `fk_dtz` FOREIGN KEY (`domestic_trade_zone`) REFERENCES `domestic_trade_zone` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=788 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of contract
@@ -361,13 +364,10 @@ CREATE TABLE `machine_order` (
   `update_time` datetime DEFAULT NULL COMMENT '订单信息更新时间',
   `end_time` datetime DEFAULT NULL COMMENT '订单结束时间',
   `all_urgent` tinyint(4) DEFAULT NULL COMMENT '该订单的机器全部加急；1表示加急,0表示取消加急(曾经加急后来取消了)，默认为null',
-  `domestic_trade_zone` int(10) unsigned DEFAULT NULL COMMENT '内贸部哪个区,外贸时为空',
   PRIMARY KEY (`id`),
   KEY `fk_o_machine_type` (`machine_type`),
   KEY `fk_o_order_detail_id` (`order_detail_id`),
   KEY `fk_o_contract_id` (`contract_id`),
-  KEY `fk_o_dtz` (`domestic_trade_zone`),
-  CONSTRAINT `fk_o_dtz` FOREIGN KEY (`domestic_trade_zone`) REFERENCES `domestic_trade_zone` (`id`),
   CONSTRAINT `fk_o_contract_id` FOREIGN KEY (`contract_id`) REFERENCES `contract` (`id`),
   CONSTRAINT `fk_o_machine_type` FOREIGN KEY (`machine_type`) REFERENCES `machine_type` (`id`),
   CONSTRAINT `fk_o_order_detail_id` FOREIGN KEY (`order_detail_id`) REFERENCES `order_detail` (`id`)
@@ -695,7 +695,7 @@ CREATE TABLE `task` (
   `quality_user_id` int(10) unsigned DEFAULT NULL COMMENT '质检用户的ID',
   `group_id` int(10) unsigned DEFAULT NULL COMMENT '安装小组id',
   `guidance` text COMMENT '作业指导，后续可能会需要（一般是html格式）',
-  `standard_minutes` int(10) unsigned DEFAULT NULL COMMENT '该工序的标准用时,单位分钟',
+  `standard_minutes` int(10) unsigned DEFAULT NULL COMMENT '该工序的标准用时,单位分钟。---update:工序没法确定一个标准时间，因为时间和工序，机型，头数，长度（比如台板）等等都有关，目前只能先记录下所有耗时时间。后面再考虑设计如何反映效率。',
   PRIMARY KEY (`id`),
   KEY `fk_t_group_id` (`group_id`),
   KEY `task_name` (`task_name`),
