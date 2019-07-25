@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.AttendanceMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.attendance.Attendance">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="install_group_id" jdbcType="INTEGER" property="installGroupId" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="attendance_member" jdbcType="VARCHAR" property="attendanceMember" />
+    <result column="overtime_member" jdbcType="VARCHAR" property="overtimeMember" />
+    <result column="absence_member" jdbcType="VARCHAR" property="absenceMember" />
+    <result column="attendance_tomorrow" jdbcType="VARCHAR" property="attendanceTomorrow" />
+  </resultMap>
+</mapper>
