@@ -704,24 +704,29 @@ CREATE TABLE `task` (
   KEY `task_name` (`task_name`),
   KEY `fk_t_quality_user_id` (`quality_user_id`),
   CONSTRAINT `fk_t_group_id` FOREIGN KEY (`group_id`) REFERENCES `install_group` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES ('1', '上轴安装', '0', '1', '');
-INSERT INTO `task` VALUES ('2', '下轴安装', '0', '2', '');
-INSERT INTO `task` VALUES ('3', '驱动安装', '0', '3', '');
-INSERT INTO `task` VALUES ('4', '台板安装', '0', '4', '');
-INSERT INTO `task` VALUES ('6', '针杆架安装', '0', '7', '');
-INSERT INTO `task` VALUES ('8', '剪线安装', '0', '9', '');
-INSERT INTO `task` VALUES ('10', '框架安装', '0', '3', '');
-INSERT INTO `task` VALUES ('11', '电控安装', null, '5', '');
-INSERT INTO `task` VALUES ('12', '线架安装', '0', '18', '');
-INSERT INTO `task` VALUES ('15', '出厂检验', '0', '14', '');
-INSERT INTO `task` VALUES ('17', '测试调试', '0', '8', '');
-INSERT INTO `task` VALUES ('19', '装置安装', null, '10', '');
-INSERT INTO `task` VALUES ('20', '毛巾安装', '0', '16', '');
+INSERT INTO `task` VALUES ('1', '上轴安装', '0', '1', '', '127');
+INSERT INTO `task` VALUES ('2', '下轴安装', '0', '2', '', '222');
+INSERT INTO `task` VALUES ('3', '驱动安装', '0', '3', '', '333');
+INSERT INTO `task` VALUES ('4', '台板安装', '0', '4', '', '444');
+INSERT INTO `task` VALUES ('6', '针杆架安装', '0', '7', '', '44');
+INSERT INTO `task` VALUES ('8', '剪线安装', '0', '9', '', '22');
+INSERT INTO `task` VALUES ('10', '框架安装', '0', '3', '', '33');
+INSERT INTO `task` VALUES ('11', '电控安装', null, '5', '', '42');
+INSERT INTO `task` VALUES ('12', '线架安装', '0', '18', '', '11');
+INSERT INTO `task` VALUES ('15', '出厂检验', '0', '14', '', '223');
+INSERT INTO `task` VALUES ('17', '测试调试', '0', '8', '', '12');
+INSERT INTO `task` VALUES ('19', '装置安装', null, '10', '', '255');
+INSERT INTO `task` VALUES ('20', '毛巾安装', '0', '16', '', '33');
+INSERT INTO `task` VALUES ('22', '自动换底线', null, '9', '', '44');
+INSERT INTO `task` VALUES ('24', '针杆架定位', null, '7', '', '56');
+INSERT INTO `task` VALUES ('25', '驱动框架安装', null, '3', '', '78');
+INSERT INTO `task` VALUES ('26', '毛巾调试', null, '16', '', '99');
+INSERT INTO `task` VALUES ('27', '拉杆定位安装', null, '7', '', '98');
 
 -- ----------------------------
 -- Table structure for `task_plan`
