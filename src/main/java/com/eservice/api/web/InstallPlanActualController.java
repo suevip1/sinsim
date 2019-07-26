@@ -58,7 +58,7 @@ public class InstallPlanActualController {
 
     @PostMapping("/update")
     public Result update(String installPlanActual) {
-        InstallPlanActual ipa = JSON.parseObject(installPlanActual,InstallPlanActual.class);
+        InstallPlanActual ipa = JSON.parseObject(installPlanActual, InstallPlanActual.class);
         if (ipa != null) {
             if (ipa.getInstallPlanId() == null) {
                 return ResultGenerator.genFailResult("错误，InstallPlanId为null！");
@@ -90,21 +90,22 @@ public class InstallPlanActualController {
 
     /**
      * 根据条件查询排产计划及其完成情况细节。
-     * @param page
-     * @param size
-     * @param orderNum
-     * @param nameplate
-     * @param installGroupName
+     *
+     * @param orderNum 订单编号
+     * @param nameplate 机器编号
+     * @param installGroupName 安装组名称
+     * @param type 排产类型： 部装，总装
      * @return
      */
     @PostMapping("/selectInstallPlanActualDetails")
     public Result selectInstallPlanActualDetails(@RequestParam(defaultValue = "0") Integer page,
-                                            @RequestParam(defaultValue = "0") Integer size,
-                                            String orderNum,
-                                            String nameplate,
-                                            String installGroupName) {
+                                                 @RequestParam(defaultValue = "0") Integer size,
+                                                 String orderNum,
+                                                 String nameplate,
+                                                 String installGroupName,
+                                                 String type) {
         PageHelper.startPage(page, size);
-        List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanActualDetails(orderNum,nameplate,installGroupName);
+        List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanActualDetails(orderNum, nameplate, installGroupName, type);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

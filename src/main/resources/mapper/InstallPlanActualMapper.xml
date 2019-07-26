@@ -21,7 +21,7 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
-  <resultMap id="InstallAcutualDetailsResultMap" type="com.eservice.api.model.install_plan_actual.InstallPlanActualDetails">
+  <resultMap id="InstallActualDetailsResultMap" type="com.eservice.api.model.install_plan_actual.InstallPlanActualDetails">
     <!--
        WARNING - @mbg.generated
      -->
@@ -47,8 +47,9 @@
     <result column="head_num" jdbcType="VARCHAR" property="headNum" />
     <result column="cmt_send" jdbcType="VARCHAR" property="cmtSend" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
   </resultMap>
-  <select id="selectInstallPlanActualDetails" resultMap="InstallAcutualDetailsResultMap">
+  <select id="selectInstallPlanActualDetails" resultMap="InstallActualDetailsResultMap">
     SELECT * FROM install_plan_actual ipa
     LEFT JOIN install_plan on ipa.install_plan_id = install_plan.id
     LEFT JOIN machine_order mo on mo.id = install_plan.order_id
@@ -64,6 +65,9 @@
     </if>
     <if test="installGroupName != null and installGroupName != ''">
       and ig.group_name = #{installGroupName}
+    </if>
+    <if test="type != null and type != ''">
+      and ig.type = #{type}
     </if>
   </select>
 </mapper>

@@ -79,4 +79,17 @@ public class InstallPlanActualDetails extends InstallPlanActual{
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    /**
+     * 总装；部装；其他. (虽然从安装组里也可以读取该信息)
+     */
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }
