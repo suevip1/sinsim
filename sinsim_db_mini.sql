@@ -228,26 +228,29 @@ CREATE TABLE `install_group` (
   `type` varchar(10) DEFAULT '其他' COMMENT '总装；部装；其他',
   PRIMARY KEY (`id`),
   KEY `group_name` (`group_name`(191))
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of install_group
 -- ----------------------------
-INSERT INTO `install_group` VALUES ('1', '上轴组');
-INSERT INTO `install_group` VALUES ('2', '下轴组');
-INSERT INTO `install_group` VALUES ('3', '驱动组');
-INSERT INTO `install_group` VALUES ('4', '台板组');
-INSERT INTO `install_group` VALUES ('5', '电控组');
-INSERT INTO `install_group` VALUES ('7', '针杆架组');
-INSERT INTO `install_group` VALUES ('8', '测试调试组');
-INSERT INTO `install_group` VALUES ('9', '剪线组');
-INSERT INTO `install_group` VALUES ('10', '装置组');
-INSERT INTO `install_group` VALUES ('11', '前置工序组');
-INSERT INTO `install_group` VALUES ('14', '出厂检验组');
-INSERT INTO `install_group` VALUES ('16', '毛巾安装组');
-INSERT INTO `install_group` VALUES ('17', '毛巾调试');
-INSERT INTO `install_group` VALUES ('18', '线架组');
-- ----------------------------
+INSERT INTO `install_group` VALUES ('1', '上轴组', '总装');
+INSERT INTO `install_group` VALUES ('2', '下轴组', '总装');
+INSERT INTO `install_group` VALUES ('3', '驱动组', '总装');
+INSERT INTO `install_group` VALUES ('4', '台板组', '总装');
+INSERT INTO `install_group` VALUES ('5', '电控组', '其他');
+INSERT INTO `install_group` VALUES ('7', '针杆架组', '总装');
+INSERT INTO `install_group` VALUES ('8', '测试调试组', '其他');
+INSERT INTO `install_group` VALUES ('9', '剪线组', '其他');
+INSERT INTO `install_group` VALUES ('10', '装置组', '其他');
+INSERT INTO `install_group` VALUES ('11', '前置工序组', '其他');
+INSERT INTO `install_group` VALUES ('14', '出厂检验组', '其他');
+INSERT INTO `install_group` VALUES ('16', '毛巾安装组', '其他');
+INSERT INTO `install_group` VALUES ('18', '线架组', '总装');
+INSERT INTO `install_group` VALUES ('19', '焊线组', '部装');
+INSERT INTO `install_group` VALUES ('20', '机头部装', '部装');
+INSERT INTO `install_group` VALUES ('21', '针杆架部装', '部装');
+INSERT INTO `install_group` VALUES ('22', '夹线器部装', '部装');
+INSERT INTO `install_group` VALUES ('23', '梭床部装', '部装');
 -- Table structure for install_plan
 -- ----------------------------
 DROP TABLE IF EXISTS `install_plan`;
