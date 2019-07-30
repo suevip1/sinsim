@@ -245,7 +245,7 @@
         join user on user.group_id = install_group.id
         where user.account  = #{userAccount}
         and (tr.status=2 or tr.status=3 or tr.status=4 or tr.status=5 or tr.status=7 or tr.status=8)
-
+        ORDER BY location, order_num
     </select>
     <select id="selectAllQaTaskRecordDetailByUserAccount" resultMap="TaskRecordDetail">
         select
