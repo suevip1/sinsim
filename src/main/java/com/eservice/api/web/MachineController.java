@@ -128,6 +128,7 @@ public class MachineController {
                                  @RequestParam(defaultValue = "0") Integer size,
                                  Integer id,
                                  Integer order_id,
+                                 String orderNum,
                                  String machine_strid,
                                  String nameplate,
                                  String location,
@@ -137,7 +138,7 @@ public class MachineController {
                                  String query_finish_time,
                                  @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
-        List<Machine> list = machineService.selectMachines(id, order_id, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time, is_fuzzy);
+        List<Machine> list = machineService.selectMachines(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

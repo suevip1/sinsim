@@ -89,7 +89,8 @@
      where qri.task_quality_record_id = #{taskQualityRecordId}
   </select>
     <select id="selectMachines" resultMap="BaseResultMap">
-        SELECT * FROM machine
+        SELECT m.* FROM machine m
+        join machine_order mo on m.order_id = mo.id
         where 1=1
         <if test="id != null and id != ''">
             and id=#{id}
@@ -99,6 +100,9 @@
         </if>
         <if test="order_id != null and order_id != ''">
             and order_id=#{order_id}
+        </if>
+        <if test="orderNum != null and orderNum != ''">
+            and order_num = #{orderNum} )
         </if>
         <if test="nameplate != null and nameplate != ''">
             and nameplate=#{nameplate}
@@ -124,7 +128,8 @@
     </select>
 
     <select id="selectMachinesFuzzy" resultMap="BaseResultMap">
-        SELECT * FROM machine
+        SELECT m.* FROM machine m
+        join machine_order mo on m.order_id = mo.id
         where 1=1
         <if test="id != null and id != ''">
             and id=#{id}
@@ -134,6 +139,9 @@
         </if>
         <if test="order_id != null and order_id != ''">
             and order_id like CONCAT('%','${order_id}','%' )
+        </if>
+        <if test="orderNum != null and orderNum != ''">
+            and order_num like CONCAT('%','${orderNum}','%' )
         </if>
         <if test="nameplate != null and nameplate != ''">
             and nameplate like CONCAT('%','${nameplate}','%' )

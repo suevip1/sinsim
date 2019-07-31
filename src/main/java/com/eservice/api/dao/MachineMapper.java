@@ -15,11 +15,15 @@ public interface MachineMapper extends Mapper<Machine> {
 
     Machine searchMachineByTaskQualityRecordId(Integer taskQualityRecordId);
 
-    List<Machine> selectMachines(@Param("id") Integer id, @Param("order_id") Integer order_id, @Param("machine_strid") String machine_strid, @Param("nameplate") String nameplate,
+    List<Machine> selectMachines(@Param("id") Integer id, @Param("order_id") Integer order_id,
+                                 @Param("orderNum") String orderNum,
+                                 @Param("machine_strid") String machine_strid, @Param("nameplate") String nameplate,
                                  @Param("location") String location, @Param("status") Byte status, @Param("machine_type") Integer machine_type,
                                  @Param("query_start_time") String query_start_time, @Param("query_finish_time") String query_finish_time);
 
-    List<Machine> selectMachinesFuzzy(@Param("id") Integer id, @Param("order_id") Integer order_id, @Param("machine_strid") String machine_strid, @Param("nameplate") String nameplate,
+    List<Machine> selectMachinesFuzzy(@Param("id") Integer id, @Param("order_id") Integer order_id,
+                                      @Param("orderNum") String orderNum,
+                                      @Param("machine_strid") String machine_strid, @Param("nameplate") String nameplate,
                                       @Param("location") String location, @Param("status") Byte status, @Param("machine_type") Integer machine_type,
                                       @Param("query_start_time") String query_start_time, @Param("query_finish_time") String query_finish_time);
 

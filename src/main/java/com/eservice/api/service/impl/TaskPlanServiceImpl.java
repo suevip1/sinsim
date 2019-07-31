@@ -157,7 +157,7 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
             }
         }
         if(taskRecordIds.size() > 0 && machineStrId != null) {
-            List<Machine> machineList = machineService.selectMachines(null, null, machineStrId, null, null, null, null, null, null, false);
+            List<Machine> machineList = machineService.selectMachines(null, null, null, machineStrId, null, null, null, null, null, null, false);
             if(machineList.size() == 1) {
                 //如果机器状态小于计划中，则更新为计划中
                 Machine machine = machineList.get(0);

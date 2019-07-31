@@ -1,6 +1,7 @@
 package com.eservice.api.dao;
 
 import com.eservice.api.core.Mapper;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import org.apache.ibatis.annotations.Param;
@@ -39,4 +40,6 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
     MachineOrder searchOrderIdByOrderLoadingListId(@Param("ollId") Integer ollId);
 
     List<Integer> getUsedMachineTypeCount(@Param("machineTypeId") Integer machineTypeId);
+
+    MachineOrder getMachineOrder(@Param("orderNum") String orderNum);
 }

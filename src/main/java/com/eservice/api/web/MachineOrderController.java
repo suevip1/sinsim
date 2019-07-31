@@ -148,6 +148,14 @@ public class MachineOrderController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    //根据 参数orderNum返回订单
+    @PostMapping("/getMachineOrder")
+    public Result getMachineOrder(
+            @RequestParam String orderNum ) {
+         MachineOrder machineOrder = machineOrderService.getMachineOrder(orderNum);
+        return ResultGenerator.genSuccessResult(machineOrder);
+    }
+
     @PostMapping("/isOrderNumExist")
     public Result isOrderNumExist(@RequestParam String orderNum) {
         if (orderNum == null) {
@@ -174,7 +182,7 @@ public class MachineOrderController {
             return ResultGenerator.genFailResult("需求单编号不存在！");
         } else {
             //检查需求单对应的机器是否生成，如果生成则不能删除
-            List<Machine> machineList = machineService.selectMachines(null,orderId,null,null,null,null,null,null,null,false);
+            List<Machine> machineList = machineService.selectMachines(null,orderId,null,null,null,null,null,null,null,null,false);
             if(machineList.size() > 0) {
                 return ResultGenerator.genFailResult("需求单删除失败，对应机器已生成！");
             } else {

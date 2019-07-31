@@ -2,6 +2,7 @@ package com.eservice.api.service.impl;
 
 import com.eservice.api.core.AbstractService;
 import com.eservice.api.dao.MachineOrderMapper;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.service.MachineOrderService;
@@ -46,6 +47,10 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
     public Integer getUsedMachineTypeCount(Integer machineTypeId)
     {
         return machineOrderMapper.getUsedMachineTypeCount(machineTypeId).get(0);//SQL查询出来的结构是List<Integer>,第一个元素就是查询出来的count
+    }
+
+    public MachineOrder getMachineOrder(String orderNum){
+        return machineOrderMapper.getMachineOrder(orderNum);
     }
 
 }

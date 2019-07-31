@@ -44,6 +44,7 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
 
     public List<Machine> selectMachines(Integer id,
                                         Integer order_id,
+                                        String orderNum,
                                         String machine_strid,
                                         String nameplate,
                                         String location,
@@ -53,9 +54,9 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                         String query_finish_time,
                                         Boolean is_fuzzy) {
         if (is_fuzzy) {
-            return machineMapper.selectMachinesFuzzy(id, order_id, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time);
+            return machineMapper.selectMachinesFuzzy(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time);
         } else {
-            return machineMapper.selectMachines(id, order_id, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time);
+            return machineMapper.selectMachines(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time);
         }
     }
 
