@@ -50,11 +50,11 @@
     <result column="type" jdbcType="VARCHAR" property="type" />
   </resultMap>
   <select id="selectInstallPlanActualDetails" resultMap="InstallActualDetailsResultMap">
-    SELECT * FROM install_plan_actual ipa
-    LEFT JOIN install_plan on ipa.install_plan_id = install_plan.id
-    LEFT JOIN machine_order mo on mo.id = install_plan.order_id
+    SELECT * FROM install_plan ip
+    LEFT JOIN install_plan_actual ipa on ipa.install_plan_id = ip.id
+    LEFT JOIN machine_order mo on mo.id = ip.order_id
     LEFT JOIN machine m on mo.id = m.order_id
-    LEFT JOIN install_group ig on ig.id = install_plan.install_group_id
+    LEFT JOIN install_group ig on ig.id = ip.install_group_id
 
     where  1=1
     <if test="orderNum != null and orderNum != ''">

@@ -2,12 +2,16 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.install_group.InstallGroup;
 import com.eservice.api.model.install_plan.InstallPlan;
+import com.eservice.api.model.install_plan_actual.InstallPlanActualDetails;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.service.InstallPlanService;
 import com.eservice.api.service.MachineOrderService;
 import com.eservice.api.service.MachineService;
 import com.eservice.api.service.impl.InstallGroupServiceImpl;
+import com.eservice.api.service.impl.InstallPlanActualServiceImpl;
 import com.eservice.api.service.impl.InstallPlanServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -40,6 +44,9 @@ public class InstallPlanController {
 
     @Resource
     private MachineService machineService;
+
+    @Resource
+    private InstallPlanActualServiceImpl installPlanActualService;
 
     private Logger logger = Logger.getLogger(InstallPlanController.class);
     @PostMapping("/add")
@@ -78,6 +85,14 @@ public class InstallPlanController {
                 return ResultGenerator.genFailResult("错误， 该机器是不属于该订单");
             }
 
+            //检查该机器是否已经安排了该安装组的计划。
+            InstallGroup installGroup = installGroupService.findById(installPlan1.getInstallGroupId());
+            Machine machine = machineService.findById(installPlan1.getMachineId());
+            if( !isOKtoSetPlan(installGroup.getId(),machine.getId()) ){
+                logger.warn("该机器 " + machine.getNameplate() + " 已经安排了 " + installGroup.getGroupName());
+                return ResultGenerator.genFailResult("该机器 " + machine.getNameplate() + " 已经安排了 " + installGroup.getGroupName());
+            }
+
             installPlan1.setCreateDate(new Date());
             installPlanService.save(installPlan1);
 
@@ -85,6 +100,28 @@ public class InstallPlanController {
             return ResultGenerator.genFailResult("参数不正确，添加失败！");
         }
         return ResultGenerator.genSuccessResult();
+    }
+
+    //是否可以安排该机器该安装组（用于检查一些不合法的安排）
+    boolean isOKtoSetPlan(Integer installGroupId, Integer machineId) {
+        InstallGroup installGroup = installGroupService.findById(installGroupId);
+        if (installGroup == null) {
+            logger.warn("Can not find the installGroup by id " + installGroupId);
+            return false;
+        }
+        Machine machine = machineService.findById(machineId);
+        if (machine == null) {
+            logger.warn("Can not find the machine by id " + machineId);
+            return false;
+        }
+        List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanActualDetails(null,
+                machine.getNameplate(),
+                installGroup.getGroupName(), null);
+        if(list == null || list.isEmpty()){
+            return true;
+        } else {
+            return  false;
+        }
     }
     /**
      *  确认该机器是否归属该订单
