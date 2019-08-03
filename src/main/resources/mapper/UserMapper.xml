@@ -33,6 +33,7 @@
         <association javaType="com.eservice.api.model.install_group.InstallGroup" property="group">
             <id column="install_group_id" property="id" />
             <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+            <result column="type" jdbcType="VARCHAR" property="type" />
         </association>
     </resultMap>
 

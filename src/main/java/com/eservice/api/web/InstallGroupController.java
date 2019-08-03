@@ -5,6 +5,7 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.install_group.InstallGroup;
 import com.eservice.api.service.InstallGroupService;
+import com.eservice.api.service.impl.InstallGroupServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ import java.util.List;
 @RequestMapping("/install/group")
 public class InstallGroupController {
     @Resource
-    private InstallGroupService installGroupService;
+    private InstallGroupServiceImpl installGroupService;
 
     @PostMapping("/add")
     public Result add(String installGroup) {
@@ -64,6 +65,16 @@ public class InstallGroupController {
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
         List<InstallGroup> list = installGroupService.findAll();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @PostMapping("/getInstallGroupByType")
+    public Result getInstallGroupByType(@RequestParam(defaultValue = "0") Integer page,
+                                        @RequestParam(defaultValue = "0") Integer size,
+                                        @RequestParam String type) {
+        PageHelper.startPage(page, size);
+        List<InstallGroup> list = installGroupService.getInstallGroupByType(type);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

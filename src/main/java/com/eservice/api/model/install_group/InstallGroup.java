@@ -45,4 +45,16 @@ public class InstallGroup {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    //总装；部装；其他
+    @Column(name = "type")
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

@@ -7,5 +7,6 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
   </resultMap>
 </mapper>

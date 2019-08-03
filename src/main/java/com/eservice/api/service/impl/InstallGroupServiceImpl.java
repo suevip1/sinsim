@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -21,4 +22,7 @@ public class InstallGroupServiceImpl extends AbstractService<InstallGroup> imple
     @Resource
     private InstallGroupMapper installGroupMapper;
 
+    public List<InstallGroup> getInstallGroupByType(String type){
+        return installGroupMapper.getInstallGroupByType(type);
+    }
 }

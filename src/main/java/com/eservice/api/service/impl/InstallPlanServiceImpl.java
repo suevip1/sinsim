@@ -51,13 +51,13 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
         return installPlanMapper.selectUnSendInstallPlans();
     }
 
-    public Result sendUnDeliveryInstallPlans(){
+    public Result sendUnDeliveryInstallPlans() {
         /**
          * 发送所有未发送的排产计划
          */
         ServerToClientMsg msg = new ServerToClientMsg();
         List<InstallPlan> unSendInstallPlans = installPlanService.selectUnSendInstallPlans();
-
+        int sendCount = 0;
         for (int i = 0; i < unSendInstallPlans.size(); i++) {
             Date now = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -75,12 +75,19 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
 
                 mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_PLAN, JSON.toJSONString(msg));
                 logger.info("MQTT SEND topic: " + Constant.S2C_INSTALL_PLAN + ", nameplate: " + msg.getNameplate());
+                sendCount++;
+
             } else {
-                logger.info("还未到安装提醒时间的机器：" + machineService.findById(unSendInstallPlans.get(i).getMachineId()).getNameplate());
+                logger.info("还未到安装提醒时间的机器："
+                        + machineService.findById(unSendInstallPlans.get(i).getMachineId()).getNameplate()
+                        + " 安装时间为 " + installDatePlanDateString);
             }
 
         }
-        return ResultGenerator.genSuccessResult(unSendInstallPlans.size() + " item(s) sent totally");
+        String str = "还未到安装提醒时间的任务: " + unSendInstallPlans.size() + "条，"
+                + "刚刚发送提醒 " + sendCount + "条";
+        logger.info(str);
+        return ResultGenerator.genSuccessResult(str);
     }
 
     /**
