@@ -95,6 +95,8 @@ public class InstallPlanController {
 
             installPlan1.setCreateDate(new Date());
             installPlanService.save(installPlan1);
+            logger.info("add install plan, nameplate： " + machine.getNameplate()
+                    + ",组： " + installGroup.getGroupName() + ", date: " + installPlan1.getInstallDatePlan() );
 
         } else {
             return ResultGenerator.genFailResult("参数不正确，添加失败！");

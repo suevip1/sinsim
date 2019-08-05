@@ -1444,7 +1444,7 @@ public class ContractController {
                         condition.createCriteria().andCondition("order_id = ", machineOrderDetail.getOriginalOrderId());
                         List<OrderChangeRecord> list = orderChangeRecordService.findByCondition(condition);
                         if(list != null && list.size() == 1) {
-                            cell2 = sheetX.getRow(35 + equipmentCount).getCell((short) 2);
+                            cell2 = sheetX.getRow(38 + equipmentCount).getCell((short) 2);
                             cell2.setCellValue(new HSSFRichTextString(list.get(0).getChangeReason()));
                         }
                     } else if(status == Constant.ORDER_SPLITED.intValue()) {
@@ -1453,7 +1453,7 @@ public class ContractController {
                         condition.createCriteria().andCondition("order_id = ", machineOrderDetail.getId());
                         List<OrderSplitRecord> list = orderSplitRecordService.findByCondition(condition);
                         if(list != null && list.size() == 1) {
-                            cell2 = sheetX.getRow(36 + equipmentCount).getCell((short) 2);
+                            cell2 = sheetX.getRow(39 + equipmentCount).getCell((short) 2);
                             cell2.setCellValue(new HSSFRichTextString(list.get(0).getSplitReason()));
                         }
                     }
@@ -1471,7 +1471,7 @@ public class ContractController {
 
                     //需求单的N个签核，插入N行
                     Integer orderSignCount = signContentItemList.size();
-                    insertRow2(wb, sheetX, 38 + equipmentCount, orderSignCount);
+                    insertRow2(wb, sheetX, 41 + equipmentCount, orderSignCount);
                     for (int k = 0; k < orderSignCount; k++) {
                         /**
                          * 需求单签核的： 角色（部门）/人/时间/意见
@@ -1480,20 +1480,20 @@ public class ContractController {
                         int roleId = signContentItemList.get(k).getRoleId();
                         //根据roleId返回角色（部门）
                         String roleName = roleService.findById(roleId).getRoleName();
-                        cell = sheetX.getRow(38 + equipmentCount + k).getCell((short) 0);
+                        cell = sheetX.getRow(41 + equipmentCount + k).getCell((short) 0);
                         cell.setCellValue(new HSSFRichTextString(roleName));
                         //2.签核人
-                        cell = sheetX.getRow(38 + equipmentCount + k).getCell((short) 1);
+                        cell = sheetX.getRow(41 + equipmentCount + k).getCell((short) 1);
                         cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getUser()));
                         //3.签核时间
-                        cell = sheetX.getRow(38 + equipmentCount + k).getCell((short) 2);
+                        cell = sheetX.getRow(41 + equipmentCount + k).getCell((short) 2);
                         if (null != signContentItemList.get(k).getDate()) {
                             cell.setCellValue(new HSSFRichTextString(formatter2.format(signContentItemList.get(k).getDate())));
                         }
-                        cell = sheetX.getRow(38 + equipmentCount + k).getCell((short) 3);
+                        cell = sheetX.getRow(41 + equipmentCount + k).getCell((short) 3);
                         cell.setCellValue(new HSSFRichTextString("意见"));
                         //4.签核意见, 隐藏 成本核算员、财务会计、财务经理，这三个角色的的审批意见
-                        cell = sheetX.getRow(38 + equipmentCount + k).getCell((short) 4);
+                        cell = sheetX.getRow(41 + equipmentCount + k).getCell((short) 4);
                         if(roleName.equals("成本核算员")||roleName.equals("财务会计")||roleName.equals("财务经理")) {
                             if (displayPrice) {
                                 cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
@@ -1504,12 +1504,12 @@ public class ContractController {
                             cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
                         }
                         //合并单元格
-                        sheetX.addMergedRegion(new CellRangeAddress(38 + equipmentCount + k,
-                                38 + equipmentCount + k, 4, 10));
+                        sheetX.addMergedRegion(new CellRangeAddress(41 + equipmentCount + k,
+                                41 + equipmentCount + k, 4, 10));
 
                     }
                     //最后删除多余一行
-                    sheetX.shiftRows(38 + equipmentCount + orderSignCount + 1,
+                    sheetX.shiftRows(41 + equipmentCount + orderSignCount + 1,
                             sheetX.getLastRowNum(),
                             -1);
                 }

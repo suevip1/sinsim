@@ -53,7 +53,7 @@
     SELECT * FROM install_plan ip
     LEFT JOIN install_plan_actual ipa on ipa.install_plan_id = ip.id
     LEFT JOIN machine_order mo on mo.id = ip.order_id
-    LEFT JOIN machine m on mo.id = m.order_id
+    LEFT JOIN machine m on m.id = ip.machine_id
     LEFT JOIN install_group ig on ig.id = ip.install_group_id
 
     where  1=1
