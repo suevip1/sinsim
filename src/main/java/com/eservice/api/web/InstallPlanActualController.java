@@ -95,6 +95,8 @@ public class InstallPlanActualController {
      * @param nameplate 机器编号
      * @param installGroupName 安装组名称
      * @param type 排产类型： 部装，总装
+     * @param queryStartTime 计划日期起始
+     * @param queryFinishTime 计划日期结束
      * @return
      */
     @PostMapping("/selectInstallPlanActualDetails")
@@ -103,9 +105,16 @@ public class InstallPlanActualController {
                                                  String orderNum,
                                                  String nameplate,
                                                  String installGroupName,
-                                                 String type) {
+                                                 String type,
+                                                 String queryStartTime,
+                                                 String queryFinishTime) {
         PageHelper.startPage(page, size);
-        List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanActualDetails(orderNum, nameplate, installGroupName, type);
+        List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanActualDetails(orderNum,
+                nameplate,
+                installGroupName,
+                type,
+                queryStartTime,
+                queryFinishTime);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

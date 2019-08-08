@@ -48,6 +48,8 @@
     <result column="cmt_send" jdbcType="VARCHAR" property="cmtSend" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="install_date_plan" jdbcType="TIMESTAMP" property="installDatePlan" />
+
   </resultMap>
   <select id="selectInstallPlanActualDetails" resultMap="InstallActualDetailsResultMap">
     SELECT * FROM install_plan ip
@@ -69,5 +71,12 @@
     <if test="type != null and type != ''">
       and ig.type = #{type}
     </if>
+    <if test="queryStartTime!=null and queryStartTime != '' ">
+      and DATE_FORMAT(ip.install_date_plan,'%Y-%m-%d') &gt;= #{queryStartTime}
+    </if>
+    <if test="queryFinishTime!=null and queryFinishTime != '' ">
+      and DATE_FORMAT(ip.install_date_plan,'%Y-%m-%d') &lt;= #{queryFinishTime}
+    </if>
+    ORDER BY ip.create_date desc, ip.install_date_plan desc , ipa.create_date desc
   </select>
 </mapper>

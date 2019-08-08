@@ -26,7 +26,9 @@ public class InstallPlanActualServiceImpl extends AbstractService<InstallPlanAct
     public List<InstallPlanActualDetails> selectInstallPlanActualDetails(String orderNum,
                                                                          String nameplate,
                                                                          String installGroupName,
-                                                                         String type) {
-        return installPlanActualMapper.selectInstallPlanActualDetails(orderNum, nameplate, installGroupName, type);
+                                                                         String type,
+                                                                         String queryStartTime,
+                                                                         String queryFinishTime) {
+        return installPlanActualMapper.selectInstallPlanActualDetails(orderNum, nameplate, installGroupName, type, queryStartTime, queryFinishTime);
     }
 }

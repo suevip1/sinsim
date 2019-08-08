@@ -118,11 +118,14 @@ public class InstallPlanController {
         }
         List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanActualDetails(null,
                 machine.getNameplate(),
-                installGroup.getGroupName(), null);
-        if(list == null || list.isEmpty()){
+                installGroup.getGroupName(),
+                null,
+                null,
+                null);
+        if (list == null || list.isEmpty()) {
             return true;
         } else {
-            return  false;
+            return false;
         }
     }
     /**
@@ -151,37 +154,41 @@ public class InstallPlanController {
         InstallPlan installPlan1 = JSON.parseObject(installPlan, InstallPlan.class);
 
         if (installPlan1 != null) {
-            if(installPlan1.getId() == null) {
-                return ResultGenerator.genFailResult("错误，installPlan1 id  为 null！");
-            }
-            if (installPlan1.getInstallGroupId() == null) {
-                return ResultGenerator.genFailResult("错误，getInstallGroupId 为 null！");
-            } else if (installGroupService.findById(installPlan1.getInstallGroupId()) == null) {
-                return ResultGenerator.genFailResult("错误，根据该InstallGroupId " + installPlan1.getInstallGroupId() + " 找不到对应的 installGroup！");
-            }
 
-            if (installPlan1.getInstallDatePlan() == null) {
-                return ResultGenerator.genFailResult("错误，InstallDatePlan 为 null！");
-            }
-
-            if (installPlan1.getOrderId() == null) {
-                return ResultGenerator.genFailResult("错误，orderId 为 null！");
-            } else if(machineOrderService.findById(installPlan1.getOrderId()) == null){
-                return ResultGenerator.genFailResult("错误，根据该 orderId " + installPlan1.getOrderId() + " 找不到对应的 machineOrder ！");
-            }
+            /**
+             * 取消这部分检查，因为update时允许只update部分内容，不需要全部都update.
+             */
+//            if(installPlan1.getId() == null) {
+//                return ResultGenerator.genFailResult("错误，installPlan1 id  为 null！");
+//            }
+//            if (installPlan1.getInstallGroupId() == null) {
+//                return ResultGenerator.genFailResult("错误，getInstallGroupId 为 null！");
+//            } else if (installGroupService.findById(installPlan1.getInstallGroupId()) == null) {
+//                return ResultGenerator.genFailResult("错误，根据该InstallGroupId " + installPlan1.getInstallGroupId() + " 找不到对应的 installGroup！");
+//            }
+//
+//            if (installPlan1.getInstallDatePlan() == null) {
+//                return ResultGenerator.genFailResult("错误，InstallDatePlan 为 null！");
+//            }
+//
+//            if (installPlan1.getOrderId() == null) {
+//                return ResultGenerator.genFailResult("错误，orderId 为 null！");
+//            } else if(machineOrderService.findById(installPlan1.getOrderId()) == null){
+//                return ResultGenerator.genFailResult("错误，根据该 orderId " + installPlan1.getOrderId() + " 找不到对应的 machineOrder ！");
+//            }
 
             /**
              * 检查machine是否存在，并且和订单匹配
              */
-            if (installPlan1.getMachineId() == null) {
-                return ResultGenerator.genFailResult("错误，machineId 为 null！");
-            }  else if(machineService.findById(installPlan1.getMachineId()) == null){
-                return ResultGenerator.genFailResult("错误，根据该 machineId " + installPlan1.getMachineId() + " 找不到对应的 machine ！");
-            } else if( !isMachineInTheOrder(installPlan1.getMachineId(), installPlan1.getOrderId())) {
-                return ResultGenerator.genFailResult("错误， 该机器是不属于该订单");
-            }
+//            if (installPlan1.getMachineId() == null) {
+//                return ResultGenerator.genFailResult("错误，machineId 为 null！");
+//            }  else if(machineService.findById(installPlan1.getMachineId()) == null){
+//                return ResultGenerator.genFailResult("错误，根据该 machineId " + installPlan1.getMachineId() + " 找不到对应的 machine ！");
+//            } else if( !isMachineInTheOrder(installPlan1.getMachineId(), installPlan1.getOrderId())) {
+//                return ResultGenerator.genFailResult("错误， 该机器是不属于该订单");
+//            }
 
-            installPlan1.setCreateDate(new Date());
+            installPlan1.setUpdateDate(new Date());
             installPlanService.update(installPlan1);
 
         } else {

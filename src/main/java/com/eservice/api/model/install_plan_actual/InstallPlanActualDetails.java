@@ -92,4 +92,17 @@ public class InstallPlanActualDetails extends InstallPlanActual{
     public void setType(String type) {
         this.type = type;
     }
+
+    @Column(name = "install_date_plan")
+    private Date installDatePlan;
+
+    public Date getInstallDatePlan() {
+        return installDatePlan;
+    }
+
+    public void setInstallDatePlan(Date installDatePlan) {
+        this.installDatePlan = installDatePlan;
+    }
+
+
 }

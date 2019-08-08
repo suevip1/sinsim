@@ -11,5 +11,7 @@ public interface InstallPlanActualMapper extends Mapper<InstallPlanActual> {
     List<InstallPlanActualDetails> selectInstallPlanActualDetails(@Param("orderNum") String orderNum,
                                                                   @Param("nameplate") String nameplate,
                                                                   @Param("installGroupName") String installGroupName,
-                                                                  @Param("type") String type);
+                                                                  @Param("type") String type,
+                                                                  @Param("queryStartTime") String queryStartTime,
+                                                                  @Param("queryFinishTime") String queryFinishTime);
 }
