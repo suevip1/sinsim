@@ -791,6 +791,8 @@ CREATE TABLE `task_record` (
   `install_end_time` datetime DEFAULT NULL,
   `quality_begin_time` datetime DEFAULT NULL COMMENT 'task开始时间',
   `quality_end_time` datetime DEFAULT NULL COMMENT 'task结束时间',
+  `update_time` datetime DEFAULT NULL COMMENT '状态更新时间',
+  `wait_timespan` int(4) DEFAULT '-1' COMMENT '等待安装的时长',
   PRIMARY KEY (`id`),
   KEY `fk_tr_process_record_id` (`process_record_id`),
   KEY `fk_tr_task_name` (`task_name`),

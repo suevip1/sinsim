@@ -91,6 +91,7 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                 for (LinkDataModel item: linkDataList) {
                     if(item.getTo().equals(taskRecord.getNodeKey().intValue())) {
                         if(item.getFrom() == null || item.getFrom() == -1) {
+                            taskRecord.setUpdateTime(new Date());
                             taskRecord.setStatus(Constant.TASK_INSTALL_WAITING);
                             break;
                         } else {
@@ -118,6 +119,7 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                                 }
                             }
                             if(allParentFinished) {
+                                taskRecord.setUpdateTime(new Date());
                                 taskRecord.setStatus(Constant.TASK_INSTALL_WAITING);
                             }
                         }

@@ -527,6 +527,15 @@ public class TaskRecordController {
         }
         //防止开始安装时间为空的问题
         if(tr.getStatus().intValue() == Constant.TASK_INSTALLING.intValue()) {
+            try{
+                if( tr.getUpdateTime()!=null)
+                {
+                    Integer timespan=(int)((new Date().getTime() - tr.getUpdateTime().getTime()) / (1000 * 60 * 60));
+                    tr.setWaitTimespan(timespan);
+                }
+            }
+            catch (Exception ex) {
+            }
             tr.setInstallBeginTime(new Date());
         }
         taskRecordService.update(tr);

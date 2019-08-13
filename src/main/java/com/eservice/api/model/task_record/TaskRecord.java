@@ -62,6 +62,19 @@ public class TaskRecord {
     @Column(name = "worker_list")
     private String workerList;
 
+    /**
+     * 更新时间
+     */
+    @Column(name = "update_time")
+    private Date updateTime;
+
+   
+
+    /**
+     * 等待安装时长
+     */
+    @Column(name = "wait_timespan")
+    private Integer waitTimespan;
 
     /**
      * @return id
@@ -215,4 +228,22 @@ public class TaskRecord {
     public void setWorkerList(String workerList) {
         this.workerList = workerList;
     }
+
+    public void setUpdateTime(Date time) {
+        this.updateTime = time;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setWaitTimespan(Integer waitTimespan) {
+        this.waitTimespan = waitTimespan;
+    }
+
+    public Integer getWaitTimespan() {
+        return waitTimespan;
+    }
+
+
 }

@@ -16,6 +16,9 @@
         <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime"/>
         <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime"/>
         <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="wait_timespan" jdbcType="INTEGER" property="waitTimespan"/>
+
     </resultMap>
 
     <resultMap id="TaskRecordExpiredMap" type="com.eservice.api.model.task_record.TaskRecordExpired">
@@ -82,6 +85,8 @@
         <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime"/>
         <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime"/>
         <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="wait_timespan" jdbcType="INTEGER" property="waitTimespan"/>
         <association javaType="com.eservice.api.model.process_record.ProcessRecord" property="processRecord">
             <id column="process_record_id_in_association" property="id"/>
             <result column="machine_id" jdbcType="INTEGER" property="machineId"/>

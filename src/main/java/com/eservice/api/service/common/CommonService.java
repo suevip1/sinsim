@@ -347,6 +347,7 @@ public class CommonService {
                                                     List<TaskRecord> taskRecordList = taskRecordService.getTaskRecordData(null, prId);
                                                     for (TaskRecord record : taskRecordList) {
                                                         if (String.valueOf(record.getNodeKey().intValue()).equals(childNode.getKey())) {
+                                                            record.setUpdateTime(new Date());
                                                             record.setStatus(Constant.TASK_INSTALL_WAITING);
                                                             taskRecordService.update(record);
                                                             //MQTT 通知下一道工序可以开始安装
