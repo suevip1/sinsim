@@ -114,4 +114,13 @@ public class NodeDataModel {
     }
     //</editor-fold>
 
+    private Integer waitTimespan;
+    public void setWaitTimespan(Integer waitTimespan) {
+        this.waitTimespan = waitTimespan;
+    }
+
+    public Integer getWaitTimespan() {
+        return waitTimespan;
+    }
+
 }

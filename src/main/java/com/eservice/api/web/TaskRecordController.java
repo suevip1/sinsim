@@ -1,5 +1,6 @@
 package com.eservice.api.web;
-
+import com.eservice.api.service.common.NodeDataModel;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
@@ -532,6 +533,21 @@ public class TaskRecordController {
                 {
                     Integer timespan=(int)((new Date().getTime() - tr.getUpdateTime().getTime()) / (1000 * 60 * 60));
                     tr.setWaitTimespan(timespan);
+                    //同步更新到ProcessRecord对应的task中
+                    ProcessRecord  processRecord = processRecordService.findById(tr.getProcessRecordId());
+                    String nodeData = processRecord.getNodeData();
+                    List<NodeDataModel> ndList = JSON.parseArray(nodeData, NodeDataModel.class);
+                    for(int i=0;i<ndList.size();i++)
+                    {
+                        if(ndList.get(i).getKey().equals(String.valueOf(tr.getNodeKey())))
+                        {
+                            ndList.get(i).setWaitTimespan(timespan);
+                            ndList.get(i).setBeginTime(new Date().toString());
+                            break;
+                        }
+                    }
+                    processRecord.setNodeData(JSON.toJSONString(ndList));
+                    processRecordService.update(processRecord);
                 }
             }
             catch (Exception ex) {
