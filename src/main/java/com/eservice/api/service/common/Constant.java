@@ -231,4 +231,7 @@ public class Constant {
             return this.value;
         }
     }
+
+    public static final Byte INVALID = 0;
+    public static final Byte VALID = 1;
 }

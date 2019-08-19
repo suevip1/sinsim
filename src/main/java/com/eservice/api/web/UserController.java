@@ -5,6 +5,7 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.role.Role;
 import com.eservice.api.model.user.User;
 import com.eservice.api.model.user.UserDetail;
+import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.DeviceServiceImpl;
 import com.eservice.api.service.impl.RoleServiceImpl;
 import com.eservice.api.service.impl.UserServiceImpl;
@@ -149,6 +150,14 @@ public class UserController {
                                @RequestParam String password,
                                @RequestParam(defaultValue = "0") String meid,
                                @RequestParam(defaultValue = "false") Boolean isExtranet) {
+
+        User user = userService.selectByAccount(account);
+        if(user == null){
+            return ResultGenerator.genFailResult(account + " 不存在！");
+        } else if(user.getValid() == Constant.INVALID){
+            return ResultGenerator.genFailResult("禁止登录，" + account + " 已设为离职");
+        }
+
         boolean isPermitted = false;
 
         if(isExtranet) {
