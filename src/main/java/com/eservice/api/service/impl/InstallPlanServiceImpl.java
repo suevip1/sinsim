@@ -5,6 +5,8 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.dao.InstallPlanMapper;
 import com.eservice.api.model.install_plan.InstallPlan;
+import com.eservice.api.model.user.User;
+import com.eservice.api.model.user.UserDetail;
 import com.eservice.api.service.InstallPlanService;
 import com.eservice.api.core.AbstractService;
 import com.eservice.api.service.MachineOrderService;
@@ -46,6 +48,8 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
     @Resource
     private MqttMessageHelper mqttMessageHelper;
 
+    @Resource
+    private UserServiceImpl userService;
     private final static Logger logger = LoggerFactory.getLogger(InstallPlanServiceImpl.class);
     public List<InstallPlan> selectUnSendInstallPlans(){
         return installPlanMapper.selectUnSendInstallPlans();
@@ -73,10 +77,16 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
                 msg.setCmtSend(unSendInstallPlans.get(i).getCmtSend());
                 msg.setInstallDatePlan(unSendInstallPlans.get(i).getInstallDatePlan());
 
-                mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_PLAN, JSON.toJSONString(msg));
-                logger.info("MQTT SEND topic: " + Constant.S2C_INSTALL_PLAN + ", nameplate: " + msg.getNameplate());
-                sendCount++;
-
+                //只发给对应的组长，并设置发送时间表示已发送。
+                List<UserDetail> userDetailList = userService.selectUsers(null,null,
+                        3,unSendInstallPlans.get(i).getInstallGroupId(),1);
+                for(int k=0; k< userDetailList.size(); k++) {
+                    mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_PLAN + userDetailList.get(k).getAccount(), JSON.toJSONString(msg));
+                    logger.info("MQTT SEND topic: " + Constant.S2C_INSTALL_PLAN +  userDetailList.get(k).getAccount() + ", nameplate: " + msg.getNameplate());
+                    sendCount++;
+                    unSendInstallPlans.get(i).setSendTime(new Date());
+                    installPlanService.update(unSendInstallPlans.get(i));
+                }
             } else {
                 logger.info("还未到安装提醒时间的机器："
                         + machineService.findById(unSendInstallPlans.get(i).getMachineId()).getNameplate()
