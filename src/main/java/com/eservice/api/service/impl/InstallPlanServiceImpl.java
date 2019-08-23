@@ -77,7 +77,7 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
                 msg.setCmtSend(unSendInstallPlans.get(i).getCmtSend());
                 msg.setInstallDatePlan(unSendInstallPlans.get(i).getInstallDatePlan());
 
-                //只发给对应的组长，并设置发送时间表示已发送。
+                //topic结尾加组长的账号，并设置发送时间表示已发送。
                 List<UserDetail> userDetailList = userService.selectUsers(null,null,
                         3,unSendInstallPlans.get(i).getInstallGroupId(),1);
                 for(int k=0; k< userDetailList.size(); k++) {

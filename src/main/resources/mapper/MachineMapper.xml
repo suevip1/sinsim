@@ -102,7 +102,7 @@
             and order_id=#{order_id}
         </if>
         <if test="orderNum != null and orderNum != ''">
-            and order_num = #{orderNum} )
+            and order_num = #{orderNum}
         </if>
         <if test="nameplate != null and nameplate != ''">
             and nameplate=#{nameplate}
@@ -123,7 +123,7 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        ORDER By create_time, ship_time DESC,ship_time DESC
+        ORDER By create_time DESC,update_time DESC, ship_time DESC
 
     </select>
 

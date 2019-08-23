@@ -53,54 +53,19 @@ public class InstallPlanController {
     public Result add(String installPlan) {
 
         InstallPlan installPlan1 = JSON.parseObject(installPlan, InstallPlan.class);
-
-        /**
-         * 逐一检查各个必要参数的合法性
-         */
-        if (installPlan1 != null) {
-            if (installPlan1.getInstallGroupId() == null) {
-                return ResultGenerator.genFailResult("错误，getInstallGroupId 为 null！");
-            } else if (installGroupService.findById(installPlan1.getInstallGroupId()) == null) {
-                return ResultGenerator.genFailResult("错误，根据该InstallGroupId " + installPlan1.getInstallGroupId() + " 找不到对应的 installGroup！");
-            }
-
-            if (installPlan1.getInstallDatePlan() == null) {
-                return ResultGenerator.genFailResult("错误，InstallDatePlan 为 null！");
-            }
-
-            if (installPlan1.getOrderId() == null) {
-                return ResultGenerator.genFailResult("错误，orderId 为 null！");
-            } else if(machineOrderService.findById(installPlan1.getOrderId()) == null){
-                return ResultGenerator.genFailResult("错误，根据该 orderId " + installPlan1.getOrderId() + " 找不到对应的 machineOrder ！");
-            }
-
-            /**
-             * 检查machine是否存在，并且和订单匹配
-             */
-            if (installPlan1.getMachineId() == null) {
-                return ResultGenerator.genFailResult("错误，machineId 为 null！");
-            }  else if(machineService.findById(installPlan1.getMachineId()) == null){
-                return ResultGenerator.genFailResult("错误，根据该 machineId " + installPlan1.getMachineId() + " 找不到对应的 machine ！");
-            } else if( !isMachineInTheOrder(installPlan1.getMachineId(), installPlan1.getOrderId())) {
-                return ResultGenerator.genFailResult("错误， 该机器是不属于该订单");
-            }
-
-            //检查该机器是否已经安排了该安装组的计划。
-            InstallGroup installGroup = installGroupService.findById(installPlan1.getInstallGroupId());
-            Machine machine = machineService.findById(installPlan1.getMachineId());
-            if( !isOKtoSetPlan(installGroup.getId(),machine.getId()) ){
-                logger.warn("该机器 " + machine.getNameplate() + " 已经安排了 " + installGroup.getGroupName());
-                return ResultGenerator.genFailResult("该机器 " + machine.getNameplate() + " 已经安排了 " + installGroup.getGroupName());
-            }
-
-            installPlan1.setCreateDate(new Date());
-            installPlanService.save(installPlan1);
-            logger.info("add install plan, nameplate： " + machine.getNameplate()
-                    + ",组： " + installGroup.getGroupName() + ", date: " + installPlan1.getInstallDatePlan() );
-
-        } else {
-            return ResultGenerator.genFailResult("参数不正确，添加失败！");
+        Result result = checkTheInstallPlanIsSet(installPlan1);
+        if (result.getCode() == ResultCode.FAIL.code) {
+            logger.warn("不合法的installPlan: " + result.getMessage());
+            return result;
         }
+        installPlan1.setCreateDate(new Date());
+        installPlanService.save(installPlan1);
+
+        Machine machine = machineService.findById(installPlan1.getMachineId());
+        InstallGroup installGroup = installGroupService.findById(installPlan1.getInstallGroupId());
+        logger.info("add install plan, nameplate： " + machine.getNameplate()
+                + ",组： " + installGroup.getGroupName() + ", date: " + installPlan1.getInstallDatePlan());
+
         return ResultGenerator.genSuccessResult();
     }
 
@@ -127,6 +92,53 @@ public class InstallPlanController {
         } else {
             return false;
         }
+    }
+
+    @PostMapping("/checkTheInstallPlanIsSet")
+    public Result checkTheInstallPlanIsSet(InstallPlan installPlan1) {
+
+        if (installPlan1 == null) {
+            return ResultGenerator.genFailResult("参数installPlan1不能为null ");
+        }
+        /**
+         * 逐一检查各个必要参数的合法性
+         */
+        if (installPlan1.getInstallGroupId() == null) {
+            return ResultGenerator.genFailResult("错误，getInstallGroupId 为 null！");
+        } else if (installGroupService.findById(installPlan1.getInstallGroupId()) == null) {
+            return ResultGenerator.genFailResult("错误，根据该InstallGroupId " + installPlan1.getInstallGroupId() + " 找不到对应的 installGroup！");
+        }
+
+        if (installPlan1.getInstallDatePlan() == null) {
+            return ResultGenerator.genFailResult("错误，InstallDatePlan 为 null！");
+        }
+
+        if (installPlan1.getOrderId() == null) {
+            return ResultGenerator.genFailResult("错误，orderId 为 null！");
+        } else if (machineOrderService.findById(installPlan1.getOrderId()) == null) {
+            return ResultGenerator.genFailResult("错误，根据该 orderId " + installPlan1.getOrderId() + " 找不到对应的 machineOrder ！");
+        }
+
+        /**
+         * 检查machine是否存在，并且和订单匹配
+         */
+        if (installPlan1.getMachineId() == null) {
+            return ResultGenerator.genFailResult("错误，machineId 为 null！");
+        } else if (machineService.findById(installPlan1.getMachineId()) == null) {
+            return ResultGenerator.genFailResult("错误，根据该 machineId " + installPlan1.getMachineId() + " 找不到对应的 machine ！");
+        } else if (!isMachineInTheOrder(installPlan1.getMachineId(), installPlan1.getOrderId())) {
+            return ResultGenerator.genFailResult("错误， 该机器是不属于该订单");
+        }
+
+        //检查该机器是否已经安排了该安装组的计划。
+        InstallGroup installGroup = installGroupService.findById(installPlan1.getInstallGroupId());
+        Machine machine = machineService.findById(installPlan1.getMachineId());
+        if (!isOKtoSetPlan(installGroup.getId(), machine.getId())) {
+            logger.warn("该机器 " + machine.getNameplate() + " 已经安排了 " + installGroup.getGroupName());
+            return ResultGenerator.genFailResult("该机器 " + machine.getNameplate() + " 已经安排了 " + installGroup.getGroupName());
+        }
+
+        return ResultGenerator.genSuccessResult("该排产允许添加");
     }
     /**
      *  确认该机器是否归属该订单
