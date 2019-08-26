@@ -793,6 +793,7 @@ CREATE TABLE `task_record` (
   `quality_end_time` datetime DEFAULT NULL COMMENT 'task结束时间',
   `update_time` datetime DEFAULT NULL COMMENT '状态更新时间',
   `wait_timespan` int(4) DEFAULT '-1' COMMENT '等待安装的时长',
+  `cmt_feedback` varchar(255) DEFAULT NULL COMMENT '扫码结束时可以添加备注信息,比如填写为什么花费了这么多时间',
   PRIMARY KEY (`id`),
   KEY `fk_tr_process_record_id` (`process_record_id`),
   KEY `fk_tr_task_name` (`task_name`),

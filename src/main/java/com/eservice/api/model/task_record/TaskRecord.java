@@ -68,14 +68,25 @@ public class TaskRecord {
     @Column(name = "update_time")
     private Date updateTime;
 
-   
-
     /**
      * 等待安装时长
      */
     @Column(name = "wait_timespan")
     private Integer waitTimespan;
 
+    public String getCmtFeedback() {
+        return cmtFeedback;
+    }
+
+    public void setCmtFeedback(String cmtFeedback) {
+        this.cmtFeedback = cmtFeedback;
+    }
+
+    /**
+     * 扫码结束时可以添加备注信息, 比如填写为什么花费了这么多时间
+     */
+    @Column(name = "cmt_feedback")
+    private String cmtFeedback;
     /**
      * @return id
      */

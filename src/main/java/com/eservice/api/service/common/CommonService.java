@@ -175,11 +175,13 @@ public class CommonService {
      */
     public void createMachineByOrderId(MachineOrder orderItem) {
 
+        logger.info("createMachineByOrderId，　orderNum: " + orderItem.getOrderNum());
         //选取有效需求单，无效需求单对应的机器数不cover在内
         Condition tempCondition = new Condition(Machine.class);
         tempCondition.createCriteria().andCondition("order_id = ", orderItem.getId());
         List<Machine> machineExistList = machineService.findByCondition(tempCondition);
         int haveToCreate = orderItem.getMachineNum() - machineExistList.size();
+        logger.info("machineExistList size: " + machineExistList.size() + ", haveToCreate: " + haveToCreate);
         int i = 1;
         while (i <= haveToCreate) {
             Machine machine = new Machine();
@@ -196,6 +198,11 @@ public class CommonService {
             }
             machineService.save(machine);
             i++;
+            logger.info("have created nameplate: " + machine.getNameplate());
+        }
+        //有出现过订单审批完成后，却没有生成机器的情况。
+        if (haveToCreate < 1) {
+            logger.warn("!Attention: haveToCreate is " + haveToCreate);
         }
     }
 
