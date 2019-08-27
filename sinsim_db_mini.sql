@@ -162,6 +162,14 @@ CREATE TABLE `contract_sign` (
 -- ----------------------------
 -- Records of contract_sign
 -- ----------------------------
+-- Table structure for data_config
+-- ----------------------------
+DROP TABLE IF EXISTS `data_config`;
+CREATE TABLE `data_config` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `data` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据配置表, 比如用于合同订单里的下拉选项的配置。';
 
 -- ----------------------------
 -- Table structure for `device`
