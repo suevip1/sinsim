@@ -3,8 +3,10 @@ import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.attendance.Attendance;
+import com.eservice.api.model.attendance.AttendanceDetail;
 import com.eservice.api.service.AttendanceService;
 import com.eservice.api.service.UserService;
+import com.eservice.api.service.impl.AttendanceServiceImpl;
 import com.eservice.api.service.impl.InstallGroupServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -26,7 +28,7 @@ import java.util.List;
 @RequestMapping("/attendance")
 public class AttendanceController {
     @Resource
-    private AttendanceService attendanceService;
+    private AttendanceServiceImpl attendanceService;
 
     @Resource
     private UserService userService;
@@ -49,6 +51,7 @@ public class AttendanceController {
             } else if (installGroupService.findById(attendance1.getInstallGroupId()) == null) {
                 return ResultGenerator.genFailResult("错误，根据该InstallGroupId " + attendance1.getInstallGroupId() + " 找不到对应的 installGroup！");
             }
+            //todo user和installGroup要匹配
             attendance1.setDate(new Date());
             attendanceService.save(attendance1);
         } else {
@@ -87,4 +90,28 @@ public class AttendanceController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 根据条件查询出勤信息
+     * @param page
+     * @param size
+     * @param userAccount
+     * @param installGroupName
+     * @param queryStartTime
+     * @param queryFinishTime
+     * @return
+     */
+    @PostMapping("/selectAttendanceDetails")
+    public Result selectAttendanceDetails(@RequestParam(defaultValue = "0") Integer page,
+                                          @RequestParam(defaultValue = "0") Integer size,
+                                          String userAccount,
+                                          String installGroupName,
+                                          String queryStartTime,
+                                          String queryFinishTime) {
+        PageHelper.startPage(page, size);
+        List<AttendanceDetail> list = attendanceService.selectAttendanceDetails(userAccount,installGroupName,queryStartTime,queryFinishTime);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 }

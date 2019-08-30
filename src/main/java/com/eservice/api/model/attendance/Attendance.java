@@ -46,6 +46,9 @@ public class Attendance {
     @Column(name = "absence_member")
     private String absenceMember;
 
+    /**
+     * 下个工作日上班人数
+     */
     @Column(name = "attendance_tomorrow")
     private String attendanceTomorrow;
 
