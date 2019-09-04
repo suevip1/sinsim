@@ -187,9 +187,10 @@ public class TaskRecordController {
                                          String taskName,
                                          String machineOrderNumber,
                                          String queryStartTime,
-                                         String queryFinishTime) {
+                                         String queryFinishTime,
+                                         String nameplate) {
         PageHelper.startPage(page, size);
-        List<TaskRecordDetail>  taskRecordDetailList = taskRecordService.searchTaskRecordDetail(taskRecordId,taskName,machineOrderNumber,queryStartTime,queryFinishTime);
+        List<TaskRecordDetail>  taskRecordDetailList = taskRecordService.searchTaskRecordDetail(taskRecordId,taskName,machineOrderNumber,queryStartTime,queryFinishTime,nameplate);
         PageInfo pageInfo = new PageInfo(taskRecordDetailList);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

@@ -211,6 +211,9 @@
         <if test="queryFinishTime != null and queryFinishTime != '' ">
           and DATE_FORMAT(tr.install_end_time,'%Y-%m-%d') &lt;= #{queryFinishTime}
         </if>
+        <if test="nameplate != null and nameplate !='' ">
+            and m.nameplate = #{nameplate}
+        </if>
     </select>
 
     <select id="selectAllTaskRecordDetail" resultMap="TaskRecordDetail">

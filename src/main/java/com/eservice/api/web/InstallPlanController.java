@@ -16,10 +16,7 @@ import com.eservice.api.service.impl.InstallPlanServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -52,12 +49,12 @@ public class InstallPlanController {
     @PostMapping("/add")
     public Result add(String installPlan) {
 
-        InstallPlan installPlan1 = JSON.parseObject(installPlan, InstallPlan.class);
-        Result result = checkTheInstallPlanIsSet(installPlan1);
+        Result result = checkTheInstallPlanIsSet(installPlan);
         if (result.getCode() == ResultCode.FAIL.code) {
             logger.warn("不合法的installPlan: " + result.getMessage());
             return result;
         }
+        InstallPlan installPlan1 = JSON.parseObject(installPlan, InstallPlan.class);
         installPlan1.setCreateDate(new Date());
         installPlanService.save(installPlan1);
 
@@ -68,6 +65,22 @@ public class InstallPlanController {
 
         return ResultGenerator.genSuccessResult();
     }
+
+    /**
+     * 一次性添加多个排产。
+     * @return
+     */
+//    @PostMapping("/addInstallPlanList")
+//    public Result addInstallPlanList(
+////            @RequestBody List<String> installPlanList
+//              @RequestParam(value = "installPlanList") List<InstallPlan> installPlanList
+//            ) {
+//
+//
+//        Result result = null;
+//        logger.warn("aaaaaaaaa:" + installPlanList.get(0));
+//        return ResultGenerator.genSuccessResult();
+//    }
 
     //是否可以安排该机器该安装组（用于检查一些不合法的安排）
     boolean isOKtoSetPlan(Integer installGroupId, Integer machineId) {
@@ -95,8 +108,8 @@ public class InstallPlanController {
     }
 
     @PostMapping("/checkTheInstallPlanIsSet")
-    public Result checkTheInstallPlanIsSet(InstallPlan installPlan1) {
-
+    public Result checkTheInstallPlanIsSet(String installPlan) {
+        InstallPlan installPlan1 = JSON.parseObject(installPlan, InstallPlan.class);
         if (installPlan1 == null) {
             return ResultGenerator.genFailResult("参数installPlan1不能为null ");
         }

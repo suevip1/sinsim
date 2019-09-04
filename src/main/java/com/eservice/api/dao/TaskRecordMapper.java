@@ -18,10 +18,11 @@ public interface TaskRecordMapper extends Mapper<TaskRecord> {
     TaskRecordDetail selectTaskRecordDetail(@Param("taskRecordId") Integer taskRecordId);
 
     List<TaskRecordDetail> searchTaskRecordDetail(@Param("taskRecordId") Integer taskRecordId,
-                                            @Param("taskName") String taskName,
-                                            @Param("machineOrderNumber") String machineOrderNumber,
-                                            @Param("queryStartTime") String queryStartTime,
-                                            @Param("queryFinishTime") String queryFinishTime);
+                                                  @Param("taskName") String taskName,
+                                                  @Param("machineOrderNumber") String machineOrderNumber,
+                                                  @Param("queryStartTime") String queryStartTime,
+                                                  @Param("queryFinishTime") String queryFinishTime,
+                                                  @Param("nameplate") String nameplate);
 
     List<TaskRecordDetail> selectAllTaskRecordDetail();
 
