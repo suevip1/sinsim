@@ -8,11 +8,16 @@ import com.eservice.api.model.install_plan.InstallPlan;
 import com.eservice.api.model.install_plan_actual.InstallPlanActualDetails;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.user.UserDetail;
 import com.eservice.api.service.MachineOrderService;
 import com.eservice.api.service.MachineService;
+import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.InstallGroupServiceImpl;
 import com.eservice.api.service.impl.InstallPlanActualServiceImpl;
 import com.eservice.api.service.impl.InstallPlanServiceImpl;
+import com.eservice.api.service.impl.UserServiceImpl;
+import com.eservice.api.service.mqtt.MqttMessageHelper;
+import com.eservice.api.service.mqtt.ServerToClientMsg;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -46,6 +51,13 @@ public class InstallPlanController {
     private InstallPlanActualServiceImpl installPlanActualService;
 
     private Logger logger = Logger.getLogger(InstallPlanController.class);
+
+    @Resource
+    private MqttMessageHelper mqttMessageHelper;
+
+    @Resource
+    private UserServiceImpl userService;
+
     @PostMapping("/add")
     public Result add(String installPlan) {
 
@@ -255,4 +267,38 @@ public class InstallPlanController {
         return result;
     }
 
+    /**
+     * 添加并立即发送 该排产计划 给该计划所在组的所有安装组长
+     */
+    @PostMapping("/addAndsendInstallPlanNow")
+    public Result addAndsendInstallPlanNow(String installPlan) {
+
+        InstallPlan installPlan1 = JSON.parseObject(installPlan, InstallPlan.class);
+        if (installPlan1 == null) {
+            return ResultGenerator.genFailResult("installPlan 解析得到null");
+        }
+        installPlan1.setCreateDate(new Date());
+
+        List<UserDetail> userDetailList = userService.selectUsers(null,null,
+                3,installPlan1.getInstallGroupId(),1);
+        int sendReceiverCount = 0;
+        ServerToClientMsg msg = new ServerToClientMsg();
+        for(int k=0; k< userDetailList.size(); k++) {
+            msg.setNameplate(machineService.findById(installPlan1.getMachineId()).getNameplate());
+            msg.setOrderNum(machineOrderService.findById(installPlan1.getOrderId()).getOrderNum());
+            msg.setType(ServerToClientMsg.MsgType.INSTALL_PLAN);
+            msg.setCmtSend(installPlan1.getCmtSend());
+            msg.setInstallDatePlan(installPlan1.getInstallDatePlan());
+
+            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_PLAN + userDetailList.get(k).getAccount(), JSON.toJSONString(msg));
+            logger.info("MQTT SEND topic: " + Constant.S2C_INSTALL_PLAN +  userDetailList.get(k).getAccount() + ", nameplate: " + msg.getNameplate());
+            sendReceiverCount++;
+            installPlan1.setSendTime(new Date());
+            installPlanService.save(installPlan1);
+        }
+        String str = "发送1条排产信息给 " + sendReceiverCount + "个"
+                + installGroupService.findById(installPlan1.getInstallGroupId()).getGroupName() + "组的组长";
+        logger.info(str);
+        return ResultGenerator.genSuccessResult(str);
+    }
 }
