@@ -595,6 +595,20 @@ public class ContractController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    /**
+     *
+     * @param contractNum
+     * @param status
+     * @param sellman
+     * @param recordUser    录单人
+     * @param roleName      当前审批阶段的角色名称
+     * @param marketGroupName   订单属于哪个市场部（仅仅分内贸部，外贸一部，外贸二部）
+     * @param query_start_time
+     * @param query_finish_time
+     * @param userDomesticTradeZoneListStr 登录者的内贸分区，可以多个，非内贸经理时，为空。
+     * @param is_fuzzy
+     * @return
+     */
     @PostMapping("/selectContracts")
     public Result selectContracts(@RequestParam(defaultValue = "0") Integer page,
                                   @RequestParam(defaultValue = "0") Integer size,
@@ -606,9 +620,15 @@ public class ContractController {
                                   String marketGroupName,
                                   String query_start_time,
                                   String query_finish_time,
+                                  String userDomesticTradeZoneListStr,
                                   @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
-        List<ContractDetail> list = contractService.selectContracts(contractNum, status, sellman, recordUser, roleName, marketGroupName, query_start_time, query_finish_time, is_fuzzy);
+//        if(userDomesticTradeZoneListStr !=null && !userDomesticTradeZoneListStr.isEmpty()) {
+//            logger.info("userDomesticTradeZoneListStr is: " + userDomesticTradeZoneListStr );
+//        } else
+//            logger.info("userDomesticTradeZoneListStr is: " + userDomesticTradeZoneListStr);
+
+        List<ContractDetail> list = contractService.selectContracts(contractNum, status, sellman, recordUser, roleName, marketGroupName, query_start_time, query_finish_time, userDomesticTradeZoneListStr, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

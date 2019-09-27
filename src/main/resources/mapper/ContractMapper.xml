@@ -19,7 +19,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="record_user" jdbcType="VARCHAR" property="recordUser"/>
         <result column="is_valid" jdbcType="VARCHAR" property="isValid"/>
-        <result column="domestic_trade_zone" jdbcType="INTEGER" property="domesticTradeZone"/>
+        <result column="domestic_trade_zone" jdbcType="VARCHAR" property="domesticTradeZone"/>
     </resultMap>
 
     <resultMap id="ContractDetailMap" type="com.eservice.api.model.contract.ContractDetail">
@@ -41,12 +41,12 @@
         <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
         <result column="order_id" jdbcType="VARCHAR" property="orderId"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
-        <result column="domestic_trade_zone" jdbcType="INTEGER" property="domesticTradeZone"/>
+        <result column="domestic_trade_zone" jdbcType="VARCHAR" property="domesticTradeZone"/>
     </resultMap>
 
     <select id="selectContractsByFuzzy" resultMap="ContractDetailMap">
         select c.id, c.contract_num,c.customer_name,c.sellman,c.record_user,c.pay_method,c.currency_type,c.market_group_name,c.market_group_name,
-        c.contract_ship_date,c.mark,c.create_time,
+        c.contract_ship_date,c.mark,c.create_time,c.domestic_trade_zone,
         os.current_step,os.update_time, mo.order_num, mo.status, mo.id order_id from machine_order mo
         LEFT JOIN contract c ON c.id = mo.contract_id
         LEFT JOIN order_sign os ON os.order_id = mo.id
@@ -76,6 +76,49 @@
         </if>
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+        </if>
+        ORDER BY os.update_time DESC,c.create_time DESC
+    </select>
+    <select id="selectContractsByFuzzyAndDomestic" resultMap="ContractDetailMap">
+        select c.id, c.contract_num,c.customer_name,c.sellman,c.record_user,c.pay_method,c.currency_type,c.market_group_name,c.market_group_name,
+        c.contract_ship_date,c.mark,c.create_time,c.domestic_trade_zone,
+        os.current_step,os.update_time, mo.order_num, mo.status, mo.id order_id from machine_order mo
+        LEFT JOIN contract c ON c.id = mo.contract_id
+        LEFT JOIN order_sign os ON os.order_id = mo.id
+            left join domestic_trade_zone dtz on dtz.zone_name = c.domestic_trade_zone
+
+        WHERE os.create_time IN (SELECT MAX(create_time) FROM order_sign GROUP BY order_id)
+        AND mo.valid!=0
+        <if test="contract_num != null and contract_num != ''">
+            and c.contract_num like CONCAT('%','${contract_num}','%' )
+        </if>
+        <if test="status != null">
+            and mo.status=${status}
+        </if>
+        <if test="sellman != null and sellman != '' ">
+            and c.sellman like CONCAT('%','${sellman}','%' )
+        </if>
+        <if test="record_user != null and record_user != '' ">
+            and c.record_user like CONCAT('%','${record_user}','%' )
+        </if>
+        <if test="market_group_name != null and market_group_name != '' ">
+            and c.market_group_name like CONCAT('%','${market_group_name}','%' )
+        </if>
+        <if test="role_name!=null and role_name != '' ">
+            and os.current_step like CONCAT('%','${role_name}','%' )
+        </if>
+        <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
+        <if test="query_start_time!=null and query_start_time != '' ">
+            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &gt;= #{query_start_time}
+        </if>
+        <if test="query_finish_time!=null and query_finish_time != '' ">
+            and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
+        </if>
+        <if test="domesticTradeArr != null and domesticTradeArr != '' ">
+            and c.domestic_trade_zone in
+            <foreach collection="domesticTradeArr" item="item" open="(" close=")"  separator="," >
+                #{item}
+            </foreach>
         </if>
         ORDER BY os.update_time DESC,c.create_time DESC
     </select>

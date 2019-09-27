@@ -24,8 +24,17 @@ public interface ContractMapper extends Mapper<Contract> {
                                                 @Param("role_name") String roleName,
                                                 @Param("market_group_name") String marketGroupName,
                                                 @Param("query_start_time") String query_start_time,
-                                                @Param("query_finish_time") String query_finish_time);
+                                                @Param("query_finish_time") String query_finish_time );
 
+    List<ContractDetail> selectContractsByFuzzyAndDomestic(@Param("contract_num") String contractNum,
+                                                @Param("status") Integer status,
+                                                @Param("sellman") String sellman,
+                                                @Param("record_user") String recordUser,
+                                                @Param("role_name") String roleName,
+                                                @Param("market_group_name") String marketGroupName,
+                                                @Param("query_start_time") String query_start_time,
+                                                @Param("query_finish_time") String query_finish_time,
+                                                @Param("domesticTradeArr") String[] domesticTradeArr);
     void saveAndGetID(Contract contract);
 
     //selectAllCustomer

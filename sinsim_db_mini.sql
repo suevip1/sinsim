@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2018-06-11 00:06:27
+Date: 2019-09-27 14:00:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -115,11 +115,10 @@ CREATE TABLE `contract` (
   `update_time` datetime DEFAULT NULL COMMENT '更新table的时间',
   `record_user` varchar(255) DEFAULT NULL COMMENT '录单人员',
   `is_valid` varchar(4) NOT NULL DEFAULT '1' COMMENT '指示合同是否有效，用于删除标记，可以理解为作废单据',
-  `domestic_trade_zone` int(10) unsigned DEFAULT NULL COMMENT '内贸分区,外贸该字段为空',
+  `domestic_trade_zone` varchar(255) DEFAULT NULL COMMENT '内贸分区,外贸该字段为空',
   PRIMARY KEY (`id`),
-  KEY `fk_dtz` (`domestic_trade_zone`),
-  CONSTRAINT `fk_dtz` FOREIGN KEY (`domestic_trade_zone`) REFERENCES `domestic_trade_zone` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=788 DEFAULT CHARSET=utf8;
+  KEY `fk_dtz` (`domestic_trade_zone`)
+) ENGINE=InnoDB AUTO_INCREMENT=795 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of contract
@@ -210,7 +209,7 @@ CREATE TABLE `domestic_trade_zone` (
   `owner_id` int(10) unsigned DEFAULT NULL COMMENT '负责人',
   PRIMARY KEY (`id`),
   KEY `fk_ower` (`owner_id`),
-  CONSTRAINT `fk_ower` FOREIGN KEY (`owner_id`) REFERENCES `user` (`id`)
+  CONSTRAINT `fk_user_dome` FOREIGN KEY (`owner_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 
 -- Records of domestic_trade_zone
@@ -264,7 +263,7 @@ INSERT INTO `install_group` VALUES ('23', '梭床部装', '部装');
 DROP TABLE IF EXISTS `install_plan`;
 CREATE TABLE `install_plan` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '排产(总装,部装)',
-  `type` varchar(10) DEFAULT NULL COMMENT '总装；部装；其他. (虽然从安装组里也可以读取该信息)',
+  `type` varchar(10) NOT NULL COMMENT '总装；部装；其他. (虽然从安装组里也可以读取该信息)',
   `install_group_id` int(10) unsigned NOT NULL COMMENT '安装小组名称',
   `install_date_plan` date NOT NULL COMMENT '安排的开始安装日期',
   `order_id` int(10) unsigned NOT NULL COMMENT '该整装记录对应的订单号',

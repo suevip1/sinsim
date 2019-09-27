@@ -237,13 +237,13 @@ public class Contract {
 
     //内贸部分区
     @Column(name = "domestic_trade_zone")
-    private Integer domesticTradeZone;
+    private String domesticTradeZone;
 
-    public Integer getDomesticTradeZone() {
+    public String getDomesticTradeZone() {
         return domesticTradeZone;
     }
 
-    public void setDomesticTradeZone(Integer domesticTradeZone) {
+    public void setDomesticTradeZone(String domesticTradeZone) {
         this.domesticTradeZone = domesticTradeZone;
     }
 

@@ -5,7 +5,9 @@ import javax.persistence.*;
 @Table(name = "domestic_trade_zone")
 public class DomesticTradeZone {
     /**
-     * 内贸部门分区
+     * 内贸部门分区.
+     * 内贸也分区域，但是销售员和区域则不绑定。
+     * 选了内贸区域以后，则要固定的内贸销售经理来签核。其他区域的销售经理不可见。
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

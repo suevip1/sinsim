@@ -9,4 +9,10 @@
     <result column="zone_name" jdbcType="VARCHAR" property="zoneName" />
     <result column="owner_id" jdbcType="INTEGER" property="ownerId" />
   </resultMap>
+
+  <select id="getDomesticTradeZone" resultMap="BaseResultMap">
+    SELECT * from domestic_trade_zone dtz
+    join `user` u on dtz.owner_id = u.id
+    where u.account  = #{account}
+  </select>
 </mapper>

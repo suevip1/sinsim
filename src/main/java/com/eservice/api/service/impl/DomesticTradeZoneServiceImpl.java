@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -20,5 +21,9 @@ import javax.annotation.Resource;
 public class DomesticTradeZoneServiceImpl extends AbstractService<DomesticTradeZone> implements DomesticTradeZoneService {
     @Resource
     private DomesticTradeZoneMapper domesticTradeZoneMapper;
+
+    public List<DomesticTradeZone> getDomesticTradeZone(String account){
+        return domesticTradeZoneMapper.getDomesticTradeZone(account);
+    }
 
 }

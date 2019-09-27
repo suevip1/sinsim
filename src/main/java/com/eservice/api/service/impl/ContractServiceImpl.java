@@ -39,9 +39,19 @@ public class ContractServiceImpl extends AbstractService<Contract> implements Co
                                                 String marketGroupName,
                                                 String query_start_time,
                                                 String query_finish_time,
+                                                String userDomesticTradeZoneListStr,
                                                 Boolean is_fuzzy) {
         if (is_fuzzy) {
-            return contractMapper.selectContractsByFuzzy(contractNum, status, sellman, recordUser, roleName, marketGroupName, query_start_time, query_finish_time);
+            /**
+             * 带了区域信息
+             */
+            if(userDomesticTradeZoneListStr ==null || userDomesticTradeZoneListStr.isEmpty()){
+                return contractMapper.selectContractsByFuzzy(contractNum, status, sellman, recordUser, roleName, marketGroupName, query_start_time, query_finish_time);
+            }else {
+                String[] domesticTradeArr;
+                domesticTradeArr = userDomesticTradeZoneListStr.split(";");
+                return contractMapper.selectContractsByFuzzyAndDomestic(contractNum, status, sellman, recordUser, roleName, marketGroupName, query_start_time,  query_finish_time,domesticTradeArr);
+            }
         } else {
             return contractMapper.selectContracts(contractNum, status, sellman, recordUser, roleName, marketGroupName, query_start_time, query_finish_time);
         }
