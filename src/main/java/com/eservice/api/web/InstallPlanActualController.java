@@ -9,6 +9,7 @@ import com.eservice.api.service.InstallPlanService;
 import com.eservice.api.service.impl.InstallPlanActualServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +33,8 @@ public class InstallPlanActualController {
     @Resource
     private InstallPlanService installPlanService;
 
+    private Logger logger = Logger.getLogger(InstallPlanActualController.class);
+
     @PostMapping("/add")
     public Result add(String installPlanActual) {
         InstallPlanActual installPlanActual1 = JSON.parseObject(installPlanActual, InstallPlanActual.class);
@@ -41,8 +44,73 @@ public class InstallPlanActualController {
             } else if (installPlanService.findById(installPlanActual1.getInstallPlanId()) == null) {
                 return ResultGenerator.genFailResult("错误，根据该InstallPlanId " + installPlanActual1.getInstallPlanId() + " 找不到对应的plan ！");
             } else {
-                installPlanActual1.setCreateDate(new Date());
-                installPlanActualService.save(installPlanActual1);
+                /**
+                 * 处理多次提交同一个排产，
+                 * 如果该计划是第一次提交，则新增该次提交。
+                 * 如果该计划的完成情况已经存在了，则在原先存在的基础上增加新完成的数据。（并检查合理性）
+                 */
+                InstallPlanActual installPlanActualExist = installPlanActualService.findById(installPlanActual1.getInstallPlanId());
+                if( installPlanActualExist == null){
+                    installPlanActual1.setCreateDate(new Date());
+                    installPlanActualService.save(installPlanActual1);
+                    logger.info("新增 installPlanActual1 " + installPlanActual1.getId());
+                } else {
+                    installPlanActualExist.setUpdateDate( new Date());
+
+                    int newHeadCountDone = installPlanActualExist.getHeadCountDone() + installPlanActual1.getHeadCountDone();
+                    installPlanActualExist.setHeadCountDone(newHeadCountDone);
+
+                    installPlanActualExist.setCmtFeedback(installPlanActualExist.getCmtFeedback() + ";" + installPlanActual1.getCmtFeedback());
+
+                    //
+                    if(installPlanActualExist.getPcWireNum() != null && installPlanActual1.getPcWireNum() != null) {
+                        String newPcWireNum = String.valueOf(Integer.valueOf(installPlanActualExist.getPcWireNum()) + Integer.valueOf(installPlanActual1.getPcWireNum()));
+                        installPlanActualExist.setPcWireNum(newPcWireNum);
+                    }
+
+                    if(installPlanActualExist.getKouxianNum() != null && installPlanActual1.getKouxianNum() != null) {
+                        String newKouxianNum = String.valueOf(Integer.valueOf(installPlanActualExist.getKouxianNum()) + Integer.valueOf(installPlanActual1.getKouxianNum()));
+                        installPlanActualExist.setKouxianNum(newKouxianNum);
+                    }
+
+                    if(installPlanActualExist.getLightWireNum() != null && installPlanActual1.getLightWireNum() != null) {
+                        String newLightWireNum = String.valueOf(Integer.valueOf(installPlanActualExist.getLightWireNum()) + Integer.valueOf(installPlanActual1.getLightWireNum()));
+                        installPlanActualExist.setLightWireNum(newLightWireNum);
+                    }
+
+                    if(installPlanActualExist.getWarnSignalNum() != null && installPlanActual1.getWarnSignalNum() != null) {
+                        String newWarnSignalNum = String.valueOf(Integer.valueOf(installPlanActualExist.getWarnSignalNum()) + Integer.valueOf(installPlanActual1.getWarnSignalNum()));
+                        installPlanActualExist.setWarnSignalNum(newWarnSignalNum);
+                    }
+
+                    if(installPlanActualExist.getDeviceSignalNum() != null && installPlanActual1.getDeviceSignalNum() != null) {
+                        String newDeviceSignalNum = String.valueOf(Integer.valueOf(installPlanActualExist.getDeviceSignalNum()) + Integer.valueOf(installPlanActual1.getDeviceSignalNum()));
+                        installPlanActualExist.setDeviceSignalNum(newDeviceSignalNum);
+                    }
+
+                    if(installPlanActualExist.getWarnPowerNum() != null && installPlanActual1.getWarnPowerNum() != null) {
+                        String newWarnPowerNum = String.valueOf(Integer.valueOf(installPlanActualExist.getWarnPowerNum()) + Integer.valueOf(installPlanActual1.getWarnPowerNum()));
+                        installPlanActualExist.setWarnSignalNum(newWarnPowerNum);
+                    }
+
+                    if(installPlanActualExist.getDevicePowerNum() != null && installPlanActual1.getDevicePowerNum() != null) {
+                        String newDevicePowerNum = String.valueOf(Integer.valueOf(installPlanActualExist.getDevicePowerNum()) + Integer.valueOf(installPlanActual1.getDevicePowerNum()));
+                        installPlanActualExist.setDevicePowerNum(newDevicePowerNum);
+                    }
+
+                    if(installPlanActualExist.getDeviceBuxiuNum() != null && installPlanActual1.getDeviceBuxiuNum() != null) {
+                        String newDeviceBuxiuNum = String.valueOf(Integer.valueOf(installPlanActualExist.getDeviceBuxiuNum()) + Integer.valueOf(installPlanActual1.getDeviceBuxiuNum()));
+                        installPlanActualExist.setDeviceBuxiuNum(newDeviceBuxiuNum);
+                    }
+
+                    if(installPlanActualExist.getDeviceSwitchNum() != null && installPlanActual1.getDeviceSwitchNum() != null) {
+                        String newDeviceSwitchNum = String.valueOf(Integer.valueOf(installPlanActualExist.getDeviceSwitchNum()) + Integer.valueOf(installPlanActual1.getDeviceSwitchNum()));
+                        installPlanActualExist.setDeviceSwitchNum(newDeviceSwitchNum);
+                    }
+
+                    installPlanActualService.update(installPlanActualExist);
+                    logger.info("更新 installPlanActual1 " + installPlanActual1.getId());
+                }
             }
         } else {
             return ResultGenerator.genFailResult("参数不正确，添加失败！");
