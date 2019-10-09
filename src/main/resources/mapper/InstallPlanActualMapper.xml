@@ -79,4 +79,13 @@
     </if>
     ORDER BY ip.create_date desc, ip.install_date_plan desc , ipa.create_date desc
   </select>
+
+  <select id="getInstallPlanActual" resultMap="BaseResultMap">
+    SELECT
+	*
+    FROM
+        install_plan_actual ipa
+    WHERE
+        ipa.install_plan_id = #{installPlanId}
+  </select>
 </mapper>

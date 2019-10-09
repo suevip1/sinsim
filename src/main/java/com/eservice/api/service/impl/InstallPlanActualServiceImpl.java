@@ -31,4 +31,7 @@ public class InstallPlanActualServiceImpl extends AbstractService<InstallPlanAct
                                                                          String queryFinishTime) {
         return installPlanActualMapper.selectInstallPlanActualDetails(orderNum, nameplate, installGroupName, type, queryStartTime, queryFinishTime);
     }
+    public InstallPlanActual getInstallPlanActual(Integer installPlanId){
+        return installPlanActualMapper.getInstallPlanActual(installPlanId);
+    }
 }

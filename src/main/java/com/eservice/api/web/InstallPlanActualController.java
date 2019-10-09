@@ -2,11 +2,14 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.install_plan.InstallPlan;
 import com.eservice.api.model.install_plan_actual.InstallPlanActual;
 import com.eservice.api.model.install_plan_actual.InstallPlanActualDetails;
+import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.service.InstallPlanActualService;
 import com.eservice.api.service.InstallPlanService;
 import com.eservice.api.service.impl.InstallPlanActualServiceImpl;
+import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -33,6 +36,9 @@ public class InstallPlanActualController {
     @Resource
     private InstallPlanService installPlanService;
 
+    @Resource
+    private MachineOrderServiceImpl machineOrderService;
+
     private Logger logger = Logger.getLogger(InstallPlanActualController.class);
 
     @PostMapping("/add")
@@ -49,7 +55,7 @@ public class InstallPlanActualController {
                  * 如果该计划是第一次提交，则新增该次提交。
                  * 如果该计划的完成情况已经存在了，则在原先存在的基础上增加新完成的数据。（并检查合理性）
                  */
-                InstallPlanActual installPlanActualExist = installPlanActualService.findById(installPlanActual1.getInstallPlanId());
+                InstallPlanActual installPlanActualExist = installPlanActualService.getInstallPlanActual(installPlanActual1.getInstallPlanId());
                 if( installPlanActualExist == null){
                     installPlanActual1.setCreateDate(new Date());
                     installPlanActualService.save(installPlanActual1);
@@ -58,8 +64,14 @@ public class InstallPlanActualController {
                     installPlanActualExist.setUpdateDate( new Date());
 
                     int newHeadCountDone = installPlanActualExist.getHeadCountDone() + installPlanActual1.getHeadCountDone();
+                    InstallPlan installPlan = installPlanService.findById(installPlanActualExist.getInstallPlanId());
+                    MachineOrder machineOrder = machineOrderService.findById( installPlan.getOrderId());
+                    if( newHeadCountDone <0 || newHeadCountDone > Integer.valueOf( machineOrder.getHeadNum())){
+                        return ResultGenerator.genFailResult("异常 newHeadCountDone: " + newHeadCountDone);
+                    }
                     installPlanActualExist.setHeadCountDone(newHeadCountDone);
 
+                    //多次提交的反馈信息，用分号间隔。
                     installPlanActualExist.setCmtFeedback(installPlanActualExist.getCmtFeedback() + ";" + installPlanActual1.getCmtFeedback());
 
                     //
@@ -186,4 +198,16 @@ public class InstallPlanActualController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 根据 installPlanId 可以找到唯一的 实际安装情况 InstallPlanActual
+     * @param installPlanId
+     * @return
+     */
+    @PostMapping("/getInstallPlanActual")
+    public Result getInstallPlanActual(@RequestParam Integer installPlanId) {
+        InstallPlanActual installPlanActual = installPlanActualService.getInstallPlanActual(installPlanId);
+        return ResultGenerator.genSuccessResult(installPlanActual);
+    }
+
 }

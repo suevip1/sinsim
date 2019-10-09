@@ -14,4 +14,5 @@ public interface InstallPlanActualMapper extends Mapper<InstallPlanActual> {
                                                                   @Param("type") String type,
                                                                   @Param("queryStartTime") String queryStartTime,
                                                                   @Param("queryFinishTime") String queryFinishTime);
+    InstallPlanActual getInstallPlanActual( @Param("installPlanId") Integer installPlanId);
 }
