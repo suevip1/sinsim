@@ -13,6 +13,7 @@ public interface InstallPlanActualMapper extends Mapper<InstallPlanActual> {
                                                                   @Param("installGroupName") String installGroupName,
                                                                   @Param("type") String type,
                                                                   @Param("queryStartTime") String queryStartTime,
-                                                                  @Param("queryFinishTime") String queryFinishTime);
+                                                                  @Param("queryFinishTime") String queryFinishTime,
+                                                                  @Param("isAllFinished") Boolean isAllFinished);
     InstallPlanActual getInstallPlanActual( @Param("installPlanId") Integer installPlanId);
 }

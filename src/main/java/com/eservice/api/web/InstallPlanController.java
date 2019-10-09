@@ -111,6 +111,7 @@ public class InstallPlanController {
                 installGroup.getGroupName(),
                 null,
                 null,
+                null,
                 null);
         if (list == null || list.isEmpty()) {
             return true;
