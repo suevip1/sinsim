@@ -177,7 +177,7 @@ public class InstallPlanActualController {
      * @param type 排产类型： 部装，总装
      * @param queryStartTime 计划日期起始
      * @param queryFinishTime 计划日期结束
-     * @param isAllFinished 该排产是否已经全部完成,true时查询完成的排产，为false或空时查询未完成的排产
+     * @param isNotFinished true时查询未完成的排产，为false时查询 或空时 不管是否完成。
      * @return
      */
     @PostMapping("/selectInstallPlanActualDetails")
@@ -189,7 +189,7 @@ public class InstallPlanActualController {
                                                  String type,
                                                  String queryStartTime,
                                                  String queryFinishTime,
-                                                 Boolean isAllFinished) {
+                                                 Boolean isNotFinished) {
         PageHelper.startPage(page, size);
         List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanActualDetails(orderNum,
                 nameplate,
@@ -197,7 +197,7 @@ public class InstallPlanActualController {
                 type,
                 queryStartTime,
                 queryFinishTime,
-                isAllFinished);
+                isNotFinished);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

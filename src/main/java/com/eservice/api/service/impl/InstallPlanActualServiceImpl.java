@@ -29,8 +29,8 @@ public class InstallPlanActualServiceImpl extends AbstractService<InstallPlanAct
                                                                          String type,
                                                                          String queryStartTime,
                                                                          String queryFinishTime,
-                                                                         Boolean isAllFinished) {
-        return installPlanActualMapper.selectInstallPlanActualDetails(orderNum, nameplate, installGroupName, type, queryStartTime, queryFinishTime, isAllFinished);
+                                                                         Boolean isNotFinished) {
+        return installPlanActualMapper.selectInstallPlanActualDetails(orderNum, nameplate, installGroupName, type, queryStartTime, queryFinishTime, isNotFinished);
     }
     public InstallPlanActual getInstallPlanActual(Integer installPlanId){
         return installPlanActualMapper.getInstallPlanActual(installPlanId);
