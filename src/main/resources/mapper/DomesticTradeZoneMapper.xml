@@ -10,9 +10,28 @@
     <result column="owner_id" jdbcType="INTEGER" property="ownerId" />
   </resultMap>
 
-  <select id="getDomesticTradeZone" resultMap="BaseResultMap">
+  <resultMap id="DomesticTradeZoneDetailResultMap" type="com.eservice.api.model.domestic_trade_zone.DomesticTradeZoneDetail">
+    <!--
+    WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="zone_name" jdbcType="VARCHAR" property="zoneName" />
+    <result column="owner_id" jdbcType="INTEGER" property="ownerId" />
+
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <select id="getDomesticTradeZone" resultMap="DomesticTradeZoneDetailResultMap">
     SELECT * from domestic_trade_zone dtz
     join `user` u on dtz.owner_id = u.id
-    where u.account  = #{account}
+    where
+    1 = 1
+    <if test="account != null and account != ''">
+      AND u.account like CONCAT('%','${account}','%' )
+    </if>
+
+    <if test="domesticTradeZone != null and domesticTradeZone != ''">
+      AND dtz.zone_name like CONCAT('%','${domesticTradeZone}','%' )
+    </if>
   </select>
 </mapper>

@@ -78,7 +78,7 @@
       and DATE_FORMAT(ip.install_date_plan,'%Y-%m-%d') &lt;= #{queryFinishTime}
     </if>
     <if test="isNotFinished">
-      and ipa.head_count_done &lt; mo.head_num
+      and (ipa.head_count_done &lt; mo.head_num or ipa.head_count_done is null)
     </if>
 
     ORDER BY ip.create_date desc, ip.install_date_plan desc , ipa.create_date desc

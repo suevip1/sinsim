@@ -2,6 +2,7 @@ package com.eservice.api.service.impl;
 
 import com.eservice.api.dao.DomesticTradeZoneMapper;
 import com.eservice.api.model.domestic_trade_zone.DomesticTradeZone;
+import com.eservice.api.model.domestic_trade_zone.DomesticTradeZoneDetail;
 import com.eservice.api.service.DomesticTradeZoneService;
 import com.eservice.api.core.AbstractService;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,8 @@ public class DomesticTradeZoneServiceImpl extends AbstractService<DomesticTradeZ
     @Resource
     private DomesticTradeZoneMapper domesticTradeZoneMapper;
 
-    public List<DomesticTradeZone> getDomesticTradeZone(String account){
-        return domesticTradeZoneMapper.getDomesticTradeZone(account);
+    public List<DomesticTradeZoneDetail> getDomesticTradeZone(String account, String domesticTradeZone){
+        return domesticTradeZoneMapper.getDomesticTradeZone(account, domesticTradeZone);
     }
 
 }

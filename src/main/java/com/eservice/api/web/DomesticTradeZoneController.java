@@ -2,6 +2,7 @@ package com.eservice.api.web;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.domestic_trade_zone.DomesticTradeZone;
+import com.eservice.api.model.domestic_trade_zone.DomesticTradeZoneDetail;
 import com.eservice.api.service.DomesticTradeZoneService;
 import com.eservice.api.service.impl.DomesticTradeZoneServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -57,10 +58,11 @@ public class DomesticTradeZoneController {
         return ResultGenerator.genSuccessResult(list);
     }
 
-    // 根据账号返回 该账号负责的全部内贸区域
+    // 根据账号或者区域,返回对应的全部内贸区域,以及用户信息
     @PostMapping("/getDomesticTradeZone")
-    public Result getDomesticTradeZone(@RequestParam String account) {
-        List<DomesticTradeZone> list = domesticTradeZoneService.getDomesticTradeZone(account);
+    public Result getDomesticTradeZone(String account,
+                                       String domesticTradeZone) {
+        List<DomesticTradeZoneDetail> list = domesticTradeZoneService.getDomesticTradeZone(account, domesticTradeZone);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
