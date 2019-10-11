@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.alibaba.fastjson.JSON;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -27,7 +28,8 @@ public class DomesticTradeZoneController {
     private DomesticTradeZoneServiceImpl domesticTradeZoneService;
 
     @PostMapping("/add")
-    public Result add(DomesticTradeZone domesticTradeZone) {
+    public Result add(String data) {
+        DomesticTradeZone domesticTradeZone = JSON.parseObject(data, DomesticTradeZone.class);
         domesticTradeZoneService.save(domesticTradeZone);
         return ResultGenerator.genSuccessResult();
     }
@@ -39,7 +41,8 @@ public class DomesticTradeZoneController {
     }
 
     @PostMapping("/update")
-    public Result update(DomesticTradeZone domesticTradeZone) {
+    public Result update(String data) {
+        DomesticTradeZone domesticTradeZone = JSON.parseObject(data, DomesticTradeZone.class);
         domesticTradeZoneService.update(domesticTradeZone);
         return ResultGenerator.genSuccessResult();
     }
@@ -60,8 +63,9 @@ public class DomesticTradeZoneController {
 
     // 根据账号或者区域,返回对应的全部内贸区域,以及用户信息
     @PostMapping("/getDomesticTradeZone")
-    public Result getDomesticTradeZone(String account,
+    public Result getDomesticTradeZone(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,String account,
                                        String domesticTradeZone) {
+        PageHelper.startPage(page, size);
         List<DomesticTradeZoneDetail> list = domesticTradeZoneService.getDomesticTradeZone(account, domesticTradeZone);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
