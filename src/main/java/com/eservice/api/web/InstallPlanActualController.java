@@ -67,7 +67,7 @@ public class InstallPlanActualController {
                     InstallPlan installPlan = installPlanService.findById(installPlanActualExist.getInstallPlanId());
                     MachineOrder machineOrder = machineOrderService.findById( installPlan.getOrderId());
                     if( newHeadCountDone <0 || newHeadCountDone > Integer.valueOf( machineOrder.getHeadNum())){
-                        return ResultGenerator.genFailResult("异常 newHeadCountDone: " + newHeadCountDone);
+                        return ResultGenerator.genFailResult("完成总头数 " + newHeadCountDone + " 超过实际头数 " );
                     }
                     installPlanActualExist.setHeadCountDone(newHeadCountDone);
 

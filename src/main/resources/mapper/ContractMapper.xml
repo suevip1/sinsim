@@ -115,10 +115,14 @@
             and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
         </if>
         <if test="domesticTradeArr != null and domesticTradeArr != '' ">
-            and c.domestic_trade_zone in
-            <foreach collection="domesticTradeArr" item="item" open="(" close=")"  separator="," >
+            and (
+            c.domestic_trade_zone is null
+            or
+            c.domestic_trade_zone in
+            <foreach collection="domesticTradeArr" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+            )
         </if>
         ORDER BY os.update_time DESC,c.create_time DESC
     </select>
