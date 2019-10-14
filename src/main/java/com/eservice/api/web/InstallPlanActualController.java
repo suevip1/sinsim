@@ -8,6 +8,7 @@ import com.eservice.api.model.install_plan_actual.InstallPlanActualDetails;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.service.InstallPlanActualService;
 import com.eservice.api.service.InstallPlanService;
+import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.impl.InstallPlanActualServiceImpl;
 import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -39,6 +40,9 @@ public class InstallPlanActualController {
     @Resource
     private MachineOrderServiceImpl machineOrderService;
 
+    @Resource
+    private CommonService commonService;
+
     private Logger logger = Logger.getLogger(InstallPlanActualController.class);
 
     @PostMapping("/add")
@@ -50,24 +54,33 @@ public class InstallPlanActualController {
             } else if (installPlanService.findById(installPlanActual1.getInstallPlanId()) == null) {
                 return ResultGenerator.genFailResult("错误，根据该InstallPlanId " + installPlanActual1.getInstallPlanId() + " 找不到对应的plan ！");
             } else {
-                /**
-                 * 处理多次提交同一个排产，
-                 * 如果该计划是第一次提交，则新增该次提交。
-                 * 如果该计划的完成情况已经存在了，则在原先存在的基础上增加新完成的数据。（并检查合理性）
-                 */
                 InstallPlanActual installPlanActualExist = installPlanActualService.getInstallPlanActual(installPlanActual1.getInstallPlanId());
                 if( installPlanActualExist == null){
+                    /**
+                     * 如果该计划是第一次提交，则新增该次提交。（并检查合理性）
+                     */
+                    InstallPlan installPlan = installPlanService.findById(installPlanActual1.getInstallPlanId());
+                    MachineOrder machineOrder = machineOrderService.findById( installPlan.getOrderId());
+                    if( installPlanActual1.getHeadCountDone() > commonService.getRealSumValue(machineOrder.getHeadNum())){
+                        logger.info("完成总头数不应该超过实际头数");
+                        return ResultGenerator.genFailResult("完成总头数不应该超过实际头数" );
+                    }
                     installPlanActual1.setCreateDate(new Date());
                     installPlanActualService.save(installPlanActual1);
                     logger.info("新增 installPlanActual1 " + installPlanActual1.getId());
                 } else {
+                    /**
+                     * 处理多次提交同一个排产，
+                     * 即如果该计划的完成情况已经存在了，则在原先存在的基础上增加新完成的数据。（并检查合理性）
+                     */
+                    InstallPlan installPlan = installPlanService.findById(installPlanActualExist.getInstallPlanId());
+                    MachineOrder machineOrder = machineOrderService.findById( installPlan.getOrderId());
                     installPlanActualExist.setUpdateDate( new Date());
 
                     int newHeadCountDone = installPlanActualExist.getHeadCountDone() + installPlanActual1.getHeadCountDone();
-                    InstallPlan installPlan = installPlanService.findById(installPlanActualExist.getInstallPlanId());
-                    MachineOrder machineOrder = machineOrderService.findById( installPlan.getOrderId());
-                    if( newHeadCountDone <0 || newHeadCountDone > Integer.valueOf( machineOrder.getHeadNum())){
-                        return ResultGenerator.genFailResult("完成总头数 " + newHeadCountDone + " 超过实际头数 " );
+                    if( newHeadCountDone > Integer.valueOf( commonService.getRealSumValue(machineOrder.getHeadNum()))){
+                        logger.info("最终完成总头数 " + newHeadCountDone + "，超过实际头数 ");
+                        return ResultGenerator.genFailResult("最终完成总头数 " + newHeadCountDone + "，超过实际头数 " );
                     }
                     installPlanActualExist.setHeadCountDone(newHeadCountDone);
 

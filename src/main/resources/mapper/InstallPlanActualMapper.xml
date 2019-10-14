@@ -60,13 +60,13 @@
 
     where  1=1
     <if test="orderNum != null and orderNum != ''">
-      and mo.order_num = #{orderNum}
+      and mo.order_num like CONCAT('%','${orderNum}','%' )
     </if>
     <if test="nameplate != null and nameplate != ''">
-      and m.nameplate = #{nameplate}
+      and m.nameplate  like CONCAT('%','${nameplate}','%' )
     </if>
     <if test="installGroupName != null and installGroupName != ''">
-      and ig.group_name = #{installGroupName}
+      and ig.group_name like CONCAT('%','${installGroupName}','%' )
     </if>
     <if test="type != null and type != ''">
       and ig.type = #{type}
