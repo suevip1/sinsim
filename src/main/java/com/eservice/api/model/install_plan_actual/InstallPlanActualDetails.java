@@ -26,6 +26,19 @@ public class InstallPlanActualDetails extends InstallPlanActual{
     private String headNum;
 
     /**
+     * 部装时需要看针数
+     */
+    private String needleNum;
+
+    public String getNeedleNum() {
+        return needleNum;
+    }
+
+    public void setNeedleNum(String needleNum) {
+        this.needleNum = needleNum;
+    }
+
+    /**
      * 计划的备注
      */
     private String cmtSend;

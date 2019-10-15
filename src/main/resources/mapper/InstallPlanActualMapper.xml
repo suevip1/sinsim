@@ -45,6 +45,7 @@
     <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
     <result column="location" jdbcType="VARCHAR" property="location" />
     <result column="head_num" jdbcType="VARCHAR" property="headNum" />
+    <result column="needle_num" jdbcType="VARCHAR" property="needleNum" />
     <result column="cmt_send" jdbcType="VARCHAR" property="cmtSend" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="type" jdbcType="VARCHAR" property="type" />
