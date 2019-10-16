@@ -53,5 +53,6 @@
     <if test="queryFinishTime != null and queryFinishTime != '' ">
       and DATE_FORMAT(a.date,'%Y-%m-%d') &lt;= #{queryFinishTime}
     </if>
+    order by a.date desc
   </select>
 </mapper>

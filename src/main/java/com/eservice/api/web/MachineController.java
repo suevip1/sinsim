@@ -272,8 +272,8 @@ public class MachineController {
             sheet1.getRow(0).getCell(2).setCellValue("机型");
             sheet1.getRow(0).getCell(3).setCellValue("订单号");
             sheet1.getRow(0).getCell(4).setCellValue("位置");
-            sheet1.getRow(0).getCell(5).setCellValue("当前工序");
-            sheet1.getRow(0).getCell(6).setCellValue("已完成/总工序");
+//            sheet1.getRow(0).getCell(5).setCellValue("当前工序");
+//            sheet1.getRow(0).getCell(6).setCellValue("已完成/总工序");
             sheet1.getRow(0).getCell(7).setCellValue("安装状态");
             sheet1.getRow(0).getCell(8).setCellValue("开始时间");
             sheet1.getRow(0).getCell(9).setCellValue("计划交货日期");
