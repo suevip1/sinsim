@@ -318,10 +318,7 @@ public class TaskRecordController {
                                           @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
 
         List<TaskRecordDetail> list = taskRecordService.selectPlanedTaskRecords(orderNum, machineStrId, taskName, nameplate, installStatus, machineType, query_start_time, query_finish_time, is_fuzzy);
-        PageInfo pageInfo = new PageInfo(list);
 
-        InputStream fs = null;
-        POIFSFileSystem pfs = null;
         HSSFWorkbook wb = null;
         FileOutputStream out = null;
         String downloadPath = "";
@@ -486,6 +483,122 @@ public class TaskRecordController {
 
     }
 
+    /**
+     *  在”生产管理”的“生产报表”导出到excel.
+     */
+    @PostMapping("/exportToExcel")
+    public Result exportToExcel(            Integer taskRecordId,
+                                            String taskName,
+                                            String machineOrderNumber,
+                                            String queryStartTime,
+                                            String queryFinishTime,
+                                            String nameplate) {
+
+        List<TaskRecordDetail> list = taskRecordService.searchTaskRecordDetail(taskRecordId,taskName,machineOrderNumber,queryStartTime,queryFinishTime,nameplate);
+
+        HSSFWorkbook wb = null;
+        FileOutputStream out = null;
+        String downloadPath = "";
+        /*
+        返回给docker外部下载
+         */
+        String downloadPathForNginx = "";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        String dateString;
+        try {
+            //生成一个空的Excel文件
+            wb=new HSSFWorkbook();
+            Sheet sheet1=wb.createSheet("工序报表");
+
+            //设置标题行格式
+            HSSFCellStyle headcellstyle = wb.createCellStyle();
+            HSSFFont headfont = wb.createFont();
+            headfont.setFontHeightInPoints((short) 10);
+            headfont.setBold(true);//粗体显示
+            headcellstyle.setFont(headfont);
+            Row row;
+            //创建行和列
+            for(int r=0;r<list.size() + 1; r++ ) {
+                row = sheet1.createRow(r);//新创建一行，行号为row+1
+                //序号，工序名称，订单号，机器编号，安装组长，安装的开始时间，安装的结束时间，耗时
+                for(int c=0; c<8; c++){
+                    row.createCell(c);//创建一个单元格，列号为col+1
+                    sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
+                }
+            }
+            for(int k=1; k<8; k++){
+                sheet1.setColumnWidth(k,4500);
+            }
+
+            //第一行为标题
+            sheet1.getRow(0).getCell(0).setCellValue("序号");
+            sheet1.getRow(0).getCell(1).setCellValue("工序名称");
+            sheet1.getRow(0).getCell(2).setCellValue("订单号");
+            sheet1.getRow(0).getCell(3).setCellValue("机器编号");
+            sheet1.getRow(0).getCell(4).setCellValue("安装组长");
+            sheet1.getRow(0).getCell(5).setCellValue("开始时间");
+            sheet1.getRow(0).getCell(6).setCellValue("结束时间");
+            sheet1.getRow(0).getCell(7).setCellValue("耗时");
+
+            //第二行开始，填入值
+            MachineType machineType1 = null;
+            Byte taskStatus = 0;
+            for(int r=0; r<list.size(); r++ ) {
+                row = sheet1.getRow(r + 1);
+                row.getCell(0).setCellValue(r + 1);
+
+                //工序名称
+                if(list.get(r).getTaskName() != null ) {
+                    row.getCell(1).setCellValue(list.get(r).getTaskName());
+                }
+                //订单号
+                if(list.get(r).getMachineOrder().getOrderNum() != null ) {
+                    row.getCell(2).setCellValue(list.get(r).getMachineOrder().getOrderNum());
+                }
+                //机器编号
+                if(list.get(r).getMachine().getNameplate() != null ) {
+                    row.getCell(3).setCellValue(list.get(r).getMachine().getNameplate());
+                }
+                //安装组长
+                if(list.get(r).getLeader() != null ) {
+                    row.getCell(4).setCellValue(list.get(r).getLeader());
+                }
+                //开始时间
+                if(list.get(r).getInstallBeginTime() != null ) {
+                    dateString = formatter.format(list.get(r).getInstallBeginTime());
+                    row.getCell(5).setCellValue(dateString);
+                }
+                //结束时间
+                if(list.get(r).getInstallEndTime() != null ) {
+                    dateString = formatter.format(list.get(r).getInstallEndTime());
+                    row.getCell(6).setCellValue(dateString);
+                }
+                //耗时
+                if(list.get(r).getInstallBeginTime() != null && list.get(r).getInstallEndTime() != null ) {
+                    String minHourDay = commonService.secondsToMinHourDay( list.get(r).getInstallEndTime().getTime() - list.get(r).getInstallBeginTime().getTime());
+                    row.getCell(7).setCellValue(minHourDay);
+                }
+
+            }
+            downloadPath = abnoramlExcelOutputDir + "工序报表" + ".xls";
+            downloadPathForNginx = "/excel/" + "工序计划" + ".xls";
+            out = new FileOutputStream(downloadPath);
+            wb.write(out);
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if("".equals(downloadPath)) {
+            return ResultGenerator.genFailResult("异常导出失败!");
+        }else {
+            return ResultGenerator.genSuccessResult(downloadPathForNginx);
+        }
+
+    }
     @PostMapping("/getTaskRecordData")
     public Result getTaskRecordData(
             @RequestParam(defaultValue = "0") Integer page,
