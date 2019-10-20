@@ -187,7 +187,7 @@
         SELECT
         tr.id, tr.task_name, tr.leader, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,
         m.status machine_status, m.nameplate,
-        mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.order_num,
+        mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.order_num, mo.*,
         task.standard_minutes
         FROM
         task_record tr

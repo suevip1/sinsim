@@ -459,4 +459,21 @@ public class CommonService {
             return second + "秒";
         }
     }
+    /**
+     * 秒数 转  分钟
+     */
+    public long secondsToMin(long milliSecond){
+        String ret = null;
+
+        long second = milliSecond/1000;
+        long minutes = second /60;            //转换分钟
+        second = second % 60;                //剩余秒数
+
+        //1~59秒归为1分钟
+        if( minutes ==0 && second>0){
+            minutes = 1;
+        }
+        return minutes;
+
+    }
 }

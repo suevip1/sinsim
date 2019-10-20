@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.service.common.NodeDataModel;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSON;
@@ -534,11 +535,11 @@ public class TaskRecordController {
             sheet1.getRow(0).getCell(0).setCellValue("序号");
             sheet1.getRow(0).getCell(1).setCellValue("工序名称");
             sheet1.getRow(0).getCell(2).setCellValue("订单号");
-            sheet1.getRow(0).getCell(3).setCellValue("机器编号");
+            sheet1.getRow(0).getCell(3).setCellValue("机器信息");
             sheet1.getRow(0).getCell(4).setCellValue("安装组长");
             sheet1.getRow(0).getCell(5).setCellValue("开始时间");
             sheet1.getRow(0).getCell(6).setCellValue("结束时间");
-            sheet1.getRow(0).getCell(7).setCellValue("耗时");
+            sheet1.getRow(0).getCell(7).setCellValue("耗时(分钟)");
 
             //第二行开始，填入值
             MachineType machineType1 = null;
@@ -555,9 +556,19 @@ public class TaskRecordController {
                 if(list.get(r).getMachineOrder().getOrderNum() != null ) {
                     row.getCell(2).setCellValue(list.get(r).getMachineOrder().getOrderNum());
                 }
-                //机器编号
-                if(list.get(r).getMachine().getNameplate() != null ) {
-                    row.getCell(3).setCellValue(list.get(r).getMachine().getNameplate());
+                //机器编号等机器信息
+                Machine machine = list.get(r).getMachine();
+                MachineOrder machineOrder = list.get(r).getMachineOrder();
+                MachineOrderDetail machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrder.getId());
+                if(machine !=null && machineOrder != null){
+                    String machineInfo = machine.getNameplate() + "/"
+                            + machineOrderDetail.getMachineType().getName() + "/"
+                            + machineOrder.getNeedleNum() + "/"
+                            + machineOrder.getHeadNum() + "/"
+                            + machineOrder.getHeadDistance() + "/"
+                            + machineOrder.getxDistance() + "/"
+                            + machineOrder.getyDistance();
+                    row.getCell(3).setCellValue(machineInfo);
                 }
                 //安装组长
                 if(list.get(r).getLeader() != null ) {
@@ -575,7 +586,7 @@ public class TaskRecordController {
                 }
                 //耗时
                 if(list.get(r).getInstallBeginTime() != null && list.get(r).getInstallEndTime() != null ) {
-                    String minHourDay = commonService.secondsToMinHourDay( list.get(r).getInstallEndTime().getTime() - list.get(r).getInstallBeginTime().getTime());
+                    long minHourDay = commonService.secondsToMin( list.get(r).getInstallEndTime().getTime() - list.get(r).getInstallBeginTime().getTime());
                     row.getCell(7).setCellValue(minHourDay);
                 }
 
