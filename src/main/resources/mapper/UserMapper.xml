@@ -70,7 +70,7 @@
     </select>
 
     <select id="requestLogin" resultMap="UserDetailMap">
-        SELECT u.*, r.id role_id, r.role_des, r.role_name, ig.id install_group_id, ig.group_name
+        SELECT u.*, r.id role_id, r.role_des, r.role_name, ig.id install_group_id, ig.group_name, ig.type
         FROM user u
         JOIN role r ON r.id = u.role_id
         LEFT JOIN install_group ig ON u.group_id = ig.id
