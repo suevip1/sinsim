@@ -509,7 +509,7 @@ public class TaskRecordController {
         try {
             //生成一个空的Excel文件
             wb=new HSSFWorkbook();
-            Sheet sheet1=wb.createSheet("工序报表");
+            Sheet sheet1=wb.createSheet("生产报表");
 
             //设置标题行格式
             HSSFCellStyle headcellstyle = wb.createCellStyle();
@@ -535,7 +535,7 @@ public class TaskRecordController {
             sheet1.getRow(0).getCell(0).setCellValue("序号");
             sheet1.getRow(0).getCell(1).setCellValue("工序名称");
             sheet1.getRow(0).getCell(2).setCellValue("订单号");
-            sheet1.getRow(0).getCell(3).setCellValue("机器信息");
+            sheet1.getRow(0).getCell(3).setCellValue("铭牌号/机器类型/针数/头数/头距/X行程/Y行程");
             sheet1.getRow(0).getCell(4).setCellValue("安装组长");
             sheet1.getRow(0).getCell(5).setCellValue("开始时间");
             sheet1.getRow(0).getCell(6).setCellValue("结束时间");
@@ -591,7 +591,7 @@ public class TaskRecordController {
                 }
 
             }
-            downloadPath = abnoramlExcelOutputDir + "工序报表" + ".xls";
+            downloadPath = abnoramlExcelOutputDir + "生产报表" + ".xls";
             downloadPathForNginx = "/excel/" + "工序计划" + ".xls";
             out = new FileOutputStream(downloadPath);
             wb.write(out);

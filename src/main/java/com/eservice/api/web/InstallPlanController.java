@@ -269,7 +269,8 @@ public class InstallPlanController {
     }
 
     /**
-     * 添加并立即发送 该排产计划 给该计划所在组的所有安装组长
+     * 添加并立即发送（MQTT） 该排产计划 给该计划所在组的所有安装组长
+     *
      */
     @PostMapping("/addAndsendInstallPlanNow")
     public Result addAndsendInstallPlanNow(String installPlan) {
@@ -284,21 +285,34 @@ public class InstallPlanController {
                 3,installPlan1.getInstallGroupId(),1);
         int sendReceiverCount = 0;
         ServerToClientMsg msg = new ServerToClientMsg();
-        for(int k=0; k< userDetailList.size(); k++) {
+        String str = null;
+//        for(int k=0; k< userDetailList.size(); k++) {
+        //发送一次MQTT，给该安装组的所有组长
+        if(userDetailList.size() !=0){
             msg.setNameplate(machineService.findById(installPlan1.getMachineId()).getNameplate());
             msg.setOrderNum(machineOrderService.findById(installPlan1.getOrderId()).getOrderNum());
             msg.setType(ServerToClientMsg.MsgType.INSTALL_PLAN);
             msg.setCmtSend(installPlan1.getCmtSend());
             msg.setInstallDatePlan(installPlan1.getInstallDatePlan());
 
-            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_PLAN + userDetailList.get(k).getAccount(), JSON.toJSONString(msg));
-            logger.info("MQTT SEND topic: " + Constant.S2C_INSTALL_PLAN +  userDetailList.get(k).getAccount() + ", nameplate: " + msg.getNameplate());
+            mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_PLAN + installPlan1.getInstallGroupId(), JSON.toJSONString(msg));
+            logger.info("MQTT SEND topic: " + Constant.S2C_INSTALL_PLAN +  installPlan1.getInstallGroupId() + ", nameplate: " + msg.getNameplate());
             sendReceiverCount++;
-            installPlan1.setSendTime(new Date());
-            installPlanService.save(installPlan1);
+
         }
-        String str = "发送1条排产信息给 " + sendReceiverCount + "个"
-                + installGroupService.findById(installPlan1.getInstallGroupId()).getGroupName() + "组的组长";
+        /**
+         * 即使没有安装组长，也安排排产
+         */
+        installPlan1.setSendTime(new Date());
+        installPlanService.save(installPlan1);
+
+        if(userDetailList.size() !=0 ) {
+            str = "发送1条排产信息给 " + sendReceiverCount + "个"
+                    + installGroupService.findById(installPlan1.getInstallGroupId()).getGroupName() + "组的组长";
+        } else {
+            str = "没有" + installGroupService.findById(installPlan1.getInstallGroupId()).getGroupName()
+                    + "组的组长, 发送数量为0";
+        }
         logger.info(str);
         return ResultGenerator.genSuccessResult(str);
     }

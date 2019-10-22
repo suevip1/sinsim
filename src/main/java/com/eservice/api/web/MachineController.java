@@ -213,7 +213,6 @@ public class MachineController {
         return ResultGenerator.genSuccessResult(machine);
     }
 
-    // todo: 安装进度 这个界面可能会改，如果改了这里也要相应地改。
     @PostMapping("/processMachineExport")
     public Result processMachineExport(
             Integer order_id,
