@@ -219,6 +219,12 @@ public class Constant {
      */
     public static final String S2C_INSTALL_PLAN = "/s2c/install_plan/";
 
+    /**
+     *  提醒
+     *  比如：前道工序A忘了扫码，后面的工序B直接去扫码，此时需要提醒A去扫码完成。
+     */
+    public static final String S2C_TASK_REMIND = "/s2c/task_remind/";
+
     public enum ValidEnum {
         INVALID(0), VALID(1);
         private Integer value;

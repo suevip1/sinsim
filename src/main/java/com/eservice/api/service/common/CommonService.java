@@ -11,6 +11,8 @@ import com.eservice.api.model.process_record.ProcessRecord;
 import com.eservice.api.model.role.Role;
 import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_record.TaskRecord;
+import com.eservice.api.model.user.User;
+import com.eservice.api.model.user.UserDetail;
 import com.eservice.api.service.impl.*;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
@@ -52,6 +54,8 @@ public class CommonService {
     private MqttMessageHelper mqttMessageHelper;
     @Resource
     private TaskServiceImpl taskService;
+    @Resource
+    private UserServiceImpl userService;
 
     Logger logger = Logger.getLogger(CommonService.class);
 
@@ -474,6 +478,43 @@ public class CommonService {
             minutes = 1;
         }
         return minutes;
+    }
 
+    /**
+     * 发送MQTT消息给安装组组长/用户。如果即指定了用户也指定了组ID，则都会发送。
+     * TOPIC 格式为：
+     *      /s2c/task_remind/123 其中123代表安装组ID
+     *      /s2c/task_remind/Jack 其中Jack代表账号
+     * @param installGroupId： 安装组组长的ID，该组名下所有组长都会收到msg。
+     * @param account：用户账户，该用户会收到msg。
+     * @param topic : MQTT topic
+     * @param msg
+     * @return  结果信息
+     */
+    public String sendMqttMsg(int installGroupId, String account, String topic, String msg){
+
+        String resultMsg = null;
+        List<UserDetail> userDetailList = userService.selectUsers(null,null,
+                3, installGroupId,1);
+        User user = null;
+        if(account !=null) {
+            user = userService.selectByAccount(account);
+        }
+        if(userDetailList.size() ==0 && user == null){
+            resultMsg = "安装组和用户都找不到，至少有一个要指定正确";
+            logger.warn(resultMsg);
+            return resultMsg;
+        } else {
+
+            if (userDetailList.size() != 0) {
+                mqttMessageHelper.sendToClient(topic + installGroupId, JSON.toJSONString(msg));
+            }
+            if (user != null) {
+                mqttMessageHelper.sendToClient(topic + user.getAccount(), JSON.toJSONString(msg));
+
+            }
+            resultMsg = "已去发送";
+            return resultMsg;
+        }
     }
 }

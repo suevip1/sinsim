@@ -1035,4 +1035,16 @@ public class TaskRecordController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 发送提醒消息
+     * 比如：前道工序A忘了扫码，后面的工序B直接去扫码，此时需要提醒A去扫码完成。
+     */
+    @PostMapping("sendRemindMqttMsg")
+    public Result sendRemindMqttMsg(int installGroupId,
+                                    String account,
+                                    String msg) {
+        String ret = commonService.sendMqttMsg(installGroupId,account,Constant.S2C_TASK_REMIND, msg);
+        return ResultGenerator.genSuccessResult(ret);
+    }
 }
