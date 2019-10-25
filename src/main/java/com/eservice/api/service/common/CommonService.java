@@ -1,5 +1,22 @@
 package com.eservice.api.service.common;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+
+import javax.annotation.Resource;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.model.contract_sign.ContractSign;
@@ -13,20 +30,24 @@ import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.user.User;
 import com.eservice.api.model.user.UserDetail;
-import com.eservice.api.service.impl.*;
+import com.eservice.api.service.impl.ContractSignServiceImpl;
+import com.eservice.api.service.impl.MachineOrderServiceImpl;
+import com.eservice.api.service.impl.MachineServiceImpl;
+import com.eservice.api.service.impl.OrderSignServiceImpl;
+import com.eservice.api.service.impl.ProcessRecordServiceImpl;
+import com.eservice.api.service.impl.RoleServiceImpl;
+import com.eservice.api.service.impl.TaskRecordServiceImpl;
+import com.eservice.api.service.impl.TaskServiceImpl;
+import com.eservice.api.service.impl.UserServiceImpl;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
+
 import org.apache.log4j.Logger;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import tk.mybatis.mapper.entity.Condition;
 
-import javax.annotation.Resource;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import tk.mybatis.mapper.entity.Condition;
 
 /**
  * Class Description:通用服务类
@@ -298,6 +319,14 @@ public class CommonService {
                 if (index > -1) {
                     ndItem = ndList.get(index);
                     ndItem.setTaskStatus(tr.getStatus().toString());
+
+                    if (tr.getStatus().intValue() == Constant.TASK_PLANED.intValue()
+                            || tr.getStatus().intValue() == Constant.TASK_INSTALL_WAITING.intValue()) {
+                        if (tr.getInstallBeginTime() == null) {
+                            String date = Utils.getFormatStringDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+                            ndItem.setBeginTime(date);
+                        }
+                    }
                     if (tr.getInstallBeginTime() != null) {
                         String date = Utils.getFormatStringDate(tr.getInstallBeginTime(), "yyyy-MM-dd HH:mm:ss");
                         ndItem.setBeginTime(date);

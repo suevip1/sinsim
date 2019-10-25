@@ -679,6 +679,25 @@ public class TaskRecordController {
             }
             tr.setInstallBeginTime(new Date());
         }
+        else if(tr.getStatus().intValue() == Constant.TASK_PLANED.intValue()
+        ||tr.getStatus().intValue() == Constant.TASK_INSTALL_WAITING.intValue()) {
+            ProcessRecord  pr = processRecordService.findById(tr.getProcessRecordId());
+            String nData = pr.getNodeData();
+            List<NodeDataModel> ndList = JSON.parseArray(nData, NodeDataModel.class);
+                    for(int i=0;i<ndList.size();i++)
+                    {
+                        if(ndList.get(i).getKey().equals(String.valueOf(tr.getNodeKey())))
+                        {
+                            if(ndList.get(i).getBeginTime()==""||ndList.get(i).getBeginTime()==null)
+                            {
+                                ndList.get(i).setBeginTime(new Date().toString());
+                            }
+                            break;
+                        }
+                    }
+                    pr.setNodeData(JSON.toJSONString(ndList));
+                    processRecordService.update(pr);
+        }
         taskRecordService.update(tr);
 
         Integer prId = tr.getProcessRecordId();
