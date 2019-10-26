@@ -203,7 +203,7 @@
           and task.task_name = #{taskName}
         </if>
         <if test="machineOrderNumber != null and machineOrderNumber !='' ">
-          and mo.order_num = #{machineOrderNumber}
+          and mo.order_num like CONCAT('%','${machineOrderNumber}','%' )
         </if>
         <if test="queryStartTime!=null and queryStartTime != '' ">
           and DATE_FORMAT(tr.install_begin_time,'%Y-%m-%d') &gt;= #{queryStartTime}
@@ -212,7 +212,7 @@
           and DATE_FORMAT(tr.install_end_time,'%Y-%m-%d') &lt;= #{queryFinishTime}
         </if>
         <if test="nameplate != null and nameplate !='' ">
-            and m.nameplate = #{nameplate}
+            and m.nameplate like CONCAT('%','${nameplate}','%' )
         </if>
     </select>
 

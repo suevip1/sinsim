@@ -57,7 +57,7 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
 
     public Result sendUnDeliveryInstallPlans() {
         /**
-         * 发送所有未发送的排产计划
+         * 通过MQTT 发送所有未发送的排产计划
          */
         ServerToClientMsg msg = new ServerToClientMsg();
         List<InstallPlan> unSendInstallPlans = installPlanService.selectUnSendInstallPlans();

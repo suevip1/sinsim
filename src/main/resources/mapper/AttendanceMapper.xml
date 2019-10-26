@@ -40,7 +40,7 @@
 
     where 1 = 1
     <if test="userAccount != null and userAccount != '' ">
-      and u.account = #{userAccount}
+      and u.account like CONCAT('%','${userAccount}','%' )
     </if>
 
     <if test="installGroupName != null and installGroupName != '' ">
