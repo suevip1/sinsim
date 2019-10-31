@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-09-27 14:00:46
+Date: 2019-10-31 15:17:24
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -97,7 +97,58 @@ CREATE TABLE `attendance` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Table structure for `contract`
+-- Table structure for change_contact_form
+-- ----------------------------
+DROP TABLE IF EXISTS `change_contact_form`;
+CREATE TABLE `change_contact_form` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `num` varchar(255) DEFAULT NULL COMMENT '联系单的编号',
+  `order_id` int(10) unsigned DEFAULT NULL COMMENT '对应的订单ID',
+  `applicant_department` varchar(255) DEFAULT NULL COMMENT '提出申请的部门',
+  `applicant_person` varchar(255) DEFAULT NULL COMMENT '申请人',
+  `create_date` datetime NOT NULL COMMENT '申请日期',
+  `hope_date` datetime DEFAULT NULL COMMENT '希望完成的日期',
+  `change_reason` varchar(255) DEFAULT NULL COMMENT '变更理由/主题',
+  `change_type` varchar(255) DEFAULT NULL COMMENT '类型：    设计变更 材料变更 工艺变更 模具设备 工装夹具 制造场所     新供应商 包装运输 检验方法 其他变更，需说明',
+  PRIMARY KEY (`id`),
+  KEY `fk_orderId` (`order_id`),
+  CONSTRAINT `fk_orderId` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for change_item
+-- ----------------------------
+DROP TABLE IF EXISTS `change_item`;
+CREATE TABLE `change_item` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `change_contact_form_id` int(10) unsigned DEFAULT NULL COMMENT '对应联系单的ID，一个联系单可以有多个变更内容。',
+  `old_info` varchar(255) DEFAULT NULL COMMENT '旧状态(变更前）',
+  `new_info` varchar(255) DEFAULT NULL COMMENT '新状态（变更后）',
+  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
+  `attached_file` varchar(255) DEFAULT NULL COMMENT '附件',
+  PRIMARY KEY (`id`),
+  KEY `fk_change_contact_form_id` (`change_contact_form_id`),
+  CONSTRAINT `fk_change_contact_form_id` FOREIGN KEY (`change_contact_form_id`) REFERENCES `change_contact_form` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for change_sign
+-- ----------------------------
+DROP TABLE IF EXISTS `change_sign`;
+CREATE TABLE `change_sign` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '变更联系单的签核',
+  `change_contact_form_id` int(10) unsigned DEFAULT NULL COMMENT '变更联系单的ID',
+  `current_step` varchar(255) DEFAULT NULL COMMENT '联系单的当前签核步骤',
+  `sign_content` text COMMENT ' 签核内容，以json格式的数组形式存放.',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_change_contact_form_id111` (`change_contact_form_id`),
+  CONSTRAINT `fk_change_contact_form_id111` FOREIGN KEY (`change_contact_form_id`) REFERENCES `change_contact_form` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for contract
 -- ----------------------------
 DROP TABLE IF EXISTS `contract`;
 CREATE TABLE `contract` (
