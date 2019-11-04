@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-10-31 15:17:24
+Date: 2019-11-04 17:11:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -97,45 +97,47 @@ CREATE TABLE `attendance` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Table structure for change_contact_form
--- ----------------------------
-DROP TABLE IF EXISTS `change_contact_form`;
-CREATE TABLE `change_contact_form` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `num` varchar(255) DEFAULT NULL COMMENT '联系单的编号',
-  `order_id` int(10) unsigned DEFAULT NULL COMMENT '对应的订单ID',
-  `applicant_department` varchar(255) DEFAULT NULL COMMENT '提出申请的部门',
-  `applicant_person` varchar(255) DEFAULT NULL COMMENT '申请人',
-  `create_date` datetime NOT NULL COMMENT '申请日期',
-  `hope_date` datetime DEFAULT NULL COMMENT '希望完成的日期',
-  `change_reason` varchar(255) DEFAULT NULL COMMENT '变更理由/主题',
-  `change_type` varchar(255) DEFAULT NULL COMMENT '类型：    设计变更 材料变更 工艺变更 模具设备 工装夹具 制造场所     新供应商 包装运输 检验方法 其他变更，需说明',
-  PRIMARY KEY (`id`),
-  KEY `fk_orderId` (`order_id`),
-  CONSTRAINT `fk_orderId` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
 -- Table structure for change_item
 -- ----------------------------
 DROP TABLE IF EXISTS `change_item`;
 CREATE TABLE `change_item` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `change_contact_form_id` int(10) unsigned DEFAULT NULL COMMENT '对应联系单的ID，一个联系单可以有多个变更内容。',
+  `contact_form_id` int(10) unsigned DEFAULT NULL COMMENT '对应联系单的ID，一个联系单可以有多个变更内容。',
   `old_info` varchar(255) DEFAULT NULL COMMENT '旧状态(变更前）',
   `new_info` varchar(255) DEFAULT NULL COMMENT '新状态（变更后）',
   `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
   `attached_file` varchar(255) DEFAULT NULL COMMENT '附件',
   PRIMARY KEY (`id`),
-  KEY `fk_change_contact_form_id` (`change_contact_form_id`),
-  CONSTRAINT `fk_change_contact_form_id` FOREIGN KEY (`change_contact_form_id`) REFERENCES `change_contact_form` (`id`)
+  KEY `fk_change_contact_form_id` (`contact_form_id`),
+  CONSTRAINT `fk_change_contact_form_id` FOREIGN KEY (`contact_form_id`) REFERENCES `contact_form` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Table structure for change_sign
+-- Table structure for contact_form
 -- ----------------------------
-DROP TABLE IF EXISTS `change_sign`;
-CREATE TABLE `change_sign` (
+DROP TABLE IF EXISTS `contact_form`;
+CREATE TABLE `contact_form` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `contact_type` varchar(255) DEFAULT NULL COMMENT '联系单类型： 变更联系单、工作联系单、配件申请联系单',
+  `num` varchar(255) DEFAULT NULL COMMENT '联系单的编号,可选',
+  `order_id` int(10) unsigned DEFAULT NULL COMMENT '对应的订单ID,可选',
+  `applicant_department` varchar(255) DEFAULT NULL COMMENT '提出申请的部门',
+  `applicant_person` varchar(255) DEFAULT NULL COMMENT '申请人',
+  `create_date` datetime NOT NULL COMMENT '申请日期',
+  `hope_date` datetime DEFAULT NULL COMMENT '希望完成的日期',
+  `contact_title` varchar(255) DEFAULT NULL COMMENT '联络主题、变更理由/主题',
+  `contact_content` varchar(255) DEFAULT NULL COMMENT '联络内容',
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_orderId` (`order_id`) USING BTREE,
+  CONSTRAINT `fk_orderId` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for contact_sign
+-- ----------------------------
+DROP TABLE IF EXISTS `contact_sign`;
+CREATE TABLE `contact_sign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '变更联系单的签核',
   `change_contact_form_id` int(10) unsigned DEFAULT NULL COMMENT '变更联系单的ID',
   `current_step` varchar(255) DEFAULT NULL COMMENT '联系单的当前签核步骤',
@@ -144,7 +146,7 @@ CREATE TABLE `change_sign` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_change_contact_form_id111` (`change_contact_form_id`),
-  CONSTRAINT `fk_change_contact_form_id111` FOREIGN KEY (`change_contact_form_id`) REFERENCES `change_contact_form` (`id`)
+  CONSTRAINT `fk_change_contact_form_id111` FOREIGN KEY (`change_contact_form_id`) REFERENCES `contact_form` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
