@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-11-04 17:11:43
+Date: 2019-11-05 10:42:06
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -128,6 +128,7 @@ CREATE TABLE `contact_form` (
   `contact_title` varchar(255) DEFAULT NULL COMMENT '联络主题、变更理由/主题',
   `contact_content` varchar(255) DEFAULT NULL COMMENT '联络内容',
   `status` varchar(255) DEFAULT NULL,
+  `defined_sign_process` varchar(1000) DEFAULT NULL COMMENT 'JSON格式，定义要参与审批的部门和顺序。',
   PRIMARY KEY (`id`),
   KEY `fk_orderId` (`order_id`) USING BTREE,
   CONSTRAINT `fk_orderId` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
@@ -139,14 +140,14 @@ CREATE TABLE `contact_form` (
 DROP TABLE IF EXISTS `contact_sign`;
 CREATE TABLE `contact_sign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '变更联系单的签核',
-  `change_contact_form_id` int(10) unsigned DEFAULT NULL COMMENT '变更联系单的ID',
+  `contact_form_id` int(10) unsigned DEFAULT NULL COMMENT '联系单的ID',
   `current_step` varchar(255) DEFAULT NULL COMMENT '联系单的当前签核步骤',
   `sign_content` text COMMENT ' 签核内容，以json格式的数组形式存放.',
   `create_time` datetime NOT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_change_contact_form_id111` (`change_contact_form_id`),
-  CONSTRAINT `fk_change_contact_form_id111` FOREIGN KEY (`change_contact_form_id`) REFERENCES `contact_form` (`id`)
+  KEY `fk_contact_form_id` (`contact_form_id`),
+  CONSTRAINT `fk_contact_form_id` FOREIGN KEY (`contact_form_id`) REFERENCES `contact_form` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.ContactSignMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.contact_sign.ContactSign">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="contact_form_id" jdbcType="INTEGER" property="contactFormId" />
+    <result column="current_step" jdbcType="VARCHAR" property="currentStep" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
+  </resultMap>
+</mapper>

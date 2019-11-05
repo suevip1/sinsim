@@ -161,6 +161,7 @@ public class UserController {
         boolean isPermitted = false;
 
         if(isExtranet) {
+            logger.info(account + " 外网登录");
             Condition condition = new Condition(User.class);
             condition.createCriteria().andEqualTo("extranetPermit", 1);
             List<User> userAllowExtranetList = userService.findByCondition(condition);
@@ -175,6 +176,8 @@ public class UserController {
             if(!isPermitted){
                 return ResultGenerator.genFailResult(account + " 用户没有外网登入权限！");
             }
+        } else {
+            logger.info(account + " 内网登录");
         }
 
         if(account == null || "".equals(account)) {

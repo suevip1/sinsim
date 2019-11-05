@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.ContactFormMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.contact_form.ContactForm">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="contact_type" jdbcType="VARCHAR" property="contactType" />
+    <result column="num" jdbcType="VARCHAR" property="num" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="applicant_department" jdbcType="VARCHAR" property="applicantDepartment" />
+    <result column="applicant_person" jdbcType="VARCHAR" property="applicantPerson" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="hope_date" jdbcType="TIMESTAMP" property="hopeDate" />
+    <result column="contact_title" jdbcType="VARCHAR" property="contactTitle" />
+    <result column="contact_content" jdbcType="VARCHAR" property="contactContent" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="defined_sign_process" jdbcType="VARCHAR" property="definedSignProcess" />
+  </resultMap>
+</mapper>
