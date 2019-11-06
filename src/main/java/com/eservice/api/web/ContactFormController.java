@@ -3,6 +3,7 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.service.ContactFormService;
+import com.eservice.api.service.impl.ContactFormServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequestMapping("/contact/form")
 public class ContactFormController {
     @Resource
-    private ContactFormService contactFormService;
+    private ContactFormServiceImpl contactFormService;
 
     @PostMapping("/add")
     public Result add(ContactForm contactForm) {
@@ -52,6 +53,44 @@ public class ContactFormController {
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
         List<ContactForm> list = contactFormService.findAll();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     * 按条件模糊查下联系单信息
+     * @param contactType 联系单类型
+     * @param contractNum 联系单编号
+     * @param applicantDepartment 发起部门
+     * @param applicantPerson   发起人
+     * @param status 状态
+     * @param queryStartTime
+     * @param queryFinishTime
+     * @param isFuzzy
+     * @return
+     */
+    @PostMapping("/selectContacts")
+    public Result selectContacts(@RequestParam(defaultValue = "0") Integer page,
+                                 @RequestParam(defaultValue = "0") Integer size,
+                                 String contactType,
+                                 String contractNum,
+                                 String applicantDepartment,
+                                 String applicantPerson,
+                                 Integer status,
+                                 String queryStartTime,
+                                 String queryFinishTime,
+                                 @RequestParam(defaultValue = "true") Boolean isFuzzy) {
+        PageHelper.startPage(page, size);
+
+        List<ContactForm> list = contactFormService.selectContacts(contactType,
+                                                                    contractNum,
+                                                                    applicantDepartment,
+                                                                    applicantPerson,
+                                                                    status,
+                                                                    queryStartTime,
+                                                                    queryFinishTime,
+                                                                    isFuzzy);
+
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

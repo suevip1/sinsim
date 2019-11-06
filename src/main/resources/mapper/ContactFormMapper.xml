@@ -18,4 +18,37 @@
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="defined_sign_process" jdbcType="VARCHAR" property="definedSignProcess" />
   </resultMap>
+  <resultMap id="ContactFormDetail" type="com.eservice.api.model.contact_form.ContactFormDetail">
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+<!--这里为空，也可以接受到 ContactForm的内容-->
+  </resultMap>
+
+  <select id="selectContacts" resultMap="ContactFormDetail">
+    SELECT * from contact_form cf
+    join machine_order mo on cf.order_id = mo.id
+    where 1=1
+
+    <if test="contactType!=null and contactType != '' ">
+    and cf.contact_type like CONCAT('%','${contactType}','%' )
+    </if>
+
+    <if test="applicantDepartment!=null and applicantDepartment != '' ">
+      and cf.applicant_department like CONCAT('%','${applicantDepartment}','%' )
+    </if>
+
+    <if test="applicantPerson!=null and applicantPerson != '' ">
+      and cf.applicant_person like CONCAT('%','${applicantPerson}','%' )
+    </if>
+
+    <if test="contractNum!=null and contractNum != '' ">
+      and mo.order_num like CONCAT('%','${contractNum}','%' )
+    </if>
+
+    <if test="queryStartTime!=null and queryStartTime != '' ">
+      and DATE_FORMAT(cf.create_date,'%Y-%m-%d') &gt;= #{queryStartTime}
+    </if>
+    <if test="queryFinishTime!=null and queryFinishTime != '' ">
+      and DATE_FORMAT(mo.create_date,'%Y-%m-%d') &lt;= #{queryFinishTime}
+    </if>
+  </select>
 </mapper>

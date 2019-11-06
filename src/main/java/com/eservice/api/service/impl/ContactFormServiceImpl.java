@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -21,4 +22,21 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
     @Resource
     private ContactFormMapper contactFormMapper;
 
+    public List<ContactForm> selectContacts(           String contactType,
+                                                String contractNum,
+                                                String applicantDepartment,
+                                                String applicantPerson,
+                                                Integer status,
+                                                String queryStartTime,
+                                                String queryFinishTime,
+                                                Boolean isFuzzy){
+        return contactFormMapper.selectContacts(contactType,
+                contractNum,
+                applicantDepartment,
+                applicantPerson,
+                status,
+                queryStartTime,
+                queryFinishTime,
+                isFuzzy);
+    }
 }
