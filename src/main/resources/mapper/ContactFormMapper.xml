@@ -17,6 +17,7 @@
     <result column="contact_content" jdbcType="VARCHAR" property="contactContent" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="defined_sign_process" jdbcType="VARCHAR" property="definedSignProcess" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
   <resultMap id="ContactFormDetail" type="com.eservice.api.model.contact_form.ContactFormDetail">
     <result column="order_num" jdbcType="VARCHAR" property="orderNum" />

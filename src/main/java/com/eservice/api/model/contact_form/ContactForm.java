@@ -45,6 +45,20 @@ public class ContactForm {
     private Date createDate;
 
     /**
+     * 更新日期
+     */
+    @Column(name = "update_date")
+    private Date updateDate;
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    /**
      * 希望完成的日期
      */
     @Column(name = "hope_date")
