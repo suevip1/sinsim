@@ -4,11 +4,17 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultCode;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contact_form.ContactForm;
-import com.eservice.api.model.contact_form.ContactFormDetail; 
+import com.eservice.api.model.contact_form.ContactFormDetail;
+import com.eservice.api.model.contact_sign.ContactSign;
+import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.service.impl.ContactFormServiceImpl;
+import com.eservice.api.service.impl.ContactSignServiceImpl;
+import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,43 +35,76 @@ public class ContactFormController {
     @Resource
     private ContactFormServiceImpl contactFormService;
 
+    @Resource
+    private ContactSignServiceImpl contactSignService;
+
+    @Resource
+    private MachineOrderServiceImpl machineOrderService;
+
     private Logger logger = Logger.getLogger(ContactFormController.class);
 
     @PostMapping("/add")
-    public Result add(String contactFormDetail) {
-
-        if(contactFormDetail == null) {
-            return ResultGenerator.genFailResult("string contactFormDetail is null");
+    public Result add(@RequestParam String contactForm, @RequestParam String contactSign) {
+        if (contactForm == null || "".equals(contactForm)) {
+            return ResultGenerator.genFailResult("contactForm 信息为空！");
         }
-        Result result = checkTheContactFormValid(contactFormDetail);
+
+        if (contactSign == null || "".equals(contactSign)) {
+            return ResultGenerator.genFailResult("contactSign 信息为空！");
+        }
+
+        Result result = checkTheContactFormValid(contactForm);
         if (result.getCode() == ResultCode.FAIL.code) {
             logger.warn("不合法的 contactFormDetail: " + result.getMessage());
             return result;
         }
-        ContactFormDetail contactFormDetail1 = JSON.parseObject(contactFormDetail, ContactFormDetail.class);
-        contactFormDetail1.setCreateDate(new Date());
-        contactFormService.save(contactFormDetail1);
+        ContactForm contactForm1 = JSON.parseObject(contactForm, ContactForm.class);
+        contactForm1.setCreateDate(new Date());
+        contactFormService.saveAndGetID(contactForm1);
+
+        ContactSign contactSign1 = JSON.parseObject(contactSign, ContactSign.class);
+        if(contactSign1 == null){
+            return ResultGenerator.genFailResult("错误，解析得到的 contactSign1 为 null！");
+        }
+
+        //审核记录
+        contactSign1.setCreateTime(new Date());
+        contactSign1.setContactFormId(contactForm1.getId());
+
+        contactSignService.save(contactSign1);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/checkTheContactFormValid")
-    public Result checkTheContactFormValid(String contactFormDetail) {
-        ContactFormDetail contactFormDetail1 = JSON.parseObject(contactFormDetail, ContactFormDetail.class);
-        if (contactFormDetail1 == null) {
+    public Result checkTheContactFormValid(String contactForm) {
+
+        if (contactForm == null) {
             return ResultGenerator.genFailResult("参数 contactFormDetail 不能为null ");
         }
-
+        ContactForm contactForm1 = JSON.parseObject(contactForm , ContactForm.class);
+        if(contactForm1 == null){
+            return ResultGenerator.genFailResult("错误，解析得到的 contactForm1为 null！");
+        }
         /**
          * 逐一检查各个必要参数的合法性
          */
-        if (contactFormDetail1.getApplicantDepartment()== null) {
+        if (contactForm1.getApplicantDepartment()== null) {
             return ResultGenerator.genFailResult("错误，getApplicantDepartment 为 null！");
         }
 
-        if (contactFormDetail1.getContactTitle() == null) {
+        if (contactForm1.getContactTitle() == null) {
             return ResultGenerator.genFailResult("错误，getContactTitle 为 null！");
         }
 
+        if(contactForm1.getOrderId() == null){
+            return ResultGenerator.genFailResult("错误，orderId 为 null！");
+        }
+
+        //根据id找订单编号
+        MachineOrder machineOrder = machineOrderService.findById(contactForm1.getOrderId());
+        if(machineOrder == null){
+            return ResultGenerator.genFailResult("错误，根据该id找不到对应的订单 ");
+        }
         return ResultGenerator.genSuccessResult("OK");
     }
 
@@ -76,8 +115,14 @@ public class ContactFormController {
     }
 
     @PostMapping("/update")
-    public Result update(ContactForm contactForm) {
-        contactFormService.update(contactForm);
+    public Result update(String contactForm) {
+        ContactForm contactForm1 = JSON.parseObject(contactForm, ContactForm.class);
+        if(contactForm1 == null) {
+            return ResultGenerator.genFailResult("参数不正确，添加失败！");
+        } else {
+            contactForm1.setUpdateDate(new Date());
+            contactFormService.update(contactForm1);
+        }
         return ResultGenerator.genSuccessResult();
     }
 
@@ -132,4 +177,5 @@ public class ContactFormController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
 }

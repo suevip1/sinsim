@@ -40,4 +40,8 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
                 queryFinishTime,
                 isFuzzy);
     }
+
+    public void saveAndGetID(ContactForm contactForm ){
+        contactFormMapper.saveAndGetID(contactForm);
+    }
 }
