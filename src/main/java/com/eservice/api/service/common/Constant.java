@@ -240,4 +240,7 @@ public class Constant {
 
     public static final Byte INVALID = 0;
     public static final Byte VALID = 1;
+
+    //联系单类型
+    public static final String STR_LXD_TYPE_BIANGENG = "变更联系单";
 }
