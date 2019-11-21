@@ -128,7 +128,7 @@ CREATE TABLE `contact_form` (
   `contact_title` varchar(255) DEFAULT NULL COMMENT '联络主题、变更理由/主题',
   `contact_content` varchar(255) DEFAULT NULL COMMENT '联络内容',
   `status` varchar(255) DEFAULT NULL,
-  `defined_sign_process` varchar(1000) DEFAULT NULL COMMENT 'JSON格式，定义要参与审批的部门和顺序。',
+  `update_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_orderId` (`order_id`) USING BTREE,
   CONSTRAINT `fk_orderId` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)

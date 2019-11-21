@@ -79,12 +79,6 @@ public class ContactForm {
     private String status;
 
     /**
-     * JSON格式，定义要参与审批的部门和顺序。
-     */
-    @Column(name = "defined_sign_process")
-    private String definedSignProcess;
-
-    /**
      * @return id
      */
     public Integer getId() {
@@ -274,21 +268,4 @@ public class ContactForm {
         this.status = status;
     }
 
-    /**
-     * 获取JSON格式，定义要参与审批的部门和顺序。
-     *
-     * @return defined_sign_process - JSON格式，定义要参与审批的部门和顺序。
-     */
-    public String getDefinedSignProcess() {
-        return definedSignProcess;
-    }
-
-    /**
-     * 设置JSON格式，定义要参与审批的部门和顺序。
-     *
-     * @param definedSignProcess JSON格式，定义要参与审批的部门和顺序。
-     */
-    public void setDefinedSignProcess(String definedSignProcess) {
-        this.definedSignProcess = definedSignProcess;
-    }
 }

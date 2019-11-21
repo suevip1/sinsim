@@ -1,8 +1,7 @@
 package com.eservice.api.model.contact_form;
 
-import javax.persistence.*;
-import java.util.Date;
 
+import javax.persistence.*;
 @Table(name = "contact_form")
 public class ContactFormDetail extends ContactForm{
 
@@ -18,4 +17,5 @@ public class ContactFormDetail extends ContactForm{
     public void setOrderNum(String orderNum) {
         this.orderNum = orderNum;
     }
+
 }

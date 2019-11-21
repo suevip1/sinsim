@@ -16,7 +16,6 @@
     <result column="contact_title" jdbcType="VARCHAR" property="contactTitle" />
     <result column="contact_content" jdbcType="VARCHAR" property="contactContent" />
     <result column="status" jdbcType="VARCHAR" property="status" />
-    <result column="defined_sign_process" jdbcType="VARCHAR" property="definedSignProcess" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
   <resultMap id="ContactFormDetail" type="com.eservice.api.model.contact_form.ContactFormDetail">
@@ -57,9 +56,9 @@
           keyProperty="id">
     insert into
     contact_form(contact_type, num, order_id, applicant_department, applicant_person,create_date, hope_date, contact_title,
-                contact_content, status, defined_sign_process, update_date)
+                contact_content, status, update_date)
     values(
     #{contactType},#{num},#{orderId},#{applicantDepartment},#{applicantPerson},#{createDate},#{hopeDate},#{contactTitle},
-    #{contactContent},#{status},#{definedSignProcess},#{updateDate})
+    #{contactContent},#{status}, #{updateDate})
   </insert>
 </mapper>

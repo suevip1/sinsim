@@ -1,10 +1,10 @@
 package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
-import com.eservice.api.core.ResultCode;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.change_item.ChangeItem;
 import com.eservice.api.model.contact_form.ContactForm;
+import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.machine_order.MachineOrder;
@@ -18,10 +18,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -51,56 +48,50 @@ public class ContactFormController {
 
     @PostMapping("/add")
     @Transactional(rollbackFor = Exception.class)
-    public Result add(@RequestParam String contactForm,
-                      String changeItem, //类型为变更联系单时，需要变更条目，其他类型时可为空
-                      @RequestParam String contactSign) {
-        if (contactForm == null || "".equals(contactForm)) {
-            return ResultGenerator.genFailResult("contactForm 信息为空！");
-        }
+    public Result add(@RequestBody ContactFormAllInfo contactFormAllInfo) {
+        String message = null;
 
-        if (contactSign == null || "".equals(contactSign)) {
-            return ResultGenerator.genFailResult("contactSign 信息为空！");
-        }
+        ContactForm contactForm = contactFormAllInfo.getContactForm();
+        List<ChangeItem> changeItemList = contactFormAllInfo.getChangeItemList();
+        ContactSign contactSign = contactFormAllInfo.getContactSign();
 
-        Result result = checkTheContactFormValid(contactForm);
-        if (result.getCode() == ResultCode.FAIL.code) {
-            logger.warn("不合法的 contactForm: " + result.getMessage());
-            return result;
-        }
-        ContactForm contactForm1 = JSON.parseObject(contactForm, ContactForm.class);
-        contactForm1.setCreateDate(new Date());
-        contactFormService.saveAndGetID(contactForm1);
-
-        //变更条目
-        if(contactForm1.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)){
-            if(changeItem == null){
-                //如果不合法，回滚前面写入的数据
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return ResultGenerator.genFailResult("变更联系单 需要有 变更条目（变更前/后）！");
+        try {
+            if( null == contactForm){
+                message = " contactForm 为空！";
+                throw new RuntimeException();
             }
-            ChangeItem changeItem1 = JSON.parseObject(changeItem, ChangeItem.class);
-            if(changeItem1 == null) {
-                //如果不合法，回滚前面写入的数据
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return ResultGenerator.genFailResult("错误，解析得到的 changeItem1 为 null！");
-            } else {
-                changeItem1.setContactFormId(contactForm1.getId());
-                changeItemService.save(changeItem1);
-            }
-        }
 
-        ContactSign contactSign1 = JSON.parseObject(contactSign, ContactSign.class);
-        if(contactSign1 == null){
-            //如果不合法，回滚前面写入的数据
+            if(contactForm.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)){
+                if( null == changeItemList) {
+                    message = " 类型为变更联系单时，变更条目不能为空！";
+                    throw new RuntimeException();
+                }
+            }
+            if( null == contactSign) {
+                message = " contactSign 为空！";
+                throw new RuntimeException();
+            }
+
+            //生成联系单
+            contactForm.setCreateDate(new Date());
+            contactFormService.saveAndGetID(contactForm);
+
+            //生成联系单变更条目
+            for(int i =0; i<changeItemList.size(); i++){
+                changeItemList.get(i).setContactFormId(contactForm.getId());
+                changeItemService.save(changeItemList.get(i));
+            }
+
+            //生成联系单的审核记录
+            contactSign.setCreateTime(new Date());
+            contactSign.setContactFormId(contactForm.getId());
+            contactSignService.save(contactSign);
+
+        } catch (Exception ex) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return ResultGenerator.genFailResult("错误，解析得到的 contactSign1 为 null！");
+            logger.warn("添加联系单/联系单变更条目/联系单审核信息 出错: " + message);
+            return ResultGenerator.genFailResult("添加联系单/联系单变更条目/联系单审核信息 出错！" + message + ex.getMessage());
         }
-
-        //审核记录
-        contactSign1.setCreateTime(new Date());
-        contactSign1.setContactFormId(contactForm1.getId());
-
-        contactSignService.save(contactSign1);
         return ResultGenerator.genSuccessResult();
     }
 
