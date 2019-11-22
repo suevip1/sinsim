@@ -8,6 +8,7 @@ import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.ChangeItemServiceImpl;
 import com.eservice.api.service.impl.ContactFormServiceImpl;
@@ -16,11 +17,16 @@ import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +49,12 @@ public class ContactFormController {
 
     @Resource
     private MachineOrderServiceImpl machineOrderService;
+
+    @Value("${lxd_attached_saved_dir}")
+    private String lxdAttachedSavedDir;
+
+    @Resource
+    private CommonService commonService;
 
     private Logger logger = Logger.getLogger(ContactFormController.class);
 
@@ -198,4 +210,44 @@ public class ContactFormController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    /**
+     * 上传联系单附件文件
+     * 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入
+     * @param request 参数带一个文件，以及一个lxdNum（联系单的编号，客户可见）
+     * @return 后端保存的文件名称（相对地址在： lxdAttachedSavedDir）
+     */
+    @PostMapping("/uploadAttachedFile")
+    public Result uploadAttachedFile(HttpServletRequest request) {
+        try {
+            //联系单的编号，在保存文件时，文件名称中包含。
+            String lxdNum = request.getParameterValues("lxdNum")[0];
+            List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("file");
+            if (fileList == null || fileList.size() == 0) {
+                return ResultGenerator.genFailResult("Error: no available file");
+            }
+            MultipartFile file = fileList.get(0);
+            File dir = new File(lxdAttachedSavedDir);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+
+            try {
+                //save file， 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入 。
+                String resultPath = commonService.saveFile(lxdAttachedSavedDir, file, lxdNum, "lxd", Constant.LXD_ATTACHED_FILE, 0);
+                if (resultPath == null || resultPath == "") {
+                    return ResultGenerator.genFailResult("文件名为空，联系单附件上传失败！");
+                }
+                logger.info("====/contact/form/uploadAttachedFile(): success======== " + resultPath);
+                return ResultGenerator.genSuccessResult(resultPath);
+            } catch (Exception e) {
+                e.printStackTrace();
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultGenerator.genFailResult("联系单附件 上传失败！" + e.getMessage());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultGenerator.genFailResult("联系单附件 上传失败！" + e.getMessage());
+        }
+    }
 }

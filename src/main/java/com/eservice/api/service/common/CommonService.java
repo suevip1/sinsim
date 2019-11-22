@@ -289,6 +289,10 @@ public class CommonService {
                 fileType = "LoadingFile";
                 dateStr = "";
                 break;
+            case Constant.LXD_ATTACHED_FILE:
+                fileType = "lxdAttached";
+                dateStr = "";
+                break;
             default:
                 fileType = " ";
                 break;

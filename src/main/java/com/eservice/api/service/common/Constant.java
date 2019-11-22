@@ -162,10 +162,12 @@ public class Constant {
      * "0" --> 异常
      * "1" --> 质检
      * "2" --> 装车单
+     * "3" --> 联系单附件
      */
     public static final int ABNORMAL_IMAGE = 0;
     public static final int QUALITY_IMAGE = 1;
     public static final int LOADING_FILE = 2;
+    public static final int LXD_ATTACHED_FILE = 3;
 
     /**
      * 计划的方式："1"==>日计划， "2"==>弹性计划， "3" ==>自计划；未计划，但是在时间允许下安装组长自行安装的

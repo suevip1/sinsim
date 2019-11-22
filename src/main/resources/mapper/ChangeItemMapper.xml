@@ -10,6 +10,5 @@
     <result column="old_info" jdbcType="VARCHAR" property="oldInfo" />
     <result column="new_info" jdbcType="VARCHAR" property="newInfo" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
-    <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
   </resultMap>
 </mapper>

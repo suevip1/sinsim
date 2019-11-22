@@ -268,4 +268,26 @@ public class ContactForm {
         this.status = status;
     }
 
+    /**
+     * 附件
+     */
+    @Column(name = "attached_file")
+    private String attachedFile;
+    /**
+     * 获取附件
+     *
+     * @return attached_file - 附件
+     */
+    public String getAttachedFile() {
+        return attachedFile;
+    }
+
+    /**
+     * 设置附件
+     *
+     * @param attachedFile 附件
+     */
+    public void setAttachedFile(String attachedFile) {
+        this.attachedFile = attachedFile;
+    }
 }

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-11-05 10:42:06
+Date: 2019-11-22 15:20:56
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -106,7 +106,6 @@ CREATE TABLE `change_item` (
   `old_info` varchar(255) DEFAULT NULL COMMENT '旧状态(变更前）',
   `new_info` varchar(255) DEFAULT NULL COMMENT '新状态（变更后）',
   `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
-  `attached_file` varchar(255) DEFAULT NULL COMMENT '附件',
   PRIMARY KEY (`id`),
   KEY `fk_change_contact_form_id` (`contact_form_id`),
   CONSTRAINT `fk_change_contact_form_id` FOREIGN KEY (`contact_form_id`) REFERENCES `contact_form` (`id`)
@@ -129,6 +128,7 @@ CREATE TABLE `contact_form` (
   `contact_content` varchar(255) DEFAULT NULL COMMENT '联络内容',
   `status` varchar(255) DEFAULT NULL,
   `update_date` datetime DEFAULT NULL,
+  `attached_file` varchar(255) DEFAULT NULL COMMENT '附件，存放路径',
   PRIMARY KEY (`id`),
   KEY `fk_orderId` (`order_id`) USING BTREE,
   CONSTRAINT `fk_orderId` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
@@ -175,11 +175,7 @@ CREATE TABLE `contract` (
 ) ENGINE=InnoDB AUTO_INCREMENT=795 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of contract
--- ----------------------------
-
--- ----------------------------
--- Table structure for `contract_reject_record`
+-- Table structure for contract_reject_record
 -- ----------------------------
 DROP TABLE IF EXISTS `contract_reject_record`;
 CREATE TABLE `contract_reject_record` (
@@ -193,11 +189,7 @@ CREATE TABLE `contract_reject_record` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of contract_reject_record
--- ----------------------------
-
--- ----------------------------
--- Table structure for `contract_sign`
+-- Table structure for contract_sign
 -- ----------------------------
 DROP TABLE IF EXISTS `contract_sign`;
 CREATE TABLE `contract_sign` (

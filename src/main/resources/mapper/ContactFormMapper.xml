@@ -17,7 +17,10 @@
     <result column="contact_content" jdbcType="VARCHAR" property="contactContent" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+
+    <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
   </resultMap>
+
   <resultMap id="ContactFormDetail" type="com.eservice.api.model.contact_form.ContactFormDetail">
     <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
 <!--这里为空，也可以接受到 ContactForm的内容-->

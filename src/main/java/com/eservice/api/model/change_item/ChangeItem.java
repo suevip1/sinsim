@@ -32,12 +32,6 @@ public class ChangeItem {
     private String remarks;
 
     /**
-     * 附件
-     */
-    @Column(name = "attached_file")
-    private String attachedFile;
-
-    /**
      * @return id
      */
     public Integer getId() {
@@ -123,21 +117,4 @@ public class ChangeItem {
         this.remarks = remarks;
     }
 
-    /**
-     * 获取附件
-     *
-     * @return attached_file - 附件
-     */
-    public String getAttachedFile() {
-        return attachedFile;
-    }
-
-    /**
-     * 设置附件
-     *
-     * @param attachedFile 附件
-     */
-    public void setAttachedFile(String attachedFile) {
-        this.attachedFile = attachedFile;
-    }
 }
