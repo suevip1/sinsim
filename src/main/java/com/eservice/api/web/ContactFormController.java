@@ -58,11 +58,19 @@ public class ContactFormController {
 
     private Logger logger = Logger.getLogger(ContactFormController.class);
 
+    /**
+     * 一次性同时上传 联系单，联系单的变更条目，联系单的签核信息
+     * @param contactFormAllInfo
+     * @return
+     */
     @PostMapping("/add")
     @Transactional(rollbackFor = Exception.class)
-    public Result add(@RequestBody ContactFormAllInfo contactFormAllInfo) {
-        String message = null;
+    public Result add(@RequestBody(required = false) ContactFormAllInfo contactFormAllInfo) {
+        if(contactFormAllInfo == null|| contactFormAllInfo.equals("")){
+            return ResultGenerator.genFailResult("JSON数据不能为空");
+        }
 
+        String message = null;
         ContactForm contactForm = contactFormAllInfo.getContactForm();
         List<ChangeItem> changeItemList = contactFormAllInfo.getChangeItemList();
         ContactSign contactSign = contactFormAllInfo.getContactSign();
@@ -88,10 +96,12 @@ public class ContactFormController {
             contactForm.setCreateDate(new Date());
             contactFormService.saveAndGetID(contactForm);
 
-            //生成联系单变更条目
-            for(int i =0; i<changeItemList.size(); i++){
-                changeItemList.get(i).setContactFormId(contactForm.getId());
-                changeItemService.save(changeItemList.get(i));
+            //生成联系单变更条目， 如果类型不是变更联系单时，这部分为空
+            if(contactForm.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)) {
+                for (int i = 0; i < changeItemList.size(); i++) {
+                    changeItemList.get(i).setContactFormId(contactForm.getId());
+                    changeItemService.save(changeItemList.get(i));
+                }
             }
 
             //生成联系单的审核记录
@@ -146,14 +156,77 @@ public class ContactFormController {
         return ResultGenerator.genSuccessResult();
     }
 
+    /**
+     * 一是修改联系单时要update （包括变更条目的修改），二是审核联系单时也要Update。
+     * 即使已经开始审批过程了，还要允许修改。
+     * 允许财务部修改是否需要总经理审核
+     * @param
+     * @return
+     */
     @PostMapping("/update")
-    public Result update(String contactForm) {
-        ContactForm contactForm1 = JSON.parseObject(contactForm, ContactForm.class);
-        if(contactForm1 == null) {
-            return ResultGenerator.genFailResult("参数不正确，添加失败！");
-        } else {
-            contactForm1.setUpdateDate(new Date());
-            contactFormService.update(contactForm1);
+    public Result update(@RequestBody(required = false) ContactFormAllInfo contactFormAllInfo) {
+        if(contactFormAllInfo == null|| contactFormAllInfo.equals("")){
+            return ResultGenerator.genFailResult("JSON数据不能为空");
+        }
+
+        String message = null;
+        ContactForm contactForm = contactFormAllInfo.getContactForm();
+        List<ChangeItem> changeItemList = contactFormAllInfo.getChangeItemList();
+        ContactSign contactSign = contactFormAllInfo.getContactSign();
+
+        try {
+            if( null == contactForm){
+                message = " contactForm 为空！";
+                throw new RuntimeException();
+            }
+
+            if( null == contactForm.getId()){
+                message = " contactForm 的Id 不能为空！";
+                throw new RuntimeException();
+            }
+            if(contactFormService.findById(contactForm.getId()) == null){
+                message = " 根据该id找不到对应的联系单！";
+                throw new RuntimeException();
+            }
+
+            if(contactForm.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)){
+                if( null == changeItemList) {
+                    message = " 类型为变更联系单时，变更条目不能为空！";
+                    throw new RuntimeException();
+                }
+            }
+            if( null == contactSign) {
+                message = " contactSign 为空！";
+                throw new RuntimeException();
+            }
+
+            //更新联系单
+            contactForm.setUpdateDate(new Date());
+            contactFormService.update(contactForm);
+
+            if(contactForm.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)) {
+                //更新联系单变更条目
+                for (int i = 0; i < changeItemList.size(); i++) {
+                    if(changeItemList.get(i).getContactFormId() != contactForm.getId() ){
+                        message = " 变更条目里的ContactFormId 和 联系单的id 不匹配！";
+                        throw new RuntimeException();
+                    }
+                    changeItemService.update(changeItemList.get(i));
+                }
+
+            }
+            //更新 联系单的审核记录
+            contactSign.setUpdateTime(new Date());
+            if(contactSign.getContactFormId() != contactForm.getId()){
+                message = " contactSign里的ContactFormId 和 联系单的id 不匹配！";
+                throw new RuntimeException();
+            }
+            contactSignService.update(contactSign);
+
+        } catch (Exception ex) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            logger.warn("更新 联系单/联系单变更条目/联系单审核信息 出错: " + message);
+            return ResultGenerator.genFailResult("更新 联系单/联系单变更条目/联系单审核信息 出错！" + message + ex.getMessage());
         }
         return ResultGenerator.genSuccessResult();
     }
