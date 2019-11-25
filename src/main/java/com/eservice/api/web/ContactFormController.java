@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import springfox.documentation.spring.web.json.Json;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -65,7 +67,8 @@ public class ContactFormController {
      */
     @PostMapping("/add")
     @Transactional(rollbackFor = Exception.class)
-    public Result add(@RequestBody(required = false) ContactFormAllInfo contactFormAllInfo) {
+    public Result add(String jsonContactFormAllInfo) {
+        ContactFormAllInfo contactFormAllInfo = JSON.parseObject(jsonContactFormAllInfo, ContactFormAllInfo.class);
         if(contactFormAllInfo == null|| contactFormAllInfo.equals("")){
             return ResultGenerator.genFailResult("JSON数据不能为空");
         }
