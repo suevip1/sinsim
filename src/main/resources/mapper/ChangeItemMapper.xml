@@ -11,4 +11,13 @@
     <result column="new_info" jdbcType="VARCHAR" property="newInfo" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
   </resultMap>
+
+  <select id="selectChangeItemList" resultMap="BaseResultMap">
+    SELECT
+        *
+    FROM
+        change_item ci
+    WHERE
+        ci.contact_form_id = #{contactFormId}
+  </select>
 </mapper>

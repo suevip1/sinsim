@@ -3,6 +3,7 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.change_item.ChangeItem;
 import com.eservice.api.service.ChangeItemService;
+import com.eservice.api.service.impl.ChangeItemServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequestMapping("/change/item")
 public class ChangeItemController {
     @Resource
-    private ChangeItemService changeItemService;
+    private ChangeItemServiceImpl changeItemService;
 
     @PostMapping("/add")
     public Result add(ChangeItem changeItem) {
@@ -52,6 +53,23 @@ public class ChangeItemController {
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
         List<ChangeItem> list = changeItemService.findAll();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     * 根据联系单id查找该联系单的所有变更条目
+     * @param page
+     * @param size
+     * @param contactFormId
+     * @return
+     */
+    @PostMapping("/selectChangeItemList")
+    public Result selectChangeItemList(@RequestParam(defaultValue = "0") Integer page,
+                                 @RequestParam(defaultValue = "0") Integer size,
+                                 @RequestParam Integer contactFormId) {
+        PageHelper.startPage(page, size);
+        List<ChangeItem> list = changeItemService.selectChangeItemList(contactFormId);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

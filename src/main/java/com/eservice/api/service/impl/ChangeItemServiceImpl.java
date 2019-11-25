@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -21,4 +22,7 @@ public class ChangeItemServiceImpl extends AbstractService<ChangeItem> implement
     @Resource
     private ChangeItemMapper changeItemMapper;
 
+    public List<ChangeItem> selectChangeItemList(Integer contactFormId){
+        return changeItemMapper.selectChangeItemList(contactFormId);
+    }
 }
