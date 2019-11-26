@@ -8,7 +8,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="contact_type" jdbcType="VARCHAR" property="contactType" />
     <result column="num" jdbcType="VARCHAR" property="num" />
-    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
     <result column="applicant_department" jdbcType="VARCHAR" property="applicantDepartment" />
     <result column="applicant_person" jdbcType="VARCHAR" property="applicantPerson" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -28,7 +28,7 @@
 
   <select id="selectContacts" resultMap="ContactFormDetail">
     SELECT * from contact_form cf
-    join machine_order mo on cf.order_id = mo.id
+    join machine_order mo on cf.order_num = mo.order_num
     where 1=1
 
     <if test="contactType!=null and contactType != '' ">
@@ -58,10 +58,10 @@
   <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contact_form.ContactForm"
           keyProperty="id">
     insert into
-    contact_form(contact_type, num, order_id, applicant_department, applicant_person,create_date, hope_date, contact_title,
+    contact_form(contact_type, num, order_num, applicant_department, applicant_person,create_date, hope_date, contact_title,
                 contact_content, status, update_date)
     values(
-    #{contactType},#{num},#{orderId},#{applicantDepartment},#{applicantPerson},#{createDate},#{hopeDate},#{contactTitle},
+    #{contactType},#{num},#{orderNum},#{applicantDepartment},#{applicantPerson},#{createDate},#{hopeDate},#{contactTitle},
     #{contactContent},#{status}, #{updateDate})
   </insert>
 </mapper>

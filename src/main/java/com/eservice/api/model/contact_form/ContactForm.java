@@ -21,10 +21,10 @@ public class ContactForm {
     private String num;
 
     /**
-     * 对应的订单ID,可选
+     * 对应的订单号码（不是ID）,可选
      */
-    @Column(name = "order_id")
-    private Integer orderId;
+    @Column(name = "order_num")
+    private String orderNum;
 
     /**
      * 提出申请的部门
@@ -128,22 +128,12 @@ public class ContactForm {
         this.num = num;
     }
 
-    /**
-     * 获取对应的订单ID,可选
-     *
-     * @return order_id - 对应的订单ID,可选
-     */
-    public Integer getOrderId() {
-        return orderId;
+    public String getOrderNum() {
+        return orderNum;
     }
 
-    /**
-     * 设置对应的订单ID,可选
-     *
-     * @param orderId 对应的订单ID,可选
-     */
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
+    public void setOrderNum(String orderNum) {
+        this.orderNum = orderNum;
     }
 
     /**

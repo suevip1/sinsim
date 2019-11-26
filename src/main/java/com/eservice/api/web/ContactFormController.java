@@ -141,14 +141,14 @@ public class ContactFormController {
             return ResultGenerator.genFailResult("错误，getContactTitle 为 null！");
         }
 
-        if(contactForm1.getOrderId() == null){
-            return ResultGenerator.genFailResult("错误，orderId 为 null！");
-        }
+//        if(contactForm1.getOrderNum() == null){
+//            return ResultGenerator.genFailResult("错误，orderNum 为 null！");
+//        }
 
-        //根据id找订单编号
-        MachineOrder machineOrder = machineOrderService.findById(contactForm1.getOrderId());
+        //根据订单号找订单
+        MachineOrder machineOrder = machineOrderService.getMachineOrder(contactForm1.getOrderNum());
         if(machineOrder == null){
-            return ResultGenerator.genFailResult("错误，根据该id找不到对应的订单 ");
+            return ResultGenerator.genFailResult("错误，根据该订单号 找不到对应的订单 ");
         }
         return ResultGenerator.genSuccessResult("OK");
     }
