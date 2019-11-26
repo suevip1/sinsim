@@ -62,7 +62,7 @@ public class ContactFormController {
 
     /**
      * 一次性同时上传 联系单，联系单的变更条目，联系单的签核信息
-     * @param contactFormAllInfo
+     * @param jsonContactFormAllInfo
      * @return
      */
     @PostMapping("/add")
@@ -70,7 +70,7 @@ public class ContactFormController {
     public Result add(String jsonContactFormAllInfo) {
         ContactFormAllInfo contactFormAllInfo = JSON.parseObject(jsonContactFormAllInfo, ContactFormAllInfo.class);
         if(contactFormAllInfo == null|| contactFormAllInfo.equals("")){
-            return ResultGenerator.genFailResult("JSON数据不能为空");
+            return ResultGenerator.genFailResult("JSON数据异常");
         }
 
         String message = null;
@@ -167,9 +167,10 @@ public class ContactFormController {
      * @return
      */
     @PostMapping("/update")
-    public Result update(@RequestBody(required = false) ContactFormAllInfo contactFormAllInfo) {
+    public Result update(@RequestBody(required = false) String jsonContactFormAllInfo) {
+        ContactFormAllInfo contactFormAllInfo = JSON.parseObject(jsonContactFormAllInfo, ContactFormAllInfo.class);
         if(contactFormAllInfo == null|| contactFormAllInfo.equals("")){
-            return ResultGenerator.genFailResult("JSON数据不能为空");
+            return ResultGenerator.genFailResult("JSON数据异常");
         }
 
         String message = null;
@@ -214,7 +215,33 @@ public class ContactFormController {
                         message = " 变更条目里的ContactFormId 和 联系单的id 不匹配！";
                         throw new RuntimeException();
                     }
-                    changeItemService.update(changeItemList.get(i));
+                    //step1.如果是已经存在的条目，则更新
+                    if(changeItemService.findById(changeItemList.get(i).getId()) != null){
+                        changeItemService.update(changeItemList.get(i));
+                        logger.info("更新了 id为 " + changeItemList.get(i).getId() + " 的变更条目");
+                    } else {
+                        //step2.如果是新增的条目，则新增。
+                        changeItemService.save(changeItemList.get(i));
+                        logger.info("新增了一个 " + changeItemList.get(i).getNewInfo() + " 的变更条目");
+                    }
+                    //step3. 如果目前已存在的条目 不在传进来的条目中，表示该条目应该删除。
+                    boolean isIncluded = false;
+                    List<ChangeItem> changeItemListExist = changeItemService.selectChangeItemList(contactForm.getId());
+                    for(int ei=0; ei<changeItemListExist.size(); ei++){ //exist item
+                        //每个条目都和传进来的每个条目进行比较
+                        isIncluded = false;
+                        for(int ii=0; ii<changeItemList.size(); ii++){ //input item
+                            if(changeItemListExist.get(ei).getId() == changeItemList.get(ii).getId()){
+                                isIncluded = true;
+                                break;
+                            }
+                        }
+                        if( !isIncluded ){
+                            changeItemService.deleteById(changeItemListExist.get(ei).getId());
+                            logger.info("删除了 id为 " + changeItemListExist.get(ei).getId() + " 的变更条目");
+                        }
+                    }
+
                 }
 
             }
