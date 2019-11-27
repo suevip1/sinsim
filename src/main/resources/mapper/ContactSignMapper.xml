@@ -12,4 +12,13 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
   </resultMap>
+
+  <select id="getContactSign" resultMap="BaseResultMap">
+    SELECT
+	  *
+    FROM
+        contact_sign cs
+    WHERE
+        cs.contact_form_id = #{contactFormId}
+  </select>
 </mapper>

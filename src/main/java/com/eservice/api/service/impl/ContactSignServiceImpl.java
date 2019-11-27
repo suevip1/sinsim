@@ -21,4 +21,7 @@ public class ContactSignServiceImpl extends AbstractService<ContactSign> impleme
     @Resource
     private ContactSignMapper contactSignMapper;
 
+    public ContactSign getContactSign(Integer contactFormId){
+        return contactSignMapper.getContactSign(contactFormId);
+    }
 }

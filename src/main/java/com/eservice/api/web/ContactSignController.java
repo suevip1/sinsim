@@ -3,6 +3,7 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.service.ContactSignService;
+import com.eservice.api.service.impl.ContactSignServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequestMapping("/contact/sign")
 public class ContactSignController {
     @Resource
-    private ContactSignService contactSignService;
+    private ContactSignServiceImpl contactSignService;
 
     @PostMapping("/add")
     public Result add(ContactSign contactSign) {
@@ -54,5 +55,16 @@ public class ContactSignController {
         List<ContactSign> list = contactSignService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    /**
+     * 根据 contact_form_id 查询 contact_sign。 目前是一一对应。
+     * @param contactFormId
+     * @return
+     */
+    @PostMapping("/getContactSign")
+    public Result getContactSign(@RequestParam Integer contactFormId) {
+        ContactSign contactSign = contactSignService.getContactSign(contactFormId);
+        return ResultGenerator.genSuccessResult(contactSign);
     }
 }
