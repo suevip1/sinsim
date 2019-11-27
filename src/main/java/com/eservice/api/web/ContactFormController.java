@@ -153,6 +153,7 @@ public class ContactFormController {
         return ResultGenerator.genSuccessResult("OK");
     }
 
+    //todo 删除相应的 变更内容和签核内容
     @PostMapping("/delete")
     public Result delete(@RequestParam Integer id) {
         contactFormService.deleteById(id);
@@ -267,6 +268,16 @@ public class ContactFormController {
         return ResultGenerator.genSuccessResult(contactForm);
     }
 
+    /**
+     * 根据联系单的ID 返回详细信息
+     * @param contactFormId
+     * @return
+     */
+    @PostMapping("/getAllInfo")
+    public Result getAllInfo(@RequestParam Integer contactFormId) {
+        ContactFormAllInfo contactFormAllInfo = contactFormService.getAllInfo(contactFormId);
+        return ResultGenerator.genSuccessResult(contactFormAllInfo);
+    }
     @PostMapping("/list")
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);

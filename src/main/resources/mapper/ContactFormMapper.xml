@@ -26,6 +26,46 @@
 <!--这里为空，也可以接受到 ContactForm的内容-->
   </resultMap>
 
+  <resultMap id="ResultContactFormAllInfo" type="com.eservice.api.model.contact_form.ContactFormAllInfo">
+    <association javaType="com.eservice.api.model.contact_form.ContactForm" property="contactForm">
+      <!--
+      WARNING - @mbg.generated
+      -->
+      <id column="contact_form_id" jdbcType="INTEGER" property="id" />
+      <result column="contact_type" jdbcType="VARCHAR" property="contactType" />
+      <result column="num" jdbcType="VARCHAR" property="num" />
+      <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+      <result column="applicant_department" jdbcType="VARCHAR" property="applicantDepartment" />
+      <result column="applicant_person" jdbcType="VARCHAR" property="applicantPerson" />
+      <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+      <result column="hope_date" jdbcType="TIMESTAMP" property="hopeDate" />
+      <result column="contact_title" jdbcType="VARCHAR" property="contactTitle" />
+      <result column="contact_content" jdbcType="VARCHAR" property="contactContent" />
+      <result column="status" jdbcType="VARCHAR" property="status" />
+      <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+      <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
+    </association>
+
+    <association property="contactSign" javaType="com.eservice.api.model.contact_sign.ContactSign" >
+      <!--
+      WARNING - @mbg.generated
+      -->
+      <id column="contact_sign_id" jdbcType="INTEGER" property="id" />
+      <result column="contact_form_id" jdbcType="INTEGER" property="contactFormId" />
+      <result column="current_step" jdbcType="VARCHAR" property="currentStep" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+      <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
+    </association>
+    <collection property="changeItemList" ofType="com.eservice.api.model.change_item.ChangeItem">
+      <id column="change_item_id" jdbcType="INTEGER" property="id" />
+      <result column="contact_form_id" jdbcType="INTEGER" property="contactFormId" />
+      <result column="old_info" jdbcType="VARCHAR" property="oldInfo" />
+      <result column="new_info" jdbcType="VARCHAR" property="newInfo" />
+      <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    </collection>
+  </resultMap>
+
   <select id="selectContacts" resultMap="ContactFormDetail">
     SELECT * from contact_form cf
     join machine_order mo on cf.order_num = mo.order_num
@@ -64,4 +104,15 @@
     #{contactType},#{num},#{orderNum},#{applicantDepartment},#{applicantPerson},#{createDate},#{hopeDate},#{contactTitle},
     #{contactContent},#{status}, #{updateDate})
   </insert>
+
+  <select id="getAllInfo" resultMap="ResultContactFormAllInfo">
+    SELECT
+        *
+    FROM
+        contact_form cf
+    JOIN change_item ci ON ci.contact_form_id = cf.id
+    JOIN contact_sign cs ON cs.contact_form_id = cf.id
+    WHERE
+        cf.id = #{contactFormId}
+  </select>
 </mapper>

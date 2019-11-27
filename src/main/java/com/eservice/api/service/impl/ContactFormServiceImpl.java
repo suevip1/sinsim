@@ -2,6 +2,7 @@ package com.eservice.api.service.impl;
 
 import com.eservice.api.dao.ContactFormMapper;
 import com.eservice.api.model.contact_form.ContactForm;
+import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
 import com.eservice.api.service.ContactFormService;
 import com.eservice.api.core.AbstractService;
@@ -43,5 +44,9 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
 
     public void saveAndGetID(ContactForm contactForm ){
         contactFormMapper.saveAndGetID(contactForm);
+    }
+
+    public ContactFormAllInfo getAllInfo(Integer contactFormId){
+        return contactFormMapper.getAllInfo(contactFormId);
     }
 }

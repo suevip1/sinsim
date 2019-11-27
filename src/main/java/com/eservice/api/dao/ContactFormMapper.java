@@ -2,6 +2,7 @@ package com.eservice.api.dao;
 
 import com.eservice.api.core.Mapper;
 import com.eservice.api.model.contact_form.ContactForm;
+import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,4 +18,6 @@ public interface ContactFormMapper extends Mapper<ContactForm> {
                                            @Param("queryFinishTime")String queryFinishTime,
                                            @Param("isFuzzy")Boolean isFuzzy);
     void saveAndGetID(  ContactForm contactForm);
+
+    ContactFormAllInfo getAllInfo(@Param("contactFormId") Integer contactFormId);
 }
