@@ -19,5 +19,5 @@ public interface ContactFormMapper extends Mapper<ContactForm> {
                                            @Param("isFuzzy")Boolean isFuzzy);
     void saveAndGetID(  ContactForm contactForm);
 
-    ContactFormAllInfo getAllInfo(@Param("contactFormId") Integer contactFormId);
+//    ContactFormAllInfo getAllInfo(@Param("contactFormId") Integer contactFormId);
 }

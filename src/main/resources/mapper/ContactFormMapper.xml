@@ -64,6 +64,7 @@
       <result column="new_info" jdbcType="VARCHAR" property="newInfo" />
       <result column="remarks" jdbcType="VARCHAR" property="remarks" />
     </collection>
+
   </resultMap>
 
   <select id="selectContacts" resultMap="ContactFormDetail">
@@ -105,14 +106,15 @@
     #{contactContent},#{status}, #{updateDate})
   </insert>
 
-  <select id="getAllInfo" resultMap="ResultContactFormAllInfo">
-    SELECT
-        *
-    FROM
-        contact_form cf
-    JOIN change_item ci ON ci.contact_form_id = cf.id
-    JOIN contact_sign cs ON cs.contact_form_id = cf.id
-    WHERE
-        cf.id = #{contactFormId}
-  </select>
+  <!-- 这个有问题，在有多个change_item时返回有异常 注意collection 用法-->
+  <!--<select id="getAllInfo" resultMap="ResultContactFormAllInfo">-->
+    <!--SELECT-->
+        <!--*-->
+    <!--FROM-->
+        <!--contact_form cf-->
+    <!--JOIN change_item ci ON ci.contact_form_id = cf.id-->
+    <!--JOIN contact_sign cs ON cs.contact_form_id = cf.id-->
+    <!--WHERE-->
+        <!--cf.id = #{contactFormId}-->
+  <!--</select>-->
 </mapper>
