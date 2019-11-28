@@ -70,6 +70,7 @@
   <select id="selectContacts" resultMap="ContactFormDetail">
     SELECT * from contact_form cf
     join machine_order mo on cf.order_num = mo.order_num
+    join contact_sign cs on cs.contact_form_id = cf.id
     where 1=1
 
     <if test="contactType!=null and contactType != '' ">
@@ -94,6 +95,11 @@
     <if test="queryFinishTime!=null and queryFinishTime != '' ">
       and DATE_FORMAT(mo.create_date,'%Y-%m-%d') &lt;= #{queryFinishTime}
     </if>
+
+    <if test="currentStep!=null and currentStep != '' ">
+      and cs.current_step like CONCAT('%','${currentStep}','%' )
+    </if>
+
   </select>
   
   <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contact_form.ContactForm"

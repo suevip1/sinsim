@@ -153,9 +153,25 @@ public class ContactFormController {
         return ResultGenerator.genSuccessResult("OK");
     }
 
-    //todo 删除相应的 变更内容和签核内容
+    //删除时，联系单对应的 变更条目，联系单签核，都删除。
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/delete")
     public Result delete(@RequestParam Integer id) {
+        ContactForm cf = contactFormService.findById(id);
+        if(null == cf){
+            return ResultGenerator.genFailResult("根据该id" + id + " 找不到对应的联系单");
+        }
+
+        if(cf.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)){
+            List<ChangeItem> ciList = changeItemService.selectChangeItemList(id);
+            for(int i=0; i< ciList.size(); i++){
+                changeItemService.deleteById(ciList.get(i).getId());
+            }
+        }
+
+        ContactSign cs = contactSignService.getContactSign(id);
+        contactSignService.deleteById(cs.getId());
+
         contactFormService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
@@ -295,6 +311,7 @@ public class ContactFormController {
      * @param status 状态
      * @param queryStartTime
      * @param queryFinishTime
+     * @Param currentStep -审核的当前步骤
      * @param isFuzzy
      * @return
      */
@@ -308,6 +325,7 @@ public class ContactFormController {
                                  Integer status,
                                  String queryStartTime,
                                  String queryFinishTime,
+                                 String currentStep,
                                  @RequestParam(defaultValue = "true") Boolean isFuzzy) {
         PageHelper.startPage(page, size);
 
@@ -318,6 +336,7 @@ public class ContactFormController {
                                                                     status,
                                                                     queryStartTime,
                                                                     queryFinishTime,
+                                                                    currentStep,
                                                                     isFuzzy);
 
         PageInfo pageInfo = new PageInfo(list);
