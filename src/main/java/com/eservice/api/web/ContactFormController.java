@@ -184,7 +184,7 @@ public class ContactFormController {
      * @return
      */
     @PostMapping("/update")
-    public Result update(@RequestBody(required = false) String jsonContactFormAllInfo) {
+    public Result update(String jsonContactFormAllInfo) {
         ContactFormAllInfo contactFormAllInfo = JSON.parseObject(jsonContactFormAllInfo, ContactFormAllInfo.class);
         if(contactFormAllInfo == null|| contactFormAllInfo.equals("")){
             return ResultGenerator.genFailResult("JSON数据异常");
