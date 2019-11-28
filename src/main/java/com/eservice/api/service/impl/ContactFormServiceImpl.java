@@ -38,7 +38,7 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
     private ChangeItemServiceImpl changeItemService;
     private Logger logger = Logger.getLogger(ContactFormServiceImpl.class);
     public List<ContactFormDetail> selectContacts(String contactType,
-                                                  String contractNum,
+                                                  String orderNum,
                                                   String applicantDepartment,
                                                   String applicantPerson,
                                                   Integer status,
@@ -47,7 +47,7 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
                                                   String currentStep,
                                                   Boolean isFuzzy){
         return contactFormMapper.selectContacts(contactType,
-                contractNum,
+                orderNum,
                 applicantDepartment,
                 applicantPerson,
                 status,

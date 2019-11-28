@@ -69,8 +69,8 @@
 
   <select id="selectContacts" resultMap="ContactFormDetail">
     SELECT * from contact_form cf
-    join machine_order mo on cf.order_num = mo.order_num
-    join contact_sign cs on cs.contact_form_id = cf.id
+    left join machine_order mo on cf.order_num = mo.order_num
+    left join contact_sign cs on cs.contact_form_id = cf.id
     where 1=1
 
     <if test="contactType!=null and contactType != '' ">
@@ -85,8 +85,8 @@
       and cf.applicant_person like CONCAT('%','${applicantPerson}','%' )
     </if>
 
-    <if test="contractNum!=null and contractNum != '' ">
-      and mo.order_num like CONCAT('%','${contractNum}','%' )
+    <if test="orderNum!=null and orderNum != '' ">
+      and mo.order_num like CONCAT('%','${orderNum}','%' )
     </if>
 
     <if test="queryStartTime!=null and queryStartTime != '' ">
@@ -100,6 +100,9 @@
       and cs.current_step like CONCAT('%','${currentStep}','%' )
     </if>
 
+    <if test="status!=null and status != '' ">
+      and cf.`status` = #{status}
+    </if>
   </select>
   
   <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contact_form.ContactForm"

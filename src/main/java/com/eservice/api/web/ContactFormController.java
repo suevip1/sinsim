@@ -303,9 +303,9 @@ public class ContactFormController {
     }
 
     /**
-     * 按条件模糊查下联系单信息
+     * 按条件 查下联系单信息
      * @param contactType 联系单类型
-     * @param contractNum  订单 编号
+     * @param orderNum  订单 编号
      * @param applicantDepartment 发起部门
      * @param applicantPerson   发起人
      * @param status 状态
@@ -319,7 +319,7 @@ public class ContactFormController {
     public Result selectContacts(@RequestParam(defaultValue = "0") Integer page,
                                  @RequestParam(defaultValue = "0") Integer size,
                                  String contactType,
-                                 String contractNum,
+                                 String orderNum,
                                  String applicantDepartment,
                                  String applicantPerson,
                                  Integer status,
@@ -330,7 +330,7 @@ public class ContactFormController {
         PageHelper.startPage(page, size);
 
         List<ContactFormDetail> list = contactFormService.selectContacts(contactType,
-                                                                    contractNum,
+                                                                    orderNum,
                                                                     applicantDepartment,
                                                                     applicantPerson,
                                                                     status,

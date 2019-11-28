@@ -245,4 +245,19 @@ public class Constant {
 
     //联系单类型
     public static final String STR_LXD_TYPE_BIANGENG = "变更联系单";
+
+    /**
+     * 联系单状态， 对应于contact_form表中的status
+     * 0 - 初始
+     * 1 - 审核中
+     * 2 - 审核完成
+     * 3 - 审核被拒
+     * 4 - 审核取消
+     */
+    public static final Byte LXD_INITIAL = 0;
+    public static final Byte LXD_CHECKING = 1;
+    public static final Byte LXD_CHECKING_FINISHED = 2;
+    public static final Byte LXD_REJECTED  = 3;
+    public static final Byte LXD_CANCELED = 4;
+
 }

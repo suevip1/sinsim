@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ContactFormMapper extends Mapper<ContactForm> {
     List<ContactFormDetail> selectContacts(@Param("contactType")String contactType,
-                                           @Param("contractNum")String contractNum,
+                                           @Param("orderNum")String orderNum,
                                            @Param("applicantDepartment")String applicantDepartment,
                                            @Param("applicantPerson")String applicantPerson,
                                            @Param("status")Integer status,
