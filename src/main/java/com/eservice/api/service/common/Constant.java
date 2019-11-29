@@ -260,4 +260,9 @@ public class Constant {
     public static final Byte LXD_REJECTED  = 3;
     public static final Byte LXD_CANCELED = 4;
 
+    public static final String STR_LXD_INITIAL = "联系单初始化";
+    public static final String STR_LXD_CHECKING = "联系单审核中";
+    public static final String STR_LXD_CHECKING_FINISHED = "联系单审核完成";
+    public static final String STR_LXD_REJECTED  = "联系单审核被拒";
+    public static final String STR_LXD_CANCELED = "联系单取消";
 }
