@@ -48,6 +48,19 @@ public class SignContentItem {
      */
     private Date date;
 
+    /**
+     * true表示该部门需要审核, 联系单需要在创建时指定审核部门。
+     */
+    private Boolean isEnabled;
+
+    public Boolean getEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        isEnabled = enabled;
+    }
+
     public Integer getNumber() {
         return number;
     }

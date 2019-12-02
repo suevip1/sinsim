@@ -97,6 +97,7 @@ public class ContactFormController {
 
             //生成联系单
             contactForm.setCreateDate(new Date());
+            contactForm.setStatus(Constant.STR_LXD_INITIAL);
             contactFormService.saveAndGetID(contactForm);
 
             //生成联系单变更条目， 如果类型不是变更联系单时，这部分为空
