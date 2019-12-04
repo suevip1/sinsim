@@ -895,6 +895,27 @@ public class ContractController {
                     for (int j = 0; j < equipmentCount; j++) {
                         Equipment eq = JSON.parseObject((String) jsonArray.get(j).toString(), Equipment.class);
 
+                        /**
+                         * 前端传进来异常数据时的处理 
+                         * 如果某数据为空 就都不写了。
+                         */
+                        if(eq.getName() == null) {
+                            logger.error("异常数据，装置名称为空");
+                            break;
+                        }
+                        if(eq.getNumber() == null) {
+                            logger.error("异常数据，装置数量为空");
+                            break;
+                        }
+                        if(eq.getPrice() == null) {
+                            logger.error("异常数据，装置价格为空");
+                            break;
+                        }
+                        if(eq.getType() == null) {
+                            logger.error("异常数据，装置类型为空");
+                            break;
+                        }
+
                         cell = sheet1.getRow(focusLine + j).getCell((short) 1);
                         cell.setCellValue(new HSSFRichTextString(eq.getName() + (eq.getType() != null && !"".equals(eq.getType()) ? "(" + eq.getType() + ")" : "")));
                         cell.setCellStyle(cellStyleSlim);
@@ -1328,6 +1349,28 @@ public class ContractController {
                     }
                     for (int j = 0; j < equipmentCount; j++) {
                         Equipment eq = JSON.parseObject((String) jsonArray.get(j).toString(), Equipment.class);
+
+                        /**
+                         * 前端传进来异常数据时的处理
+                         * 如果某数据为空 就都不写了。
+                         */
+                        if(eq.getName() == null) {
+                            logger.error("异常数据，装置名称为空");
+                            break;
+                        }
+                        if(eq.getNumber() == null) {
+                            logger.error("异常数据，装置数量为空");
+                            break;
+                        }
+                        if(eq.getPrice() == null) {
+                            logger.error("异常数据，装置价格为空");
+                            break;
+                        }
+                        if(eq.getType() == null) {
+                            logger.error("异常数据，装置类型为空");
+                            break;
+                        }
+
                         cell2 = sheetX.getRow(22 + j).getCell((short) 0);
                         cell2.setCellValue(new HSSFRichTextString(Integer.toString(j + 1)));
 

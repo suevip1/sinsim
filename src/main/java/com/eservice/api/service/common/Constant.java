@@ -243,8 +243,9 @@ public class Constant {
     public static final Byte INVALID = 0;
     public static final Byte VALID = 1;
 
-    //联系单类型
-    public static final String STR_LXD_TYPE_BIANGENG = "变更联系单";
+    //联系单类型： 变更联系单，工作联系单
+    public static final String STR_LXD_TYPE_BIANGENG = "变更";
+    public static final String STR_LXD_TYPE_WORK = "工作";
 
     /**
      * 联系单状态， 对应于contact_form表中的status
