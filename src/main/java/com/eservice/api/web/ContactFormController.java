@@ -7,6 +7,7 @@ import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
 import com.eservice.api.model.contact_sign.ContactSign;
+import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
@@ -23,8 +24,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import springfox.documentation.spring.web.json.Json;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -383,5 +382,34 @@ public class ContactFormController {
             e.printStackTrace();
             return ResultGenerator.genFailResult("联系单附件 上传失败！" + e.getMessage());
         }
+    }
+
+    /**
+     *  联系单发起审核
+     * @param lxdId
+     * @return
+     */
+    @PostMapping("/startSign")
+    @Transactional(rollbackFor = Exception.class)
+    public Result startSign(@RequestParam Integer lxdId) {
+        if (lxdId == null) {
+            ResultGenerator.genFailResult("联系单ID为空！");
+        } else {
+            ContactSign contactSign = contactSignService.getContactSign((lxdId));
+            if (contactSign == null) {
+                return ResultGenerator.genFailResult("根据联系单ID号获取 签核信息失败！");
+            } else {
+                //更新联系单状态为 STR_LXD_CHECKING
+                ContactForm contactForm = contactFormService.findById(lxdId);
+                if (contactForm == null) {
+                    return ResultGenerator.genFailResult("合同编号ID无效");
+                } else {
+                    contactForm.setStatus(Constant.STR_LXD_CHECKING);
+                    contactForm.setUpdateDate(new Date());
+                    contactFormService.update(contactForm);
+                }
+            }
+        }
+        return ResultGenerator.genSuccessResult();
     }
 }
