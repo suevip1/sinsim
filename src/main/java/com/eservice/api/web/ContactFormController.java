@@ -7,7 +7,6 @@ import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
 import com.eservice.api.model.contact_sign.ContactSign;
-import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
@@ -329,15 +328,30 @@ public class ContactFormController {
                                  @RequestParam(defaultValue = "true") Boolean isFuzzy) {
         PageHelper.startPage(page, size);
 
+        String strStatus = null;
+        //String -- integer 转换
+        if (status != null) {
+            if (status.equals(Integer.valueOf(Constant.LXD_INITIAL))) {
+                strStatus = Constant.STR_LXD_INITIAL;
+            } else if (status.equals(Integer.valueOf(Constant.LXD_CHECKING))) {
+                strStatus = Constant.STR_LXD_CHECKING;
+            } else if (status.equals(Integer.valueOf(Constant.LXD_CHECKING_FINISHED))) {
+                strStatus = Constant.STR_LXD_CHECKING_FINISHED;
+            } else if (status.equals(Integer.valueOf(Constant.LXD_REJECTED))) {
+                strStatus = Constant.STR_LXD_REJECTED;
+            } else if (status.equals(Integer.valueOf(Constant.LXD_CANCELED))) {
+                strStatus = Constant.STR_LXD_CANCELED;
+            }
+        }
         List<ContactFormDetail> list = contactFormService.selectContacts(contactType,
-                                                                    orderNum,
-                                                                    applicantDepartment,
-                                                                    applicantPerson,
-                                                                    status,
-                                                                    queryStartTime,
-                                                                    queryFinishTime,
-                                                                    currentStep,
-                                                                    isFuzzy);
+                orderNum,
+                applicantDepartment,
+                applicantPerson,
+                strStatus,
+                queryStartTime,
+                queryFinishTime,
+                currentStep,
+                isFuzzy);
 
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);

@@ -100,8 +100,8 @@
       and cs.current_step like CONCAT('%','${currentStep}','%' )
     </if>
 
-    <if test="status!=null and status != '' ">
-      and cf.`status` = #{status}
+    <if test="strStatus!=null and strStatus != '' ">
+      and cf.`status` = #{strStatus}
     </if>
 
     ORDER BY cf.create_date desc , cf.update_date desc

@@ -13,7 +13,7 @@ public interface ContactFormMapper extends Mapper<ContactForm> {
                                            @Param("orderNum")String orderNum,
                                            @Param("applicantDepartment")String applicantDepartment,
                                            @Param("applicantPerson")String applicantPerson,
-                                           @Param("status")Integer status,
+                                           @Param("strStatus")String strStatus,
                                            @Param("queryStartTime")String queryStartTime,
                                            @Param("queryFinishTime")String queryFinishTime,
                                            @Param("currentStep")String currentStep,
