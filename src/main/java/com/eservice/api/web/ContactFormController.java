@@ -230,6 +230,36 @@ public class ContactFormController {
             contactForm.setUpdateDate(new Date());
             contactFormService.update(contactForm);
 
+            //重新计算当前审核阶段
+            List<SignContentItem> contactSignContentList = JSON.parseArray(contactSign.getSignContent(), SignContentItem.class);
+            String currentStep = "";
+            int num=-1;
+            for (SignContentItem item : contactSignContentList) {
+                String step = roleService.findById(item.getRoleId()).getRoleName();
+                //检查当前current step 是否禁用掉
+                if(step.equals(contactSign.getCurrentStep()))
+                {
+                    num=item.getNumber();
+                    if(item.getResult() == Constant.SIGN_INITIAL&&item.getEnabled()) {
+                        break;
+                    }
+                }else{
+                    if(num>-1&&item.getNumber()>num)
+                    {
+                        if(item.getResult() == Constant.SIGN_INITIAL&&item.getEnabled()) {
+                            currentStep=step;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if(currentStep!="")
+            {
+                contactSign.setCurrentStep(currentStep);
+                contactSignService.update(contactSign);//更新审核数据currentstep
+            }
+
             if(contactForm.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)) {
                 //更新联系单变更条目
                 for (int i = 0; i < changeItemList.size(); i++) {
