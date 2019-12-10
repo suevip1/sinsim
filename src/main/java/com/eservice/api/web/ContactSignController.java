@@ -80,7 +80,7 @@ public class ContactSignController {
                 haveReject = true;
             }
             //签核在初始化，则把当前步骤设为发起部门
-            if(item.getResult() == Constant.SIGN_INITIAL) {
+            if(item.getResult() == Constant.SIGN_INITIAL&&item.getEnabled()) {
                 currentStep = roleService.findById(item.getRoleId()).getRoleName();
                 break;
             }

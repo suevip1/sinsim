@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
@@ -7,6 +8,7 @@ import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
 import com.eservice.api.model.contact_sign.ContactSign;
+import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
@@ -14,6 +16,7 @@ import com.eservice.api.service.impl.ChangeItemServiceImpl;
 import com.eservice.api.service.impl.ContactFormServiceImpl;
 import com.eservice.api.service.impl.ContactSignServiceImpl;
 import com.eservice.api.service.impl.MachineOrderServiceImpl;
+import com.eservice.api.service.impl.RoleServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -40,6 +43,9 @@ import java.util.List;
 public class ContactFormController {
     @Resource
     private ContactFormServiceImpl contactFormService;
+
+    @Resource
+    private RoleServiceImpl roleService;
 
     @Resource
     private ContactSignServiceImpl contactSignService;
@@ -413,6 +419,18 @@ public class ContactFormController {
             if (contactSign == null) {
                 return ResultGenerator.genFailResult("根据联系单ID号获取 签核信息失败！");
             } else {
+                List<SignContentItem> contactSignContentList = JSON.parseArray(contactSign.getSignContent(), SignContentItem.class);
+                String currentStep = "";
+                for (SignContentItem item : contactSignContentList) {
+                    //签核在初始化，则把当前步骤设为发起部门
+                    if(item.getResult() == Constant.SIGN_INITIAL&&item.getEnabled()) {
+                        currentStep = roleService.findById(item.getRoleId()).getRoleName();
+                        break;
+                    }
+                }
+                contactSign.setCurrentStep(currentStep);
+                contactSignService.update(contactSign);//更新审核数据currentstep
+
                 //更新联系单状态为 STR_LXD_CHECKING
                 ContactForm contactForm = contactFormService.findById(lxdId);
                 if (contactForm == null) {

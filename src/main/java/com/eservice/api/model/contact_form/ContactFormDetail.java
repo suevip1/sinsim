@@ -10,6 +10,12 @@ public class ContactFormDetail extends ContactForm{
      */
     private String orderNum;
 
+     /**
+     * 联系单的当前签核步骤
+     */
+    @Column(name = "current_step")
+    private String currentStep;
+
     public String getOrderNum() {
         return orderNum;
     }
@@ -18,4 +24,22 @@ public class ContactFormDetail extends ContactForm{
         this.orderNum = orderNum;
     }
 
+
+    /**
+     * 获取联系单的当前签核步骤
+     *
+     * @return current_step - 联系单的当前签核步骤
+     */
+    public String getCurrentStep() {
+        return currentStep;
+    }
+
+    /**
+     * 设置联系单的当前签核步骤
+     *
+     * @param currentStep 联系单的当前签核步骤
+     */
+    public void setCurrentStep(String currentStep) {
+        this.currentStep = currentStep;
+    }
 }

@@ -23,6 +23,7 @@
 
   <resultMap id="ContactFormDetail" type="com.eservice.api.model.contact_form.ContactFormDetail">
     <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+    <result column="current_step" jdbcType="VARCHAR" property="currentStep" />
 <!--这里为空，也可以接受到 ContactForm的内容-->
   </resultMap>
 
