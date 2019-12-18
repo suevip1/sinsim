@@ -50,15 +50,16 @@ public class SignContentItem {
 
     /**
      * true表示该部门需要审核, 联系单需要在创建时指定审核部门。
+     * /// 不用isEnabled等和系统可能重名混淆的名称。
      */
-    private Boolean isEnabled;
+    private Boolean shenHeEnabled;
 
-    public Boolean getEnabled() {
-        return isEnabled;
+    public Boolean getShenHeEnabled() {
+        return shenHeEnabled;
     }
 
-    public void setEnabled(Boolean enabled) {
-        isEnabled = enabled;
+    public void setShenHeEnabled(Boolean shenHeEnabled) {
+        this.shenHeEnabled = shenHeEnabled;
     }
 
     public Integer getNumber() {

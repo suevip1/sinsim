@@ -71,7 +71,7 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
             return null;
         }
 
-        ContactSign cs = contactSignService.getContactSign( contactFormId );
+        ContactSign cs = contactSignService.getContactSignByLxdId( contactFormId );////
         if(null == cs){
             logger.warn("根据该contactFormId" + contactFormId + " 找不到对应的contactSign");
             return null;

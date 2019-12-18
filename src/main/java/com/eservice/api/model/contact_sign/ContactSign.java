@@ -32,6 +32,14 @@ public class ContactSign {
 
     /**
      *  签核内容，以json格式的数组形式存放.
+     *  举例；
+     *  {"comment":"xs ok",
+     *  "date":1576636458000,
+     *  "number":1,"result":1,
+     *  "roleId":7,
+     *  "shenHeEnabled":true,  ///注意： 这里不用用 isEnable等容易和系统混淆的名称，否则会造成系统混乱。
+     *  "signType":"联系单签核",
+     *  "user":"张仕均"},
      */
     @Column(name = "sign_content")
     private String signContent;

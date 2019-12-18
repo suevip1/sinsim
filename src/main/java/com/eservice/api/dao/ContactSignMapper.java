@@ -5,5 +5,5 @@ import com.eservice.api.model.contact_sign.ContactSign;
 import org.apache.ibatis.annotations.Param;
 
 public interface ContactSignMapper extends Mapper<ContactSign> {
-    ContactSign getContactSign(@Param("contactFormId")Integer contactFormId);
+    ContactSign getContactSignByLxdId(@Param("contactFormId")Integer contactFormId);
 }

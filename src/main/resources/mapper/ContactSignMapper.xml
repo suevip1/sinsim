@@ -13,7 +13,7 @@
     <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
   </resultMap>
 
-  <select id="getContactSign" resultMap="BaseResultMap">
+  <select id="getContactSignByLxdId" resultMap="BaseResultMap">
     SELECT
 	  *
     FROM

@@ -12,6 +12,7 @@ import com.eservice.api.service.impl.ContactSignServiceImpl;
 import com.eservice.api.service.impl.RoleServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,8 @@ public class ContactSignController {
     @Resource
     private RoleServiceImpl roleService;
 
+    private Logger logger = Logger.getLogger(ContactSignController.class);
+
     @PostMapping("/add")
     public Result add(ContactSign contactSign) {
         contactSignService.save(contactSign);
@@ -62,10 +65,13 @@ public class ContactSignController {
         if (contactSign == null || "".equals(contactSign)) {
             ResultGenerator.genFailResult("联系单审核信息不能为空！");
         }
+        logger.info("contactSign:" + contactSign);
+		
         ContactSign cs = JSON.parseObject(contactSign,ContactSign.class);
         if (cs == null) {
             ResultGenerator.genFailResult("审核信息JSON解析失败！");
         }
+
         ContactForm cf = contactFormService.findById(cs.getContactFormId());
         if(null == cf){
             ResultGenerator.genFailResult("根据传入的签核信息里的联系单ID 找不到对应的联系单");
@@ -73,6 +79,7 @@ public class ContactSignController {
 
         cs.setUpdateTime(new Date());
         List<SignContentItem> contactSignContentList = JSON.parseArray(cs.getSignContent(), SignContentItem.class);
+
         boolean haveReject = false;
         String currentStep = "";
         for (SignContentItem item : contactSignContentList) {
@@ -80,7 +87,7 @@ public class ContactSignController {
                 haveReject = true;
             }
             //签核在初始化，则把当前步骤设为发起部门
-            if(item.getResult() == Constant.SIGN_INITIAL&&item.getEnabled()) {
+            if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
                 currentStep = roleService.findById(item.getRoleId()).getRoleName();
                 break;
             }
@@ -105,6 +112,7 @@ public class ContactSignController {
                 item.setResult(Constant.SIGN_INITIAL);
             }
             cs.setSignContent(JSONObject.toJSONString(contactSignContentList));
+            logger.warn("got Reject signContent: " + JSONObject.toJSONString(contactSignContentList));
             contactSignService.update(cs);
 
             cf.setStatus(Constant.STR_LXD_REJECTED);
@@ -144,7 +152,7 @@ public class ContactSignController {
      */
     @PostMapping("/getContactSign")
     public Result getContactSign(@RequestParam Integer contactFormId) {
-        ContactSign contactSign = contactSignService.getContactSign(contactFormId);
+        ContactSign contactSign = contactSignService.getContactSignByLxdId(contactFormId);
         return ResultGenerator.genSuccessResult(contactSign);
     }
 }

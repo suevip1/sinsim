@@ -174,7 +174,7 @@ public class ContactFormController {
             }
         }
 
-        ContactSign cs = contactSignService.getContactSign(id);
+        ContactSign cs = contactSignService.getContactSignByLxdId(id);
         contactSignService.deleteById(cs.getId());
 
         contactFormService.deleteById(id);
@@ -240,13 +240,13 @@ public class ContactFormController {
                 if(step.equals(contactSign.getCurrentStep()))
                 {
                     num=item.getNumber();
-                    if(item.getResult() == Constant.SIGN_INITIAL&&item.getEnabled()) {
+                    if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
                         break;
                     }
                 }else{
                     if(num>-1&&item.getNumber()>num)
                     {
-                        if(item.getResult() == Constant.SIGN_INITIAL&&item.getEnabled()) {
+                        if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
                             currentStep=step;
                             break;
                         }
@@ -445,7 +445,7 @@ public class ContactFormController {
         if (lxdId == null) {
             ResultGenerator.genFailResult("联系单ID为空！");
         } else {
-            ContactSign contactSign = contactSignService.getContactSign((lxdId));
+            ContactSign contactSign = contactSignService.getContactSignByLxdId((lxdId));
             if (contactSign == null) {
                 return ResultGenerator.genFailResult("根据联系单ID号获取 签核信息失败！");
             } else {
@@ -453,7 +453,7 @@ public class ContactFormController {
                 String currentStep = "";
                 for (SignContentItem item : contactSignContentList) {
                     //签核在初始化，则把当前步骤设为发起部门
-                    if(item.getResult() == Constant.SIGN_INITIAL&&item.getEnabled()) {
+                    if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
                         currentStep = roleService.findById(item.getRoleId()).getRoleName();
                         break;
                     }
