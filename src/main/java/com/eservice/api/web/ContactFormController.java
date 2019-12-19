@@ -474,4 +474,28 @@ public class ContactFormController {
         }
         return ResultGenerator.genSuccessResult();
     }
+
+    /**
+     * 根据联系单ID 返回 联系单的附件的文件名称
+     * 下载路径的前面部分是统一的，放在xxx_ip/download/下(nginx配置)，
+     * 比如，访问下面地址可以下载该装车单
+     * http://xx.xx.xx.xx/lxdAttached/lxd_lxdNum111_lxdAttached__0.xlsx
+     * @param contact_form_id
+     * @return 类似 lxd_lxdNum111_lxdAttached__0.xlsx
+     */
+    @PostMapping("/getLxdAttachedFile")
+    public Result getLxdAttachedFile(@RequestParam Integer contact_form_id) {
+
+        ContactForm cf = contactFormService.findById(contact_form_id);
+        if ( null == cf) {
+            return ResultGenerator.genFailResult("根据该contact_form_id 找不到对应的联系单");
+        }
+        if (cf.getAttachedFile() == null){
+            return ResultGenerator.genFailResult("该联系单没有附件");
+        }
+
+        String fileName = null;
+        fileName = cf.getAttachedFile().substring(lxdAttachedSavedDir.length());
+        return ResultGenerator.genSuccessResult(fileName);
+    }
 }
