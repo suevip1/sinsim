@@ -112,10 +112,10 @@
           keyProperty="id">
     insert into
     contact_form(contact_type, num, order_num, applicant_department, applicant_person,create_date, hope_date, contact_title,
-                contact_content, status, update_date)
+                contact_content, status, update_date, attached_file)
     values(
     #{contactType},#{num},#{orderNum},#{applicantDepartment},#{applicantPerson},#{createDate},#{hopeDate},#{contactTitle},
-    #{contactContent},#{status}, #{updateDate})
+    #{contactContent},#{status}, #{updateDate}, #{attachedFile})
   </insert>
 
   <!-- 这个有问题，在有多个change_item时返回有异常 注意collection 用法-->

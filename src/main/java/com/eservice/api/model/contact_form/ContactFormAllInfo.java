@@ -57,4 +57,14 @@ public class ContactFormAllInfo {
     public void setContactSign(ContactSign contactSign) {
         this.contactSign = contactSign;
     }
+
+    private String attachedFile;
+
+    public String getAttachedFile() {
+        return attachedFile;
+    }
+
+    public void setAttachedFile(String attachedFile) {
+        this.attachedFile = attachedFile;
+    }
 }
