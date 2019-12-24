@@ -236,22 +236,28 @@ public class ContactFormController {
             int num=-1;
             for (SignContentItem item : contactSignContentList) {
                 String step = roleService.findById(item.getRoleId()).getRoleName();
-                //检查当前current step 是否禁用掉
-                if(step.equals(contactSign.getCurrentStep()))
-                {
-                    num=item.getNumber();
-                    if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
-                        break;
-                    }
-                }else{
-                    if(num>-1&&item.getNumber()>num)
-                    {
-                        if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
-                            currentStep=step;
-                            break;
-                        }
-                    }
+                //每次更新，需按顺序检查，当前审核步骤是否变化
+                //审核状态是初始化，并且是启用的就是当前步骤
+                if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
+                    currentStep=step;
+                    break;
                 }
+                //检查当前current step 是否禁用掉
+                // if(step.equals(contactSign.getCurrentStep()))
+                // {
+                //     num=item.getNumber();
+                //     if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
+                //         break;
+                //     }
+                // }else{
+                //     if(num>-1&&item.getNumber()>num)
+                //     {
+                //         if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
+                //             currentStep=step;
+                //             break;
+                //         }
+                //     }
+                // }
             }
 
             if(currentStep!="")
