@@ -227,6 +227,7 @@ public class TaskRecordController {
      * "交货日期":"",		-->machine_order.contract_ship_date
      * "计划日期":"",		-->machine_order.plan_ship_date
      *
+     *特别地，包含了跳过的工序的机器，在最后的“出厂检测”工序，不要显示出来，因为这些机器还不应该被出厂检测。
      * @param userAccount
      * @return
      */

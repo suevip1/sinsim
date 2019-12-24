@@ -6,6 +6,7 @@ import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.model.task_record.TaskRecordExpired;
 import com.eservice.api.model.task_record.TaskReport;
+import com.eservice.api.model.user.User;
 import com.eservice.api.service.TaskRecordService;
 import com.eservice.api.core.AbstractService;
 import com.eservice.api.service.common.Constant;
@@ -28,6 +29,8 @@ import java.util.List;
 public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implements TaskRecordService {
     @Resource
     private TaskRecordMapper taskRecordMapper;
+    @Resource
+    private UserServiceImpl userService;
 
     public List<TaskRecord> selectTaskReocords(String userAccount) {
         return taskRecordMapper.selectTaskReocords(userAccount);
@@ -55,7 +58,15 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
     }
 
     public List<TaskRecordDetail> selectAllInstallTaskRecordDetailByUserAccount(String userAccount) {
-        return taskRecordMapper.selectAllInstallTaskRecordDetailByUserAccount(userAccount);
+        User user = userService.selectByAccount(userAccount);
+        /**
+         * 对于出厂检测组，如果机器工序包含了未处理的异常，就不要显示。避免出厂检测把未完成的机型流出厂。
+         */
+        if (user.getGroupId() == 14) {// 14是出厂检验组
+            return taskRecordMapper.selectAllInstallTaskRecordDetailByUserAccountChuChangJianCe(userAccount);
+        } else {
+            return taskRecordMapper.selectAllInstallTaskRecordDetailByUserAccount(userAccount);
+        }
     }
 
     public List<TaskRecordDetail> selectAllQaTaskRecordDetailByUserAccount(String userAccount) {

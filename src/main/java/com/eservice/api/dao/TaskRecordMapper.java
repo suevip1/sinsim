@@ -28,6 +28,8 @@ public interface TaskRecordMapper extends Mapper<TaskRecord> {
 
     List<TaskRecordDetail> selectAllInstallTaskRecordDetailByUserAccount(@Param("userAccount") String userAccount);
 
+    List<TaskRecordDetail> selectAllInstallTaskRecordDetailByUserAccountChuChangJianCe(@Param("userAccount") String userAccount);
+
     List<TaskRecordDetail> selectAllQaTaskRecordDetailByUserAccount(@Param("userAccount") String userAccount);
 
     List<TaskRecord> selectNotPlanedTaskRecord(@Param("process_record_id") Integer processRecordId);
