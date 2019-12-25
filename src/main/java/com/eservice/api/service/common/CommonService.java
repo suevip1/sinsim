@@ -521,29 +521,35 @@ public class CommonService {
      * @param installGroupId： 安装组组长的ID，该组名下所有组长都会收到msg。
      * @param account：用户账户，该用户会收到msg。
      * @param topic : MQTT topic
-     * @param msg
+     * @param message
      * @return  结果信息
      */
-    public String sendMqttMsg(int installGroupId, String account, String topic, String msg){
+    public String sendMqttMsg(int installGroupId, String account, String topic, String message){
 
         String resultMsg = null;
-        List<UserDetail> userDetailList = userService.selectUsers(null,null,
-                3, installGroupId,1);
+        List<UserDetail> userDetailList = null;
+        if(installGroupId != -1) {
+            //installGroupId为-1 是没有传这个参数，不要发MQTT
+            userDetailList = userService.selectUsers(null, null,
+                    3, installGroupId, 1);
+        }
+
         User user = null;
         if(account !=null) {
             user = userService.selectByAccount(account);
         }
-        if(userDetailList.size() ==0 && user == null){
+
+        if((userDetailList == null || userDetailList.size() ==0) && user == null){
             resultMsg = "安装组和用户都找不到，至少有一个要指定正确";
             logger.warn(resultMsg);
             return resultMsg;
         } else {
 
-            if (userDetailList.size() != 0) {
-                mqttMessageHelper.sendToClient(topic + installGroupId, JSON.toJSONString(msg));
+            if (userDetailList != null && userDetailList.size() != 0) {
+                mqttMessageHelper.sendToClient(topic + installGroupId, JSON.toJSONString(message));
             }
             if (user != null) {
-                mqttMessageHelper.sendToClient(topic + user.getAccount(), JSON.toJSONString(msg));
+                mqttMessageHelper.sendToClient(topic + user.getAccount(), JSON.toJSONString(message));
 
             }
             resultMsg = "已去发送";
