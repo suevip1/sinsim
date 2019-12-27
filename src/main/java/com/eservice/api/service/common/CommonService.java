@@ -508,14 +508,14 @@ public class CommonService {
 
     /**
      * 发送MQTT消息给订阅的app(安装组)。
-     * TOPIC 格式为：/s2c/task_remind/1, msg: "nameplate123" 其中1是 taskName为上轴安装的安装组的groupId
+     * 实例：mqtt topic: /s2c/task_remind/1, msg: {"nameplate":"namePlate123"} 其中1是 taskName为上轴安装的安装组的groupId
      *
      * @param taskName：
      * @param topic : MQTT topic
-     * @param message
+     * @param nameplate
      * @return  结果信息
      */
-    public String sendMqttMsg(  String taskName, String topic, String message){
+    public String sendMqttMsg(  String taskName, String topic, String nameplate){
 
         String resultMsg = null;
         // taskName转groupId, 一个安装组可以有多种任务。
@@ -524,9 +524,10 @@ public class CommonService {
             resultMsg = "错误，根据taskName " + taskName + " 找不到对应的安装组";
             return resultMsg;
         }
-
-        mqttMessageHelper.sendToClient(topic + installGroup.getId(), JSON.toJSONString(message));
-        resultMsg = "try to send mqtt: " + topic + installGroup.getId() + " with message " + message;
+        ServerToClientMsg msg = new ServerToClientMsg();
+        msg.setNameplate(nameplate);
+        mqttMessageHelper.sendToClient(topic + installGroup.getId(), JSON.toJSONString(msg));
+        resultMsg = "try to send mqtt: " + topic + installGroup.getId() + " with message " + msg.getNameplate();
         return resultMsg;
 
     }
