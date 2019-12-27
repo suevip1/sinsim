@@ -57,7 +57,7 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
 
     public Result sendUnDeliveryInstallPlans() {
         /**
-         * 通过MQTT 发送所有未发送的排产计划
+         * 通过MQTT 发送所有未发送的且排产日期为明天的排产计划 
          */
         ServerToClientMsg msg = new ServerToClientMsg();
         List<InstallPlan> unSendInstallPlans = installPlanService.selectUnSendInstallPlans();
@@ -77,16 +77,13 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
                 msg.setCmtSend(unSendInstallPlans.get(i).getCmtSend());
                 msg.setInstallDatePlan(unSendInstallPlans.get(i).getInstallDatePlan());
 
-                //topic结尾加组长的账号，并设置发送时间表示已发送。
-                List<UserDetail> userDetailList = userService.selectUsers(null,null,
-                        3,unSendInstallPlans.get(i).getInstallGroupId(),1);
-                for(int k=0; k< userDetailList.size(); k++) {
-                    mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_PLAN + userDetailList.get(k).getAccount(), JSON.toJSONString(msg));
-                    logger.info("MQTT SEND topic: " + Constant.S2C_INSTALL_PLAN +  userDetailList.get(k).getAccount() + ", nameplate: " + msg.getNameplate());
-                    sendCount++;
-                    unSendInstallPlans.get(i).setSendTime(new Date());
-                    installPlanService.update(unSendInstallPlans.get(i));
-                }
+                //topic结尾加安装组的groupId，并设置发送时间表示已发送。
+                mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_PLAN + unSendInstallPlans.get(i).getInstallGroupId(), JSON.toJSONString(msg));
+                logger.info("MQTT SEND topic: " + Constant.S2C_INSTALL_PLAN + unSendInstallPlans.get(i).getInstallGroupId() + ", nameplate: " + msg.getNameplate());
+                sendCount++;
+                unSendInstallPlans.get(i).setSendTime(new Date());
+                installPlanService.update(unSendInstallPlans.get(i));
+
             } else {
                 logger.info("还未到安装提醒时间的机器："
                         + machineService.findById(unSendInstallPlans.get(i).getMachineId()).getNameplate()

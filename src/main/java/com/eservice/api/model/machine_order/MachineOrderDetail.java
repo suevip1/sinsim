@@ -1,5 +1,6 @@
 package com.eservice.api.model.machine_order;
 
+import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
@@ -855,5 +856,16 @@ public class MachineOrderDetail {
 
     public void setValid(Integer valid) {
         this.valid = valid;
+    }
+
+    //该订单的对应的联系单状态
+    private boolean lxdPassed;
+
+    public boolean isLxdPassed() {
+        return lxdPassed;
+    }
+
+    public void setLxdPassed(boolean lxdPassed) {
+        this.lxdPassed = lxdPassed;
     }
 }

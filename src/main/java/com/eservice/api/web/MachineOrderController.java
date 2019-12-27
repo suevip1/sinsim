@@ -127,6 +127,7 @@ public class MachineOrderController {
     根据条件查询订单。
     比如 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单
      */
+    //注意这个接口在不带参数时查询全部数据会有一定耗时，加了联系单查询。
     @PostMapping("/selectOrders")
     public Result selectOrders(
             @RequestParam(defaultValue = "0") Integer page,@RequestParam(defaultValue = "0") Integer size,
