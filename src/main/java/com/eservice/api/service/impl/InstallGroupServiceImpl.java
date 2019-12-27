@@ -25,4 +25,8 @@ public class InstallGroupServiceImpl extends AbstractService<InstallGroup> imple
     public List<InstallGroup> getInstallGroupByType(String type){
         return installGroupMapper.getInstallGroupByType(type);
     }
+    public InstallGroup getInstallGroupByTaskName(String TaskName){
+        return installGroupMapper.getInstallGroupByTaskName(TaskName);
+    }
+
 }

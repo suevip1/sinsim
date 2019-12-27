@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
+import com.eservice.api.model.install_group.InstallGroup;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_sign.OrderSign;
@@ -30,15 +31,7 @@ import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.user.User;
 import com.eservice.api.model.user.UserDetail;
-import com.eservice.api.service.impl.ContractSignServiceImpl;
-import com.eservice.api.service.impl.MachineOrderServiceImpl;
-import com.eservice.api.service.impl.MachineServiceImpl;
-import com.eservice.api.service.impl.OrderSignServiceImpl;
-import com.eservice.api.service.impl.ProcessRecordServiceImpl;
-import com.eservice.api.service.impl.RoleServiceImpl;
-import com.eservice.api.service.impl.TaskRecordServiceImpl;
-import com.eservice.api.service.impl.TaskServiceImpl;
-import com.eservice.api.service.impl.UserServiceImpl;
+import com.eservice.api.service.impl.*;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
 
@@ -76,7 +69,7 @@ public class CommonService {
     @Resource
     private TaskServiceImpl taskService;
     @Resource
-    private UserServiceImpl userService;
+    private InstallGroupServiceImpl installGroupService;
 
     Logger logger = Logger.getLogger(CommonService.class);
 
@@ -514,46 +507,27 @@ public class CommonService {
     }
 
     /**
-     * 发送MQTT消息给安装组组长/用户。如果即指定了用户也指定了组ID，则都会发送。
-     * TOPIC 格式为：
-     *      /s2c/task_remind/123 其中123代表安装组ID
-     *      /s2c/task_remind/Jack 其中Jack代表账号
-     * @param installGroupId： 安装组组长的ID，该组名下所有组长都会收到msg。
-     * @param account：用户账户，该用户会收到msg。
+     * 发送MQTT消息给订阅的app(安装组)。
+     * TOPIC 格式为：/s2c/task_remind/1, msg: "nameplate123" 其中1是 taskName为上轴安装的安装组的groupId
+     *
+     * @param taskName：
      * @param topic : MQTT topic
      * @param message
      * @return  结果信息
      */
-    public String sendMqttMsg(int installGroupId, String account, String topic, String message){
+    public String sendMqttMsg(  String taskName, String topic, String message){
 
         String resultMsg = null;
-        List<UserDetail> userDetailList = null;
-        if(installGroupId != -1) {
-            //installGroupId为-1 是没有传这个参数，不要发MQTT
-            userDetailList = userService.selectUsers(null, null,
-                    3, installGroupId, 1);
-        }
-
-        User user = null;
-        if(account !=null) {
-            user = userService.selectByAccount(account);
-        }
-
-        if((userDetailList == null || userDetailList.size() ==0) && user == null){
-            resultMsg = "安装组和用户都找不到，至少有一个要指定正确";
-            logger.warn(resultMsg);
-            return resultMsg;
-        } else {
-
-            if (userDetailList != null && userDetailList.size() != 0) {
-                mqttMessageHelper.sendToClient(topic + installGroupId, JSON.toJSONString(message));
-            }
-            if (user != null) {
-                mqttMessageHelper.sendToClient(topic + user.getAccount(), JSON.toJSONString(message));
-
-            }
-            resultMsg = "已去发送";
+        // taskName转groupId, 一个安装组可以有多种任务。
+        InstallGroup installGroup = installGroupService.getInstallGroupByTaskName(taskName);
+        if(installGroup == null){
+            resultMsg = "错误，根据taskName " + taskName + " 找不到对应的安装组";
             return resultMsg;
         }
+
+        mqttMessageHelper.sendToClient(topic + installGroup.getId(), JSON.toJSONString(message));
+        resultMsg = "try to send mqtt: " + topic + installGroup.getId() + " with message " + message;
+        return resultMsg;
+
     }
 }

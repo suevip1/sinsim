@@ -69,6 +69,7 @@ public class InstallGroupController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    //type是“总装” ”部装“等类型
     @PostMapping("/getInstallGroupByType")
     public Result getInstallGroupByType(@RequestParam(defaultValue = "0") Integer page,
                                         @RequestParam(defaultValue = "0") Integer size,
@@ -77,5 +78,12 @@ public class InstallGroupController {
         List<InstallGroup> list = installGroupService.getInstallGroupByType(type);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    //根据taskName 获取对应的安装组。
+    @PostMapping("/getInstallGroupByTaskName")
+    public Result getInstallGroupByTaskName(@RequestParam String TaskName) {
+        InstallGroup installGroup = installGroupService.getInstallGroupByTaskName(TaskName);
+        return ResultGenerator.genSuccessResult(installGroup);
     }
 }

@@ -1059,19 +1059,14 @@ public class TaskRecordController {
     /**
      * 发送提醒消息
      * 比如：前道工序A忘了扫码，后面的工序B直接去扫码，此时需要提醒A去扫码完成。
-     * 安装组或者用户都可以指定，至少有一个要指定正确，否则不发送
      * 铭牌号可以作为 message
-     *
      * MQTT 实例：
-     * 1. 只传 installGroupId+铭牌号 ：/s2c/task_remind/1, msg: "nameplate123"
-     * 2. 只传 account+铭牌号：/s2c/task_remind/章校均, msg: "nameplate123"
-     * 3. installGroupId和account+铭牌号都传：上面两个MQTT都会发。
+     * /s2c/task_remind/1, msg: "nameplate123" 其中1是 taskName为上轴安装的安装组的groupId
      */
     @PostMapping("sendRemindMqttMsg")
-    public Result sendRemindMqttMsg(@RequestParam(defaultValue = "-1") int installGroupId,
-                                    String account,
+    public Result sendRemindMqttMsg(@RequestParam String taskName,
                                     String message) {
-        String ret = commonService.sendMqttMsg(installGroupId,account,Constant.S2C_TASK_REMIND, message);
+        String ret = commonService.sendMqttMsg(taskName,Constant.S2C_TASK_REMIND, message);
         return ResultGenerator.genSuccessResult(ret);
     }
 
