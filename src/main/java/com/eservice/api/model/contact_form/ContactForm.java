@@ -280,4 +280,18 @@ public class ContactForm {
     public void setAttachedFile(String attachedFile) {
         this.attachedFile = attachedFile;
     }
+
+    /**
+     * “其他变更，需说明”时的输入
+     */
+    @Column(name = "contact_content_else")
+    private String contactContentElse;
+
+    public String getContactContentElse() {
+        return contactContentElse;
+    }
+
+    public void setContactContentElse(String contactContentElse) {
+        this.contactContentElse = contactContentElse;
+    }
 }

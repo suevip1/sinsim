@@ -19,6 +19,8 @@
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
 
     <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
+    <result column="contact_content_else" jdbcType="VARCHAR" property="contactContentElse" />
+
   </resultMap>
 
   <resultMap id="ContactFormDetail" type="com.eservice.api.model.contact_form.ContactFormDetail">
@@ -45,6 +47,7 @@
       <result column="status" jdbcType="VARCHAR" property="status" />
       <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
       <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
+      <result column="contact_content_else" jdbcType="VARCHAR" property="contactContentElse" />
     </association>
 
     <association property="contactSign" javaType="com.eservice.api.model.contact_sign.ContactSign" >
@@ -112,10 +115,10 @@
           keyProperty="id">
     insert into
     contact_form(contact_type, num, order_num, applicant_department, applicant_person,create_date, hope_date, contact_title,
-                contact_content, status, update_date, attached_file)
+                contact_content, status, update_date, attached_file, contact_content_else)
     values(
     #{contactType},#{num},#{orderNum},#{applicantDepartment},#{applicantPerson},#{createDate},#{hopeDate},#{contactTitle},
-    #{contactContent},#{status}, #{updateDate}, #{attachedFile})
+    #{contactContent},#{status}, #{updateDate}, #{attachedFile}, #{contactContentElse})
   </insert>
 
   <!-- 这个有问题，在有多个change_item时返回有异常 注意collection 用法-->

@@ -117,22 +117,22 @@ CREATE TABLE `change_item` (
 DROP TABLE IF EXISTS `contact_form`;
 CREATE TABLE `contact_form` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `contact_type` varchar(255) DEFAULT NULL COMMENT '联系单类型： 变更联系单、工作联系单、配件申请联系单',
-  `num` varchar(255) DEFAULT NULL COMMENT '联系单的编号,可选',
-  `order_id` int(10) unsigned DEFAULT NULL COMMENT '对应的订单ID,可选',
-  `applicant_department` varchar(255) DEFAULT NULL COMMENT '提出申请的部门',
-  `applicant_person` varchar(255) DEFAULT NULL COMMENT '申请人',
+  `contact_type` varchar(255) NOT NULL COMMENT '联系单类型： 变更联系单、工作联系单、配件申请联系单',
+  `num` varchar(255) NOT NULL COMMENT '联系单的编号,可选',
+  `order_num` varchar(255) DEFAULT NULL COMMENT '对应的订单号,可选',
+  `applicant_department` varchar(255) NOT NULL COMMENT '提出申请的部门',
+  `applicant_person` varchar(255) NOT NULL COMMENT '申请人',
   `create_date` datetime NOT NULL COMMENT '申请日期',
   `hope_date` datetime DEFAULT NULL COMMENT '希望完成的日期',
-  `contact_title` varchar(255) DEFAULT NULL COMMENT '联络主题、变更理由/主题',
+  `contact_title` varchar(255) NOT NULL COMMENT '联络主题、变更理由/主题',
   `contact_content` varchar(255) DEFAULT NULL COMMENT '联络内容',
+  `contact_content_else` varchar(255) DEFAULT NULL COMMENT '“其他变更，需说明”时的输入',
   `status` varchar(255) DEFAULT NULL,
   `update_date` datetime DEFAULT NULL,
   `attached_file` varchar(255) DEFAULT NULL COMMENT '附件，存放路径',
   PRIMARY KEY (`id`),
-  KEY `fk_orderId` (`order_id`) USING BTREE,
-  CONSTRAINT `fk_orderId` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  KEY `fk_orderId` (`order_num`(191)) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for contact_sign
