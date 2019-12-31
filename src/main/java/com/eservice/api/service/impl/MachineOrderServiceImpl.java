@@ -17,10 +17,11 @@ import java.util.List;
 
 
 /**
-* Class Description: xxx
-* @author Wilson Hu
-* @date 2017/11/24.
-*/
+ * Class Description: xxx
+ *
+ * @author Wilson Hu
+ * @date 2017/11/24.
+ */
 @Service
 @Transactional
 public class MachineOrderServiceImpl extends AbstractService<MachineOrder> implements MachineOrderService {
@@ -31,39 +32,35 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
     private ContactFormServiceImpl contactFormService;
 
     public MachineOrderDetail getOrderAllDetail(Integer id) {
-        return  machineOrderMapper.getOrderAllDetail(id);
+        return machineOrderMapper.getOrderAllDetail(id);
     }
+
     public List<MachineOrderDetail> selectOrder(Integer id, Integer contract_id, String order_num, String contract_num, Integer status, String sellman,
-                                                String customer,String marketGroupName, String query_start_time, String query_finish_time, String machine_name, Boolean is_fuzzy){
+                                                String customer, String marketGroupName, String query_start_time, String query_finish_time, String machine_name, Boolean is_fuzzy) {
 
         List<MachineOrderDetail> machineOrderDetailList;
         /**
          * Note: 对每个订单都查询一次该订单的联系单状态，然后赋值。
          */
-        if (is_fuzzy){
-            machineOrderDetailList = machineOrderMapper.selectOrderFuzzy(id, contract_id, order_num, contract_num, status,sellman, customer,marketGroupName, query_start_time, query_finish_time,machine_name);
-            for(int i=0; i<machineOrderDetailList.size(); i++){
-                if(relatedLxdPassed(machineOrderDetailList.get(i).getOrderNum())) {
-                    machineOrderDetailList.get(i).setLxdPassed(true);
-                } else {
-                    machineOrderDetailList.get(i).setLxdPassed(false);
-                }
+        if (is_fuzzy) {
+            machineOrderDetailList = machineOrderMapper.selectOrderFuzzy(id, contract_id, order_num, contract_num, status, sellman, customer, marketGroupName, query_start_time, query_finish_time, machine_name);
+            for (int i = 0; i < machineOrderDetailList.size(); i++) {
+                machineOrderDetailList.get(i).setContactFormDetailList(relatedLxdPassed(machineOrderDetailList.get(i).getOrderNum()));
+
             }
         } else {
-            machineOrderDetailList = machineOrderMapper.selectOrder(id, contract_id, order_num, contract_num, status, sellman, customer,marketGroupName, query_start_time, query_finish_time, machine_name);
-            for(int i=0; i<machineOrderDetailList.size(); i++){
-                if(relatedLxdPassed(machineOrderDetailList.get(i).getOrderNum())) {
-                    machineOrderDetailList.get(i).setLxdPassed(true);
-                } else {
-                    machineOrderDetailList.get(i).setLxdPassed(false);
-                }
+            machineOrderDetailList = machineOrderMapper.selectOrder(id, contract_id, order_num, contract_num, status, sellman, customer, marketGroupName, query_start_time, query_finish_time, machine_name);
+            for (int i = 0; i < machineOrderDetailList.size(); i++) {
+                machineOrderDetailList.get(i).setContactFormDetailList(relatedLxdPassed(machineOrderDetailList.get(i).getOrderNum()));
             }
         }
         return machineOrderDetailList;
     }
 
-    //订单对应的联系单是否已经存在并且通过审核了。
-    public boolean relatedLxdPassed(String orderNum){
+    /**
+     * 订单对应的联系单是否已经存在并且通过审核了
+     */
+    public List<ContactFormDetail> relatedLxdPassed(String orderNum) {
         List<ContactFormDetail> contactFormDetailsList = contactFormService.selectContacts(null,
                 orderNum,
                 null,
@@ -73,33 +70,33 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                 null,
                 null,
                 null);
+        return contactFormDetailsList;
 
-        if(contactFormDetailsList !=null && contactFormDetailsList.size() !=0){
-            //有多个联系单，取最后一个为准
-            if(contactFormDetailsList.get(contactFormDetailsList.size() -1).getStatus().equals(Constant.STR_LXD_CHECKING_FINISHED)){
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+//        if(contactFormDetailsList !=null && contactFormDetailsList.size() !=0){
+//            //有多个联系单，取最后一个为准
+//            if(contactFormDetailsList.get(contactFormDetailsList.size() -1).getStatus().equals(Constant.STR_LXD_CHECKING_FINISHED)){
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        } else {
+//            return false;
+//        }
     }
 
-    public void saveAndGetID(MachineOrder machineOrder){
+    public void saveAndGetID(MachineOrder machineOrder) {
         machineOrderMapper.saveAndGetID(machineOrder);
     }
 
-    public MachineOrder searchOrderIdByOrderLoadingListId( Integer ollId){
+    public MachineOrder searchOrderIdByOrderLoadingListId(Integer ollId) {
         return machineOrderMapper.searchOrderIdByOrderLoadingListId(ollId);
     }
 
-    public Integer getUsedMachineTypeCount(Integer machineTypeId)
-    {
+    public Integer getUsedMachineTypeCount(Integer machineTypeId) {
         return machineOrderMapper.getUsedMachineTypeCount(machineTypeId).get(0);//SQL查询出来的结构是List<Integer>,第一个元素就是查询出来的count
     }
 
-    public MachineOrder getMachineOrder(String orderNum){
+    public MachineOrder getMachineOrder(String orderNum) {
         return machineOrderMapper.getMachineOrder(orderNum);
     }
 

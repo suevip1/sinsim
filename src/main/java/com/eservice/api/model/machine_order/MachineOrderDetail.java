@@ -1,6 +1,7 @@
 package com.eservice.api.model.machine_order;
 
 import com.eservice.api.model.contact_form.ContactForm;
+import com.eservice.api.model.contact_form.ContactFormDetail;
 import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
@@ -9,7 +10,9 @@ import com.eservice.api.model.order_split_record.OrderSplitRecord;
 import com.eservice.api.model.order_loading_list.OrderLoadingList;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 //@Table(name = "machine_order")
 public class MachineOrderDetail {
@@ -228,6 +231,19 @@ public class MachineOrderDetail {
      */
     @Column(name = "valid")
     private Integer valid;
+
+    /**
+     * 需求单对应的联系单
+     */
+    private List<ContactFormDetail> contactFormDetailList = new ArrayList<>();
+
+    public List<ContactFormDetail> getContactFormDetailList() {
+        return contactFormDetailList;
+    }
+
+    public void setContactFormDetailList(List<ContactFormDetail> contactFormDetailList) {
+        this.contactFormDetailList = contactFormDetailList;
+    }
 
     /**
      * 改单记录
