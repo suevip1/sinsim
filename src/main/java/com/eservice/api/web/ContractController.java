@@ -549,9 +549,10 @@ public class ContractController {
                     msg.setType(ServerToClientMsg.MsgType.ORDER_SPLIT);
                     mqttMessageHelper.sendToClient(Constant.S2C_MACHINE_STATUS_CHANGE, JSON.toJSONString(msg));
                     splitMachine.setUpdateTime(new Date());
-                    if(splitMachine.getIsUrgent().equals("")){
-                        splitMachine.setIsUrgent(null);
-                    }
+                    //正常数据时是不需要设置
+//                    if(splitMachine.getIsUrgent().equals("")){
+//                        splitMachine.setIsUrgent(null);
+//                    }
                     machineService.update(splitMachine);
                 }
 
