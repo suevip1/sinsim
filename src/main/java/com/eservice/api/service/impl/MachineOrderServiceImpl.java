@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -61,15 +62,22 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
      * 订单对应的联系单是否已经存在并且通过审核了
      */
     public List<ContactFormDetail> relatedLxdPassed(String orderNum) {
-        List<ContactFormDetail> contactFormDetailsList = contactFormService.selectContacts(null,
-                orderNum,
-                null,
-                null,
-                null,// 可能有多个联系单，所以不能用 Constant.STR_LXD_CHECKING_FINISHED,
-                null,
-                null,
-                null,
-                null);
+        List<ContactFormDetail> contactFormDetailsList = new ArrayList<>();
+        //根据需求单查找对应联系单，会用用最原始的需求单号（除去括号），所以可查出所有历史的联系单
+        if(orderNum != null) {
+            if(orderNum.contains("(")) {
+                orderNum = orderNum.substring(0, orderNum.indexOf("("));
+            }
+            contactFormDetailsList = contactFormService.selectContacts(null,
+                    orderNum,
+                    null,
+                    null,
+                    null,// 可能有多个联系单，所以不能用 Constant.STR_LXD_CHECKING_FINISHED,
+                    null,
+                    null,
+                    null,
+                    null);
+        }
         return contactFormDetailsList;
 
 //        if(contactFormDetailsList !=null && contactFormDetailsList.size() !=0){
