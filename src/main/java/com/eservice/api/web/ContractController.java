@@ -315,7 +315,8 @@ public class ContractController {
                 machineOrder.setContractId(contract1.getId());
 
                 //改单的前提是原订单已审核完成，联系单已经审核通过，所以不需要再重新审核，
-                machineOrder.setStatus(Constant.ORDER_CHECKING_FINISHED);
+                machineOrder.setStatus(Constant.ORDER_CHANGE_FINISHED);
+                machineOrder.setCreateTime(new Date());
                 machineOrderService.saveAndGetID(machineOrder);
 
                 //初始化需求单审核记录
@@ -511,7 +512,10 @@ public class ContractController {
                 orderDetailService.saveAndGetID(temp);
                 machineOrder.setOrderDetailId(temp.getId());
                 machineOrder.setContractId(contractObj.getId());
-                machineOrder.setStatus(Constant.ORDER_INITIAL);
+                //改单的前提是原订单已审核完成，联系单已经审核通过，所以不需要再重新审核，
+//                machineOrder.setStatus(Constant.ORDER_INITIAL);
+                machineOrder.setStatus(Constant.ORDER_SPLIT_FINISHED);
+                machineOrder.setCreateTime(new Date());
 
                 /**
                  * 订单 不允许同名

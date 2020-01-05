@@ -84,6 +84,14 @@ public class Constant {
      */
     public static final Byte ORDER_CANCELED = 6;
 
+    /**
+     * 拆单 不必再审核
+     */
+    public static final Byte ORDER_SPLIT_FINISHED = 7;
+    /**
+     * 改单 不必再审核
+     */
+    public static final Byte ORDER_CHANGE_FINISHED = 8;
 
     /**
      * 机器状态:
