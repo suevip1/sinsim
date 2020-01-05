@@ -265,6 +265,10 @@ public class ContractController {
         return ResultGenerator.genSuccessResult();
     }
 
+    /**
+     * 联系单审核通过才允许改单，
+     * 改单后新生成的订单不用再审批，因为联系单已经审核过了。
+     */
     @PostMapping("/changeOrder")
     @Transactional(rollbackFor = Exception.class)
     public Result changeOrder(String contract, String contractSign, String requisitionForms) {
@@ -309,7 +313,9 @@ public class ContractController {
                 orderDetailService.saveAndGetID(temp);
                 machineOrder.setOrderDetailId(temp.getId());
                 machineOrder.setContractId(contract1.getId());
-                machineOrder.setStatus(Constant.ORDER_INITIAL);
+
+                //改单的前提是原订单已审核完成，联系单已经审核通过，所以不需要再重新审核，
+                machineOrder.setStatus(Constant.ORDER_CHECKING_FINISHED);
                 machineOrderService.saveAndGetID(machineOrder);
 
                 //初始化需求单审核记录
@@ -369,6 +375,7 @@ public class ContractController {
                         machine.setUpdateTime(new Date());
                         machineService.update(machine);
                     }
+                    //对于改单，如果是新增了机器，之前也是没有生成新的机器的。
                     /* 20180323精简了算法，对于被改的需求单，除了初始化和取消状态的机器保持状态不变，其他机器都设置为该到为状态
                     if (newOrder.getMachineNum() >= machineOrder.getMachineNum()) {
                         for (Machine machine : machineList) {

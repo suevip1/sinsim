@@ -305,7 +305,7 @@ public class ContactFormController {
             }
             //更新 联系单的审核记录
             contactSign.setUpdateTime(new Date());
-            if(contactSign.getContactFormId() != contactForm.getId()){
+            if(contactSign.getContactFormId().intValue() != contactForm.getId()){
                 message = " contactSign里的ContactFormId 和 联系单的id 不匹配！";
                 throw new RuntimeException();
             }
