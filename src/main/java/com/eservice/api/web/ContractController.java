@@ -146,8 +146,8 @@ public class ContractController {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResultGenerator.genFailResult("需求单为空！");
         }
-
-        return ResultGenerator.genSuccessResult();
+        //返回ID给前端，前端新增合同时不关闭页面。
+        return ResultGenerator.genSuccessResult(contract1.getId());
     }
 
     @PostMapping("/delete")

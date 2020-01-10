@@ -122,7 +122,8 @@ public class ContactFormController {
             logger.warn("添加联系单/联系单变更条目/联系单审核信息 出错: " + message);
             return ResultGenerator.genFailResult("添加联系单/联系单变更条目/联系单审核信息 出错！" + message + ex.getMessage());
         }
-        return ResultGenerator.genSuccessResult();
+        //返回ID给前端，前端新增联系单时不关闭页面。
+        return ResultGenerator.genSuccessResult(contactForm.getId());
     }
 
     @PostMapping("/checkTheContactFormValid")
