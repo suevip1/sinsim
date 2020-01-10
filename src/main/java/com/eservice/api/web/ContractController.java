@@ -302,6 +302,8 @@ public class ContractController {
         contractSignService.save(contractSignObj);
 
         //新增的改单处理
+        //返回新增的改单的ID号给前端，前端新增改单时不关闭页面。
+        int newMachineOrderId = 0;
         List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
         for (MachineOrderWrapper orderItem : machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
@@ -318,6 +320,7 @@ public class ContractController {
                 machineOrder.setStatus(Constant.ORDER_CHANGE_FINISHED);
                 machineOrder.setCreateTime(new Date());
                 machineOrderService.saveAndGetID(machineOrder);
+                newMachineOrderId = machineOrder.getId();
 
                 //初始化需求单审核记录
                 OrderSign orderSignData = orderItem.getOrderSign();
@@ -461,7 +464,7 @@ public class ContractController {
             }
         }
 
-        return ResultGenerator.genSuccessResult();
+        return ResultGenerator.genSuccessResult(newMachineOrderId);
 
     }
 
@@ -500,7 +503,9 @@ public class ContractController {
         contractSignObj.setCurrentStep("");
         contractSignService.save(contractSignObj);
 
-        //新增的改单处理
+        //新增的拆单处理
+        //返回新增的拆单的ID号给前端，前端新增改单时不关闭页面。
+        int newMachineOrderId = 0;
         List<MachineOrderWrapper> machineOrderWrapperList = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
         List<Machine> splitMachineList = JSONObject.parseArray(splitMachines, Machine.class);
 
@@ -540,6 +545,7 @@ public class ContractController {
                 }
 
                 machineOrderService.saveAndGetID(machineOrder);
+                newMachineOrderId = machineOrder.getId();
 
                 //初始化需求单审核记录
                 OrderSign orderSignData = orderItem.getOrderSign();
@@ -590,7 +596,7 @@ public class ContractController {
             }
         }
 
-        return ResultGenerator.genSuccessResult();
+        return ResultGenerator.genSuccessResult(newMachineOrderId);
     }
 
     @PostMapping("/detail")
