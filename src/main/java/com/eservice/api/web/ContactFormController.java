@@ -230,41 +230,43 @@ public class ContactFormController {
             //更新联系单
             contactForm.setUpdateDate(new Date());
             contactFormService.update(contactForm);
-
-            //重新计算当前审核阶段
-            List<SignContentItem> contactSignContentList = JSON.parseArray(contactSign.getSignContent(), SignContentItem.class);
-            String currentStep = "";
-            int num=-1;
-            for (SignContentItem item : contactSignContentList) {
-                String step = roleService.findById(item.getRoleId()).getRoleName();
-                //每次更新，需按顺序检查，当前审核步骤是否变化
-                //审核状态是初始化，并且是启用的就是当前步骤
-                if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
-                    currentStep=step;
-                    break;
-                }
-                //检查当前current step 是否禁用掉
-                // if(step.equals(contactSign.getCurrentStep()))
-                // {
-                //     num=item.getNumber();
-                //     if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
-                //         break;
-                //     }
-                // }else{
-                //     if(num>-1&&item.getNumber()>num)
-                //     {
-                //         if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
-                //             currentStep=step;
-                //             break;
-                //         }
-                //     }
-                // }
-            }
-
-            if(currentStep!="")
+            
+            if(contactForm.getStatus() == Constant.STR_LXD_CHECKING)
             {
-                contactSign.setCurrentStep(currentStep);
-                contactSignService.update(contactSign);//更新审核数据currentstep
+                  //重新计算当前审核阶段
+                List<SignContentItem> contactSignContentList = JSON.parseArray(contactSign.getSignContent(), SignContentItem.class);
+                String currentStep = "";
+                //int num=-1;
+                for (SignContentItem item : contactSignContentList) {
+                    String step = roleService.findById(item.getRoleId()).getRoleName();
+                    //每次更新，需按顺序检查，当前审核步骤是否变化
+                    //审核状态是初始化，并且是启用的就是当前步骤
+                    if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
+                        currentStep=step;
+                        break;
+                    }
+                    //检查当前current step 是否禁用掉
+                    // if(step.equals(contactSign.getCurrentStep()))
+                    // {
+                    //     num=item.getNumber();
+                    //     if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
+                    //         break;
+                    //     }
+                    // }else{
+                    //     if(num>-1&&item.getNumber()>num)
+                    //     {
+                    //         if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
+                    //             currentStep=step;
+                    //             break;
+                    //         }
+                    //     }
+                    // }
+                }
+                if(currentStep!="")
+                {
+                    contactSign.setCurrentStep(currentStep);
+                    contactSignService.update(contactSign);//更新审核数据currentstep
+                }
             }
 
             if(contactForm.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)) {
