@@ -10,7 +10,6 @@ import com.eservice.api.core.AbstractService;
 import com.eservice.api.service.common.Constant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
@@ -52,11 +51,12 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                         Integer machine_type,
                                         String query_start_time,
                                         String query_finish_time,
+                                        Integer installGroupId,
                                         Boolean is_fuzzy) {
         if (is_fuzzy) {
-            return machineMapper.selectMachinesFuzzy(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time);
+            return machineMapper.selectMachinesFuzzy(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time, installGroupId);
         } else {
-            return machineMapper.selectMachines(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time);
+            return machineMapper.selectMachines(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time, installGroupId);
         }
     }
 

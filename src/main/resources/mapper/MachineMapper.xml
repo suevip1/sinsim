@@ -91,6 +91,8 @@
     <select id="selectMachines" resultMap="BaseResultMap">
         SELECT m.* FROM machine m
         join machine_order mo on m.order_id = mo.id
+        join install_plan ip on ip.machine_id = m.id
+        join install_group ig on ig.id = ip.install_group_id
         where 1=1
         <if test="id != null and id != ''">
             and id=#{id}
@@ -123,6 +125,9 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
+        <if test="installGroupId != null and installGroupId != ''">
+            and ig.id = #{installGroupId}
+        </if>
         ORDER By create_time DESC,update_time DESC, ship_time DESC
 
     </select>
@@ -130,6 +135,8 @@
     <select id="selectMachinesFuzzy" resultMap="BaseResultMap">
         SELECT m.* FROM machine m
         join machine_order mo on m.order_id = mo.id
+        join install_plan ip on ip.machine_id = m.id
+        join install_group ig on ig.id = ip.install_group_id
         where 1=1
         <if test="id != null and id != ''">
             and id=#{id}
@@ -161,6 +168,9 @@
         </if>
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
+        </if>
+        <if test="installGroupId != null and installGroupId != ''">
+            and ig.id = #{installGroupId}
         </if>
         ORDER By create_time DESC,update_time DESC, ship_time DESC
     </select>

@@ -123,6 +123,21 @@ public class MachineController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    /**
+     * @param id
+     * @param order_id
+     * @param orderNum
+     * @param machine_strid
+     * @param nameplate
+     * @param location
+     * @param status
+     * @param machine_type
+     * @param query_start_time
+     * @param query_finish_time
+     * @param installGroupId -- 安装组ID， 表示 包含了该安装组的排产
+     * @param is_fuzzy
+     * @return
+     */
     @PostMapping("/selectMachines")
     public Result selectMachines(@RequestParam(defaultValue = "0") Integer page,
                                  @RequestParam(defaultValue = "0") Integer size,
@@ -136,9 +151,21 @@ public class MachineController {
                                  Integer machine_type,
                                  String query_start_time,
                                  String query_finish_time,
+                                 Integer installGroupId,
                                  @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
-        List<Machine> list = machineService.selectMachines(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time, is_fuzzy);
+        List<Machine> list = machineService.selectMachines(id,
+                order_id,
+                orderNum,
+                machine_strid,
+                nameplate,
+                location,
+                status,
+                machine_type,
+                query_start_time,
+                query_finish_time,
+                installGroupId,
+                is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
