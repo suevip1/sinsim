@@ -91,8 +91,6 @@
     <select id="selectMachines" resultMap="BaseResultMap">
         SELECT m.* FROM machine m
         join machine_order mo on m.order_id = mo.id
-        join install_plan ip on ip.machine_id = m.id
-        join install_group ig on ig.id = ip.install_group_id
         where 1=1
         <if test="id != null and id != ''">
             and id=#{id}
@@ -125,9 +123,6 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        <if test="installGroupId != null and installGroupId != ''">
-            and ig.id = #{installGroupId}
-        </if>
         group by m.id
         ORDER By create_time DESC,update_time DESC, ship_time DESC
 
@@ -136,8 +131,6 @@
     <select id="selectMachinesFuzzy" resultMap="BaseResultMap">
         SELECT m.* FROM machine m
         join machine_order mo on m.order_id = mo.id
-        join install_plan ip on ip.machine_id = m.id
-        join install_group ig on ig.id = ip.install_group_id
         where 1=1
         <if test="id != null and id != ''">
             and id=#{id}
@@ -170,11 +163,38 @@
         <if test="query_finish_time!=null and query_finish_time != '' ">
             and DATE_FORMAT(create_time,'%Y-%m-%d %T') &lt;= #{query_finish_time}
         </if>
-        <if test="installGroupId != null and installGroupId != ''">
-            and ig.id = #{installGroupId}
-        </if>
         group by m.id
         ORDER By create_time DESC,update_time DESC, ship_time DESC
+    </select>
+
+    <select id="selectMachinesNotInstallPlanned" resultMap="BaseResultMap">
+        SELECT
+        m.nameplate,
+        mo.order_num
+        FROM
+            machine m
+        LEFT JOIN machine_order mo ON mo.id = m.order_id
+        WHERE
+            mo.order_num = #{orderNum} -- 首先查该订单的机器
+        AND (
+            nameplate NOT IN (
+                -- 再查该订单已经排产了该工序的机器， 并排除
+                SELECT
+                    m.nameplate
+                FROM
+                    machine m
+                left  JOIN install_plan ip ON m.id = ip.machine_id
+                left  JOIN machine_order mo ON mo.id = m.order_id
+                left  JOIN install_group ig ON ig.id = ip.install_group_id
+                left  JOIN task ON ig.id = task.group_id
+                WHERE
+                    ip.id IS NOT NULL
+                AND ig.id = #{installGroupId}
+                AND mo.order_num = #{orderNum}
+                GROUP BY
+                    nameplate
+            )
+        )
     </select>
 
     <!-- 返回需要安排计划的机器-->

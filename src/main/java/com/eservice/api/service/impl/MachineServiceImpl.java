@@ -51,13 +51,16 @@ public class MachineServiceImpl extends AbstractService<Machine> implements Mach
                                         Integer machine_type,
                                         String query_start_time,
                                         String query_finish_time,
-                                        Integer installGroupId,
                                         Boolean is_fuzzy) {
         if (is_fuzzy) {
-            return machineMapper.selectMachinesFuzzy(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time, installGroupId);
+            return machineMapper.selectMachinesFuzzy(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time);
         } else {
-            return machineMapper.selectMachines(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time, installGroupId);
+            return machineMapper.selectMachines(id, order_id, orderNum, machine_strid, nameplate, location, status, machine_type, query_start_time, query_finish_time);
         }
+    }
+
+    public List<Machine> selectMachinesNotInstallPlanned(String orderNum, Integer installGroupId){
+        return machineMapper.selectMachinesNotInstallPlanned(orderNum, installGroupId);
     }
 
     public List<MachinePlan> selectPlanningMachines(String orderNum,

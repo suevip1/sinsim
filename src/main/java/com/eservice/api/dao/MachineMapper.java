@@ -24,8 +24,7 @@ public interface MachineMapper extends Mapper<Machine> {
                                  @Param("status") Byte status,
                                  @Param("machine_type") Integer machine_type,
                                  @Param("query_start_time") String query_start_time,
-                                 @Param("query_finish_time") String query_finish_time,
-                                 @Param("installGroupId") Integer installGroupId);
+                                 @Param("query_finish_time") String query_finish_time);
 
     List<Machine> selectMachinesFuzzy(@Param("id") Integer id,
                                       @Param("order_id") Integer order_id,
@@ -36,8 +35,10 @@ public interface MachineMapper extends Mapper<Machine> {
                                       @Param("status") Byte status,
                                       @Param("machine_type") Integer machine_type,
                                       @Param("query_start_time") String query_start_time,
-                                      @Param("query_finish_time") String query_finish_time,
-                                      @Param("installGroupId") Integer installGroupId);
+                                      @Param("query_finish_time") String query_finish_time);
+
+    List<Machine> selectMachinesNotInstallPlanned(@Param("orderNum") String orderNum,
+                                                  @Param("installGroupId") Integer installGroupId);
 
     List<MachinePlan> selectPlanningMachines(@Param("order_num") String orderNum, @Param("machine_strid") String machine_strid, @Param("nameplate") String nameplate,
                                              @Param("location") String location, @Param("status") Byte status, @Param("machine_type") Integer machineType, @Param("date_type") Integer DateType,

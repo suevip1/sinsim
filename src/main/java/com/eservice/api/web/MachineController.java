@@ -134,7 +134,6 @@ public class MachineController {
      * @param machine_type
      * @param query_start_time
      * @param query_finish_time
-     * @param installGroupId -- 安装组ID， 表示 包含了该安装组的排产
      * @param is_fuzzy
      * @return
      */
@@ -151,7 +150,6 @@ public class MachineController {
                                  Integer machine_type,
                                  String query_start_time,
                                  String query_finish_time,
-                                 Integer installGroupId,
                                  @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
         List<Machine> list = machineService.selectMachines(id,
@@ -164,11 +162,29 @@ public class MachineController {
                 machine_type,
                 query_start_time,
                 query_finish_time,
-                installGroupId,
                 is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     *  查找该订单+该安装组 还没有排产的机器.
+     *  在排产页面，已经排产的机器，不要出现在可选机器列表中。
+     * @param orderNum -- 订单号码
+     * @param installGroupId -- 安装组
+     * @return
+     */
+    @PostMapping("/selectMachinesNotInstallPlanned")
+    public Result selectMachinesNotInstallPlanned(@RequestParam(defaultValue = "0") Integer page,
+                                                  @RequestParam(defaultValue = "0") Integer size,
+                                                  String orderNum,
+                                                  Integer installGroupId ) {
+        PageHelper.startPage(page, size);
+        List<Machine> list = machineService.selectMachinesNotInstallPlanned(orderNum, installGroupId);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 
     @PostMapping("/selectPlanningMachines")
     public Result selectPlanningMachines(@RequestParam(defaultValue = "0") Integer page,
