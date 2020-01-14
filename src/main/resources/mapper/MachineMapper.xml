@@ -128,6 +128,7 @@
         <if test="installGroupId != null and installGroupId != ''">
             and ig.id = #{installGroupId}
         </if>
+        group by m.id
         ORDER By create_time DESC,update_time DESC, ship_time DESC
 
     </select>
@@ -172,6 +173,7 @@
         <if test="installGroupId != null and installGroupId != ''">
             and ig.id = #{installGroupId}
         </if>
+        group by m.id
         ORDER By create_time DESC,update_time DESC, ship_time DESC
     </select>
 
@@ -454,7 +456,7 @@
         </if>
       <!-- 急单需要置顶，取消加急后is_urgent为0，从未设置过加急的null当作为0，这样不影响原先的排序  -->
         GROUP BY v.nameplate
-        ORDER By IFNULL (v.is_urgent,0) DESC, v.process_create_time DESC, v.update_time DESC,v.create_time DESC
+        ORDER By IFNULL (v.is_urgent,0) DESC, IFNULL(v.diffday,0) ASC, v.process_create_time DESC, v.update_time DESC,v.create_time DESC
     </select>
 
     <!--selectProcessMachine-->
@@ -527,7 +529,7 @@
             and  tr.task_name IN (${taskNameList})
         </if>
         GROUP BY v.nameplate
-        ORDER By IFNULL (v.is_urgent,0) DESC, v.process_create_time DESC, v.update_time DESC,v.create_time DESC
+        ORDER By IFNULL (v.is_urgent,0) DESC,IFNULL(v.diffday,0) ASC,v.process_create_time DESC, v.update_time DESC,v.create_time DESC
     </select>
 
     <select id="selectMachinesByNameplate" resultMap="BaseResultMap">
