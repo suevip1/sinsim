@@ -169,8 +169,8 @@
 
     <select id="selectMachinesNotInstallPlanned" resultMap="BaseResultMap">
         SELECT
-        m.nameplate,
-        mo.order_num
+        m.*,
+        mo.*
         FROM
             machine m
         LEFT JOIN machine_order mo ON mo.id = m.order_id

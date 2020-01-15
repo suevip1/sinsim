@@ -72,6 +72,13 @@ public class TaskRecordController {
     private AbnormalImageServiceImpl abnormalImageService;
     @Resource
     private AbnormalRecordServiceImpl abnormalRecordService;
+
+    /**
+     * 导出的生产报表excel表格，和合同excel表格放同个地方
+     */
+    @Value("${contract_excel_output_dir}")
+    private String taskRecordExcelOutputDir;
+
     @Value("${abnormal_images_saved_dir}")
     private String imagesSavedDir;
     @Value("${quality_images_saved_dir}")
@@ -592,7 +599,7 @@ public class TaskRecordController {
                 }
 
             }
-            downloadPath = abnoramlExcelOutputDir + "生产报表" + ".xls";
+            downloadPath = taskRecordExcelOutputDir + "生产报表" + ".xls";
             downloadPathForNginx = "/excel/" + "工序计划" + ".xls";
             out = new FileOutputStream(downloadPath);
             wb.write(out);
