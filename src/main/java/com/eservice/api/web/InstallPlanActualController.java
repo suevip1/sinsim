@@ -6,8 +6,8 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.install_plan.InstallPlan;
 import com.eservice.api.model.install_plan_actual.InstallPlanActual;
 import com.eservice.api.model.install_plan_actual.InstallPlanActualDetails;
+import com.eservice.api.model.install_plan_actual.InstallPlanActualListInfo;
 import com.eservice.api.model.machine_order.MachineOrder;
-import com.eservice.api.service.InstallPlanActualService;
 import com.eservice.api.service.InstallPlanService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.impl.InstallPlanActualServiceImpl;
@@ -15,10 +15,7 @@ import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -146,18 +143,27 @@ public class InstallPlanActualController {
 
     /**
      * 一次性接收多个排产反馈
-     * app 上一次性提交多个
+     * app 上一次性提交多个。
+     * @return 添加或更新（比如分多次完成）成功的个数，比如非法的数据比如不合理的数量，无法被添加。
      */
     @PostMapping("/addInstallPlanActualList")
-    public Result addInstallPlanActualList(List<String> installPlanActualList) {
+//    public Result addInstallPlanActualList(List<String> installPlanActualList) { //不能支持List
+    public Result addInstallPlanActualList(@RequestBody InstallPlanActualListInfo installPlanActualListInfo) {
+        List<InstallPlanActual> installPlanActualList = installPlanActualListInfo.getInstallPlanActualList();
+
+        logger.info(" sss " + installPlanActualList.size());
+
+        InstallPlanActual installPlanActual;
         Result result;
-        for(int i=0; i<installPlanActualList.size(); i++){
-            result = add(installPlanActualList.get(i));
-            if(result.getCode() == Integer.valueOf(ResultCode.FAIL.toString())){
-                return ResultGenerator.genFailResult(result.getMessage());
+        int successSum = 0;
+        for(int i=0; i< installPlanActualList.size(); i++){
+            installPlanActual = installPlanActualList.get(i);
+            result = add( JSON.toJSONString(installPlanActual));
+            if(result.getCode() == ResultCode.SUCCESS.code){
+                successSum++;
             }
         }
-        return ResultGenerator.genSuccessResult(installPlanActualList.size() + "item(s) added");
+        return ResultGenerator.genSuccessResult("添加或更新（比如分多次完成）成功的个数:" + successSum);
     }
 
     @PostMapping("/delete")
