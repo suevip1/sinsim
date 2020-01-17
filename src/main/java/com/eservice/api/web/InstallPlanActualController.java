@@ -1,5 +1,6 @@
 package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultCode;
 import com.eservice.api.core.ResultGenerator;
@@ -18,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -148,9 +150,9 @@ public class InstallPlanActualController {
      */
     @PostMapping("/addInstallPlanActualList")
 //    public Result addInstallPlanActualList(List<String> installPlanActualList) { //不能支持List
-    public Result addInstallPlanActualList(@RequestBody InstallPlanActualListInfo installPlanActualListInfo) {
-        List<InstallPlanActual> installPlanActualList = installPlanActualListInfo.getInstallPlanActualList();
-
+    public Result addInstallPlanActualList( String installPlanActualListInfo) {
+        List<InstallPlanActual> installPlanActualList = new ArrayList<>();
+        installPlanActualList = JSONObject.parseArray(installPlanActualListInfo,InstallPlanActual.class);
         logger.info(" sss " + installPlanActualList.size());
 
         InstallPlanActual installPlanActual;
