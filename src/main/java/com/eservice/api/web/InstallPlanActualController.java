@@ -1,6 +1,7 @@
 package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
+import com.eservice.api.core.ResultCode;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.install_plan.InstallPlan;
 import com.eservice.api.model.install_plan_actual.InstallPlanActual;
@@ -141,6 +142,22 @@ public class InstallPlanActualController {
             return ResultGenerator.genFailResult("参数不正确，添加失败！");
         }
         return ResultGenerator.genSuccessResult();
+    }
+
+    /**
+     * 一次性接收多个排产反馈
+     * app 上一次性提交多个
+     */
+    @PostMapping("/addInstallPlanActualList")
+    public Result addInstallPlanActualList(List<String> installPlanActualList) {
+        Result result;
+        for(int i=0; i<installPlanActualList.size(); i++){
+            result = add(installPlanActualList.get(i));
+            if(result.getCode() == Integer.valueOf(ResultCode.FAIL.toString())){
+                return ResultGenerator.genFailResult(result.getMessage());
+            }
+        }
+        return ResultGenerator.genSuccessResult(installPlanActualList.size() + "item(s) added");
     }
 
     @PostMapping("/delete")
