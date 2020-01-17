@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -102,6 +103,26 @@ public class ContactFormController {
             //生成联系单
             contactForm.setCreateDate(new Date());
             contactForm.setStatus(Constant.STR_LXD_INITIAL);
+
+            String firstPartOfLxdNum = contactForm.getNum().replace("xxx","");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
+            String thisYear = formatter.format(new Date());
+            String lastSerialNumber = getLxdLastSerialNumber(thisYear,contactForm.getApplicantDepartment());
+            if(lastSerialNumber == ""){
+                String firstLxdOfTheDepartment = contactForm.getNum().replace("xxx","001");
+                contactForm.setNum( firstLxdOfTheDepartment);
+            } else {
+                Integer newSerialNumber;
+                try {
+                    newSerialNumber = Integer.valueOf(lastSerialNumber) + 1;
+                } catch (Exception e) {
+                    logger.warn("exception: " + e);
+                    newSerialNumber = 0;
+                }
+                String newNum = firstPartOfLxdNum + newSerialNumber;
+                contactForm.setNum(newNum);
+            }
+
             contactFormService.saveAndGetID(contactForm);
 
             //生成联系单变更条目， 如果类型不是变更联系单时，这部分为空
@@ -124,6 +145,25 @@ public class ContactFormController {
         }
         //返回ID给前端，前端新增联系单时不关闭页面。
         return ResultGenerator.genSuccessResult(contactForm.getId());
+    }
+
+    /**
+     * 需要查询某年、某部门已存在的联系单的最后的联系单单号。
+     * @param year 格式 yyyy
+     * @param department 发起部门（角色）
+     * @return
+     */
+    @PostMapping("/getLxdLastSerialNumber")
+    public String getLxdLastSerialNumber(@RequestParam String year,
+                                     @RequestParam String department) {
+        List<ContactForm> contactFormList = contactFormService.getLxdLastSerialNumber(year, department);
+        if(contactFormList !=null && contactFormList.size() !=0){
+            //外1-20-111
+            String[] arr = contactFormList.get(contactFormList.size()-1).getNum().split("-");
+            return arr[arr.length -1];
+        }else {
+            return "";
+        }
     }
 
     @PostMapping("/checkTheContactFormValid")

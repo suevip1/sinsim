@@ -19,6 +19,7 @@ public interface ContactFormMapper extends Mapper<ContactForm> {
                                            @Param("currentStep")String currentStep,
                                            @Param("isFuzzy")Boolean isFuzzy);
     void saveAndGetID(  ContactForm contactForm);
-
+    List<ContactForm> getLxdLastSerialNumber( @Param("year")String year,
+                                              @Param("department")String department);
 //    ContactFormAllInfo getAllInfo(@Param("contactFormId") Integer contactFormId);
 }

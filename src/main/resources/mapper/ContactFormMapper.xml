@@ -131,4 +131,17 @@
     <!--WHERE-->
         <!--cf.id = #{contactFormId}-->
   <!--</select>-->
+
+  <select id="getLxdLastSerialNumber" resultMap="BaseResultMap">
+    SELECT
+        *
+    FROM
+        contact_form cf
+    WHERE
+        1 = 1
+    AND cf.create_date LIKE CONCAT('${year}','%' )
+    AND cf.applicant_department = #{department}
+    ORDER BY
+        cf.create_date
+  </select>
 </mapper>

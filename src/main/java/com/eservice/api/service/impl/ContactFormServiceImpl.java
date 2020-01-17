@@ -61,6 +61,10 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
         contactFormMapper.saveAndGetID(contactForm);
     }
 
+    public List<ContactForm> getLxdLastSerialNumber(String year, String department){
+        return contactFormMapper.getLxdLastSerialNumber(year, department);
+    }
+
     public ContactFormAllInfo getAllInfo(Integer contactFormId){
 
         ContactFormAllInfo contactFormAllInfo = new ContactFormAllInfo();

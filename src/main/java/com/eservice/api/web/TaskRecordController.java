@@ -600,7 +600,7 @@ public class TaskRecordController {
 
             }
             downloadPath = taskRecordExcelOutputDir + "生产报表" + ".xls";
-            downloadPathForNginx = "/excel/" + "工序计划" + ".xls";
+            downloadPathForNginx = "/excel/" + "生产报表" + ".xls";
             out = new FileOutputStream(downloadPath);
             wb.write(out);
             out.close();
