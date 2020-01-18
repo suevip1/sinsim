@@ -119,7 +119,7 @@ public class ContactFormController {
                     logger.warn("exception: " + e);
                     newSerialNumber = 0;
                 }
-                String newNum = firstPartOfLxdNum + newSerialNumber;
+                String newNum = firstPartOfLxdNum + String.format("%03d", newSerialNumber);
                 contactForm.setNum(newNum);
             }
 
