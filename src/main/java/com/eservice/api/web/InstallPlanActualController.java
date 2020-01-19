@@ -71,22 +71,18 @@ public class InstallPlanActualController {
                 } else {
                     /**
                      * 处理多次提交同一个排产，
-                     * 即如果该计划的完成情况已经存在了，则在原先存在的基础上增加新完成的数据。（并检查合理性）
+                     * 即如果该计划的完成情况已经存在了，则在覆盖旧的数据，即，app上传来的最新的总数。
                      */
                     InstallPlan installPlan = installPlanService.findById(installPlanActualExist.getInstallPlanId());
                     MachineOrder machineOrder = machineOrderService.findById( installPlan.getOrderId());
                     installPlanActualExist.setUpdateDate( new Date());
 
-                    int newHeadCountDone = installPlanActualExist.getHeadCountDone() + installPlanActual1.getHeadCountDone();
-                    if( newHeadCountDone > Integer.valueOf( commonService.getRealSumValue(machineOrder.getHeadNum()))){
-                        logger.info("最终完成总头数 " + newHeadCountDone + "，超过实际头数 ");
-                        return ResultGenerator.genFailResult("最终完成总头数 " + newHeadCountDone + "，超过实际头数 " );
-                    }
-                    installPlanActualExist.setHeadCountDone(newHeadCountDone);
+                    installPlanActualExist.setHeadCountDone(installPlanActual1.getHeadCountDone());
 
                     //多次提交的反馈信息，用分号间隔。
-                    installPlanActualExist.setCmtFeedback(installPlanActualExist.getCmtFeedback() + ";" + installPlanActual1.getCmtFeedback());
-
+                    if( installPlanActual1.getCmtFeedback() != null) {
+                        installPlanActualExist.setCmtFeedback(installPlanActualExist.getCmtFeedback() + ";" + installPlanActual1.getCmtFeedback());
+                    }
                     //
                     if(installPlanActualExist.getPcWireNum() != null && installPlanActual1.getPcWireNum() != null) {
                         String newPcWireNum = String.valueOf(Integer.valueOf(installPlanActualExist.getPcWireNum()) + Integer.valueOf(installPlanActual1.getPcWireNum()));
@@ -165,7 +161,13 @@ public class InstallPlanActualController {
                 successSum++;
             }
         }
-        return ResultGenerator.genSuccessResult("添加或更新（比如分多次完成）成功的个数:" + successSum);
+        if(successSum < installPlanActualList.size()) {
+            logger.info("未成功的个数:" + (installPlanActualList.size() - successSum));
+            return ResultGenerator.genFailResult("添加或更新（比如分多次完成）成功的个数:" + successSum);
+        } else {
+            logger.info("全部添加或更新成功， 个数:" + successSum);
+            return ResultGenerator.genSuccessResult("全部添加或更新成功， 个数:" + successSum);
+        }
     }
 
     @PostMapping("/delete")
