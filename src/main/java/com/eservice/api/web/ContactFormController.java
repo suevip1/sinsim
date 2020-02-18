@@ -312,9 +312,11 @@ public class ContactFormController {
             if(contactForm.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)) {
                 //更新联系单变更条目
                 for (int i = 0; i < changeItemList.size(); i++) {
-                    if(changeItemList.get(i).getContactFormId() != contactForm.getId() ){
+                    if(changeItemList.get(i).getContactFormId()!= null) {
+                        if (changeItemList.get(i).getContactFormId().intValue() != contactForm.getId().intValue()) {
                         message = " 变更条目里的ContactFormId 和 联系单的id 不匹配！";
                         throw new RuntimeException();
+                        }
                     }
                     //step1.如果是已经存在的条目，则更新
                     if(changeItemService.findById(changeItemList.get(i).getId()) != null){
@@ -322,6 +324,7 @@ public class ContactFormController {
                         logger.info("更新了 id为 " + changeItemList.get(i).getId() + " 的变更条目");
                     } else {
                         //step2.如果是新增的条目，则新增。
+                        changeItemList.get(i).setContactFormId(contactForm.getId());
                         changeItemService.save(changeItemList.get(i));
                         logger.info("新增了一个 " + changeItemList.get(i).getNewInfo() + " 的变更条目");
                     }
