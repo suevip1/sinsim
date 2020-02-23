@@ -688,7 +688,8 @@ public class ContactFormController {
             }
             String fileName = cf.getContactForm().getNum().replaceAll("/", "-") + ".xls";
             downloadPath = lxdAttachedSavedDir + fileName;
-            downloadPathForNginx = "/excel/" + fileName;
+//            downloadPathForNginx = "/excel/" + fileName;
+            downloadPathForNginx = "/" + fileName;
             out = new FileOutputStream(downloadPath);
             wb.write(out);
         } catch (FileNotFoundException e) {
