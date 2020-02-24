@@ -79,9 +79,13 @@
     <if test="contactType!=null and contactType != '' ">
     and cf.contact_type like CONCAT('%','${contactType}','%' )
     </if>
-
+-- -- 销售部不要相互看到，都是要能看到其他非销售的部门的联系单
     <if test="applicantDepartment!=null and applicantDepartment != '' ">
-      and cf.applicant_department like CONCAT('%','${applicantDepartment}','%' )
+      and
+      (cf.applicant_department like CONCAT('%','${applicantDepartment}','%')
+      OR
+      (cf.applicant_department != '内贸部' and cf.applicant_department != '外贸一部' and cf.applicant_department != '外贸二部' )
+      )
     </if>
 
     <if test="applicantPerson!=null and applicantPerson != '' ">
