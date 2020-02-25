@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.plaf.synth.Region;
 
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
@@ -23,13 +22,10 @@ import com.eservice.api.model.contact_form.ContactFormDetail;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.user.User;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
-import com.eservice.api.service.impl.ChangeItemServiceImpl;
-import com.eservice.api.service.impl.ContactFormServiceImpl;
-import com.eservice.api.service.impl.ContactSignServiceImpl;
-import com.eservice.api.service.impl.MachineOrderServiceImpl;
-import com.eservice.api.service.impl.RoleServiceImpl;
+import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -81,10 +77,13 @@ public class ContactFormController {
     @Value("${lxd_attached_saved_dir}")
     private String lxdAttachedSavedDir;
 
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     @Resource
     private CommonService commonService;
+
+    @Resource
+    private UserServiceImpl userService;
 
     private Logger logger = Logger.getLogger(ContactFormController.class);
 
@@ -585,6 +584,10 @@ public class ContactFormController {
          */
         String downloadPathForNginx = "";
 
+        Boolean displayEnable = false;
+        User user = userService.selectByAccount(account);
+        displayEnable = isDisplayEnable(user);
+
         try {
             String templateFile = isChange ? "empty_lxd_change_template.xls" : "empty_lxd_work_template.xls";
             ClassPathResource resource = new ClassPathResource(templateFile);
@@ -653,7 +656,7 @@ public class ContactFormController {
 
             for (short i = startRow; i < workSheet.getLastRowNum(); i++) {
                 if (this.getCellStringValue(workSheet.getRow(i).getCell((short) 1)).indexOf("附件") >= 0) {
-                    workSheet.getRow(i).getCell((short) 2).setCellValue(cf.getContactForm().getAttachedFile());// 附件
+                    workSheet.getRow(i).getCell((short) 2).setCellValue("有");// 附件
                 }
                 if (this.getCellStringValue(workSheet.getRow(i).getCell((short) 1)).indexOf("签核角色") >= 0) {
                     ContactSign contactSign = cf.getContactSign();
@@ -669,8 +672,19 @@ public class ContactFormController {
 
                         String date = item.getDate() == null ? "" : formatter.format(item.getDate());
                         workSheet.getRow(i + j).getCell((short) 3).setCellValue(new HSSFRichTextString(date));
-                        workSheet.getRow(i + j).getCell((short) 4)
-                                .setCellValue(new HSSFRichTextString(item.getComment()));
+
+                        //成本核算员跟财务经理的意见,只给销售人员和王总看。
+                        if(item.getRoleId() == 13 ||item.getRoleId() ==14 ) {
+                            if (displayEnable) {
+                                workSheet.getRow(i + j).getCell((short) 4)
+                                        .setCellValue(new HSSFRichTextString(item.getComment()));
+                            } else {
+                                workSheet.getRow(i + j).getCell((short) 4).setCellValue(new HSSFRichTextString("/"));
+                            }
+                        } else {
+                            workSheet.getRow(i + j).getCell((short) 4)
+                                    .setCellValue(new HSSFRichTextString(item.getComment()));
+                        }
                         workSheet.getRow(i + j).getCell((short) 11)
                                 .setCellValue(new HSSFRichTextString(this.getResultString(item.getResult())));
 
@@ -715,6 +729,26 @@ public class ContactFormController {
         }
     }
 
+    boolean isDisplayEnable(User user){
+        if (user != null) {
+            Integer roleId = user.getRoleId();
+            //只有总经理，销售，财务等用户，生成的excel里才显示金额信息. '6','7','9','14','15'
+            if ((1 == roleId)
+                    ||(6 == roleId)
+                    || (7 == roleId)
+                    || (9 == roleId)
+                    || (13 == roleId)
+                    || (14 == roleId)
+                    || (15 == roleId)) {
+               return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     void insertRow(HSSFSheet sheet, int starRow, int rows) {
         sheet.shiftRows(starRow + 1, sheet.getLastRowNum(), rows, true, false);
         starRow = starRow - 1;
@@ -746,6 +780,8 @@ public class ContactFormController {
             res = "接受";
         } else if (resultIndex == Constant.SIGN_REJECT) {
             res = "驳回";
+        } else {
+            res = "无需审核";
         }
         return res;
     }
