@@ -46,8 +46,9 @@
 
     <select id="selectContractsByFuzzy" resultMap="ContractDetailMap">
         select c.id, c.contract_num,c.customer_name,c.sellman,c.record_user,c.pay_method,c.currency_type,c.market_group_name,c.market_group_name,
-        c.contract_ship_date,c.mark,c.domestic_trade_zone,c.update_time,
+        c.contract_ship_date,c.mark,c.domestic_trade_zone,
         mo.create_time,
+        os.update_time,
         os.current_step, mo.order_num, mo.status, mo.id order_id from machine_order mo
         LEFT JOIN contract c ON c.id = mo.contract_id
         LEFT JOIN order_sign os ON os.order_id = mo.id
@@ -82,8 +83,9 @@
     </select>
     <select id="selectContractsByFuzzyAndDomestic" resultMap="ContractDetailMap">
         select c.id, c.contract_num,c.customer_name,c.sellman,c.record_user,c.pay_method,c.currency_type,c.market_group_name,c.market_group_name,
-        c.contract_ship_date,c.mark,c.domestic_trade_zone,c.update_time,
+        c.contract_ship_date,c.mark,c.domestic_trade_zone,
         mo.create_time,
+        os.update_time,
         os.current_step, mo.order_num, mo.status, mo.id order_id from machine_order mo
         LEFT JOIN contract c ON c.id = mo.contract_id
         LEFT JOIN order_sign os ON os.order_id = mo.id
@@ -132,9 +134,9 @@
     <select id="selectContracts" resultMap="ContractDetailMap">
         select c.id, c.contract_num,c.customer_name,c.sellman,c.record_user,c.pay_method,c.currency_type,c.market_group_name,c.market_group_name,
         c.contract_ship_date,c.mark,
---     采用订单的时间比较合适
+--     采用订单的创建时间，更新时间则用签核的更新时间，每次签核后时间就会变
         mo.create_time,
-        mo.update_time,
+        os.update_time,
         os.current_step, mo.order_num, mo.status, mo.id order_id  from machine_order mo
         LEFT JOIN contract c ON c.id = mo.contract_id
         LEFT JOIN order_sign os ON os.order_id = mo.id
