@@ -87,6 +87,10 @@
       (cf.applicant_department != '内贸部' and cf.applicant_department != '外贸一部' and cf.applicant_department != '外贸二部' )
       )
     </if>
+    
+    <if test="userRoleName!=null and userRoleName != '' ">
+ -- TOOD
+    </if>
 
     <if test="applicantPerson!=null and applicantPerson != '' ">
       and cf.applicant_person like CONCAT('%','${applicantPerson}','%' )

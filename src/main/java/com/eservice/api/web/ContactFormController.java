@@ -420,6 +420,7 @@ public class ContactFormController {
      * @param orderNum            订单 编号
      * @param applicantDepartment 发起部门
      * @param applicantPerson     发起人
+     * @param userRoleName      查询者的角色 TODO:...
      * @param status              状态
      * @param queryStartTime
      * @param queryFinishTime
@@ -429,9 +430,17 @@ public class ContactFormController {
      */
     @PostMapping("/selectContacts")
     public Result selectContacts(@RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "0") Integer size, String contactType, String orderNum,
-            String applicantDepartment, String applicantPerson, Integer status, String queryStartTime,
-            String queryFinishTime, String currentStep, @RequestParam(defaultValue = "true") Boolean isFuzzy) {
+                                 @RequestParam(defaultValue = "0") Integer size,
+                                 String contactType,
+                                 String orderNum,
+                                 String applicantDepartment,
+                                 String applicantPerson,
+                                 String userRoleName,
+                                 Integer status,
+                                 String queryStartTime,
+                                 String queryFinishTime,
+                                 String currentStep,
+                                 @RequestParam(defaultValue = "true") Boolean isFuzzy) {
         PageHelper.startPage(page, size);
 
         String strStatus = null;
@@ -449,8 +458,16 @@ public class ContactFormController {
                 strStatus = Constant.STR_LXD_CANCELED;
             }
         }
-        List<ContactFormDetail> list = contactFormService.selectContacts(contactType, orderNum, applicantDepartment,
-                applicantPerson, strStatus, queryStartTime, queryFinishTime, currentStep, isFuzzy);
+        List<ContactFormDetail> list = contactFormService.selectContacts(contactType,
+                orderNum,
+                applicantDepartment,
+                applicantPerson,
+                userRoleName,
+                strStatus,
+                queryStartTime,
+                queryFinishTime,
+                currentStep,
+                isFuzzy);
 
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
