@@ -185,13 +185,21 @@ public class MachineOrderController {
             //检查需求单对应的机器是否生成，如果生成则不能删除
             List<Machine> machineList = machineService.selectMachines(null,orderId,null,null,null,null,null,null,null,null, false);
             if(machineList.size() > 0) {
-                return ResultGenerator.genFailResult("需求单删除失败，对应机器已生成！");
-            } else {
-                machineOrder.setValid(Constant.ValidEnum.INVALID.getValue());
-                machineOrder.setUpdateTime(new Date());
-                machineOrderService.update(machineOrder);
-                return ResultGenerator.genSuccessResult();
+                //return ResultGenerator.genFailResult("需求单删除失败，对应机器已生成！");
+                //机器已经生成，则把机器status设为 MACHINE_CANCELED
+                for(int i=0;i<machineList.size();i++){
+                    machineList.get(i).setStatus(Constant.MACHINE_CANCELED);
+                    machineService.update(machineList.get(i));
+                    logger.warn("订单被删除，已生成的机器 " + machineList.get(i).getNameplate() + " 设置为取消");
+                }
             }
+
+            machineOrder.setValid(Constant.ValidEnum.INVALID.getValue());
+            machineOrder.setUpdateTime(new Date());
+            machineOrderService.update(machineOrder);
+            logger.warn(machineOrder.getOrderNum() + " 订单被删除");
+            return ResultGenerator.genSuccessResult();
+
         }
     }
 }
