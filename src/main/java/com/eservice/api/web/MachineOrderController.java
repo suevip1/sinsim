@@ -123,6 +123,18 @@ public class MachineOrderController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    @PostMapping("/getValidList")
+    public Result getValidList(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+        PageHelper.startPage(page, size);
+
+        Condition condition = new Condition(MachineOrder.class);
+        condition.createCriteria().andCondition("valid = ", 1);
+        List<MachineOrder> list = machineOrderService.findByCondition(condition);
+
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
     /*
     根据条件查询订单。
     比如 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单
