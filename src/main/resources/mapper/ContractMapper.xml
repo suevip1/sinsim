@@ -126,6 +126,8 @@
             <foreach collection="domesticTradeArr" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
+--             2020-03-11之前的内贸订单，各区域都可互见； 新的分区，从3月11开始
+            or  DATE_FORMAT(mo.create_time,'%Y-%m-%d')  &lt;= '2020-03-10'
             )
         </if>
         ORDER BY os.update_time DESC,c.create_time DESC
