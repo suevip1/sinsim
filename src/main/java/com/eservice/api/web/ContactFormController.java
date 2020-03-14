@@ -333,6 +333,7 @@ public class ContactFormController {
 
             if (contactForm.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)) {
                 // 更新联系单变更条目
+                List<ChangeItem> changeItemListExist = changeItemService.selectChangeItemList(contactForm.getId());
                 for (int i = 0; i < changeItemList.size(); i++) {
                     if (changeItemList.get(i).getContactFormId() != null) {
                         if (changeItemList.get(i).getContactFormId().intValue() != contactForm.getId().intValue()) {
@@ -352,12 +353,12 @@ public class ContactFormController {
                     }
                     // step3. 如果目前已存在的条目 不在传进来的条目中，表示该条目应该删除。
                     boolean isIncluded = false;
-                    List<ChangeItem> changeItemListExist = changeItemService.selectChangeItemList(contactForm.getId());
+//                    List<ChangeItem> changeItemListExist = changeItemService.selectChangeItemList(contactForm.getId());
                     for (int ei = 0; ei < changeItemListExist.size(); ei++) { // exist item
                         // 每个条目都和传进来的每个条目进行比较
                         isIncluded = false;
                         for (int ii = 0; ii < changeItemList.size(); ii++) { // input item
-                            if (changeItemListExist.get(ei).getId() == changeItemList.get(ii).getId()) {
+                            if (changeItemListExist.get(ei).getId().equals(  changeItemList.get(ii).getId()) ) {
                                 isIncluded = true;
                                 break;
                             }
@@ -369,8 +370,16 @@ public class ContactFormController {
                     }
 
                 }
+                //如果传进来变更列表的是空的，说明要把之前旧的全部都删除
+                if( changeItemList.size()==0 ){
+                    for (int ei = 0; ei < changeItemListExist.size(); ei++) { // exist item
+                        changeItemService.deleteById(changeItemListExist.get(ei).getId());
+                        logger.info("all, 删除了 id为 " + changeItemListExist.get(ei).getId() + " 的变更条目");
+                    }
+                }
 
             }
+
             // 更新 联系单的审核记录
             contactSign.setUpdateTime(new Date());
             if (contactSign.getContactFormId().intValue() != contactForm.getId()) {
