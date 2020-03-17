@@ -259,6 +259,7 @@ public class ContactFormController {
             return ResultGenerator.genFailResult("JSON数据异常");
         }
 
+        logger.info("更新联系单 " +jsonContactFormAllInfo);
         String message = null;
         ContactForm contactForm = contactFormAllInfo.getContactForm();
         List<ChangeItem> changeItemList = contactFormAllInfo.getChangeItemList();
@@ -294,7 +295,7 @@ public class ContactFormController {
             contactForm.setUpdateDate(new Date());
             contactFormService.update(contactForm);
 
-            if (contactForm.getStatus() == Constant.STR_LXD_CHECKING) {
+            if (contactForm.getStatus().equals(Constant.STR_LXD_CHECKING) ) {
                 // 重新计算当前审核阶段
                 List<SignContentItem> contactSignContentList = JSON.parseArray(contactSign.getSignContent(),
                         SignContentItem.class);

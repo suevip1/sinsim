@@ -26,6 +26,8 @@
   <resultMap id="ContactFormDetail" type="com.eservice.api.model.contact_form.ContactFormDetail">
     <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
     <result column="current_step" jdbcType="VARCHAR" property="currentStep" />
+
+      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
 <!--这里为空，也可以接受到 ContactForm的内容-->
   </resultMap>
 
@@ -115,7 +117,7 @@
       and cf.`status` = #{strStatus}
     </if>
 
-    ORDER BY cf.update_date desc, cf.create_date desc
+    ORDER BY cs.update_time desc, cf.update_date desc, cf.create_date desc
   </select>
   
   <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contact_form.ContactForm"

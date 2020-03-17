@@ -2,6 +2,8 @@ package com.eservice.api.model.contact_form;
 
 
 import javax.persistence.*;
+import java.util.Date;
+
 @Table(name = "contact_form")
 public class ContactFormDetail extends ContactForm{
 
@@ -41,5 +43,17 @@ public class ContactFormDetail extends ContactForm{
      */
     public void setCurrentStep(String currentStep) {
         this.currentStep = currentStep;
+    }
+
+
+    ///这里是 签核的更新时间
+    private Date updateTime;
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

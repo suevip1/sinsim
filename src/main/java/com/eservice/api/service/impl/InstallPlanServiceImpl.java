@@ -85,9 +85,9 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
                 installPlanService.update(unSendInstallPlans.get(i));
 
             } else {
-                logger.info("还未到安装提醒时间的机器："
-                        + machineService.findById(unSendInstallPlans.get(i).getMachineId()).getNameplate()
-                        + " 安装时间为 " + installDatePlanDateString);
+//                logger.info("还未到安装提醒时间的机器："
+//                        + machineService.findById(unSendInstallPlans.get(i).getMachineId()).getNameplate()
+//                        + " 安装时间为 " + installDatePlanDateString);
             }
 
         }
