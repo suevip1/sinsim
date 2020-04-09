@@ -65,6 +65,7 @@ public class ContractSignController {
         return ResultGenerator.genSuccessResult();
     }
 
+    //// 目前已经没有合同签核，合同不用签核，订单要签核
     @PostMapping("/update")
     @Transactional(rollbackFor = Exception.class)
     public Result update(String contractSign) {

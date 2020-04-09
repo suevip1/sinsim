@@ -21,6 +21,7 @@ import com.eservice.api.model.order_split_record.OrderSplitRecord;
 import com.eservice.api.model.user.User;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.common.Utils;
 import com.eservice.api.service.impl.*;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
@@ -272,6 +273,8 @@ public class ContractController {
     @PostMapping("/changeOrder")
     @Transactional(rollbackFor = Exception.class)
     public Result changeOrder(String contract, String contractSign, String requisitionForms) {
+        logger.info("changeOrder=======:");
+        logger.info(requisitionForms);
         if (contract == null || "".equals(contract)) {
             return ResultGenerator.genFailResult("合同信息为空！");
         }
@@ -352,8 +355,8 @@ public class ContractController {
                 //获取被改单对应机器，设置改单状态(machine)
                 Condition tempCondition = new Condition(Machine.class);
                 tempCondition.createCriteria().andCondition("order_id = ", machineOrder.getId());
-                List<Machine> machineList = machineService.findByCondition(tempCondition);
-                //寻找对应新需求单，比较机器数
+                List<Machine> machineList = machineService.findByCondition(tempCondition); ///被改订单的
+                //寻找对应新生成的需求单，比较机器数
                 MachineOrder newOrder = null;
                 for (MachineOrderWrapper wrapper : machineOrderWrapperList) {
                     if (wrapper.getMachineOrder().getOriginalOrderId().equals(machineOrder.getId())) {
@@ -362,24 +365,81 @@ public class ContractController {
                     }
                 }
                 if (newOrder != null) {
-                    ///改单前后机器数相等或者大于原需求单数中对应的机器数;多出部分机器在审核完成以后自动添加
-                    for (Machine machine : machineList) {
-                        ///初始化、取消状态，直接将机器的上的需求单号直接绑定到新需求单
-                        if (machine.getStatus().equals(Constant.MACHINE_INITIAL) || machine.getStatus().equals(Constant.MACHINE_CANCELED)) {
-                        } else {
-                            machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
-                            ///有改单状态的机器，通知全部安装组长
-                            ServerToClientMsg msg = new ServerToClientMsg();
-                            msg.setOrderNum(newOrder.getOrderNum());
-                            msg.setNameplate(machine.getNameplate());
-                            msg.setType(ServerToClientMsg.MsgType.ORDER_CHANGE);
-                            mqttMessageHelper.sendToClient(Constant.S2C_MACHINE_STATUS_CHANGE, JSON.toJSONString(msg));
+                    //改单后，机器数量不变或者变少了，需要把这部分机器设置为取消（无论是否已生产）
+                    if(newOrder.getMachineNum()<= machineList.size()) {
+                        //step1 按新订单的机器数量，把 被改订单的机器 新生成的订单
+                        for (int m=0; m<newOrder.getMachineNum(); m++) {
+                            Machine machine = machineList.get(m);
+                            ///初始化、取消状态，直接将机器的上的需求单号直接绑定到新需求单。 其他状态的机器则改为 改单
+                            logger.info("新生成的订单号" + newOrder.getOrderNum() + "的 【实际的】 机器编号： " + machine.getNameplate() + "，状态： " + machine.getStatus());
+                            if (machine.getStatus().equals(Constant.MACHINE_INITIAL) || machine.getStatus().equals(Constant.MACHINE_CANCELED)) {
+                            } else {
+                                machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                                ///有改单状态的机器，通知全部安装组长
+                                ServerToClientMsg msg = new ServerToClientMsg();
+                                msg.setOrderNum(newOrder.getOrderNum());
+                                msg.setNameplate(machine.getNameplate());
+                                msg.setType(ServerToClientMsg.MsgType.ORDER_CHANGE);
+                                mqttMessageHelper.sendToClient(Constant.S2C_MACHINE_STATUS_CHANGE, JSON.toJSONString(msg));
+                            }
+                            machine.setOrderId(newOrder.getId());
+                            machine.setUpdateTime(new Date());
+                            machineService.update(machine);
                         }
-                        machine.setOrderId(newOrder.getId());
-                        machine.setUpdateTime(new Date());
-                        machineService.update(machine);
+                        ////step2把被改订单里剩下的机器设置为取消
+                        tempCondition.createCriteria().andCondition("order_id = ", machineOrder.getId());
+                        List<Machine> machineToBeCancelledList = machineService.findByCondition(tempCondition);
+                        for (Machine machine : machineToBeCancelledList) { //如果机器数量不变，这里为0
+                            machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CANCELED)));
+                            machine.setUpdateTime(new Date());
+                            logger.info("把剩下的机器设置为取消 " + machine.getNameplate());
+                            machineService.update(machine);
+                        }
+                    } else {
+                        /**
+                         * 改单后，机器数量增加了，需要新增机器 ,原先：多出部分机器在审核完成以后自动添加
+                         * --> 2020-0409：有联系单后不再需要审核订单了，所以需要在此生成机器。
+                         */
+                        ////step1  把 被改订单的机器 全部之间挂到新生成的订单，即旧订单就没机器了。
+                        for (int n=0; n<machineList.size(); n++) {
+                            Machine machine = machineList.get(n);
+                            ///初始化、取消状态，直接将机器的上的需求单号直接绑定到新需求单。 其他状态的机器则改为 改单 （为啥这样？全部改成改单不行吗）
+                            logger.info("新生成的订单号" + newOrder.getOrderNum() + "的 【实际的】 机器编号： " + machine.getNameplate() + "，状态： " + machine.getStatus());
+                            if (machine.getStatus().equals(Constant.MACHINE_INITIAL) || machine.getStatus().equals(Constant.MACHINE_CANCELED)) {
+                            } else {
+                                machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_CHANGED)));
+                                ///有改单状态的机器，通知全部安装组长
+                                ServerToClientMsg msg = new ServerToClientMsg();
+                                msg.setOrderNum(newOrder.getOrderNum());
+                                msg.setNameplate(machine.getNameplate());
+                                msg.setType(ServerToClientMsg.MsgType.ORDER_CHANGE);
+                                mqttMessageHelper.sendToClient(Constant.S2C_MACHINE_STATUS_CHANGE, JSON.toJSONString(msg));
+                            }
+                            machine.setOrderId(newOrder.getId());
+                            machine.setUpdateTime(new Date());
+                            machineService.update(machine);
+                        }
+                        ////step2 再补足 新增的机器
+                        int haveToCreate = newOrder.getMachineNum() - machineList.size();
+                        logger.info("订单" + newOrder.getOrderNum() + "，需要新增机器台数：" + haveToCreate);
+                        for (int c = 0; c < haveToCreate; c++) {
+                            Machine machine = new Machine();
+                            machine.setMachineStrId(Utils.createMachineBasicId() + c);
+                            machine.setOrderId(newOrder.getId());
+                            machine.setStatus(Byte.parseByte(String.valueOf(Constant.MACHINE_INITIAL)));
+                            machine.setMachineType(newOrder.getMachineType());
+                            machine.setCreateTime(new Date());
+
+                            if (newOrder.getAllUrgent() == null || !newOrder.getAllUrgent()) {
+                                machine.setIsUrgent(false);
+                            } else {
+                                machine.setIsUrgent(true);
+                            }
+                            machineService.save(machine);
+                            logger.info("have created nameplate: " + machine.getNameplate());
+                        }
                     }
-                    //对于改单，如果是新增了机器，之前也是没有生成新的机器的。
+
                     /* 20180323精简了算法，对于被改的需求单，除了初始化和取消状态的机器保持状态不变，其他机器都设置为该到为状态
                     if (newOrder.getMachineNum() >= machineOrder.getMachineNum()) {
                         for (Machine machine : machineList) {

@@ -15,6 +15,7 @@ import com.eservice.api.service.impl.MachineServiceImpl;
 import com.eservice.api.service.impl.TaskRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -60,6 +61,7 @@ public class MachineController {
     @Resource
     private MachineTypeService machineTypeService;
 
+    Logger logger = Logger.getLogger(MachineController.class);
     @PostMapping("/add")
     public Result add(String machine) {
         Machine machine1 = JSON.parseObject(machine, Machine.class);
@@ -94,6 +96,7 @@ public class MachineController {
 
     @PostMapping("/update")
     public Result update(String machine) {
+        logger.info(machine);
         Machine machine1 = JSON.parseObject(machine, Machine.class);
         machine1.setUpdateTime(new Date());
         // 如果该机器有对应的工序是跳过未完成的，不允许设置为已完成。
