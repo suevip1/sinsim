@@ -194,7 +194,7 @@ public class ContractController {
             }
 
             for (MachineOrderWrapper wapperItem : machineOrderWapperlist) { //null
-                if (wapperItem.getMachineOrder().getId().equals(item.getId())) {
+                if (item.getId().equals(wapperItem.getMachineOrder().getId())) {
                     exist = true;
                     break;
                 }

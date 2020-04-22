@@ -65,7 +65,7 @@
 		<result column="wrap_machine" jdbcType="VARCHAR" property="wrapMachine"/>
 		<result column="wrap_machine_change" jdbcType="VARCHAR" property="wrapMachineChange"/>
 		<result column="package_mark" jdbcType="LONGVARCHAR" property="packageMark"/>
-		<result column="machine_num" jdbcType="TINYINT" property="machineNum"/>
+		<result column="machine_num" jdbcType="INTEGER" property="machineNum"/>
 		<result column="machine_price" jdbcType="VARCHAR" property="machinePrice"/>
 		<result column="intermediary_price" jdbcType="VARCHAR" property="intermediaryPrice"/>
 		<result column="discounts" jdbcType="VARCHAR" property="discounts"/>
