@@ -367,7 +367,7 @@ public class ContractController {
                 if (newOrder != null) {
                     //改单后，机器数量不变或者变少了，需要把这部分机器设置为取消（无论是否已生产）
                     if(newOrder.getMachineNum()<= machineList.size()) {
-                        //step1 按新订单的机器数量，把 被改订单的机器 新生成的订单
+                        //step1 按新订单的机器数量，把 被改订单的机器 挂到新生成的订单
                         for (int m=0; m<newOrder.getMachineNum(); m++) {
                             Machine machine = machineList.get(m);
                             ///初始化、取消状态，直接将机器的上的需求单号直接绑定到新需求单。 其他状态的机器则改为 改单
@@ -387,6 +387,9 @@ public class ContractController {
                             machineService.update(machine);
                         }
                         ////step2把被改订单里剩下的机器设置为取消
+                        /**
+                         * 因为在改单时不确定哪些机子在生产了，所以管理员根据需要可以在"生产管理"页面，根据实际情况调整机器铭牌号。
+                         */
                         tempCondition.createCriteria().andCondition("order_id = ", machineOrder.getId());
                         List<Machine> machineToBeCancelledList = machineService.findByCondition(tempCondition);
                         for (Machine machine : machineToBeCancelledList) { //如果机器数量不变，这里为0
