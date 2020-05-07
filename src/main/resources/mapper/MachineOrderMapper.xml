@@ -324,7 +324,7 @@
 
 	<select id="getMachineOrder" resultMap="BaseResultMap">
 		SELECT * from machine_order
-		where order_num = #{orderNum}
+		where order_num = #{orderNum} and valid ='1'
 	</select>
 
 </mapper>
