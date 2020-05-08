@@ -22,4 +22,14 @@
     SELECT * from install_plan
     WHERE send_time is null
   </select>
+
+  <select id="getInstallPlanByMachineId" resultMap="BaseResultMap">
+    SELECT
+	*
+    FROM
+        install_plan ip
+    LEFT JOIN machine m ON ip.machine_id = m.id
+    WHERE
+        m.id = #{machineId}
+  </select>
 </mapper>

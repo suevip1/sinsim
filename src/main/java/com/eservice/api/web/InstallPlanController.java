@@ -303,4 +303,20 @@ public class InstallPlanController {
         logger.info(str);
         return ResultGenerator.genSuccessResult(str);
     }
+
+    /**
+     * 根据机器ID去查询排产计划，
+     * 可以用于： 如果机器已经完成(结束扫码)，
+     * 则该机器的所有总装工序的针数头数自动填写为全部完成，
+     * 这样app用户就不需要重复去报告总装工序的情况。
+     */
+    @PostMapping("/getInstallPlanByMachineId")
+    public Result getInstallPlanByMachineId(@RequestParam(defaultValue = "0") Integer page,
+                                           @RequestParam(defaultValue = "0") Integer size,
+                                            @RequestParam Integer machineId) {
+        PageHelper.startPage(page, size);
+        List<InstallPlan> list = installPlanService.getInstallPlanByMachineId(machineId);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }

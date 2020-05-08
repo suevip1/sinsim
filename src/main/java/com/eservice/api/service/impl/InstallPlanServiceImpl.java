@@ -5,8 +5,6 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.dao.InstallPlanMapper;
 import com.eservice.api.model.install_plan.InstallPlan;
-import com.eservice.api.model.user.User;
-import com.eservice.api.model.user.UserDetail;
 import com.eservice.api.service.InstallPlanService;
 import com.eservice.api.core.AbstractService;
 import com.eservice.api.service.MachineOrderService;
@@ -123,4 +121,8 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
         logger.info( n + " day after " + specifiedDay + " is " + dayAfter);
         return dayAfter;
     }
+    public List<InstallPlan> getInstallPlanByMachineId(Integer machineId){
+        return installPlanMapper.getInstallPlanByMachineId(machineId);
+    }
+
 }

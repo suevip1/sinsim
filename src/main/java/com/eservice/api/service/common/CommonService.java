@@ -22,6 +22,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.install_group.InstallGroup;
+import com.eservice.api.model.install_plan.InstallPlan;
+import com.eservice.api.model.install_plan_actual.InstallPlanActual;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_sign.OrderSign;
@@ -432,6 +434,16 @@ public class CommonService {
                     //安装完成
                     machine.setStatus(Constant.MACHINE_INSTALLED);
                     isNeedUpdateMachine = true;
+
+                    /**
+                     * 如果机器已经完成(结束扫码)，
+                     * 则该机器的所有总装工序的针数头数自动填写为全部完成，
+                     * 这样app用户就不需要重复去报告总装工序的情况。
+                     *
+                     * task_record --> process_record --> machine --> install_plan --> install_plan_actual
+                     */
+                    ///TODO
+
                 }
 
                 if (machine.getStatus().equals(Constant.MACHINE_PLANING)) {
