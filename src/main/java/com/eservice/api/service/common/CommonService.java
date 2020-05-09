@@ -72,6 +72,10 @@ public class CommonService {
     private TaskServiceImpl taskService;
     @Resource
     private InstallGroupServiceImpl installGroupService;
+    @Resource
+    private InstallPlanServiceImpl installPlanService;
+    @Resource
+    private InstallPlanActualServiceImpl installPlanActualService;
 
     Logger logger = Logger.getLogger(CommonService.class);
 
@@ -442,7 +446,20 @@ public class CommonService {
                      *
                      * task_record --> process_record --> machine --> install_plan --> install_plan_actual
                      */
-                    ///TODO
+                    List<InstallPlan> installPlanList = installPlanService.getInstallPlanByMachineId(machine.getId());
+                    MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+                    for (InstallPlan installplan: installPlanList) {
+                        /**
+                         * 已约定“如果该计划的完成情况已经存在了，则在覆盖旧的数据，即，app上传来的最新的总数”
+                         * 这样的话，应该是InstallPlan 和 InstallPlanActual一一对应了，为保险起见，后面还是按一对多的可能来处理
+                         */
+                        List<InstallPlanActual> installPlanActualList = installPlanActualService.getInstallPlanActualList(installplan.getId());
+                        for(InstallPlanActual installPlanActual:installPlanActualList){
+                            //计划里扫码完成，总装就自动填写全部头数完成。
+                            installPlanActual.setHeadCountDone(getRealSumValue(machineOrder.getHeadNum()));
+                            installPlanActual.setCreateDate(new Date());
+                        }
+                    }
 
                 }
 

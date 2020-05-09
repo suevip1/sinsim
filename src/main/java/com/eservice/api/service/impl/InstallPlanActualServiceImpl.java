@@ -35,4 +35,8 @@ public class InstallPlanActualServiceImpl extends AbstractService<InstallPlanAct
     public InstallPlanActual getInstallPlanActual(Integer installPlanId){
         return installPlanActualMapper.getInstallPlanActual(installPlanId);
     }
+
+    public List<InstallPlanActual> getInstallPlanActualList(Integer installPlanId){
+        return installPlanActualMapper.getInstallPlanActualList(installPlanId);
+    }
 }

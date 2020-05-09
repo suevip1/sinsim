@@ -118,7 +118,6 @@ public class InstallPlanServiceImpl extends AbstractService<InstallPlan> impleme
         c.set(Calendar.DATE, day + n);
 
         String dayAfter = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
-        logger.info( n + " day after " + specifiedDay + " is " + dayAfter);
         return dayAfter;
     }
     public List<InstallPlan> getInstallPlanByMachineId(Integer machineId){

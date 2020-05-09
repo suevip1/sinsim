@@ -93,4 +93,13 @@
     WHERE
         ipa.install_plan_id = #{installPlanId}
   </select>
+
+  <select id="getInstallPlanActualList" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM
+        install_plan_actual ipa
+    WHERE
+        ipa.install_plan_id = #{installPlanId}
+  </select>
 </mapper>

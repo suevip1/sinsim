@@ -245,12 +245,28 @@ public class InstallPlanActualController {
     /**
      * 根据 installPlanId 可以找到唯一的 实际安装情况 InstallPlanActual
      * @param installPlanId
-     * @return
+     *
+     * 1个排产计划，可以有多次反馈，比如第一天没完成，第二天继续，每天都要反馈。
+     * --> 更新：已约定“如果该计划的完成情况已经存在了，则在覆盖旧的数据，即，app上传来的最新的总数”
+     *          这样的话，应该是InstallPlan 和 InstallPlanActual一一对应了，为保险起见，后面还是按一对多的可能来处理
      */
     @PostMapping("/getInstallPlanActual")
     public Result getInstallPlanActual(@RequestParam Integer installPlanId) {
         InstallPlanActual installPlanActual = installPlanActualService.getInstallPlanActual(installPlanId);
         return ResultGenerator.genSuccessResult(installPlanActual);
+    }
+
+    /**
+     * 根据 installPlanId 查询 所有 InstallPlanActual，比如一天没完成，分多天多次提交的排产，会返回所有提交的实际情况
+     * --> 已约定“如果该计划的完成情况已经存在了，则在覆盖旧的数据，即，app上传来的最新的总数”
+     *     这样的话，应该是InstallPlan 和 InstallPlanActual一一对应了，为保险起见，后面还是按一对多的可能来处理
+     * @param installPlanId
+     * @return
+     */
+    @PostMapping("/getInstallPlanActualList")
+    public Result getInstallPlanActualList(@RequestParam Integer installPlanId) {
+        List<InstallPlanActual> installPlanActualList = installPlanActualService.getInstallPlanActualList(installPlanId);
+        return ResultGenerator.genSuccessResult(installPlanActualList);
     }
 
 }
