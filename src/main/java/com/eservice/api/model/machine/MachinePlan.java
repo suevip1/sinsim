@@ -183,4 +183,25 @@ public class MachinePlan  extends Machine {
     public void setInstallWaitingTaskNum(Integer installWaitingTaskNum){
         this.installWaitingTaskNum = installWaitingTaskNum;
     }
+
+    //头数
+    private String headNum;
+
+    public String getHeadNum() {
+        return headNum;
+    }
+
+    public void setHeadNum(String headNum) {
+        this.headNum = headNum;
+    }
+
+    private String needleNum;
+
+    public String getNeedleNum() {
+        return needleNum;
+    }
+
+    public void setNeedleNum(String needleNum) {
+        this.needleNum = needleNum;
+    }
 }
