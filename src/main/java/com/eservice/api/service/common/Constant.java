@@ -274,4 +274,7 @@ public class Constant {
     public static final String STR_LXD_CHECKING_FINISHED = "联系单审核完成";
     public static final String STR_LXD_REJECTED  = "联系单审核被拒";
     public static final String STR_LXD_CANCELED = "联系单取消";
+
+    public static final String STR_INSTALL_TYPE_WHOLE = "总装";
+    public static final String STR_INSTALL_TYPE_PARTS = "部装";
 }

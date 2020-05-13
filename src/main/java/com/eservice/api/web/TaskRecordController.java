@@ -651,6 +651,15 @@ public class TaskRecordController {
         return ResultGenerator.genSuccessResult();
     }
 
+    /**
+     * 比如app扫码&结束开始时调用该接口，开始/完成一个工序各调用一次。
+     * （质检报正常也是调该接口，即无论是否质检都调这个接口）
+     *
+     * app扫码报异常时，调用 addTrArAi （app报正常时，调用的是 updateTaskInfo， 少了两个参数）
+     * （质检报正常也是调addTrArAi）
+     * @param taskRecord
+     * @return
+     */
     @PostMapping("/updateTaskInfo")
     @Transactional(rollbackFor = Exception.class)
     public Result updateTaskInfo(String taskRecord) {
@@ -871,6 +880,8 @@ public class TaskRecordController {
     /**
      * task_record, abnormal_record, abnormal_image  3个表一起更新。
      * app端，在安装异常时需要更新task_record(update)，增加 abnormal_record(add), abnormal_image (add)
+     *
+     * app扫码报异常时，调用addTrArAi （app报正常时，调用的是 updateTaskInfo， 少了异常记录和文件两个参数）
      */
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/addTrArAi")
@@ -961,6 +972,7 @@ public class TaskRecordController {
     /**
      * 3个表 task_record/TaskQualityRecord/QualityRecordImage 更新。
      * app端，上传质检异常状态，task_record(update)，增加 TaskQualityRecord(add), QualityRecordImage (add)
+     * 没有质检员了，这个接口没在用。
      */
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/addTrTqrQri")

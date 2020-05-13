@@ -1,8 +1,9 @@
 package com.eservice.api.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.eservice.api.dao.TaskPlanMapper;
+import com.eservice.api.model.install_group.InstallGroup;
+import com.eservice.api.model.install_plan.InstallPlan;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.process_record.ProcessRecord;
@@ -15,10 +16,10 @@ import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.common.LinkDataModel;
 import com.eservice.api.service.common.NodeDataModel;
-import com.eservice.api.service.common.TaskRcordPlanTime;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
-import org.apache.tomcat.util.bcel.Const;
+import com.eservice.api.web.InstallPlanController;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -26,8 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +56,11 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
     private MachineOrderServiceImpl machineOrderService;
     @Resource
     private MqttMessageHelper mqttMessageHelper;
+    @Resource
+    private InstallGroupServiceImpl installGroupService;
+    @Resource
+    private InstallPlanServiceImpl installPlanService;
+    private Logger logger = Logger.getLogger(InstallPlanController.class);
 
     @Transactional(rollbackFor = Exception.class)
     public boolean addTaskPlans(@RequestParam List<Integer> taskRecordIds, Integer planType, String machineStrId, Date planDate, Integer userId) {
@@ -151,6 +155,27 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                     msg.setNameplate(machine.getNameplate());
                     mqttMessageHelper.sendToClient(Constant.S2C_TASK_INSTALL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
                 }
+
+                // 因为把总装排产，合并到“计划管理”，所以需要在安排计划时 自动生成总装排产（这样在app上扫码完成时，才能有总装完成自动填充完成头数）
+                InstallPlan installPlan1 = new InstallPlan();
+                installPlan1.setType(Constant.STR_INSTALL_TYPE_WHOLE);
+
+                InstallGroup installGroup = installGroupService.getInstallGroupByTaskName(taskRecord.getTaskName());
+                installPlan1.setInstallGroupId(installGroup.getId());
+
+                installPlan1.setInstallDatePlan(plan.getPlanTime());
+
+                ProcessRecord pr = processRecordService.findById(taskRecord.getProcessRecordId());
+                Machine machine = machineService.findById(pr.getMachineId());
+                MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+                installPlan1.setOrderId(machineOrder.getId());
+
+                installPlan1.setMachineId(machine.getId());
+                installPlan1.setValid(Byte.valueOf("1"));
+                installPlan1.setCreateDate(new Date());
+
+                installPlanService.save(installPlan1);
+                logger.info("自动添加了 总装排产 " + installPlan1.getCreateDate());
 
             }else {
                 //进行事务操作
