@@ -1,7 +1,9 @@
 package com.eservice.api.web;
+import com.eservice.api.model.install_group.InstallGroup;
+import com.eservice.api.model.install_plan.InstallPlan;
+import com.eservice.api.model.install_plan_actual.InstallPlanActual;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.service.common.NodeDataModel;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
@@ -31,7 +33,6 @@ import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Value;
@@ -104,6 +105,12 @@ public class TaskRecordController {
     private TaskQualityRecordServiceImpl taskQualityRecordService;
     @Resource
     private QualityRecordImageService qualityRecordImageService;
+    @Resource
+    private InstallGroupServiceImpl installGroupService;
+    @Resource
+    private InstallPlanServiceImpl installPlanService;
+    @Resource
+    private InstallPlanActualServiceImpl installPlanActualService;
 
     @PostMapping("/add")
     public Result add(String taskRecord) {
@@ -746,7 +753,46 @@ public class TaskRecordController {
             //MQTT 如果当前工序状态是安装完成等待质检的状态，则通知App
             mqttMessageHelper.sendToClient(Constant.S2C_TASK_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
         }
+
+        //开始安装时不用，只有在安装结束时才要更新 --> 现在没有质检了，扫码完成时，app直接发 质检完成
+        if(tr.getStatus().equals(Constant.TASK_QUALITY_DONE)) {
+            updateInstallActual(tr);
+        }
         return ResultGenerator.genSuccessResult();
+    }
+
+    /**
+     * 根据已完成的工序，自动生成 【对应工序的】的总装排产的实际完成情况
+     *
+     */
+    public void updateInstallActual(TaskRecord tr){
+        /**
+         * 如果机器某个工序已经完成(结束扫码)，
+         * 则该机器的 对应的总装的 工序的针数头数自动填写为全部完成，
+         * 这样app用户就不需要重复去报告总装工序的情况。
+         *
+         * task_record --> process_record --> machine --> install_plan --> install_plan_actual
+         */
+        ProcessRecord pr = processRecordService.findById(tr.getProcessRecordId());
+        Machine machine = machineService.findById(pr.getMachineId());
+        List<InstallPlan> installPlanList = installPlanService.getInstallPlanByMachineId(machine.getId());
+
+        MachineOrder machineOrder = machineOrderService.findById(machine.getOrderId());
+        InstallGroup installGroup = installGroupService.getInstallGroupByTaskName(tr.getTaskName());
+        for (InstallPlan installplan: installPlanList) {
+            if(installGroup.getId() == installplan.getInstallGroupId()) {
+                InstallPlanActual installPlanActual = new InstallPlanActual();
+                installPlanActual.setCreateDate(new Date());
+                installPlanActual.setInstallPlanId(installplan.getId());
+                installPlanActual.setHeadCountDone(commonService.getRealSumValue(machineOrder.getHeadNum()));
+                installPlanActualService.save(installPlanActual);
+
+                Logger.getLogger("").log(Level.INFO, "自动填写总装 " + installPlanActual.getId());///这里可以获取id ! ...
+                break;
+            } else {
+                Logger.getLogger("").log(Level.INFO, "没有相等 ");
+            }
+        }
     }
 
     /**
@@ -965,7 +1011,7 @@ public class TaskRecordController {
             //MQTT 发生安装异常时，通知对应质检员
             mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL_TO_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
         }
-
+        updateInstallActual(taskRecord1);
         return ResultGenerator.genSuccessResult("3个表 task_record + abnormal_record + abnormal_image更新成功");
     }
 

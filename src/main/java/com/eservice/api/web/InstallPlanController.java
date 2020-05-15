@@ -305,9 +305,9 @@ public class InstallPlanController {
     }
 
     /**
-     * 根据机器ID去查询排产计划，
-     * 可以用于： 如果机器已经完成(结束扫码)，
-     * 则该机器的所有总装工序的针数头数自动填写为全部完成，
+     * 根据机器ID 去查询排产计划，
+     * 可以用于： 如果机器已经完成(结束扫码)，--> 是某个工序 扫码完成
+     * 则该机器的 【对应工序的】总装工序的 installPlanActurall的针数头数 自动填写为全部完成，
      * 这样app用户就不需要重复去报告总装工序的情况。
      */
     @PostMapping("/getInstallPlanByMachineId")

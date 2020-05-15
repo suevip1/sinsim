@@ -62,6 +62,7 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
     private InstallPlanServiceImpl installPlanService;
     private Logger logger = Logger.getLogger(InstallPlanController.class);
 
+    //每新增1个工序，调用一次。
     @Transactional(rollbackFor = Exception.class)
     public boolean addTaskPlans(@RequestParam List<Integer> taskRecordIds, Integer planType, String machineStrId, Date planDate, Integer userId) {
         for (int i = 0; i < taskRecordIds.size(); i++) {

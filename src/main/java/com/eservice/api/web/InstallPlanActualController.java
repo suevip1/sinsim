@@ -28,6 +28,11 @@ import java.util.List;
 * @author Wilson Hu
 * @date 2019/07/19.
 */
+
+/**
+ * 更新： app上不再反馈总装排产，在app扫码完成某工序时，自动生成对应 installPlanActual 的总装排产的数据，
+ * 所以这个controller类，应该不再被使用了 （installPlanActual还是在用）
+ */
 @RestController
 @RequestMapping("/install/plan/actual")
 public class InstallPlanActualController {
@@ -143,6 +148,9 @@ public class InstallPlanActualController {
      * 一次性接收多个排产反馈
      * app 上一次性提交多个。
      * @return 添加或更新（比如分多次完成）成功的个数，比如非法的数据比如不合理的数量，无法被添加。
+     *
+     * 更新： app上不再反馈总装排产，在app扫码完成某工序时，自动生成对应installPlanActual的总装排产的数据，
+     * 所以这个controller类，包括这个接口，应该不再被使用了
      */
     @PostMapping("/addInstallPlanActualList")
 //    public Result addInstallPlanActualList(List<String> installPlanActualList) { //不能支持List
