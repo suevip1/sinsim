@@ -756,16 +756,15 @@ public class TaskRecordController {
 
         //开始安装时不用，只有在安装结束时才要更新 --> 现在没有质检了，扫码完成时，app直接发 质检完成
         if(tr.getStatus().equals(Constant.TASK_QUALITY_DONE)) {
-            updateInstallActual(tr);
+            createInstallPlanActual(tr);
         }
         return ResultGenerator.genSuccessResult();
     }
 
     /**
      * 根据已完成的工序，自动生成 【对应工序的】的总装排产的实际完成情况
-     *
      */
-    public void updateInstallActual(TaskRecord tr){
+    public void createInstallPlanActual(TaskRecord tr){
         /**
          * 如果机器某个工序已经完成(结束扫码)，
          * 则该机器的 对应的总装的 工序的针数头数自动填写为全部完成，
@@ -790,7 +789,7 @@ public class TaskRecordController {
                 Logger.getLogger("").log(Level.INFO, "自动填写总装 " + installPlanActual.getId());///这里可以获取id ! ...
                 break;
             } else {
-                Logger.getLogger("").log(Level.INFO, "没有相等 ");
+                Logger.getLogger("").log(Level.INFO, tr.getTaskName() + ", 该工序不是总装，无需生成 ");
             }
         }
     }
@@ -1011,7 +1010,8 @@ public class TaskRecordController {
             //MQTT 发生安装异常时，通知对应质检员
             mqttMessageHelper.sendToClient(Constant.S2C_INSTALL_ABNORMAL_TO_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
         }
-        updateInstallActual(taskRecord1);
+        //报异常，不应该生成对应 InstallPlanActual
+        //createInstallPlanActual(taskRecord1);
         return ResultGenerator.genSuccessResult("3个表 task_record + abnormal_record + abnormal_image更新成功");
     }
 
