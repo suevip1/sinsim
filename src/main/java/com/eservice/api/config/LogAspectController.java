@@ -70,7 +70,7 @@ public class LogAspectController {
     @AfterReturning(returning = "ret", pointcut = "pointCut()")
     public void afterReturning(Object ret) throws Throwable {
         // 处理完请求，返回内容
-        logger.info("[AOP] Return: " + ret);
+     //   logger.info("[AOP] Return: " + ret);
     }
 
     /**

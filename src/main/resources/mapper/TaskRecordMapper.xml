@@ -18,7 +18,7 @@
         <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="wait_timespan" jdbcType="INTEGER" property="waitTimespan"/>
-        <result column="cmt_feedback" jdbcType="INTEGER" property="cmtFeedback"/>
+        <result column="cmt_feedback" jdbcType="VARCHAR" property="cmtFeedback"/>
 
     </resultMap>
 
@@ -88,7 +88,7 @@
         <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="wait_timespan" jdbcType="INTEGER" property="waitTimespan"/>
-        <result column="cmt_feedback" jdbcType="INTEGER" property="cmtFeedback"/>
+        <result column="cmt_feedback" jdbcType="VARCHAR" property="cmtFeedback"/>
         <association javaType="com.eservice.api.model.process_record.ProcessRecord" property="processRecord">
             <id column="process_record_id_in_association" property="id"/>
             <result column="machine_id" jdbcType="INTEGER" property="machineId"/>
@@ -185,7 +185,7 @@
 
     <select id="searchTaskRecordDetail" resultMap="TaskRecordDetail">
         SELECT
-        tr.id, tr.task_name, tr.leader, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,
+        tr.id, tr.task_name, tr.leader, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.cmt_feedback,
         m.status machine_status, m.nameplate,
         mo.id machine_order_id, mo.status machineOrder_status, mo.machine_type mo_machine_type, mo.order_num, mo.*,
         task.standard_minutes

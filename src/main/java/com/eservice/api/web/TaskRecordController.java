@@ -786,10 +786,10 @@ public class TaskRecordController {
                 installPlanActual.setHeadCountDone(commonService.getRealSumValue(machineOrder.getHeadNum()));
                 installPlanActualService.save(installPlanActual);
 
-                Logger.getLogger("").log(Level.INFO, "自动填写总装 " + installPlanActual.getId());///这里可以获取id ! ...
+                Logger.getLogger("").log(Level.INFO, "自动生成 实际总装 " + installPlanActual.getId() + ", 头数 " + installPlanActual.getHeadCountDone());///这里可以获取id ! ...
                 break;
             } else {
-                Logger.getLogger("").log(Level.INFO, tr.getTaskName() + ", 该工序不是总装，无需生成 ");
+//                Logger.getLogger("").log(Level.INFO, installGroup.getGroupName() + ", 无需生成 ");
             }
         }
     }

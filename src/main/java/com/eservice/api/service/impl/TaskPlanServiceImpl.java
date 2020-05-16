@@ -157,6 +157,7 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                     mqttMessageHelper.sendToClient(Constant.S2C_TASK_INSTALL + taskList.get(0).getGroupId(), JSON.toJSONString(msg));
                 }
 
+                ///在”计划管理“中 添加计划安排时，自动添加了 总装排产 InstallPlan。 （InstallPlanActual则在app扫码完成工序时添加）
                 // 因为把总装排产，合并到“计划管理”，所以需要在安排计划时 自动生成总装排产（这样在app上扫码完成时，才能有总装完成自动填充完成头数）
                 InstallPlan installPlan1 = new InstallPlan();
                 installPlan1.setType(Constant.STR_INSTALL_TYPE_WHOLE);
@@ -176,7 +177,7 @@ public class TaskPlanServiceImpl extends AbstractService<TaskPlan> implements Ta
                 installPlan1.setCreateDate(new Date());
 
                 installPlanService.save(installPlan1);
-                logger.info("自动添加了 总装排产 " + installPlan1.getCreateDate());
+                logger.info("自动添加了 总装排产 for 铭牌号： " + machine.getNameplate() + ", 工序： " + taskRecord.getTaskName());
 
             }else {
                 //进行事务操作
