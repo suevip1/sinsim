@@ -15,6 +15,15 @@ public interface InstallPlanActualMapper extends Mapper<InstallPlanActual> {
                                                                   @Param("queryStartTime") String queryStartTime,
                                                                   @Param("queryFinishTime") String queryFinishTime,
                                                                   @Param("isNotFinished") Boolean isNotFinished);
+
+    List<InstallPlanActualDetails> selectInstallPlanActualDetails_Parts(@Param("orderNum") String orderNum,
+                                                                  @Param("nameplate") String nameplate,
+                                                                  @Param("installGroupName") String installGroupName,
+                                                                  @Param("type") String type,
+                                                                  @Param("queryStartTime") String queryStartTime,
+                                                                  @Param("queryFinishTime") String queryFinishTime,
+                                                                  @Param("isNotFinished") Boolean isNotFinished);
+
     InstallPlanActual getInstallPlanActual( @Param("installPlanId") Integer installPlanId);
 
     List<InstallPlanActual> getInstallPlanActualList( @Param("installPlanId") Integer installPlanId);

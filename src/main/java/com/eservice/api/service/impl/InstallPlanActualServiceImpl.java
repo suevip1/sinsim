@@ -5,6 +5,7 @@ import com.eservice.api.model.install_plan_actual.InstallPlanActual;
 import com.eservice.api.model.install_plan_actual.InstallPlanActualDetails;
 import com.eservice.api.service.InstallPlanActualService;
 import com.eservice.api.core.AbstractService;
+import com.eservice.api.service.common.Constant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,11 @@ public class InstallPlanActualServiceImpl extends AbstractService<InstallPlanAct
                                                                          String queryStartTime,
                                                                          String queryFinishTime,
                                                                          Boolean isNotFinished) {
-        return installPlanActualMapper.selectInstallPlanActualDetails(orderNum, nameplate, installGroupName, type, queryStartTime, queryFinishTime, isNotFinished);
+        if(null != type && type.equals(Constant.STR_INSTALL_TYPE_WHOLE)) {
+            return installPlanActualMapper.selectInstallPlanActualDetails(orderNum, nameplate, installGroupName, type, queryStartTime, queryFinishTime, isNotFinished);
+        }else {
+            return installPlanActualMapper.selectInstallPlanActualDetails_Parts(orderNum, nameplate, installGroupName, type, queryStartTime, queryFinishTime, isNotFinished);
+        }
     }
     public InstallPlanActual getInstallPlanActual(Integer installPlanId){
         return installPlanActualMapper.getInstallPlanActual(installPlanId);
