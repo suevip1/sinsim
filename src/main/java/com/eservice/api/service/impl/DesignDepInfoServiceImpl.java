@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -20,5 +21,29 @@ import javax.annotation.Resource;
 public class DesignDepInfoServiceImpl extends AbstractService<DesignDepInfo> implements DesignDepInfoService {
     @Resource
     private DesignDepInfoMapper designDepInfoMapper;
+
+    public List<DesignDepInfo> selectDesignDepInfo(
+                                                    String orderNum,
+                                                    String saleman,
+                                                    String guestName,
+                                                    Integer orderStatus,//订单审核状态
+                                                    Integer drawingStatus,//图纸状态
+                                                    String machineSpec,
+                                                    String keyword,
+                                                    String designer,
+                                                    String updateDateStart,
+                                                    String updateDateEnd) {
+        return designDepInfoMapper.selectDesignDepInfo(orderNum,
+                saleman,
+                guestName,
+                orderStatus,
+                drawingStatus,
+                machineSpec,
+                keyword,
+                designer,
+                updateDateStart,
+                updateDateEnd);
+
+    }
 
 }

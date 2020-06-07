@@ -53,6 +53,17 @@ public class DesignDepInfo {
     @Column(name = "created_date")
     private Date createdDate;
 
+    @Column(name = "updated_date")
+    private Date updatedDate;
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
     /**
      * 设备规格
      */

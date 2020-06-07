@@ -232,6 +232,7 @@ CREATE TABLE `design_dep_info` (
   `order_sign_status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '订单的审核状态',
   `designer` varchar(255) DEFAULT NULL COMMENT '安排的设计人员',
   `created_date` datetime DEFAULT NULL,
+  `updated_time` datetime DEFAULT NULL,
   `machine_spec` varchar(255) DEFAULT NULL COMMENT '设备规格',
   `keywords` varchar(255) DEFAULT NULL COMMENT '关键字',
   `drawing_loading_done` tinyint(1) DEFAULT '0' COMMENT '人工选择是否完成图纸',

@@ -16,6 +16,7 @@
     <result column="order_sign_status" jdbcType="TINYINT" property="orderSignStatus" />
     <result column="designer" jdbcType="VARCHAR" property="designer" />
     <result column="created_date" jdbcType="TIMESTAMP" property="createdDate" />
+    <result column="created_date" jdbcType="TIMESTAMP" property="updatedDate" />
     <result column="machine_spec" jdbcType="VARCHAR" property="machineSpec" />
     <result column="keywords" jdbcType="VARCHAR" property="keywords" />
     <result column="drawing_loading_done" jdbcType="BIT" property="drawingLoadingDone" />
@@ -27,4 +28,45 @@
     <result column="cover_file" jdbcType="VARCHAR" property="coverFile" />
     <result column="design_status" jdbcType="VARCHAR" property="designStatus" />
   </resultMap>
+  <select id="selectDesignDepInfo" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM
+        design_dep_info ddi
+    WHERE 1=1
+    <if test="orderNum!=null and orderNum != '' ">
+      and ddi.order_num like CONCAT('%','${orderNum}','%' )
+    </if>
+    <if test="saleman!=null and saleman != '' ">
+      and ddi.sellman like CONCAT('%','${saleman}','%')
+    </if>
+
+    <if test="guestName!=null and guestName != '' ">
+      and ddi.guest_name like CONCAT('%','${guestName}','%')
+    </if>
+
+    <if test="orderStatus!=null and orderStatus != '' ">
+      and ddi.order_sign_status = #{orderStatus}
+    </if>
+    <if test="drawingStatus!=null and drawingStatus != '' ">
+      and ddi.drawing_loading_done = #{drawingStatus}
+    </if>
+
+    <if test="machineSpec!=null and machineSpec != '' ">
+      and ddi.machine_spec like CONCAT('%','${machineSpec}','%' )
+    </if>
+    <if test="keyword!=null and keyword != '' ">
+      and ddi.keywords like CONCAT('%','${keyword}','%' )
+    </if>
+    <if test="designer!=null and designer != '' ">
+      and ddi.designer like CONCAT('%','${designer}','%' )
+    </if>
+
+    <if test="updateDateStart!=null and updateDateStart != '' ">
+      and DATE_FORMAT(ddi.updated_time,'%Y-%m-%d') &gt;= #{updateDateStart}
+    </if>
+    <if test="updateDateEnd!=null and updateDateEnd != '' ">
+      and DATE_FORMAT(ddi.updated_time,'%Y-%m-%d') &lt;= #{updateDateEnd}
+    </if>
+  </select>
 </mapper>

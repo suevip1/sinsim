@@ -3,6 +3,7 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.design_dep_info.DesignDepInfo;
 import com.eservice.api.service.DesignDepInfoService;
+import com.eservice.api.service.impl.DesignDepInfoServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequestMapping("/design/dep/info")
 public class DesignDepInfoController {
     @Resource
-    private DesignDepInfoService designDepInfoService;
+    private DesignDepInfoServiceImpl designDepInfoService;
 
     @PostMapping("/add")
     public Result add(DesignDepInfo designDepInfo) {
@@ -52,6 +53,35 @@ public class DesignDepInfoController {
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
         List<DesignDepInfo> list = designDepInfoService.findAll();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @PostMapping("/selectDesignDepInfo")
+    public Result selectDesignDepInfo(@RequestParam(defaultValue = "0") Integer page,
+                                      @RequestParam(defaultValue = "0") Integer size,
+                                      String orderNum,
+                                      String saleman,
+                                      String guestName,
+                                      Integer orderStatus,//订单审核状态
+                                      Integer drawingStatus,//图纸状态
+                                      String machineSpec,
+                                      String keyword,
+                                      String designer,
+                                      String updateDateStart,
+                                      String updateDateEnd) {
+        PageHelper.startPage(page, size);
+        List<DesignDepInfo> list = designDepInfoService.selectDesignDepInfo(
+                orderNum,
+                saleman,
+                guestName,
+                orderStatus,
+                drawingStatus,
+                machineSpec,
+                keyword,
+                designer,
+                updateDateStart,
+                updateDateEnd);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
