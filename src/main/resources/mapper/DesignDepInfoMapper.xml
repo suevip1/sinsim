@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.DesignDepInfoMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.design_dep_info.DesignDepInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+    <result column="sellman" jdbcType="VARCHAR" property="sellman" />
+    <result column="guest_name" jdbcType="VARCHAR" property="guestName" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="machine_num" jdbcType="INTEGER" property="machineNum" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="order_sign_status" jdbcType="TINYINT" property="orderSignStatus" />
+    <result column="designer" jdbcType="VARCHAR" property="designer" />
+    <result column="created_date" jdbcType="TIMESTAMP" property="createdDate" />
+    <result column="machine_spec" jdbcType="VARCHAR" property="machineSpec" />
+    <result column="keywords" jdbcType="VARCHAR" property="keywords" />
+    <result column="drawing_loading_done" jdbcType="BIT" property="drawingLoadingDone" />
+    <result column="drawing_loading_files" jdbcType="VARCHAR" property="drawingLoadingFiles" />
+    <result column="hole_tube_required" jdbcType="BIT" property="holeTubeRequired" />
+    <result column="hole_tube_files" jdbcType="VARCHAR" property="holeTubeFiles" />
+    <result column="bom_required" jdbcType="BIT" property="bomRequired" />
+    <result column="cover_required" jdbcType="BIT" property="coverRequired" />
+    <result column="cover_file" jdbcType="VARCHAR" property="coverFile" />
+    <result column="design_status" jdbcType="VARCHAR" property="designStatus" />
+  </resultMap>
+</mapper>

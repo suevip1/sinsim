@@ -41,8 +41,17 @@ public class CodeGenerator {
 //            "order_cancel_record","order_change_record","order_detail", "order_loading_list","order_sign","order_split_record","process",
 //            "process_record", "role", "task", "task_plan","task_record","task_quality_record",
 //            "user","contract","contract_sign","sign_process"
-            "whole_install_acutual",
-            "whole_install_plan"
+//            "whole_install_acutual",
+//            "whole_install_plan"
+//            "domestic_trade_zone"
+//            "install_plan_acutual"
+//            "install_plan"
+//    "attendance"
+//            "data_config"
+//            "contact_form",
+//            "contact_sign",
+//            "change_item"
+            "design_dep_info"
     };
 
     public static void main(String[] args) {
