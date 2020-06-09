@@ -53,6 +53,8 @@
 		<result column="create_user_id" jdbcType="INTEGER" property="createUserId"/>
 		<result column="contract_num" jdbcType="VARCHAR" property="contractNum"/>
 		<result column="customer" jdbcType="VARCHAR" property="customer"/>
+		<result column="pay_method" jdbcType="VARCHAR" property="payMethod"/>
+		<result column="currency_type" jdbcType="VARCHAR" property="currencyType"/>
 		<result column="country" jdbcType="VARCHAR" property="country"/>
 		<result column="brand" jdbcType="VARCHAR" property="brand"/>
 		<!--&amp;lt;result column="machine_type" jdbcType="INTEGER" property="machineType" /&amp;gt;-->
@@ -83,6 +85,7 @@
 		<result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
 		<result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
 		<result column="all_urgent" jdbcType="TINYINT" property="allUrgent"/>
+		<result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
 		<association javaType="com.eservice.api.model.order_detail.OrderDetail" property="orderDetail">
 			<!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
 			<id column="detail_id" property="id"/>
@@ -183,30 +186,93 @@
   </select>
 
 	<select id="selectOrderFuzzy" resultMap="MachineOrderDetailMap">
-		select mo.*,
-		od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
-		od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor,
-		od.electric_motor_xy,
-		od.electric_trim, od.electric_power, od.electric_switch,od.color_change_mode, od.electric_oil, od.axle_split,
-		od.axle_panel, od.axle_needle,od.axle_needle_type, od.axle_rail, od.axle_down_check, od.axle_hook,
-		od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
-		od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_pole_height, od.framework_light,
-		od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
-		od.driver_reel,
-		os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,os.current_step,
-		mt.id machineTypeID, mt.`name`, con.contract_num, con.customer_name as customer,
-		oll.id as order_loading_list_id,oll.file_name,oll.type as file_type,
-		osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id, osr.original_order_id split_original_order_id, osr.split_reason,
-		ocr.id changeRecordId, ocr.user_id change_user_id, ocr.order_id change_order_id, ocr.change_reason
-		from machine_order mo
-		LEFT JOIN order_sign os on mo.id = os.order_id
-		LEFT JOIN order_detail od on mo.order_detail_id=od.id
-		LEFT JOIN machine_type mt on mo.machine_type=mt.id
-		LEFT JOIN contract con on mo.contract_id = con.id
-		LEFT JOIN order_loading_list oll ON oll.order_id=mo.id
-		LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
-		LEFT JOIN order_split_record osr on osr.order_id = mo.id
-		where 1=1 AND mo.valid!=0
+		SELECT 
+			mo.*,
+			m.nameplate,
+			od.id detail_id,
+			od.special_towel_color,
+			od.special_towel_daxle,
+			od.special_towel_haxle,
+			od.special_towel_motor,
+			od.special_taping_head,
+			od.special_towel_needle,
+			od.electric_pc,
+			od.electric_language,
+			od.electric_motor,
+			od.electric_motor_xy,
+			od.electric_trim,
+			od.electric_power,
+			od.electric_switch,
+			od.color_change_mode,
+			od.electric_oil,
+			od.axle_split,
+			od.axle_panel,
+			od.axle_needle,
+			od.axle_needle_type,
+			od.axle_rail,
+			od.axle_down_check,
+			od.axle_hook,
+			od.axle_jump,
+			od.axle_upper_thread,
+			od.axle_addition,
+			od.framework_color,
+			od.framework_platen,
+			od.framework_platen_color,
+			od.framework_ring,
+			od.framework_bracket,
+			od.framework_stop,
+			od.framework_pole_height,
+			od.framework_light,
+			od.driver_type,
+			od.driver_method,
+			od.driver_reel_hole,
+			od.driver_horizon_num,
+			od.driver_vertical_num,
+			od.driver_reel,
+			os.id order_sign_id,
+			os.order_id,
+			os.sign_content,
+			os.create_time os_create_time,
+			os.update_time os_update_time,
+			os.current_step,
+			mt.id machineTypeID,
+			mt.`name`,
+			con.contract_num,
+			con.customer_name AS customer,
+			con.pay_method,
+			con.currency_type,
+			oll.id AS order_loading_list_id,
+			oll.file_name,
+			oll.type AS file_type,
+			osr.id splitRecordId,
+			osr.user_id split_user_id,
+			osr.order_id split_order_id,
+			osr.original_order_id split_original_order_id,
+			osr.split_reason,
+			ocr.id changeRecordId,
+			ocr.user_id change_user_id,
+			ocr.order_id change_order_id,
+			ocr.change_reason
+		FROM
+			machine_order mo
+				LEFT JOIN
+			order_sign os ON mo.id = os.order_id
+				LEFT JOIN
+			order_detail od ON mo.order_detail_id = od.id
+				LEFT JOIN
+			machine_type mt ON mo.machine_type = mt.id
+				LEFT JOIN
+			contract con ON mo.contract_id = con.id
+				LEFT JOIN
+			order_loading_list oll ON oll.order_id = mo.id
+				LEFT JOIN
+			order_change_record ocr ON ocr.order_id = mo.original_order_id
+				LEFT JOIN
+			order_split_record osr ON osr.order_id = mo.id
+				LEFT JOIN
+			machine m ON m.order_id = mo.id
+		WHERE
+			1 = 1 AND mo.valid != 0
 		<if test="id != null and id != ''">
 			and mo.id=#{id}
 		</if>
@@ -248,31 +314,93 @@
 
 
 	<select id="selectOrder" resultMap="MachineOrderDetailMap">
-		select mo.*,
-		od.id detail_id, od.special_towel_color, od.special_towel_daxle, od.special_towel_haxle, od.special_towel_motor,
-		od.special_taping_head, od.special_towel_needle, od.electric_pc,od.electric_language, od.electric_motor,
-		od.electric_motor_xy,
-		od.electric_trim, od.electric_power, od.electric_switch,od.color_change_mode, od.electric_oil, od.axle_split,
-		od.axle_panel, od.axle_needle,od.axle_needle_type,od.axle_rail, od.axle_down_check, od.axle_hook,
-		od.axle_jump, od.axle_upper_thread, od.axle_addition, od.framework_color, od.framework_platen,
-		od.framework_platen_color, od.framework_ring, od.framework_bracket, od.framework_stop, od.framework_pole_height, od.framework_light,
-		od.driver_type, od.driver_method, od.driver_reel_hole, od.driver_horizon_num, od.driver_vertical_num,
-		od.driver_reel,
-		os.id order_sign_id, os.order_id,os.sign_content,os.create_time os_create_time, os.update_time os_update_time,os.current_step,
-		mt.id machineTypeID, mt.`name`, con.contract_num, con.customer_name as customer,
-		oll.id as order_loading_list_id,oll.file_name,oll.type as file_type,
-		osr.id splitRecordId, osr.user_id split_user_id, osr.order_id split_order_id,osr.original_order_id split_original_order_id, osr.split_reason,
-		ocr.id changeRecordId, ocr.user_id change_user_id, ocr.order_id change_order_id, ocr.change_reason
-		from machine_order mo
-		LEFT JOIN order_sign os on mo.id = os.order_id
-		LEFT JOIN order_detail od on mo.order_detail_id=od.id
-		LEFT JOIN machine_type mt on mo.machine_type=mt.id
-		LEFT JOIN contract con on mo.contract_id = con.id
-		LEFT JOIN order_loading_list oll ON oll.order_id=mo.id
-		LEFT JOIN order_change_record ocr on ocr.order_id = mo.original_order_id
-		LEFT JOIN order_split_record osr on osr.order_id = mo.id
--- 		left join contact_form cf on cf.order_num = mo.order_num
-		where 1=1 AND mo.valid!=0
+		SELECT 
+			mo.*,
+			m.nameplate,
+			od.id detail_id,
+			od.special_towel_color,
+			od.special_towel_daxle,
+			od.special_towel_haxle,
+			od.special_towel_motor,
+			od.special_taping_head,
+			od.special_towel_needle,
+			od.electric_pc,
+			od.electric_language,
+			od.electric_motor,
+			od.electric_motor_xy,
+			od.electric_trim,
+			od.electric_power,
+			od.electric_switch,
+			od.color_change_mode,
+			od.electric_oil,
+			od.axle_split,
+			od.axle_panel,
+			od.axle_needle,
+			od.axle_needle_type,
+			od.axle_rail,
+			od.axle_down_check,
+			od.axle_hook,
+			od.axle_jump,
+			od.axle_upper_thread,
+			od.axle_addition,
+			od.framework_color,
+			od.framework_platen,
+			od.framework_platen_color,
+			od.framework_ring,
+			od.framework_bracket,
+			od.framework_stop,
+			od.framework_pole_height,
+			od.framework_light,
+			od.driver_type,
+			od.driver_method,
+			od.driver_reel_hole,
+			od.driver_horizon_num,
+			od.driver_vertical_num,
+			od.driver_reel,
+			os.id order_sign_id,
+			os.order_id,
+			os.sign_content,
+			os.create_time os_create_time,
+			os.update_time os_update_time,
+			os.current_step,
+			mt.id machineTypeID,
+			mt.`name`,
+			con.contract_num,
+			con.customer_name AS customer,
+			con.pay_method,
+			con.currency_type,
+			oll.id AS order_loading_list_id,
+			oll.file_name,
+			oll.type AS file_type,
+			osr.id splitRecordId,
+			osr.user_id split_user_id,
+			osr.order_id split_order_id,
+			osr.original_order_id split_original_order_id,
+			osr.split_reason,
+			ocr.id changeRecordId,
+			ocr.user_id change_user_id,
+			ocr.order_id change_order_id,
+			ocr.change_reason
+		FROM
+			machine_order mo
+				LEFT JOIN
+			order_sign os ON mo.id = os.order_id
+				LEFT JOIN
+			order_detail od ON mo.order_detail_id = od.id
+				LEFT JOIN
+			machine_type mt ON mo.machine_type = mt.id
+				LEFT JOIN
+			contract con ON mo.contract_id = con.id
+				LEFT JOIN
+			order_loading_list oll ON oll.order_id = mo.id
+				LEFT JOIN
+			order_change_record ocr ON ocr.order_id = mo.original_order_id
+				LEFT JOIN
+			order_split_record osr ON osr.order_id = mo.id
+				LEFT JOIN
+			machine m ON m.order_id = mo.id
+		WHERE
+			1 = 1 AND mo.valid != 0
 		<if test="id != null and id != ''">
 			and mo.id=#{id}
 		</if>
