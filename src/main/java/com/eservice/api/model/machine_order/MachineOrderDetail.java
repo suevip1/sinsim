@@ -2,6 +2,7 @@ package com.eservice.api.model.machine_order;
 
 import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_form.ContactFormDetail;
+import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.order_change_record.OrderChangeRecord;
 import com.eservice.api.model.order_detail.OrderDetail;
@@ -210,6 +211,20 @@ public class MachineOrderDetail {
     @Column(name = "end_time")
     private Date endTime;
 
+       /**
+     * 合同支付方式
+     */
+    @Column(name="pay_method")
+    private String payMethod;
+
+    /**
+     * 币种
+     */
+    @Column(name="currency_type")
+    private String currencyType;
+
+    private String nameplate;
+
     /**
      * 备注信息
      */
@@ -226,11 +241,42 @@ public class MachineOrderDetail {
      */
     private OrderSign orderSign;
 
+    /*
+    *机器
+    */
+    private Machine machine;
+
     /**
      * 订单是否有效
      */
     @Column(name = "valid")
     private Integer valid;
+
+    public String getNameplate()
+    {
+        return nameplate;
+    }
+
+    public void setNameplate(String nameplate)
+    {
+        this.nameplate = nameplate;
+    }
+
+    public String getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(String payMethod) {
+        this.payMethod = payMethod;
+    }
+
+    public String getCurrencyType() {
+        return currencyType;
+    }
+
+    public void setCurrencyType(String currencyType) {
+        this.currencyType = currencyType;
+    }
 
     /**
      * 需求单对应的联系单
@@ -343,6 +389,14 @@ public class MachineOrderDetail {
 
     public void setOrderSign(OrderSign orderSign) {
         this.orderSign = orderSign;
+    }
+
+    public Machine getMachine() {
+        return machine;
+    }
+
+    public void setMachine(Machine machine) {
+        this.machine = machine;
     }
 
     public String getEquipment() {
