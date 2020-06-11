@@ -480,4 +480,40 @@ public class DesignDepInfo {
     public void setDesignStatus(String designStatus) {
         this.designStatus = designStatus;
     }
+
+    //是否完成
+    @Column(name = "hole_tube_done")
+    private String holeTubeDone;
+
+    //BOM是否完成
+    @Column(name = "bom_done")
+    private String bomDone;
+
+    //是否完成
+    @Column(name = "cover_done")
+    private String coverDone;
+
+    public String getHoleTubeDone() {
+        return holeTubeDone;
+    }
+
+    public void setHoleTubeDone(String holeTubeDone) {
+        this.holeTubeDone = holeTubeDone;
+    }
+
+    public String getBomDone() {
+        return bomDone;
+    }
+
+    public void setBomDone(String bomDone) {
+        this.bomDone = bomDone;
+    }
+
+    public String getCoverDone() {
+        return coverDone;
+    }
+
+    public void setCoverDone(String coverDone) {
+        this.coverDone = coverDone;
+    }
 }
