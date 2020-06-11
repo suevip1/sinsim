@@ -287,9 +287,9 @@ public class MachineOrderController {
                 sheet1.getRow(0).getCell(5).setCellValue("台数");
                 sheet1.getRow(0).getCell(6).setCellValue("单价");
                 sheet1.getRow(0).getCell(7).setCellValue("装置");
-                sheet1.getRow(0).getCell(8).setCellValue("装置金额");
+                sheet1.getRow(0).getCell(8).setCellValue("装置总价");
                 sheet1.getRow(0).getCell(9).setCellValue("优惠金额");
-                sheet1.getRow(0).getCell(10).setCellValue("总金额");
+                sheet1.getRow(0).getCell(10).setCellValue("订单总价");
                 sheet1.getRow(0).getCell(11).setCellValue("币种");
                 sheet1.getRow(0).getCell(12).setCellValue("销售员"); 
                 sheet1.getRow(0).getCell(13).setCellValue("销售费"); 
@@ -370,14 +370,14 @@ public class MachineOrderController {
 
                     sheet1.getRow(r).getCell(11).setCellValue(mod.getCurrencyType());//币种
                     sheet1.getRow(r).getCell(12).setCellValue(mod.getSellman());//销售员
-                    sheet1.getRow(r).getCell(13).setCellValue(totalAmount);//销售费
-                    sheet1.getRow(r).getCell(14).setCellValue(0);//保修费
+//                    sheet1.getRow(r).getCell(13).setCellValue(totalAmount);//销售费 先空着
+//                    sheet1.getRow(r).getCell(14).setCellValue(0);//保修费 先空着
                     sheet1.getRow(r).getCell(15).setCellValue(mod.getMaintainPerson());//保修人员
 
                     sheet1.getRow(r).getCell(16).setCellValue(mod.getPayMethod());//付款方式
                     //sheet1.getRow(r).getCell(16).setCellStyle(wrapStyle);
-                    sheet1.getRow(r).getCell(17).setCellValue(0);//定金率
-                    sheet1.getRow(r).getCell(18).setCellValue(0);//毛利
+//                    sheet1.getRow(r).getCell(17).setCellValue(0);//定金率 先空着
+//                    sheet1.getRow(r).getCell(18).setCellValue(0);//毛利 先空着
 
                     sheet1.getRow(r).getCell(19).setCellValue(mod.getPackageMethod());//包装方式
                     sheet1.getRow(r).getCell(20).setCellValue("");//机架长度
@@ -469,9 +469,9 @@ public class MachineOrderController {
                     sheet1.getRow(0).getCell(5).setCellValue("台数");
                     sheet1.getRow(0).getCell(6).setCellValue("单价");
                     sheet1.getRow(0).getCell(7).setCellValue("装置");
-                    sheet1.getRow(0).getCell(8).setCellValue("装置金额");
+                    sheet1.getRow(0).getCell(8).setCellValue("装置总价");
                     sheet1.getRow(0).getCell(9).setCellValue("优惠金额");
-                    sheet1.getRow(0).getCell(10).setCellValue("总金额");
+                    sheet1.getRow(0).getCell(10).setCellValue("订单总金额");
                     sheet1.getRow(0).getCell(11).setCellValue("币种");
                     sheet1.getRow(0).getCell(12).setCellValue("销售员"); 
                     sheet1.getRow(0).getCell(13).setCellValue("销售费"); 
@@ -534,7 +534,7 @@ public class MachineOrderController {
 
                         sheet1.getRow(r).getCell(11).setCellValue(mod.getCurrencyType());//币种
                         sheet1.getRow(r).getCell(12).setCellValue(mod.getSellman());//销售员
-                        sheet1.getRow(r).getCell(13).setCellValue(totalAmount);//销售费
+//                        sheet1.getRow(r).getCell(13).setCellValue(totalAmount);//销售费 先空着
                         sheet1.getRow(r).getCell(13).setCellStyle(cellStyle);
 
                         sheet1.getRow(r).getCell(14).setCellValue(mod.getPayMethod());//付款方式

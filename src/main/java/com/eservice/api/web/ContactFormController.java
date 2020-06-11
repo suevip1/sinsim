@@ -611,9 +611,7 @@ public class ContactFormController {
          */
         String downloadPathForNginx = "";
 
-        Boolean displayEnable = false;
-        User user = userService.selectByAccount(account);
-        displayEnable = isDisplayEnable(user);
+        Boolean displayEnable = commonService.isDisplayPrice(account);
 
         try {
             String templateFile = isChange ? "empty_lxd_change_template.xls" : "empty_lxd_work_template.xls";
@@ -674,7 +672,12 @@ public class ContactFormController {
                     }
                     curRow.getCell((short) 1).setCellValue(item.getOldInfo());
                     curRow.getCell((short) 5).setCellValue(item.getNewInfo());
-                    curRow.getCell((short) 10).setCellValue(item.getRemarks());
+
+                    if(displayEnable) {
+                        curRow.getCell((short) 10).setCellValue(item.getRemarks());
+                    } else {
+                        curRow.getCell((short) 10).setCellValue("/");
+                    }
                     index++;
                 }
             } else {
@@ -753,26 +756,6 @@ public class ContactFormController {
             return ResultGenerator.genFailResult("生成文件失败!");
         } else {
             return ResultGenerator.genSuccessResult(downloadPathForNginx);
-        }
-    }
-
-    boolean isDisplayEnable(User user){
-        if (user != null) {
-            Integer roleId = user.getRoleId();
-            //只有总经理，销售，财务等用户，生成的excel里才显示金额信息. '6','7','9','14','15'
-            if ((1 == roleId)
-                    ||(6 == roleId)
-                    || (7 == roleId)
-                    || (9 == roleId)
-                    || (13 == roleId)
-                    || (14 == roleId)
-                    || (15 == roleId)) {
-               return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
         }
     }
 

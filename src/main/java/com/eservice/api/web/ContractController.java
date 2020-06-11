@@ -807,24 +807,8 @@ public class ContractController {
          */
         Integer totalPriceOfContract = 0;
 
-
         //只有总经理，销售，财务等用户，生成的excel里才显示金额信息. '6','7','9','14','15'
-        Boolean displayPrice = false;
-        User user = userService.selectByAccount(account);
-        if (user != null) {
-            Integer roleId = user.getRoleId();
-            if ((6 == roleId)
-                    || (7 == roleId)
-                    || (9 == roleId)
-                    || (13 == roleId)
-                    || (14 == roleId)
-                    || (15 == roleId)) {
-                displayPrice = true;
-            }
-        } else {
-            return ResultGenerator.genFailResult("用户不存在！");
-        }
-
+        Boolean displayPrice = commonService.isDisplayPrice(account);
         try {
             ClassPathResource resource = new ClassPathResource("empty_contract.xls");
             fs = resource.getInputStream();
