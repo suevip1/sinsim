@@ -173,7 +173,7 @@ public class MachineOrderController {
             String marketGroupName,
             String query_start_time,
             String query_finish_time,
-            String machine_name,
+            String machine_name,// 这个其实是机型
             @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page,size);
         List<MachineOrderDetail> list = machineOrderService.selectOrder(id, contract_id,order_num, contract_num, status,sellman,customer,marketGroupName,query_start_time,query_finish_time,machine_name,is_fuzzy);
@@ -400,7 +400,7 @@ public class MachineOrderController {
                 }
               
                 downloadPath = reportOutputPath + "账务报表" + ".xls";
-                downloadPathForNginx = "/excel/" + "账务报表" + ".xls";
+                downloadPathForNginx = "/report/" + "账务报表" + ".xls";
                 out = new FileOutputStream(downloadPath);
                 wb.write(out);
                 out.close();
@@ -542,7 +542,7 @@ public class MachineOrderController {
                     }
                   
                     downloadPath = reportOutputPath + "销售报表" + ".xls";
-                    downloadPathForNginx = "/excel/" + "销售报表" + ".xls";
+                    downloadPathForNginx = "/report/" + "销售报表" + ".xls";
                     out = new FileOutputStream(downloadPath);
                     wb.write(out);
                     out.close();
