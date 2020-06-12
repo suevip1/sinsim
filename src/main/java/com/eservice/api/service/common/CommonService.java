@@ -73,9 +73,7 @@ public class CommonService {
     @Resource
     private InstallGroupServiceImpl installGroupService;
     @Resource
-    private InstallPlanServiceImpl installPlanService;
-    @Resource
-    private InstallPlanActualServiceImpl installPlanActualService;
+    private UserServiceImpl userService;
 
     Logger logger = Logger.getLogger(CommonService.class);
 
@@ -540,5 +538,26 @@ public class CommonService {
         resultMsg = "try to send mqtt: " + topic + installGroup.getId() + " with message " + msg.getNameplate();
         return resultMsg;
 
+    }
+
+    //查看该账号是否可以看敏感信息
+    public boolean isDisplayPrice(String account){
+        //只有总经理，销售，财务等用户，生成的excel里才显示金额信息. '6','7','9','14','15'
+        Boolean displayPrice = false;
+        User user = userService.selectByAccount(account);
+        if (user != null) {
+            Integer roleId = user.getRoleId();
+            if ((6 == roleId)
+                    || (7 == roleId)
+                    || (9 == roleId)
+                    || (13 == roleId)
+                    || (14 == roleId)
+                    || (15 == roleId)) {
+                displayPrice = true;
+            }
+        } else {
+            displayPrice = false;
+        }
+        return displayPrice;
     }
 }
