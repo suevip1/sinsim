@@ -17,4 +17,6 @@ public interface DesignDepInfoMapper extends Mapper<DesignDepInfo> {
                                             @Param("designer") String designer,
                                             @Param("updateDateStart") String updateDateStart,
                                             @Param("updateDateEnd") String updateDateEnd );
+
+    void saveAndGetID(DesignDepInfo designDepInfo);
 }

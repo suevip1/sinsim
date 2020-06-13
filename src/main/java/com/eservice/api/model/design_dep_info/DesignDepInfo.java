@@ -18,7 +18,7 @@ public class DesignDepInfo {
     @Column(name = "order_num")
     private String orderNum;
 
-    private String sellman;
+    private String saleman;
 
     /**
      * 客户名称
@@ -170,17 +170,17 @@ public class DesignDepInfo {
     }
 
     /**
-     * @return sellman
+     * @return saleman
      */
-    public String getSellman() {
-        return sellman;
+    public String getSaleman() {
+        return saleman;
     }
 
     /**
-     * @param sellman
+     * @param saleman
      */
-    public void setSellman(String sellman) {
-        this.sellman = sellman;
+    public void setSaleman(String saleman) {
+        this.saleman = saleman;
     }
 
     /**

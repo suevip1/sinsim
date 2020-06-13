@@ -8,7 +8,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="order_id" jdbcType="INTEGER" property="orderId" />
     <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
-    <result column="sellman" jdbcType="VARCHAR" property="sellman" />
+    <result column="saleman" jdbcType="VARCHAR" property="saleman" />
     <result column="guest_name" jdbcType="VARCHAR" property="guestName" />
     <result column="country" jdbcType="VARCHAR" property="country" />
     <result column="machine_num" jdbcType="INTEGER" property="machineNum" />
@@ -16,7 +16,7 @@
     <result column="order_sign_status" jdbcType="TINYINT" property="orderSignStatus" />
     <result column="designer" jdbcType="VARCHAR" property="designer" />
     <result column="created_date" jdbcType="TIMESTAMP" property="createdDate" />
-    <result column="created_date" jdbcType="TIMESTAMP" property="updatedDate" />
+    <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate" />
     <result column="machine_spec" jdbcType="VARCHAR" property="machineSpec" />
     <result column="keywords" jdbcType="VARCHAR" property="keywords" />
     <result column="drawing_loading_done" jdbcType="BIT" property="drawingLoadingDone" />
@@ -41,7 +41,7 @@
       and ddi.order_num like CONCAT('%','${orderNum}','%' )
     </if>
     <if test="saleman!=null and saleman != '' ">
-      and ddi.sellman like CONCAT('%','${saleman}','%')
+      and ddi.saleman like CONCAT('%','${saleman}','%')
     </if>
 
     <if test="guestName!=null and guestName != '' ">
@@ -72,4 +72,18 @@
       and DATE_FORMAT(ddi.updated_time,'%Y-%m-%d') &lt;= #{updateDateEnd}
     </if>
   </select>
+
+  <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.design_dep_info.DesignDepInfo"
+          keyProperty="id">
+    insert into
+    design_dep_info(order_id,order_num, saleman, guest_name, country, machine_num,remark, order_sign_status, designer,
+    created_date, updated_date, machine_spec, keywords, drawing_loading_done,drawing_loading_files,
+    hole_tube_required,hole_tube_files,bom_required,cover_required,cover_file,design_status,
+    hole_tube_done, bom_done, cover_done )
+    values(
+    #{orderId},#{orderNum},#{saleman},#{guestName},#{country},#{machineNum},#{remark},#{orderSignStatus},#{designer},
+    #{createdDate},#{updatedDate},  #{machineSpec}, #{keywords}, #{drawingLoadingDone}, #{drawingLoadingFiles},
+    #{holeTubeRequired}, #{holeTubeFiles}, #{bomRequired}, #{coverRequired},#{coverFile},#{designStatus},
+    #{holeTubeDone},#{bomDone}, #{coverDone})
+  </insert>
 </mapper>

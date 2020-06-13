@@ -46,4 +46,8 @@ public class DesignDepInfoServiceImpl extends AbstractService<DesignDepInfo> imp
 
     }
 
+    public void saveAndGetID(DesignDepInfo designDepInfo){
+        designDepInfoMapper.saveAndGetID(designDepInfo);
+    }
+
 }

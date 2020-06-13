@@ -224,7 +224,7 @@ CREATE TABLE `design_dep_info` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `order_id` int(10) unsigned NOT NULL,
   `order_num` varchar(255) NOT NULL COMMENT '订单号， 可读性强，注意不是唯一，比如废弃的订单号',
-  `sellman` varchar(255) NOT NULL,
+  `saleman` varchar(255) NOT NULL,
   `guest_name` varchar(255) NOT NULL COMMENT '客户名称',
   `country` varchar(255) NOT NULL,
   `machine_num` int(11) NOT NULL COMMENT '机器数量',
@@ -232,21 +232,24 @@ CREATE TABLE `design_dep_info` (
   `order_sign_status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '订单的审核状态',
   `designer` varchar(255) DEFAULT NULL COMMENT '安排的设计人员',
   `created_date` datetime DEFAULT NULL,
-  `updated_time` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
   `machine_spec` varchar(255) DEFAULT NULL COMMENT '设备规格',
   `keywords` varchar(255) DEFAULT NULL COMMENT '关键字',
   `drawing_loading_done` tinyint(1) DEFAULT '0' COMMENT '人工选择是否完成图纸',
   `drawing_loading_files` varchar(255) DEFAULT NULL COMMENT '机架图纸、装车单 附件文件，空表示没有完成',
   `hole_tube_required` tinyint(1) DEFAULT NULL COMMENT '点孔、方管 是否需要，0不需要1需要',
+  `hole_tube_done` tinyint(1) DEFAULT '0' COMMENT 'hole_tube是否完成',
   `hole_tube_files` varchar(255) DEFAULT NULL COMMENT '点孔、方管的附件文件，空表示没有完成',
   `bom_required` tinyint(1) DEFAULT NULL COMMENT 'bom表文件,选是和否就好，不需要附件。',
+  `bom_done` tinyint(1) DEFAULT '0',
   `cover_required` tinyint(1) DEFAULT NULL COMMENT '是否需要罩盖，0不需要，1需要',
+  `cover_done` tinyint(1) DEFAULT '0',
   `cover_file` varchar(255) DEFAULT NULL COMMENT '罩盖附件',
-  `design_status` varchar(255) DEFAULT NULL COMMENT '未计划  设计中   完成（全部完成）/改单',
+  `design_status` varchar(255) DEFAULT '未计划' COMMENT '未计划  设计中   完成（全部完成）/改单',
   PRIMARY KEY (`id`),
   KEY `fkid` (`order_id`),
   CONSTRAINT `fkid` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for device
