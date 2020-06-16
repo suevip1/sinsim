@@ -27,9 +27,9 @@
     <result column="cover_required" jdbcType="BIT" property="coverRequired" />
     <result column="cover_file" jdbcType="VARCHAR" property="coverFile" />
     <result column="design_status" jdbcType="VARCHAR" property="designStatus" />
-    <result column="hole_tube_done" jdbcType="VARCHAR" property="holeTubeDone" />
-    <result column="bom_done" jdbcType="VARCHAR" property="bomDone" />
-    <result column="cover_done" jdbcType="VARCHAR" property="coverDone" />
+    <result column="hole_tube_done" jdbcType="BIT" property="holeTubeDone" />
+    <result column="bom_done" jdbcType="BIT" property="bomDone" />
+    <result column="cover_done" jdbcType="BIT" property="coverDone" />
   </resultMap>
   <select id="selectDesignDepInfo" resultMap="BaseResultMap">
     SELECT

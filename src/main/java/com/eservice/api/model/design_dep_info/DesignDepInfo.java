@@ -483,37 +483,37 @@ public class DesignDepInfo {
 
     //是否完成
     @Column(name = "hole_tube_done")
-    private String holeTubeDone;
+    private Boolean holeTubeDone;
 
     //BOM是否完成
     @Column(name = "bom_done")
-    private String bomDone;
+    private Boolean bomDone;
 
     //是否完成
     @Column(name = "cover_done")
-    private String coverDone;
+    private Boolean coverDone;
 
-    public String getHoleTubeDone() {
+    public Boolean getHoleTubeDone() {
         return holeTubeDone;
     }
 
-    public void setHoleTubeDone(String holeTubeDone) {
+    public void setHoleTubeDone(Boolean holeTubeDone) {
         this.holeTubeDone = holeTubeDone;
     }
 
-    public String getBomDone() {
+    public Boolean getBomDone() {
         return bomDone;
     }
 
-    public void setBomDone(String bomDone) {
+    public void setBomDone(Boolean bomDone) {
         this.bomDone = bomDone;
     }
 
-    public String getCoverDone() {
+    public Boolean getCoverDone() {
         return coverDone;
     }
 
-    public void setCoverDone(String coverDone) {
+    public void setCoverDone(Boolean coverDone) {
         this.coverDone = coverDone;
     }
 }

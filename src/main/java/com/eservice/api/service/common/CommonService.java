@@ -239,7 +239,8 @@ public class CommonService {
      * @param number    表示第几个文件
      * @return 文件路径
      */
-    public String saveFile(String path, MultipartFile file,
+    public String saveFile(String path,
+                           MultipartFile file,
                            @RequestParam(defaultValue = "") String machineID,
                            @RequestParam(defaultValue = "") String orderNum,
                            int type,
@@ -263,7 +264,8 @@ public class CommonService {
         return targetFileName;
     }
 
-    public String formatFileName(int type, String fileName,
+    public String formatFileName(int type,
+                                 String fileName,
                                  @RequestParam(defaultValue = "") String machineID,
                                  @RequestParam(defaultValue = "") String orderNum,
                                  @RequestParam(defaultValue = "0") int number) {
@@ -291,6 +293,11 @@ public class CommonService {
                 fileType = "lxdAttached";
                 dateStr = "";
                 break;
+            case Constant.DESIGN_ATTACHED_FILE:
+                fileType = "designAttached";
+                dateStr = "";
+                break;
+
             default:
                 fileType = " ";
                 break;

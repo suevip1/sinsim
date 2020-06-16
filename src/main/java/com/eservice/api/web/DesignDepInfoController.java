@@ -38,9 +38,6 @@ public class DesignDepInfoController {
     @Value("${design_attached_saved_dir}")
     private String designAttachedSavedDir;
 
-    @Value("${lxd_attached_saved_dir}")
-    private String lxdAttachedSavedDir;
-
     @Resource
     private CommonService commonService;
 
@@ -73,6 +70,7 @@ public class DesignDepInfoController {
     @PostMapping("/update")
     public Result update(String jsonDesignDepInfoFormAllInfo) {
         DesignDepInfo designDepInfo = JSON.parseObject(jsonDesignDepInfoFormAllInfo, DesignDepInfo.class);
+
         if (designDepInfo == null || designDepInfo.equals("")) {
             return ResultGenerator.genFailResult("JSON数据异常");
         }
@@ -91,6 +89,8 @@ public class DesignDepInfoController {
     @PostMapping("/uploadDesignFile")
     public Result uploadDesignFile(HttpServletRequest request) {
         try {
+            String orderNum = request.getParameterValues("orderNum")[0];
+            String type = request.getParameterValues("type")[0];
             List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("file");
             if (fileList == null || fileList.size() == 0) {
                 return ResultGenerator.genFailResult("Error: no available file");
@@ -103,8 +103,8 @@ public class DesignDepInfoController {
 
             try {
                 // save file， 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入 。
-                String resultPath = commonService.saveFile(designAttachedSavedDir, file, "", "design",
-                        Constant.LXD_ATTACHED_FILE, 0);
+                String resultPath = commonService.saveFile(designAttachedSavedDir, file, type, orderNum,
+                        Constant.DESIGN_ATTACHED_FILE, 0);
                 if (resultPath == null || resultPath == "") {
                     return ResultGenerator.genFailResult("文件名为空，设计附件上传失败！");
                 }
