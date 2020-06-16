@@ -3,17 +3,25 @@ import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.design_dep_info.DesignDepInfo;
-import com.eservice.api.service.DesignDepInfoService;
+import com.eservice.api.service.common.CommonService;
+import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.DesignDepInfoServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -27,6 +35,16 @@ public class DesignDepInfoController {
     @Resource
     private DesignDepInfoServiceImpl designDepInfoService;
 
+    @Value("${design_attached_saved_dir}")
+    private String designAttachedSavedDir;
+
+    @Value("${lxd_attached_saved_dir}")
+    private String lxdAttachedSavedDir;
+
+    @Resource
+    private CommonService commonService;
+
+    private Logger logger = Logger.getLogger(DesignDepInfoController.class);
     /**
      * 一次性同时上传 信息
      *
@@ -63,6 +81,45 @@ public class DesignDepInfoController {
         }
         designDepInfoService.update(designDepInfo);
         return ResultGenerator.genSuccessResult();
+    }
+
+    /**
+     * 后端提示：No mapping found for HTTP request with URI [/design/depinfo/uploadDesignFiles]
+     * in DispatcherServlet with name 'dispatcherServlet.
+     * 其实是接口名称没有完全正确，多了个字符。
+     */
+    @PostMapping("/uploadDesignFile")
+    public Result uploadDesignFile(HttpServletRequest request) {
+        try {
+            List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("file");
+            if (fileList == null || fileList.size() == 0) {
+                return ResultGenerator.genFailResult("Error: no available file");
+            }
+            MultipartFile file = fileList.get(0);
+            File dir = new File(designAttachedSavedDir);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+
+            try {
+                // save file， 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入 。
+                String resultPath = commonService.saveFile(designAttachedSavedDir, file, "", "design",
+                        Constant.LXD_ATTACHED_FILE, 0);
+                if (resultPath == null || resultPath == "") {
+                    return ResultGenerator.genFailResult("文件名为空，设计附件上传失败！");
+                }
+                logger.info("====/design/dep/info uploadDesignFile(): success======== " + resultPath);
+                return ResultGenerator.genSuccessResult(resultPath);
+            } catch (Exception e) {
+                e.printStackTrace();
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultGenerator.genFailResult("设计附件 上传失败！" + e.getMessage());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultGenerator.genFailResult("设计附件 上传失败！" + e.getMessage());
+        }
     }
 
     @PostMapping("/detail")
