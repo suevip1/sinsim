@@ -305,6 +305,13 @@
 			and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
 		</if>
 
+		<!-- 查询 审核时间ureate_time在传入的参数 queryStartTimeSign 和 queryFinishTimeSign 之间的订单 -->
+		<if test="queryStartTimeSign!=null and queryStartTimeSign != '' ">
+			and DATE_FORMAT(os.update_time,'%Y-%m-%d') &gt;= #{queryStartTimeSign}
+		</if>
+		<if test="queryFinishTimeSign!=null and queryFinishTimeSign != '' ">
+			and DATE_FORMAT(os.update_time,'%Y-%m-%d') &lt;= #{queryFinishTimeSign}
+		</if>
 		<if test="machine_name!=null and machine_name != '' ">
 			and mt.name like CONCAT('%','${machine_name}','%' )
 		</if>
@@ -433,6 +440,13 @@
 			and DATE_FORMAT(mo.create_time,'%Y-%m-%d') &lt;= #{query_finish_time}
 		</if>
 
+		<!-- 查询 审核时间ureate_time在传入的参数 queryStartTimeSign 和 queryFinishTimeSign 之间的订单 -->
+		<if test="queryStartTimeSign!=null and queryStartTimeSign != '' ">
+			and DATE_FORMAT(os.update_time,'%Y-%m-%d') &gt;= #{queryStartTimeSign}
+		</if>
+		<if test="queryFinishTimeSign!=null and queryFinishTimeSign != '' ">
+			and DATE_FORMAT(os.update_time,'%Y-%m-%d') &lt;= #{queryFinishTimeSign}
+		</if>
 		<if test="machine_name!=null and machine_name != '' ">
 			and mt.name = CONCAT('%','${machine_name}','%' )
 		</if>

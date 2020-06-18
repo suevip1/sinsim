@@ -23,7 +23,6 @@ import com.eservice.api.service.mqtt.ServerToClientMsg;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +37,6 @@ import javax.annotation.Resource;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -100,6 +98,10 @@ public class AbnormalRecordController {
     public Result update(String abnormalRecord) {
         AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
         abnormalRecord1.setSolveTime(new Date());
+        if(abnormalRecord1.getSolution()==null || abnormalRecord1.getSolution().isEmpty()){
+//            abnormalRecord1.setSolution("空");
+            return ResultGenerator.genFailResult("请填写解决内容");
+        }
         //修改对应工序的状态为"安装中"或者“质检中”，需要检查安装开始时间和质检开始时间，质检已开始则状态为质检中
         AbnormalRecord completeInfo = abnormalRecordService.findById(abnormalRecord1.getId());
         Integer taskRecordId = completeInfo.getTaskRecordId();
