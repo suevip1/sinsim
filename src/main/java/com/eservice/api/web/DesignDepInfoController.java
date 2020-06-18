@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -109,6 +110,38 @@ public class DesignDepInfoController {
                     return ResultGenerator.genFailResult("文件名为空，设计附件上传失败！");
                 }
                 logger.info("====/design/dep/info uploadDesignFile(): success======== " + resultPath);
+                /**
+                 * 在第一次新建时上传文件，designDepInfoID为空，则后端把各个更新日期设为当前日期即可
+                 * 在编辑时更新上传文件，则把根据类型，把对应的Update日期更新。
+                 */
+                Integer designDepInfoID = Integer.valueOf(request.getParameterValues("designDepInfoID")[0]);
+                if(designDepInfoID == null || designDepInfoID.equals(0)){
+                    logger.info("在新创建的设计里上传文件，已经默认更新日期为当前时间");
+                } else {
+                    DesignDepInfo designDepInfo = designDepInfoService.findById(designDepInfoID);
+                    if(designDepInfo == null){
+                        logger.error("根据前端给的ID找不到 designDepInfo");
+                    } else {
+                        switch (type) {
+                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_DRAWING:
+                                designDepInfo.setDrawingLoadingUpdateTime(new Date());
+                                break;
+                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_HOLE:
+                                designDepInfo.setHoleTubeUpdateTime(new Date());
+                                break;
+                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_BOM:
+                                designDepInfo.setBomUpdateTime(new Date());
+                                break;
+                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_COVER:
+                                designDepInfo.setCoverUpdateTime(new Date());
+                                break;
+
+                            default:
+                                break;
+                        }
+                        designDepInfoService.update(designDepInfo);
+                    }
+                }
                 return ResultGenerator.genSuccessResult(resultPath);
             } catch (Exception e) {
                 e.printStackTrace();

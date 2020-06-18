@@ -516,4 +516,100 @@ public class DesignDepInfo {
     public void setCoverDone(Boolean coverDone) {
         this.coverDone = coverDone;
     }
+
+    //图纸和装车单 的更新人
+    @Column(name = "drawing_loading_man")
+    private String drawingLoadingMan;
+
+    //图纸和装车单 的更新时间
+    @Column(name = "drawing_loading_update_time")
+    private Date drawingLoadingUpdateTime;
+
+    //点孔方管 的更新人
+    @Column(name = "hole_tube_man")
+    private String holeTubeMan;
+
+    //点孔方管 的更新时间
+    @Column(name = "hole_tube_update_time")
+    private Date holeTubeUpdateTime;
+
+    //BOM 的更新人
+    @Column(name = "bom_man")
+    private String bomMan;
+
+    //BOM 的更新时间
+    @Column(name = "bom_update_time")
+    private Date bomUpdateTime;
+
+    //罩盖 的更新人
+    @Column(name = "cover_man")
+    private String coverMan;
+
+    //罩盖 的更新时间
+    @Column(name = "cover_update_time")
+    private Date coverUpdateTime;
+
+    public String getDrawingLoadingMan() {
+        return drawingLoadingMan;
+    }
+
+    public void setDrawingLoadingMan(String drawingLoadingMan) {
+        this.drawingLoadingMan = drawingLoadingMan;
+    }
+
+    public Date getDrawingLoadingUpdateTime() {
+        return drawingLoadingUpdateTime;
+    }
+
+    public void setDrawingLoadingUpdateTime(Date drawingLoadingUpdateTime) {
+        this.drawingLoadingUpdateTime = drawingLoadingUpdateTime;
+    }
+
+    public String getHoleTubeMan() {
+        return holeTubeMan;
+    }
+
+    public void setHoleTubeMan(String holeTubeMan) {
+        this.holeTubeMan = holeTubeMan;
+    }
+
+    public Date getHoleTubeUpdateTime() {
+        return holeTubeUpdateTime;
+    }
+
+    public void setHoleTubeUpdateTime(Date holeTubeUpdateTime) {
+        this.holeTubeUpdateTime = holeTubeUpdateTime;
+    }
+
+    public String getBomMan() {
+        return bomMan;
+    }
+
+    public void setBomMan(String bomMan) {
+        this.bomMan = bomMan;
+    }
+
+    public Date getBomUpdateTime() {
+        return bomUpdateTime;
+    }
+
+    public void setBomUpdateTime(Date bomUpdateTime) {
+        this.bomUpdateTime = bomUpdateTime;
+    }
+
+    public String getCoverMan() {
+        return coverMan;
+    }
+
+    public void setCoverMan(String coverMan) {
+        this.coverMan = coverMan;
+    }
+
+    public Date getCoverUpdateTime() {
+        return coverUpdateTime;
+    }
+
+    public void setCoverUpdateTime(Date coverUpdateTime) {
+        this.coverUpdateTime = coverUpdateTime;
+    }
 }

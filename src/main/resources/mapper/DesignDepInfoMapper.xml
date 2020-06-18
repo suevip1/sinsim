@@ -30,6 +30,16 @@
     <result column="hole_tube_done" jdbcType="BIT" property="holeTubeDone" />
     <result column="bom_done" jdbcType="BIT" property="bomDone" />
     <result column="cover_done" jdbcType="BIT" property="coverDone" />
+    
+    <result column="drawing_loading_man" jdbcType="VARCHAR" property="drawingLoadingMan"/>
+    <result column="hole_tube_man" jdbcType="VARCHAR" property="holeTubeMan"/>
+    <result column="bom_man" jdbcType="VARCHAR" property="bomMan"/>
+    <result column="cover_man" jdbcType="VARCHAR" property="coverMan"/>
+
+    <result column="drawing_loading_update_time" jdbcType="VARCHAR" property="drawingLoadingUpdateTime" />
+    <result column="hole_tube_update_time" jdbcType="VARCHAR" property="holeTubeUpdateTime" />
+    <result column="bom_update_time" jdbcType="VARCHAR" property="bomUpdateTime" />
+    <result column="cover_update_time" jdbcType="VARCHAR" property="coverUpdateTime" />
   </resultMap>
   <select id="selectDesignDepInfo" resultMap="BaseResultMap">
     SELECT
@@ -78,12 +88,14 @@
     insert into
     design_dep_info(order_id,order_num, saleman, guest_name, country, machine_num,remark, order_sign_status, designer,
     created_date, updated_date, machine_spec, keywords, drawing_loading_done,drawing_loading_files,
-    hole_tube_required,hole_tube_files,bom_required,cover_required,cover_file,design_status,
-    hole_tube_done, bom_done, cover_done )
+    drawing_loading_man,drawing_loading_update_time, hole_tube_required,hole_tube_files,bom_required,
+    hole_tube_man, hole_tube_update_time, cover_required,cover_file,design_status,
+    hole_tube_done, bom_done, cover_done,bom_man,bom_update_time,cover_man,cover_update_time )
     values(
     #{orderId},#{orderNum},#{saleman},#{guestName},#{country},#{machineNum},#{remark},#{orderSignStatus},#{designer},
     #{createdDate},#{updatedDate},  #{machineSpec}, #{keywords}, #{drawingLoadingDone}, #{drawingLoadingFiles},
-    #{holeTubeRequired}, #{holeTubeFiles}, #{bomRequired}, #{coverRequired},#{coverFile},#{designStatus},
-    #{holeTubeDone},#{bomDone}, #{coverDone})
+    #{drawingLoadingMan},#{drawingLoadingUpdateTime},#{holeTubeRequired}, #{holeTubeFiles}, #{bomRequired},
+    #{holeTubeMan}, #{holeTubeUpdateTime},#{coverRequired},#{coverFile},#{designStatus},
+    #{holeTubeDone},#{bomDone}, #{coverDone},#{bomMan},#{bomUpdateTime},#{coverMan},#{coverUpdateTime})
   </insert>
 </mapper>

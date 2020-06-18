@@ -178,6 +178,11 @@ public class Constant {
     public static final int LXD_ATTACHED_FILE = 3;
     public static final int DESIGN_ATTACHED_FILE = 4;
 
+    //设计页面，文件类型
+    public static final String STR_DESIGN_UPLOAD_FILE_TYPE_DRAWING = "图纸";
+    public static final String STR_DESIGN_UPLOAD_FILE_TYPE_HOLE = "点孔";
+    public static final String STR_DESIGN_UPLOAD_FILE_TYPE_BOM= "BOM";
+    public static final String STR_DESIGN_UPLOAD_FILE_TYPE_COVER= "罩盖";
     /**
      * 计划的方式："1"==>日计划， "2"==>弹性计划， "3" ==>自计划；未计划，但是在时间允许下安装组长自行安装的
      */
