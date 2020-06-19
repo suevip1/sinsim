@@ -252,6 +252,7 @@ public class ContactFormController {
      * @param
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/update")
     public Result update(String jsonContactFormAllInfo) {
         ContactFormAllInfo contactFormAllInfo = JSON.parseObject(jsonContactFormAllInfo, ContactFormAllInfo.class);
@@ -291,10 +292,6 @@ public class ContactFormController {
                 throw new RuntimeException();
             }
 
-            // 更新联系单
-            contactForm.setUpdateDate(new Date());
-            contactFormService.update(contactForm);
-
             if (contactForm.getStatus().equals(Constant.STR_LXD_CHECKING) ) {
                 // 重新计算当前审核阶段
                 List<SignContentItem> contactSignContentList = JSON.parseArray(contactSign.getSignContent(),
@@ -328,7 +325,16 @@ public class ContactFormController {
                 }
                 if (currentStep != "") {
                     contactSign.setCurrentStep(currentStep);
-                    contactSignService.update(contactSign);// 更新审核数据currentstep
+                    logger.info("当前审核阶段 不为空：" + currentStep);
+                } else {
+                    /**
+                     * 当前审核阶段 为空, 表示已经不存在：需要审核但是还没审核（Result为0）的步骤，即已经全部审核完成了。
+                     * 此时需要更新状态。【被取消的那一步，刚好是最后一步，且前面都已经完成审核】
+                     * 实列：一开始是勾着王总审核的，王总前面全部审批完成，再修改取消了王总审核，此时审核应该为完成。
+                     */
+                    logger.info("当前审核阶段 为空：" + currentStep);
+                    contactSign.setCurrentStep(Constant.SIGN_FINISHED);
+                    contactForm.setStatus(Constant.STR_LXD_CHECKING_FINISHED);
                 }
             }
 
@@ -387,7 +393,10 @@ public class ContactFormController {
                 message = " contactSign里的ContactFormId 和 联系单的id 不匹配！";
                 throw new RuntimeException();
             }
-            contactSignService.update(contactSign);
+
+            contactSignService.update(contactSign);// 统一更新审核数据， currentstep等
+            contactForm.setUpdateDate(new Date());
+            contactFormService.update(contactForm); // 统一更新联系单
 
         } catch (Exception ex) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

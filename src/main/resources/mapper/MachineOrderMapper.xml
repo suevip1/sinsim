@@ -86,6 +86,10 @@
 		<result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
 		<result column="all_urgent" jdbcType="TINYINT" property="allUrgent"/>
 		<result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
+
+		<result column="electric_trim" jdbcType="VARCHAR" property="electricTrim"/>
+		<result column="electric_pc" jdbcType="VARCHAR" property="electricPc"/>
+
 		<association javaType="com.eservice.api.model.order_detail.OrderDetail" property="orderDetail">
 			<!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
 			<id column="detail_id" property="id"/>
