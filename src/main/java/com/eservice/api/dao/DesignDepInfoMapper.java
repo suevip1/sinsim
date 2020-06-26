@@ -11,9 +11,9 @@ public interface DesignDepInfoMapper extends Mapper<DesignDepInfo> {
                                             @Param("saleman") String saleman,
                                             @Param("guestName") String guestName,
                                             @Param("orderStatus") Integer orderStatus,
-                                            @Param("drawingStatus") Integer drawingStatus,
+                                            @Param("drawingLoadingDoneStatus") Integer drawingLoadingDoneStatus,
                                             @Param("machineSpec") String machineSpec,
-                                            @Param("keyword") String keyword,
+                                            @Param("keywords") String keywords,
                                             @Param("designer") String designer,
                                             @Param("updateDateStart") String updateDateStart,
                                             @Param("updateDateEnd") String updateDateEnd );

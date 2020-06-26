@@ -27,9 +27,9 @@ public class DesignDepInfoServiceImpl extends AbstractService<DesignDepInfo> imp
                                                     String saleman,
                                                     String guestName,
                                                     Integer orderStatus,//订单审核状态
-                                                    Integer drawingStatus,//图纸状态
+                                                    Integer drawingLoadingDoneStatus,//图纸状态
                                                     String machineSpec,
-                                                    String keyword,
+                                                    String keywords,
                                                     String designer,
                                                     String updateDateStart,
                                                     String updateDateEnd) {
@@ -37,9 +37,9 @@ public class DesignDepInfoServiceImpl extends AbstractService<DesignDepInfo> imp
                 saleman,
                 guestName,
                 orderStatus,
-                drawingStatus,
+                drawingLoadingDoneStatus,
                 machineSpec,
-                keyword,
+                keywords,
                 designer,
                 updateDateStart,
                 updateDateEnd);

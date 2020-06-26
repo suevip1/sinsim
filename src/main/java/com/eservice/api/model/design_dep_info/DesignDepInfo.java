@@ -40,7 +40,7 @@ public class DesignDepInfo {
     private String remark;
 
     /**
-     * 订单的审核状态
+     * 订单的审核状态, 确切说的订单的状态。变量名称先不改了。
      */
     @Column(name = "order_sign_status")
     private Byte orderSignStatus;

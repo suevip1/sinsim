@@ -58,28 +58,28 @@
       and ddi.guest_name like CONCAT('%','${guestName}','%')
     </if>
 
-    <if test="orderStatus!=null and orderStatus != '' ">
+    <if test="orderStatus!=null">
       and ddi.order_sign_status = #{orderStatus}
     </if>
-    <if test="drawingStatus!=null and drawingStatus != '' ">
-      and ddi.drawing_loading_done = #{drawingStatus}
+    <if test="drawingLoadingDoneStatus!=null ">
+      and ddi.drawing_loading_done = #{drawingLoadingDoneStatus}
     </if>
 
     <if test="machineSpec!=null and machineSpec != '' ">
       and ddi.machine_spec like CONCAT('%','${machineSpec}','%' )
     </if>
-    <if test="keyword!=null and keyword != '' ">
-      and ddi.keywords like CONCAT('%','${keyword}','%' )
+    <if test="keywords!=null and keywords != '' ">
+      and ddi.keywords like CONCAT('%','${keywords}','%' )
     </if>
     <if test="designer!=null and designer != '' ">
       and ddi.designer like CONCAT('%','${designer}','%' )
     </if>
 
     <if test="updateDateStart!=null and updateDateStart != '' ">
-      and DATE_FORMAT(ddi.updated_time,'%Y-%m-%d') &gt;= #{updateDateStart}
+      and DATE_FORMAT(ddi.updated_date,'%Y-%m-%d') &gt;= #{updateDateStart}
     </if>
     <if test="updateDateEnd!=null and updateDateEnd != '' ">
-      and DATE_FORMAT(ddi.updated_time,'%Y-%m-%d') &lt;= #{updateDateEnd}
+      and DATE_FORMAT(ddi.updated_date,'%Y-%m-%d') &lt;= #{updateDateEnd}
     </if>
   </select>
 
