@@ -197,4 +197,62 @@ public class DesignDepInfoController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 根据 设计单的ID以及下载类型（） 返回设计单的附件的对应类型的文件名称
+     * 下载路径的前面部分是统一的，放在xxx_ip/download/下(nginx配置)，
+     * 比如，访问下面地址可以下载该图纸装车单
+     *
+     * @param designDepInfoId
+     * @return 类似
+     */
+    @PostMapping("/getDesignAttachedFile")
+    public Result getDesignAttachedFile(@RequestParam Integer designDepInfoId, String fileType) {
+
+        DesignDepInfo ddi = designDepInfoService.findById(designDepInfoId);
+        if (null == ddi) {
+            return ResultGenerator.genFailResult("根据该 designDepInfoId 找不到对应的设计单");
+        }
+
+        String fileName = null;
+        switch (fileType){
+            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_DRAWING:
+                if (ddi.getDrawingLoadingFiles() == null) {
+                    return ResultGenerator.genFailResult("该设计单没有 图纸附件");
+                }
+                fileName = ddi.getDrawingLoadingFiles().substring(designAttachedSavedDir.length());
+                break;
+
+            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_LOADINGFILE:
+                if (ddi.getDrawingLoadingFiles() == null) {
+                    return ResultGenerator.genFailResult("该设计单没有 装车单附件");
+                }
+                fileName = ddi.getDrawingLoadingFiles().substring(designAttachedSavedDir.length());
+                break;
+
+            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_HOLE:
+                if (ddi.getHoleTubeFiles() == null) {
+                    return ResultGenerator.genFailResult("该设计单没有 点孔附件");
+                }
+                fileName = ddi.getHoleTubeFiles().substring(designAttachedSavedDir.length());
+                break;
+            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_BOM:
+                if (ddi.getHoleTubeFiles() == null) {
+                    return ResultGenerator.genFailResult("该设计单没有 BOM附件");
+                }
+//                fileName = ddi.getB().substring(designAttachedSavedDir.length());
+                break;
+            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_COVER:
+                if (ddi.getHoleTubeFiles() == null) {
+                    return ResultGenerator.genFailResult("该设计单没有 罩盖附件");
+                }
+                fileName = ddi.getCoverFile().substring(designAttachedSavedDir.length());
+                break;
+
+                default:
+                    return ResultGenerator.genFailResult("没有该类型： " + fileType);
+        }
+
+        return ResultGenerator.genSuccessResult(fileName);
+    }
 }

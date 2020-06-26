@@ -180,6 +180,7 @@ public class Constant {
 
     //设计页面，文件类型
     public static final String STR_DESIGN_UPLOAD_FILE_TYPE_DRAWING = "图纸";
+    public static final String STR_DESIGN_UPLOAD_FILE_TYPE_LOADINGFILE = "装车单";
     public static final String STR_DESIGN_UPLOAD_FILE_TYPE_HOLE = "点孔";
     public static final String STR_DESIGN_UPLOAD_FILE_TYPE_BOM= "BOM";
     public static final String STR_DESIGN_UPLOAD_FILE_TYPE_COVER= "罩盖";
