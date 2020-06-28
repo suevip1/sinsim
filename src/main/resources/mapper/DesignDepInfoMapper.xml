@@ -19,25 +19,33 @@
     <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate" />
     <result column="machine_spec" jdbcType="VARCHAR" property="machineSpec" />
     <result column="keywords" jdbcType="VARCHAR" property="keywords" />
-    <result column="drawing_loading_done" jdbcType="BIT" property="drawingLoadingDone" />
-    <result column="drawing_loading_files" jdbcType="VARCHAR" property="drawingLoadingFiles" />
+    <result column="drawing_file_done" jdbcType="BIT" property="drawingFileDone" />
+    <result column="loading_file_done" jdbcType="BIT" property="loadingFileDone" />
+    <result column="drawing_files" jdbcType="VARCHAR" property="drawingFiles" />
+    <result column="loading_files" jdbcType="VARCHAR" property="loadingFiles" />
     <result column="hole_tube_required" jdbcType="BIT" property="holeTubeRequired" />
-    <result column="hole_tube_files" jdbcType="VARCHAR" property="holeTubeFiles" />
+    <result column="hole_files" jdbcType="VARCHAR" property="holeFiles" />
+    <result column="tube_files" jdbcType="VARCHAR" property="tubeFiles" />
     <result column="bom_required" jdbcType="BIT" property="bomRequired" />
     <result column="cover_required" jdbcType="BIT" property="coverRequired" />
     <result column="cover_file" jdbcType="VARCHAR" property="coverFile" />
     <result column="design_status" jdbcType="VARCHAR" property="designStatus" />
-    <result column="hole_tube_done" jdbcType="BIT" property="holeTubeDone" />
+    <result column="hole_done" jdbcType="BIT" property="holeDone" />
+    <result column="tube_done" jdbcType="BIT" property="tubeDone" />
     <result column="bom_done" jdbcType="BIT" property="bomDone" />
     <result column="cover_done" jdbcType="BIT" property="coverDone" />
-    
-    <result column="drawing_loading_man" jdbcType="VARCHAR" property="drawingLoadingMan"/>
-    <result column="hole_tube_man" jdbcType="VARCHAR" property="holeTubeMan"/>
+
+    <result column="drawing_man" jdbcType="VARCHAR" property="drawingMan"/>
+    <result column="loading_man" jdbcType="VARCHAR" property="loadingMan"/>
+    <result column="hole_man" jdbcType="VARCHAR" property="holeMan"/>
+    <result column="tube_man" jdbcType="VARCHAR" property="tubeMan"/>
     <result column="bom_man" jdbcType="VARCHAR" property="bomMan"/>
     <result column="cover_man" jdbcType="VARCHAR" property="coverMan"/>
 
-    <result column="drawing_loading_update_time" jdbcType="VARCHAR" property="drawingLoadingUpdateTime" />
-    <result column="hole_tube_update_time" jdbcType="VARCHAR" property="holeTubeUpdateTime" />
+    <result column="drawing_update_time" jdbcType="VARCHAR" property="drawingUpdateTime" />
+    <result column="loading_update_time" jdbcType="VARCHAR" property="loadingUpdateTime" />
+    <result column="hole_update_time" jdbcType="VARCHAR" property="holeUpdateTime" />
+    <result column="tube_update_time" jdbcType="VARCHAR" property="tubeUpdateTime" />
     <result column="bom_update_time" jdbcType="VARCHAR" property="bomUpdateTime" />
     <result column="cover_update_time" jdbcType="VARCHAR" property="coverUpdateTime" />
   </resultMap>
@@ -87,15 +95,33 @@
           keyProperty="id">
     insert into
     design_dep_info(order_id,order_num, saleman, guest_name, country, machine_num,remark, order_sign_status, designer,
-    created_date, updated_date, machine_spec, keywords, drawing_loading_done,drawing_loading_files,
-    drawing_loading_man,drawing_loading_update_time, hole_tube_required,hole_tube_files,bom_required,
-    hole_tube_man, hole_tube_update_time, cover_required,cover_file,design_status,
-    hole_tube_done, bom_done, cover_done,bom_man,bom_update_time,cover_man,cover_update_time )
+    created_date, updated_date, machine_spec, keywords, drawing_file_done,loading_file_done,
+    drawing_files,loading_files,
+    drawing_man,loading_man,
+    drawing_update_time, loading_update_time,
+    hole_tube_required,
+    hole_files,
+    tube_files,
+    bom_required,
+    hole_man, tube_man,
+    hole_update_time, tube_update_time,
+    cover_required,cover_file,design_status,
+    hole_done, tube_done,
+    bom_done, cover_done,bom_man,bom_update_time,cover_man,cover_update_time )
     values(
     #{orderId},#{orderNum},#{saleman},#{guestName},#{country},#{machineNum},#{remark},#{orderSignStatus},#{designer},
-    #{createdDate},#{updatedDate},  #{machineSpec}, #{keywords}, #{drawingLoadingDone}, #{drawingLoadingFiles},
-    #{drawingLoadingMan},#{drawingLoadingUpdateTime},#{holeTubeRequired}, #{holeTubeFiles}, #{bomRequired},
-    #{holeTubeMan}, #{holeTubeUpdateTime},#{coverRequired},#{coverFile},#{designStatus},
-    #{holeTubeDone},#{bomDone}, #{coverDone},#{bomMan},#{bomUpdateTime},#{coverMan},#{coverUpdateTime})
+    #{createdDate},#{updatedDate},  #{machineSpec}, #{keywords}, #{drawingFileDone},#{loadingFileDone},
+    #{drawingFiles}, #{loadingFiles},
+    #{drawingMan},#{loadingMan},
+    #{drawingUpdateTime},#{loadingUpdateTime},
+    #{holeTubeRequired},
+    #{holeFiles},
+    #{tubeFiles},
+    #{bomRequired},
+    #{holeMan}, #{tubeMan},
+    #{holeUpdateTime}, #{tubeUpdateTime},
+    #{coverRequired},#{coverFile},#{designStatus},
+    #{holeDone},#{tubeDone},
+    #{bomDone}, #{coverDone},#{bomMan},#{bomUpdateTime},#{coverMan},#{coverUpdateTime})
   </insert>
 </mapper>

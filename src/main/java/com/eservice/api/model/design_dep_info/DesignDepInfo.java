@@ -76,17 +76,52 @@ public class DesignDepInfo {
     private String keywords;
 
     /**
+     * 人工选择是否完成图纸装车单
+     */
+    @Column(name = "loading_file_done")
+    private Boolean loadingFileDone;
+
+    /**
      * 人工选择是否完成图纸
      */
-    @Column(name = "drawing_loading_done")
-    private Boolean drawingLoadingDone;
+    @Column(name = "drawing_file_done")
+    private Boolean drawingFileDone;
+
+    public Boolean getDrawingFileDone() {
+        return drawingFileDone;
+    }
+
+    public void setDrawingFileDone(Boolean drawingFileDone) {
+        this.drawingFileDone = drawingFileDone;
+    }
+
+    public String getLoadingFiles() {
+        return loadingFiles;
+    }
+
+    public void setLoadingFiles(String loadingFiles) {
+        this.loadingFiles = loadingFiles;
+    }
+
+    public String getDrawingFiles() {
+        return drawingFiles;
+    }
+
+    public void setDrawingFiles(String drawingFiles) {
+        this.drawingFiles = drawingFiles;
+    }
+
+    /**
+     * 装车单 附件文件，空表示没有完成
+     */
+    @Column(name = "loading_files")
+    private String loadingFiles;
 
     /**
      * 机架图纸、装车单 附件文件，空表示没有完成
      */
-    @Column(name = "drawing_loading_files")
-    private String drawingLoadingFiles;
-
+    @Column(name = "drawing_files")
+    private String drawingFiles;
     /**
      * 点孔、方管 是否需要，0不需要1需要
      */
@@ -94,11 +129,33 @@ public class DesignDepInfo {
     private Boolean holeTubeRequired;
 
     /**
-     * 点孔、方管的附件文件，空表示没有完成
+     * 点孔 的附件文件，空表示没有完成
      */
-    @Column(name = "hole_tube_files")
-    private String holeTubeFiles;
+    @Column(name = "hole_files")
+    private String holeFiles;
 
+    public String getHoleFiles() {
+        return holeFiles;
+    }
+
+    public void setHoleFiles(String holeFiles) {
+        this.holeFiles = holeFiles;
+    }
+
+    public String getTubeFiles() {
+        return tubeFiles;
+    }
+
+    public void setTubeFiles(String tubeFiles) {
+        this.tubeFiles = tubeFiles;
+    }
+
+    /**
+     *  方管的附件文件，空表示没有完成
+     */
+
+    @Column(name = "tube_files")
+    private String tubeFiles;
     /**
      * bom表文件,选是和否就好，不需要附件。
      */
@@ -342,35 +399,17 @@ public class DesignDepInfo {
      *
      * @return drawing_loading_done - 人工选择是否完成图纸
      */
-    public Boolean getDrawingLoadingDone() {
-        return drawingLoadingDone;
+    public Boolean getLoadingFileDone() {
+        return loadingFileDone;
     }
 
     /**
      * 设置人工选择是否完成图纸
      *
-     * @param drawingLoadingDone 人工选择是否完成图纸
+     * @param loadingFileDone 人工选择是否完成图纸
      */
-    public void setDrawingLoadingDone(Boolean drawingLoadingDone) {
-        this.drawingLoadingDone = drawingLoadingDone;
-    }
-
-    /**
-     * 获取机架图纸、装车单 附件文件，空表示没有完成
-     *
-     * @return drawing_loading_files - 机架图纸、装车单 附件文件，空表示没有完成
-     */
-    public String getDrawingLoadingFiles() {
-        return drawingLoadingFiles;
-    }
-
-    /**
-     * 设置机架图纸、装车单 附件文件，空表示没有完成
-     *
-     * @param drawingLoadingFiles 机架图纸、装车单 附件文件，空表示没有完成
-     */
-    public void setDrawingLoadingFiles(String drawingLoadingFiles) {
-        this.drawingLoadingFiles = drawingLoadingFiles;
+    public void setLoadingFileDone(Boolean loadingFileDone) {
+        this.loadingFileDone = loadingFileDone;
     }
 
     /**
@@ -389,24 +428,6 @@ public class DesignDepInfo {
      */
     public void setHoleTubeRequired(Boolean holeTubeRequired) {
         this.holeTubeRequired = holeTubeRequired;
-    }
-
-    /**
-     * 获取点孔、方管的附件文件，空表示没有完成
-     *
-     * @return hole_tube_files - 点孔、方管的附件文件，空表示没有完成
-     */
-    public String getHoleTubeFiles() {
-        return holeTubeFiles;
-    }
-
-    /**
-     * 设置点孔、方管的附件文件，空表示没有完成
-     *
-     * @param holeTubeFiles 点孔、方管的附件文件，空表示没有完成
-     */
-    public void setHoleTubeFiles(String holeTubeFiles) {
-        this.holeTubeFiles = holeTubeFiles;
     }
 
     /**
@@ -481,9 +502,30 @@ public class DesignDepInfo {
         this.designStatus = designStatus;
     }
 
-    //是否完成
-    @Column(name = "hole_tube_done")
-    private Boolean holeTubeDone;
+    //点孔 是否完成
+    @Column(name = "hole_done")
+    private Boolean holeDone;
+
+
+    public Boolean getHoleDone() {
+        return holeDone;
+    }
+
+    public void setHoleDone(Boolean holeDone) {
+        this.holeDone = holeDone;
+    }
+
+    public Boolean getTubeDone() {
+        return tubeDone;
+    }
+
+    public void setTubeDone(Boolean tubeDone) {
+        this.tubeDone = tubeDone;
+    }
+
+    //方管 是否完成
+    @Column(name = "tube_done")
+    private Boolean tubeDone;
 
     //BOM是否完成
     @Column(name = "bom_done")
@@ -492,14 +534,6 @@ public class DesignDepInfo {
     //是否完成
     @Column(name = "cover_done")
     private Boolean coverDone;
-
-    public Boolean getHoleTubeDone() {
-        return holeTubeDone;
-    }
-
-    public void setHoleTubeDone(Boolean holeTubeDone) {
-        this.holeTubeDone = holeTubeDone;
-    }
 
     public Boolean getBomDone() {
         return bomDone;
@@ -517,21 +551,87 @@ public class DesignDepInfo {
         this.coverDone = coverDone;
     }
 
-    //图纸和装车单 的更新人
-    @Column(name = "drawing_loading_man")
-    private String drawingLoadingMan;
+    public String getDrawingMan() {
+        return drawingMan;
+    }
 
-    //图纸和装车单 的更新时间
-    @Column(name = "drawing_loading_update_time")
-    private Date drawingLoadingUpdateTime;
+    public void setDrawingMan(String drawingMan) {
+        this.drawingMan = drawingMan;
+    }
 
-    //点孔方管 的更新人
-    @Column(name = "hole_tube_man")
-    private String holeTubeMan;
+    public String getLoadingMan() {
+        return loadingMan;
+    }
 
-    //点孔方管 的更新时间
-    @Column(name = "hole_tube_update_time")
-    private Date holeTubeUpdateTime;
+    public void setLoadingMan(String loadingMan) {
+        this.loadingMan = loadingMan;
+    }
+
+    //图纸  的更新人
+    @Column(name = "drawing_man")
+    private String drawingMan;
+
+    // 装车单 的更新人
+    @Column(name = "loading_man")
+    private String loadingMan;
+
+    //图纸  的更新时间
+    @Column(name = "drawing_update_time")
+    private Date drawingUpdateTime;
+
+    // 装车单 的更新时间
+
+    public Date getDrawingUpdateTime() {
+        return drawingUpdateTime;
+    }
+
+    public void setDrawingUpdateTime(Date drawingUpdateTime) {
+        this.drawingUpdateTime = drawingUpdateTime;
+    }
+
+    public Date getLoadingUpdateTime() {
+        return loadingUpdateTime;
+    }
+
+    public void setLoadingUpdateTime(Date loadingUpdateTime) {
+        this.loadingUpdateTime = loadingUpdateTime;
+    }
+
+    @Column(name = "loading_update_time")
+    private Date loadingUpdateTime;
+
+    //点孔 的更新人
+    @Column(name = "hole_man")
+    private String holeMan;
+
+
+    // 方管 的更新人
+    @Column(name = "tube_man")
+    private String tubeMan;
+
+    public String getHoleMan() {
+        return holeMan;
+    }
+
+    public void setHoleMan(String holeMan) {
+        this.holeMan = holeMan;
+    }
+
+    public String getTubeMan() {
+        return tubeMan;
+    }
+
+    public void setTubeMan(String tubeMan) {
+        this.tubeMan = tubeMan;
+    }
+
+    //点孔 的更新时间
+    @Column(name = "hole_update_time")
+    private Date holeUpdateTime;
+
+    // 方管 的更新时间
+    @Column(name = "tube_update_time")
+    private Date tubeUpdateTime;
 
     //BOM 的更新人
     @Column(name = "bom_man")
@@ -549,38 +649,6 @@ public class DesignDepInfo {
     @Column(name = "cover_update_time")
     private Date coverUpdateTime;
 
-    public String getDrawingLoadingMan() {
-        return drawingLoadingMan;
-    }
-
-    public void setDrawingLoadingMan(String drawingLoadingMan) {
-        this.drawingLoadingMan = drawingLoadingMan;
-    }
-
-    public Date getDrawingLoadingUpdateTime() {
-        return drawingLoadingUpdateTime;
-    }
-
-    public void setDrawingLoadingUpdateTime(Date drawingLoadingUpdateTime) {
-        this.drawingLoadingUpdateTime = drawingLoadingUpdateTime;
-    }
-
-    public String getHoleTubeMan() {
-        return holeTubeMan;
-    }
-
-    public void setHoleTubeMan(String holeTubeMan) {
-        this.holeTubeMan = holeTubeMan;
-    }
-
-    public Date getHoleTubeUpdateTime() {
-        return holeTubeUpdateTime;
-    }
-
-    public void setHoleTubeUpdateTime(Date holeTubeUpdateTime) {
-        this.holeTubeUpdateTime = holeTubeUpdateTime;
-    }
-
     public String getBomMan() {
         return bomMan;
     }
@@ -595,6 +663,22 @@ public class DesignDepInfo {
 
     public void setBomUpdateTime(Date bomUpdateTime) {
         this.bomUpdateTime = bomUpdateTime;
+    }
+
+    public Date getHoleUpdateTime() {
+        return holeUpdateTime;
+    }
+
+    public void setHoleUpdateTime(Date holeUpdateTime) {
+        this.holeUpdateTime = holeUpdateTime;
+    }
+
+    public Date getTubeUpdateTime() {
+        return tubeUpdateTime;
+    }
+
+    public void setTubeUpdateTime(Date tubeUpdateTime) {
+        this.tubeUpdateTime = tubeUpdateTime;
     }
 
     public String getCoverMan() {

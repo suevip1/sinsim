@@ -124,10 +124,16 @@ public class DesignDepInfoController {
                     } else {
                         switch (type) {
                             case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_DRAWING:
-                                designDepInfo.setDrawingLoadingUpdateTime(new Date());
+                                designDepInfo.setDrawingUpdateTime(new Date());
+                                break;
+                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_LOADINGFILE:
+                                designDepInfo.setLoadingUpdateTime(new Date());
                                 break;
                             case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_HOLE:
-                                designDepInfo.setHoleTubeUpdateTime(new Date());
+                                designDepInfo.setHoleUpdateTime(new Date());
+                                break;
+                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_TUBE:
+                                designDepInfo.setTubeUpdateTime(new Date());
                                 break;
                             case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_BOM:
                                 designDepInfo.setBomUpdateTime(new Date());
@@ -217,33 +223,34 @@ public class DesignDepInfoController {
         String fileName = null;
         switch (fileType){
             case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_DRAWING:
-                if (ddi.getDrawingLoadingFiles() == null) {
+                if (ddi.getDrawingFiles() == null) {
                     return ResultGenerator.genFailResult("该设计单没有 图纸附件");
                 }
-                fileName = ddi.getDrawingLoadingFiles().substring(designAttachedSavedDir.length());
+                fileName = ddi.getDrawingFiles().substring(designAttachedSavedDir.length());
                 break;
 
             case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_LOADINGFILE:
-                if (ddi.getDrawingLoadingFiles() == null) {
+                if (ddi.getLoadingFiles() == null) {
                     return ResultGenerator.genFailResult("该设计单没有 装车单附件");
                 }
-                fileName = ddi.getDrawingLoadingFiles().substring(designAttachedSavedDir.length());
+                fileName = ddi.getLoadingFiles().substring(designAttachedSavedDir.length());
                 break;
 
             case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_HOLE:
-                if (ddi.getHoleTubeFiles() == null) {
+                if (ddi.getHoleFiles() == null) {
                     return ResultGenerator.genFailResult("该设计单没有 点孔附件");
                 }
-                fileName = ddi.getHoleTubeFiles().substring(designAttachedSavedDir.length());
+                fileName = ddi.getHoleFiles().substring(designAttachedSavedDir.length());
                 break;
-            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_BOM:
-                if (ddi.getHoleTubeFiles() == null) {
-                    return ResultGenerator.genFailResult("该设计单没有 BOM附件");
+            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_TUBE:
+                if (ddi.getTubeFiles() == null) {
+                    return ResultGenerator.genFailResult("该设计单没有 方管附件");
                 }
-//                fileName = ddi.getB().substring(designAttachedSavedDir.length());
+                fileName = ddi.getTubeFiles().substring(designAttachedSavedDir.length());
                 break;
+
             case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_COVER:
-                if (ddi.getHoleTubeFiles() == null) {
+                if (ddi.getCoverFile() == null) {
                     return ResultGenerator.genFailResult("该设计单没有 罩盖附件");
                 }
                 fileName = ddi.getCoverFile().substring(designAttachedSavedDir.length());
