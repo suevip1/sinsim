@@ -135,6 +135,23 @@ CREATE TABLE `contact_form` (
 ) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
+-- Table structure for contact_fulfill
+-- ----------------------------
+DROP TABLE IF EXISTS `contact_fulfill`;
+CREATE TABLE `contact_fulfill` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '落实单',
+  `contact_form_id` int(10) unsigned DEFAULT NULL COMMENT '联系单的ID',
+  `create_date` datetime DEFAULT NULL COMMENT '落实单的创建时间',
+  `update_date` datetime DEFAULT NULL COMMENT '落实单的更新时间',
+  `hope_date` datetime DEFAULT NULL COMMENT '希望完成日期',
+  `fulfill_man` varchar(255) DEFAULT NULL COMMENT '指定的落实人',
+  `message` varchar(500) DEFAULT NULL COMMENT '意见建议信息',
+  `feedback` varchar(500) DEFAULT NULL COMMENT '落实人的反馈信息',
+  `status` varchar(20) DEFAULT NULL COMMENT '落实状态: 初始化,未指定落实人员，落实进行中，落实完成',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
 -- Table structure for contact_sign
 -- ----------------------------
 DROP TABLE IF EXISTS `contact_sign`;
@@ -235,15 +252,31 @@ CREATE TABLE `design_dep_info` (
   `updated_date` datetime DEFAULT NULL,
   `machine_spec` varchar(255) DEFAULT NULL COMMENT '设备规格',
   `keywords` varchar(255) DEFAULT NULL COMMENT '关键字',
-  `drawing_loading_done` tinyint(1) DEFAULT '0' COMMENT '人工选择是否完成图纸',
-  `drawing_loading_files` varchar(255) DEFAULT NULL COMMENT '机架图纸、装车单 附件文件，空表示没有完成',
+  `loading_file_done` tinyint(1) DEFAULT '0' COMMENT '人工选择装车单是否完成',
+  `drawing_file_done` tinyint(1) DEFAULT '0' COMMENT '人工选择图纸是否完成',
+  `loading_files` varchar(255) DEFAULT NULL COMMENT ' 装车单 附件文件，空表示没有完成',
+  `drawing_files` varchar(255) DEFAULT NULL COMMENT '机架图纸的 附件文件，空表示没有完成',
+  `drawing_man` varchar(20) DEFAULT NULL COMMENT '图纸的更新人',
+  `loading_man` varchar(20) DEFAULT NULL COMMENT '装车单的更新人',
+  `loading_update_time` datetime DEFAULT NULL COMMENT '装车单的更新时间',
+  `drawing_update_time` datetime DEFAULT NULL COMMENT '图纸的更新时间',
   `hole_tube_required` tinyint(1) DEFAULT NULL COMMENT '点孔、方管 是否需要，0不需要1需要',
-  `hole_tube_done` tinyint(1) DEFAULT '0' COMMENT 'hole_tube是否完成',
-  `hole_tube_files` varchar(255) DEFAULT NULL COMMENT '点孔、方管的附件文件，空表示没有完成',
+  `hole_done` tinyint(1) DEFAULT '0' COMMENT 'hole 是否完成',
+  `tube_done` tinyint(1) DEFAULT '0' COMMENT 'tube 是否完成',
+  `hole_files` varchar(255) DEFAULT NULL COMMENT '点孔的附件文件，空表示没有完成',
+  `tube_files` varchar(255) DEFAULT NULL COMMENT '方管的附件文件，空表示没有完成',
+  `hole_man` varchar(20) DEFAULT NULL COMMENT '点孔的更新人',
+  `tube_man` varchar(20) DEFAULT NULL COMMENT '方管的更新人',
+  `hole_update_time` datetime DEFAULT NULL,
+  `tube_update_time` datetime DEFAULT NULL,
   `bom_required` tinyint(1) DEFAULT NULL COMMENT 'bom表文件,选是和否就好，不需要附件。',
   `bom_done` tinyint(1) DEFAULT '0',
+  `bom_man` varchar(20) DEFAULT NULL COMMENT 'bom更新人',
+  `bom_update_time` datetime DEFAULT NULL,
   `cover_required` tinyint(1) DEFAULT NULL COMMENT '是否需要罩盖，0不需要，1需要',
   `cover_done` tinyint(1) DEFAULT '0',
+  `cover_man` varchar(20) DEFAULT NULL COMMENT '罩盖更新人',
+  `cover_update_time` datetime DEFAULT NULL,
   `cover_file` varchar(255) DEFAULT NULL COMMENT '罩盖附件',
   `design_status` varchar(255) DEFAULT '未计划' COMMENT '未计划  设计中   完成（全部完成）/改单',
   PRIMARY KEY (`id`),

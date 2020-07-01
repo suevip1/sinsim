@@ -51,7 +51,8 @@ public class CodeGenerator {
 //            "contact_form",
 //            "contact_sign",
 //            "change_item"
-            "design_dep_info"
+//            "design_dep_info"
+            "contact_fulfill"
     };
 
     public static void main(String[] args) {

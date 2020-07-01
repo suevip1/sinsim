@@ -114,40 +114,44 @@ public class DesignDepInfoController {
                  * 在第一次新建时上传文件，designDepInfoID为空，则后端把各个更新日期设为当前日期即可
                  * 在编辑时更新上传文件，则把根据类型，把对应的Update日期更新。
                  */
-                Integer designDepInfoID = Integer.valueOf(request.getParameterValues("designDepInfoID")[0]);
-                if(designDepInfoID == null || designDepInfoID.equals(0)){
-                    logger.info("在新创建的设计里上传文件，已经默认更新日期为当前时间");
-                } else {
-                    DesignDepInfo designDepInfo = designDepInfoService.findById(designDepInfoID);
-                    if(designDepInfo == null){
-                        logger.error("根据前端给的ID找不到 designDepInfo");
-                    } else {
-                        switch (type) {
-                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_DRAWING:
-                                designDepInfo.setDrawingUpdateTime(new Date());
-                                break;
-                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_LOADINGFILE:
-                                designDepInfo.setLoadingUpdateTime(new Date());
-                                break;
-                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_HOLE:
-                                designDepInfo.setHoleUpdateTime(new Date());
-                                break;
-                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_TUBE:
-                                designDepInfo.setTubeUpdateTime(new Date());
-                                break;
-                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_BOM:
-                                designDepInfo.setBomUpdateTime(new Date());
-                                break;
-                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_COVER:
-                                designDepInfo.setCoverUpdateTime(new Date());
-                                break;
-
-                            default:
-                                break;
-                        }
-                        designDepInfoService.update(designDepInfo);
-                    }
-                }
+//                if(request.getParameterValues("designDepInfoID") == null){
+//                    ///todo ,第一次新建时上传文件，会出错
+//                }
+//                Integer designDepInfoID = Integer.valueOf(request.getParameterValues("designDepInfoID")[0]);
+//                if(designDepInfoID == null || designDepInfoID.equals(0)){
+//                    logger.info("在新创建的设计里上传文件，已经默认更新日期为当前时间");
+//                } else {
+//                    DesignDepInfo designDepInfo = designDepInfoService.findById(designDepInfoID);
+//                    if(designDepInfo == null){
+//                        logger.error("根据前端给的ID找不到 designDepInfo");
+//                    } else {
+//                        logger.info("type文件类型：" + type);
+//                        switch (type) {
+//                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_DRAWING:
+//                                designDepInfo.setDrawingUpdateTime(new Date());
+//                                break;
+//                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_LOADINGFILE:
+//                                designDepInfo.setLoadingUpdateTime(new Date());
+//                                break;
+//                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_HOLE:
+//                                designDepInfo.setHoleUpdateTime(new Date());
+//                                break;
+//                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_TUBE:
+//                                designDepInfo.setTubeUpdateTime(new Date());
+//                                break;
+//                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_BOM:
+//                                designDepInfo.setBomUpdateTime(new Date());
+//                                break;
+//                            case Constant.STR_DESIGN_UPLOAD_FILE_TYPE_COVER:
+//                                designDepInfo.setCoverUpdateTime(new Date());
+//                                break;
+//
+//                            default:
+//                                break;
+//                        }
+//                        designDepInfoService.update(designDepInfo);
+//                    }
+//                }
                 return ResultGenerator.genSuccessResult(resultPath);
             } catch (Exception e) {
                 e.printStackTrace();
