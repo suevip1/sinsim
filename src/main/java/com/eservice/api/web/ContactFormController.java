@@ -19,6 +19,8 @@ import com.eservice.api.model.change_item.ChangeItem;
 import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
+import com.eservice.api.model.contact_fulfill.ContactFulfill;
+import com.eservice.api.model.contact_fulfill.ContactFulfillDetail;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
@@ -73,6 +75,9 @@ public class ContactFormController {
 
     @Resource
     private MachineOrderServiceImpl machineOrderService;
+
+    @Resource
+    private ContactFulfillServiceImpl contactFulfillService;
 
     @Value("${lxd_attached_saved_dir}")
     private String lxdAttachedSavedDir;
@@ -161,6 +166,16 @@ public class ContactFormController {
             contactSign.setContactFormId(contactForm.getId());
             contactSignService.save(contactSign);
 
+            /**
+             * 联系单的落实，也在add时添加，比如技术部（联系单的主要落实者）也可以在发起联系单时，直接指定落实信息。
+             */
+            ContactFulfill contactFulfill = contactFormAllInfo.getContactFulfill();
+            if(contactFulfill != null ) {
+                contactFulfill.setContactFormId(contactForm.getId());
+                contactFulfillService.save(contactFulfill);
+            } else {
+                logger.info("新增联系单时，落实单为空");
+            }
         } catch (Exception ex) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             logger.warn("添加联系单/联系单变更条目/联系单审核信息 出错: " + message);

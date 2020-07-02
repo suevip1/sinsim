@@ -1,6 +1,7 @@
 package com.eservice.api.model.contact_form;
 
 import com.eservice.api.model.change_item.ChangeItem;
+import com.eservice.api.model.contact_fulfill.ContactFulfill;
 import com.eservice.api.model.contact_sign.ContactSign;
 
 import javax.persistence.Table;
@@ -66,5 +67,18 @@ public class ContactFormAllInfo {
 
     public void setAttachedFile(String attachedFile) {
         this.attachedFile = attachedFile;
+    }
+
+    /**
+     * 落实单
+     */
+    private ContactFulfill contactFulfill;
+
+    public ContactFulfill getContactFulfill() {
+        return contactFulfill;
+    }
+
+    public void setContactFulfill(ContactFulfill contactFulfill) {
+        this.contactFulfill = contactFulfill;
     }
 }

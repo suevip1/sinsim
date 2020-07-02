@@ -15,4 +15,45 @@
     <result column="feedback" jdbcType="VARCHAR" property="feedback" />
     <result column="status" jdbcType="VARCHAR" property="status" />
   </resultMap>
+
+  <resultMap id="ContactFulfillDetail" type="com.eservice.api.model.contact_fulfill.ContactFulfillDetail">
+      <id column="id" jdbcType="INTEGER" property="id" />
+      <result column="contact_form_id" jdbcType="INTEGER" property="contactFormId" />
+      <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+      <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+      <result column="hope_date" jdbcType="TIMESTAMP" property="hopeDate" />
+      <result column="fulfill_man" jdbcType="VARCHAR" property="fulfillMan" />
+      <result column="message" jdbcType="VARCHAR" property="message" />
+      <result column="feedback" jdbcType="VARCHAR" property="feedback" />
+      <result column="status" jdbcType="VARCHAR" property="status" />
+
+      <association javaType="com.eservice.api.model.contact_form.ContactForm" property="contactForm">
+          <!--
+          WARNING - @mbg.generated
+          -->
+          <id column="contact_form_id" jdbcType="INTEGER" property="id" />
+          <result column="contact_type" jdbcType="VARCHAR" property="contactType" />
+          <result column="num" jdbcType="VARCHAR" property="num" />
+          <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+          <result column="applicant_department" jdbcType="VARCHAR" property="applicantDepartment" />
+          <result column="applicant_person" jdbcType="VARCHAR" property="applicantPerson" />
+          <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+          <result column="hope_date" jdbcType="TIMESTAMP" property="hopeDate" />
+          <result column="contact_title" jdbcType="VARCHAR" property="contactTitle" />
+          <result column="contact_content" jdbcType="VARCHAR" property="contactContent" />
+          <result column="status" jdbcType="VARCHAR" property="status" />
+          <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+          <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
+          <result column="contact_content_else" jdbcType="VARCHAR" property="contactContentElse" />
+      </association>
+
+  </resultMap>
+
+  <select id="selectFulfillList" resultMap="ContactFulfillDetail">
+    SELECT
+        *
+    FROM
+        contact_fulfill cff
+    LEFT JOIN contact_form cf ON cff.contact_form_id = cf.id
+  </select>
 </mapper>
