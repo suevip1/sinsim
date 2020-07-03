@@ -24,11 +24,44 @@
   </resultMap>
 
   <resultMap id="ContactFormDetail" type="com.eservice.api.model.contact_form.ContactFormDetail">
+      <!--
+     WARNING - @mbg.generated
+   -->
+
+      <!--这里为空，也可以接受到 ContactForm的内容; 2020-0703: 但是在存在了association的情况下，不能省略，否则返回的数据为空等问题-->
+      <id column="id" jdbcType="INTEGER" property="id" />
+      <result column="contact_type" jdbcType="VARCHAR" property="contactType" />
+      <result column="num" jdbcType="VARCHAR" property="num" />
+      <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+      <result column="applicant_department" jdbcType="VARCHAR" property="applicantDepartment" />
+      <result column="applicant_person" jdbcType="VARCHAR" property="applicantPerson" />
+      <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+      <result column="hope_date" jdbcType="TIMESTAMP" property="hopeDate" />
+      <result column="contact_title" jdbcType="VARCHAR" property="contactTitle" />
+      <result column="contact_content" jdbcType="VARCHAR" property="contactContent" />
+      <result column="status" jdbcType="VARCHAR" property="status" />
+      <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+
+      <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
+      <result column="contact_content_else" jdbcType="VARCHAR" property="contactContentElse" />
+
     <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
     <result column="current_step" jdbcType="VARCHAR" property="currentStep" />
 
       <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-<!--这里为空，也可以接受到 ContactForm的内容-->
+      <association property="contactFulfill" javaType="com.eservice.api.model.contact_fulfill.ContactFulfill">
+          <id column="id_fulfill" jdbcType="INTEGER" property="id" />
+          <result column="contact_form_id" jdbcType="INTEGER" property="contactFormId" />
+          <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+          <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+          <result column="hope_date" jdbcType="TIMESTAMP" property="hopeDate" />
+          <result column="fulfill_man" jdbcType="VARCHAR" property="fulfillMan" />
+          <result column="message" jdbcType="VARCHAR" property="message" />
+          <result column="feedback" jdbcType="VARCHAR" property="feedback" />
+          <result column="status" jdbcType="VARCHAR" property="status" />
+      </association>
+
+
   </resultMap>
 
   <resultMap id="ResultContactFormAllInfo" type="com.eservice.api.model.contact_form.ContactFormAllInfo">
@@ -71,11 +104,28 @@
       <result column="remarks" jdbcType="VARCHAR" property="remarks" />
     </collection>
 
+      <collection property="contactFulfill" ofType="com.eservice.api.model.contact_fulfill.ContactFulfill">
+          <id column="id" jdbcType="INTEGER" property="id" />
+          <result column="contact_form_id" jdbcType="INTEGER" property="contactFormId" />
+          <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+          <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+          <result column="hope_date" jdbcType="TIMESTAMP" property="hopeDate" />
+          <result column="fulfill_man" jdbcType="VARCHAR" property="fulfillMan" />
+          <result column="message" jdbcType="VARCHAR" property="message" />
+          <result column="feedback" jdbcType="VARCHAR" property="feedback" />
+          <result column="status" jdbcType="VARCHAR" property="status" />
+      </collection>
+
   </resultMap>
 
   <select id="selectContacts" resultMap="ContactFormDetail">
-    SELECT * from contact_form cf
+    SELECT
+      cf.*,
+      cff.id as id_fulfill,
+      cff.*
+      from contact_form cf
     left join contact_sign cs on cs.contact_form_id = cf.id
+    LEFT JOIN contact_fulfill cff on cff.contact_form_id = cf.id
     where 1=1
 
     <if test="contactType!=null and contactType != '' ">

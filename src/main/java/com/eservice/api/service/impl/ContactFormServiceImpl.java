@@ -5,6 +5,7 @@ import com.eservice.api.model.change_item.ChangeItem;
 import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
+import com.eservice.api.model.contact_fulfill.ContactFulfill;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.service.ContactFormService;
 import com.eservice.api.core.AbstractService;
@@ -33,6 +34,9 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
 
     @Resource
     private ContactSignServiceImpl contactSignService;
+
+    @Resource
+    private ContactFulfillServiceImpl contactFulfillService;
 
     @Resource
     private ChangeItemServiceImpl changeItemService;
@@ -83,8 +87,14 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
             return null;
         }
 
+        //落实单
+        ContactFulfill cff = contactFulfillService.getFulFillByLxdId(contactFormId);
+        if(null == cff){
+            logger.warn("根据该contactFormId" + contactFormId + " 找不到对应的落实单");
+        }
         contactFormAllInfo.setContactForm(cf);
         contactFormAllInfo.setContactSign(cs);
+        contactFormAllInfo.setContactFulfill(cff);
         if(cf.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)) {
             List<ChangeItem> changeItemList = changeItemService.selectChangeItemList(contactFormId);
             contactFormAllInfo.setChangeItemList(changeItemList);

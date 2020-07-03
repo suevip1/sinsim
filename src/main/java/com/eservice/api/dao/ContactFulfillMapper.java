@@ -20,4 +20,6 @@ public interface ContactFulfillMapper extends Mapper<ContactFulfill> {
          @Param("contactFormNum")String contactFormNum,
          @Param("queryStartTimeUpdate")String queryStartTimeUpdate,
          @Param("queryFinishTimeUpdate")String queryFinishTimeUpdate);
+
+    ContactFulfill getFulFillByLxdId(@Param("contactFormId")Integer  contactFormId);
 }

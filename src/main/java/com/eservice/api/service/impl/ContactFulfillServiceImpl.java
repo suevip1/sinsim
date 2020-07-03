@@ -49,4 +49,7 @@ public class ContactFulfillServiceImpl extends AbstractService<ContactFulfill> i
         );
     }
 
+    ContactFulfill getFulFillByLxdId(Integer contactFormId) {
+        return contactFulfillMapper.getFulFillByLxdId(contactFormId);
+    }
 }

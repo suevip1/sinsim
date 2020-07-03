@@ -1,6 +1,8 @@
 package com.eservice.api.model.contact_form;
 
 
+import com.eservice.api.model.contact_fulfill.ContactFulfill;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -55,5 +57,18 @@ public class ContactFormDetail extends ContactForm{
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    /**
+     * 落实单
+     */
+    private ContactFulfill contactFulfill;
+
+    public ContactFulfill getContactFulfill() {
+        return contactFulfill;
+    }
+
+    public void setContactFulfill(ContactFulfill contactFulfill) {
+        this.contactFulfill = contactFulfill;
     }
 }

@@ -56,4 +56,16 @@
         contact_fulfill cff
     LEFT JOIN contact_form cf ON cff.contact_form_id = cf.id
   </select>
+
+    <select id="getFulFillByLxdId" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            contact_fulfill cff
+        LEFT JOIN contact_form cf ON cff.contact_form_id = cf.id
+        WHERE 1=1
+        <if test="contactFormId!=null and contactFormId != '' ">
+            and cf.id = #{contactFormId}
+        </if>
+    </select>
 </mapper>
