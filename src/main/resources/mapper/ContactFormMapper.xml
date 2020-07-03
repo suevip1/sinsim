@@ -59,6 +59,7 @@
           <result column="message" jdbcType="VARCHAR" property="message" />
           <result column="feedback" jdbcType="VARCHAR" property="feedback" />
           <result column="status" jdbcType="VARCHAR" property="status" />
+          <result column="filfull_success" jdbcType="VARCHAR" property="filfullSuccess" />
       </association>
 
 
@@ -114,6 +115,7 @@
           <result column="message" jdbcType="VARCHAR" property="message" />
           <result column="feedback" jdbcType="VARCHAR" property="feedback" />
           <result column="status" jdbcType="VARCHAR" property="status" />
+          <result column="filfull_success" jdbcType="VARCHAR" property="filfullSuccess" />
       </collection>
 
   </resultMap>

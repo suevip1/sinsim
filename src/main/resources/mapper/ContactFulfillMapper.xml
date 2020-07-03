@@ -14,6 +14,7 @@
     <result column="message" jdbcType="VARCHAR" property="message" />
     <result column="feedback" jdbcType="VARCHAR" property="feedback" />
     <result column="status" jdbcType="VARCHAR" property="status" />
+      <result column="filfull_success" jdbcType="VARCHAR" property="filfullSuccess" />
   </resultMap>
 
   <resultMap id="ContactFulfillDetail" type="com.eservice.api.model.contact_fulfill.ContactFulfillDetail">
@@ -26,6 +27,7 @@
       <result column="message" jdbcType="VARCHAR" property="message" />
       <result column="feedback" jdbcType="VARCHAR" property="feedback" />
       <result column="status" jdbcType="VARCHAR" property="status" />
+      <result column="filfull_success" jdbcType="VARCHAR" property="filfullSuccess" />
 
       <association javaType="com.eservice.api.model.contact_form.ContactForm" property="contactForm">
           <!--

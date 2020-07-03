@@ -90,11 +90,19 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
         //落实单
         ContactFulfill cff = contactFulfillService.getFulFillByLxdId(contactFormId);
         if(null == cff){
-            logger.warn("根据该contactFormId" + contactFormId + " 找不到对应的落实单");
+            logger.warn("根据该contactFormId " + contactFormId + " 找不到对应的落实单 (之前期的联系单还不存在落实单信息)");
+            /**
+             * 方便前台处理
+             *（cff为空时，对于旧的联系单，前端无法读取cff的信息， Cannot read property 'xxxx' of null"，会造成无法显示）
+             */
+            cff = new ContactFulfill();
+        } else{
+
         }
+        contactFormAllInfo.setContactFulfill(cff);
         contactFormAllInfo.setContactForm(cf);
         contactFormAllInfo.setContactSign(cs);
-        contactFormAllInfo.setContactFulfill(cff);
+
         if(cf.getContactType().equals(Constant.STR_LXD_TYPE_BIANGENG)) {
             List<ChangeItem> changeItemList = changeItemService.selectChangeItemList(contactFormId);
             contactFormAllInfo.setChangeItemList(changeItemList);

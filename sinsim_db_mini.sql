@@ -148,6 +148,7 @@ CREATE TABLE `contact_fulfill` (
   `message` varchar(500) DEFAULT NULL COMMENT '意见建议信息',
   `feedback` varchar(500) DEFAULT NULL COMMENT '落实人的反馈信息',
   `status` varchar(20) DEFAULT NULL COMMENT '落实状态: 初始化,未指定落实人员，落实进行中，落实完成',
+  `filfull_success` tinyint(4) DEFAULT NULL COMMENT '0: 未成功； 1：成功',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

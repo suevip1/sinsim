@@ -404,6 +404,16 @@ public class ContactFormController {
             }
             contactSignService.update(contactSign);
 
+            /**
+             * 联系单的落实，更新
+             */
+            ContactFulfill contactFulfill = contactFormAllInfo.getContactFulfill();
+            if(contactFulfill != null ) {
+                contactFulfill.setContactFormId(contactForm.getId());
+                contactFulfillService.update(contactFulfill);
+            } else {
+                logger.info("更新联系单时，落实单为空");
+            }
         } catch (Exception ex) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             logger.warn("更新 联系单/联系单变更条目/联系单审核信息 出错: " + message);

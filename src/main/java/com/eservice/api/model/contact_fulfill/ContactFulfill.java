@@ -218,4 +218,16 @@ public class ContactFulfill {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    //0: 未成功； 1：成功
+    @Column(name = "filfull_success")
+    private boolean filfullSuccess;
+
+    public boolean isFilfullSuccess() {
+        return filfullSuccess;
+    }
+
+    public void setFilfullSuccess(boolean filfullSuccess) {
+        this.filfullSuccess = filfullSuccess;
+    }
 }
