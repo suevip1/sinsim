@@ -53,13 +53,16 @@
 
   <select id="selectFulfillList" resultMap="ContactFulfillDetail">
     SELECT
-        *
+	*
     FROM
         contact_fulfill cff
     LEFT JOIN contact_form cf ON cff.contact_form_id = cf.id
+    ORDER BY
+        cff.create_date DESC,
+        cff.update_date DESC
   </select>
 
-    <select id="getFulFillByLxdId" resultMap="BaseResultMap">
+    <select id="getLatestFulFillByLxdId" resultMap="BaseResultMap">
         SELECT
             *
         FROM
@@ -69,5 +72,9 @@
         <if test="contactFormId!=null and contactFormId != '' ">
             and cf.id = #{contactFormId}
         </if>
+--         如果有多个落实单，只认最新的落实单（创建日期最新）
+        ORDER BY
+        cff.create_date DESC
+        LIMIT 1
     </select>
 </mapper>

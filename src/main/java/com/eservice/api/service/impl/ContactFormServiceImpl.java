@@ -88,7 +88,8 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
         }
 
         //落实单
-        ContactFulfill cff = contactFulfillService.getFulFillByLxdId(contactFormId);
+        //如果有多个落实单，只认最新的落实单（创建日期最新）
+        ContactFulfill cff = contactFulfillService.getLatestFulFillByLxdId(contactFormId);
         if(null == cff){
             logger.warn("根据该contactFormId " + contactFormId + " 找不到对应的落实单 (之前期的联系单还不存在落实单信息)");
             /**
@@ -96,6 +97,7 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
              *（cff为空时，对于旧的联系单，前端无法读取cff的信息， Cannot read property 'xxxx' of null"，会造成无法显示）
              */
             cff = new ContactFulfill();
+            logger.warn("cff为空时，对于旧的联系单，前端无法读取cff的信息");
         } else{
 
         }

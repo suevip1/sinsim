@@ -405,12 +405,21 @@ public class ContactFormController {
             contactSignService.update(contactSign);
 
             /**
-             * 联系单的落实，更新
+             * 联系单的落实，新增/更新
              */
             ContactFulfill contactFulfill = contactFormAllInfo.getContactFulfill();
             if(contactFulfill != null ) {
                 contactFulfill.setContactFormId(contactForm.getId());
-                contactFulfillService.update(contactFulfill);
+                if(contactFulfill.getId() == null || contactFulfill.getId() ==0){
+                    ////workaround：不知道为啥前端会传个为0的contactFulfill.id，照理应该是null
+                    //新增加的落实信息，比如在二期旧的联系单上添加落实信息，比如在新建联系单时未写落实信息，后面再补上时。
+                    contactFulfill.setStatus(Constant.STR_FULFILL_STATUS_FULFILLING);
+                    contactFulfill.setCreateDate(new Date());
+                    contactFulfillService.save(contactFulfill);
+                } else {
+                    contactFulfill.setUpdateDate(new Date());
+                    contactFulfillService.update(contactFulfill);
+                }
             } else {
                 logger.info("更新联系单时，落实单为空");
             }

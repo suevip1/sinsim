@@ -285,4 +285,10 @@ public class Constant {
 
     public static final String STR_INSTALL_TYPE_WHOLE = "总装";
     public static final String STR_INSTALL_TYPE_PARTS = "部装";
+
+    public static final String STR_FULFILL_STATUS_INITIAL = "落实单初始化";
+    public static final String STR_FULFILL_STATUS_UN_ASSIGN = "未指定落实人员";
+    public static final String STR_FULFILL_STATUS_FULFILLING = "落实进行中";
+    public static final String STR_FULFILL_STATUS_DONE = "落实完成";
+
 }
