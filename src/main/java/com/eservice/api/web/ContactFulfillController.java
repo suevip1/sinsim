@@ -4,6 +4,7 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contact_fulfill.ContactFulfill;
 import com.eservice.api.model.contact_fulfill.ContactFulfillDetail;
 import com.eservice.api.service.ContactFulfillService;
+import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.ContactFulfillServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -87,6 +88,18 @@ public class ContactFulfillController {
                                     String queryFinishTimeUpdate ) {
         PageHelper.startPage(page, size);
 
+        String statusStr = null;
+        if (fulfillStatus != null) {
+            if (fulfillStatus.equals("0")) {
+                statusStr = Constant.STR_FULFILL_STATUS_INITIAL;
+            } else if (fulfillStatus.equals("1")) {
+                statusStr = Constant.STR_FULFILL_STATUS_UN_ASSIGN;
+            } else if (fulfillStatus.equals("2")) {
+                statusStr = Constant.STR_FULFILL_STATUS_FULFILLING;
+            } else if (fulfillStatus.equals("3")) {
+                statusStr = Constant.STR_FULFILL_STATUS_DONE;
+            }
+        }
         List<ContactFulfillDetail> list = contactFulfillService.selectFulfillList(
                 applicantPerson,
                 applicantDepartment,
@@ -94,7 +107,7 @@ public class ContactFulfillController {
                 queryStartTimeCreate,
                 queryFinishTimeCreate,
                 fulfillMan,
-                fulfillStatus,
+                statusStr,
                 contactFormNum,
                 queryStartTimeUpdate,
                 queryFinishTimeUpdate);

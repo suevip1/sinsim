@@ -2,6 +2,7 @@ package com.eservice.api.service.impl;
 
 import com.eservice.api.dao.DesignDepInfoMapper;
 import com.eservice.api.model.design_dep_info.DesignDepInfo;
+import com.eservice.api.model.design_dep_info.DesignDepInfoDetail;
 import com.eservice.api.service.DesignDepInfoService;
 import com.eservice.api.core.AbstractService;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class DesignDepInfoServiceImpl extends AbstractService<DesignDepInfo> imp
     @Resource
     private DesignDepInfoMapper designDepInfoMapper;
 
-    public List<DesignDepInfo> selectDesignDepInfo(
+    public List<DesignDepInfoDetail> selectDesignDepInfo(
                                                     String orderNum,
                                                     String saleman,
                                                     String guestName,

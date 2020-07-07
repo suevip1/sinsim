@@ -291,4 +291,15 @@ public class Constant {
     public static final String STR_FULFILL_STATUS_FULFILLING = "落实进行中";
     public static final String STR_FULFILL_STATUS_DONE = "落实完成";
 
+    //设计单 状态
+    public static final String STR_DESIGN_STATUS_UNPLANNED = "待计划"; //未指定设计人员
+    public static final String STR_DESIGN_STATUS_PLANNED = "已计划";
+    public static final String STR_DESIGN_STATUS_DRAWING_DONE = "图纸完成";
+    public static final String STR_DESIGN_STATUS_LOADING_DONE = "装车单完成";
+    public static final String STR_DESIGN_STATUS_HOLE_DONE = "点孔完成";
+    public static final String STR_DESIGN_STATUS_TUBE_DONE = "方管完成";
+    public static final String STR_DESIGN_STATUS_COVER_DONE = "罩盖完成";
+    public static final String STR_DESIGN_STATUS_BOM_DONE = "BOM完成";
+    public static final String STR_DESIGN_STATUS_ALL_DONE = "全部完成";
+
 }

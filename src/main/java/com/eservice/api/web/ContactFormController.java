@@ -20,11 +20,9 @@ import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
 import com.eservice.api.model.contact_fulfill.ContactFulfill;
-import com.eservice.api.model.contact_fulfill.ContactFulfillDetail;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
-import com.eservice.api.model.user.User;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
@@ -172,6 +170,12 @@ public class ContactFormController {
             ContactFulfill contactFulfill = contactFormAllInfo.getContactFulfill();
             if(contactFulfill != null ) {
                 contactFulfill.setContactFormId(contactForm.getId());
+                if(contactFulfill.getFulfillMan() == null || contactFulfill.getFulfillMan().equals("")){
+                    contactFulfill.setStatus(Constant.STR_FULFILL_STATUS_UN_ASSIGN);
+                } else {
+                    contactFulfill.setStatus(Constant.STR_FULFILL_STATUS_FULFILLING);
+                }
+                contactFulfill.setCreateDate(new Date());
                 contactFulfillService.save(contactFulfill);
             } else {
                 logger.info("新增联系单时，落实单为空");
@@ -413,7 +417,11 @@ public class ContactFormController {
                 if(contactFulfill.getId() == null || contactFulfill.getId() ==0){
                     ////workaround：不知道为啥前端会传个为0的contactFulfill.id，照理应该是null
                     //新增加的落实信息，比如在二期旧的联系单上添加落实信息，比如在新建联系单时未写落实信息，后面再补上时。
-                    contactFulfill.setStatus(Constant.STR_FULFILL_STATUS_FULFILLING);
+                    if(contactFulfill.getFulfillMan() ==null){
+                        contactFulfill.setStatus(Constant.STR_FULFILL_STATUS_UN_ASSIGN);
+                    } else {
+                        contactFulfill.setStatus(Constant.STR_FULFILL_STATUS_FULFILLING);
+                    }
                     contactFulfill.setCreateDate(new Date());
                     contactFulfillService.save(contactFulfill);
                 } else {

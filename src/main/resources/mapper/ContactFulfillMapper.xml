@@ -56,7 +56,38 @@
 	*
     FROM
         contact_fulfill cff
-    LEFT JOIN contact_form cf ON cff.contact_form_id = cf.id
+    JOIN contact_form cf ON cff.contact_form_id = cf.id
+      <if test="applicantPerson != null and applicantPerson != ''">
+          and cf.applicant_person like CONCAT('%','${applicantPerson}','%' )
+      </if>
+      <if test="applicantDepartment != null and applicantDepartment != ''">
+          and cf.applicant_department like CONCAT('%','${applicantDepartment}','%' )
+      </if>
+      <if test="orderNum != null and orderNum != ''">
+          and cf.order_num like CONCAT('%','${orderNum}','%' )
+      </if>
+      <if test="fulfillMan != null and fulfillMan != ''">
+          and cff.fulfill_man like CONCAT('%','${fulfillMan}','%' )
+      </if>
+      <if test="fulfillStatus != null and fulfillStatus != ''">
+          and cff.status like CONCAT('%','${fulfillStatus}','%' )
+      </if>
+      <if test="contactFormNum != null and contactFormNum != ''">
+          and cf.order_num like CONCAT('%','${contactFormNum}','%' )
+      </if>
+      <if test="queryStartTimeCreate!=null and queryStartTimeCreate != '' ">
+          and DATE_FORMAT(cff.create_date,'%Y-%m-%d') &gt;= #{queryStartTimeCreate}
+      </if>
+      <if test="queryFinishTimeCreate!=null and queryFinishTimeCreate != '' ">
+          and DATE_FORMAT(cff.create_date,'%Y-%m-%d') &lt;= #{queryFinishTimeCreate}
+      </if>
+      <if test="queryStartTimeUpdate!=null and queryStartTimeUpdate != '' ">
+          and DATE_FORMAT(cff.update_date,'%Y-%m-%d') >= #{queryStartTimeUpdate}
+      </if>
+      <if test="queryFinishTimeUpdate!=null and queryFinishTimeUpdate != '' ">
+          and DATE_FORMAT(cff.update_date,'%Y-%m-%d') &lt;=  #{queryFinishTimeUpdate}
+      </if>
+
     ORDER BY
         cff.create_date DESC,
         cff.update_date DESC

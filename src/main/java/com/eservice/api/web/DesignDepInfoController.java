@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.design_dep_info.DesignDepInfo;
+import com.eservice.api.model.design_dep_info.DesignDepInfoDetail;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.DesignDepInfoServiceImpl;
@@ -57,6 +58,12 @@ public class DesignDepInfoController {
         if(designDepInfo.getOrderId() == null){
             return ResultGenerator.genFailResult("异常，orderId为空");
         }
+        //自动设置状态
+        if(designDepInfo.getDesigner() == null || designDepInfo.getDesigner().equals("")){
+            designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_UNPLANNED);
+        } else {
+            designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_PLANNED);
+        }
         designDepInfoService.saveAndGetID(designDepInfo);
         // 返回ID给前端，前端新增联系单时不关闭页面。
         return ResultGenerator.genSuccessResult(designDepInfo.getId());
@@ -78,6 +85,60 @@ public class DesignDepInfoController {
         if(designDepInfo.getId() == null){
             return ResultGenerator.genFailResult("异常，Id为空");
         }
+        //自动设置状态
+        if(designDepInfo.getDesigner() == null || designDepInfo.getDesigner().equals("")){
+            designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_UNPLANNED);
+        } else {
+            designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_PLANNED);
+        }
+
+        DesignDepInfo designDepInfoOld = designDepInfoService.findById(designDepInfo.getId());
+        if(designDepInfoOld == null){
+            return ResultGenerator.genFailResult("异常，根据Id找不到对应的设计");
+        }
+        //记录的是: 最新一次更新
+        //整体状态DesignStatus, 只考虑常规操作, 即只考虑从未完成到已完成, 不考虑来回改动,
+        if(designDepInfoOld.getDrawingFileDone() != designDepInfo.getDrawingFileDone()){
+            if(designDepInfo.getDrawingFileDone() ) {
+                designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_DRAWING_DONE);
+            } else {
+                //对于把已某项 完成改成未完成的情况,不考虑再修改整体状态
+            }
+        }
+        if(designDepInfoOld.getLoadingFileDone() != designDepInfo.getLoadingFileDone()){
+            if(designDepInfo.getLoadingFileDone() ) {
+                designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_LOADING_DONE);
+            }
+        }
+        if(designDepInfoOld.getHoleDone() != designDepInfo.getHoleDone()){
+            if(designDepInfo.getHoleDone() ) {
+                designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_HOLE_DONE);
+            }
+        }
+        if(designDepInfoOld.getTubeDone() != designDepInfo.getTubeDone()){
+            if(designDepInfo.getTubeDone() ) {
+                designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_TUBE_DONE);
+            }
+        }
+        if(designDepInfoOld.getCoverDone() != designDepInfo.getCoverDone()){
+            if(designDepInfo.getCoverDone() ) {
+                designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_COVER_DONE);
+            }
+        }
+        if(designDepInfoOld.getBomDone() != designDepInfo.getBomDone()){
+            if(designDepInfo.getBomDone() ) {
+                designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_BOM_DONE);
+            }
+        }
+        if(designDepInfo.getDrawingFileDone()
+                &&designDepInfo.getLoadingFileDone()
+                &&designDepInfo.getHoleDone()
+                &&designDepInfo.getTubeDone()
+                &&designDepInfo.getCoverDone()
+                &&designDepInfo.getBomDone() ){
+            designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_ALL_DONE);
+        }
+
         designDepInfoService.update(designDepInfo);
         return ResultGenerator.genSuccessResult();
     }
@@ -193,7 +254,7 @@ public class DesignDepInfoController {
                                       String updateDateStart,
                                       String updateDateEnd) {
         PageHelper.startPage(page, size);
-        List<DesignDepInfo> list = designDepInfoService.selectDesignDepInfo(
+        List<DesignDepInfoDetail> list = designDepInfoService.selectDesignDepInfo(
                 orderNum,
                 saleman,
                 guestName,
