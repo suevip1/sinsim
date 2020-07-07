@@ -528,11 +528,24 @@ CREATE TABLE `market_group` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of market_group
+-- Table structure for optimize
 -- ----------------------------
-INSERT INTO `market_group` VALUES ('1', '外贸一部');
-INSERT INTO `market_group` VALUES ('2', '外贸二部');
-INSERT INTO `market_group` VALUES ('3', '内贸部');
+DROP TABLE IF EXISTS `optimize`;
+CREATE TABLE `optimize` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `project_name` varchar(50) DEFAULT NULL COMMENT '项目名称',
+  `optimize_part` varchar(50) DEFAULT NULL COMMENT '优化类部件',
+  `order_num` varchar(50) DEFAULT NULL COMMENT '订单号',
+  `machine_type` varchar(50) DEFAULT NULL COMMENT '机型',
+  `purpose` varchar(500) DEFAULT NULL COMMENT '目的',
+  `owner` varchar(10) DEFAULT NULL COMMENT '负责人',
+  `working_hours` varchar(10) DEFAULT NULL COMMENT '工时',
+  `results` varchar(255) DEFAULT NULL COMMENT '效果',
+  `files` varchar(255) DEFAULT NULL COMMENT '附件',
+  `create_date` datetime DEFAULT NULL,
+  `update_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for `order_cancel_record`
