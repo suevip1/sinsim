@@ -146,6 +146,21 @@ public class ContactFormController {
                 contactForm.setNum(newNum);
             }
 
+            //如果是在新建联系单就添加附件，此时联系单单号未确定。需要后端来更新。
+            if(contactForm.getAttachedFile().contains("xxx") ){
+                String oldNameOfAttachedFile = contactForm.getAttachedFile();
+                String newNameOfAttachedFile = contactForm.getAttachedFile().replace("xxx",contactForm.getNum().split("-")[2]);
+
+                //根据订单名称 重新命名附件文件
+                File file = new File(oldNameOfAttachedFile);
+                if(file == null || !file.exists()){
+                    logger.error(oldNameOfAttachedFile + "文件不存在！");
+                } else {
+                    file.renameTo(new File(newNameOfAttachedFile));
+                }
+                contactForm.setAttachedFile(newNameOfAttachedFile);
+            }
+
             contactFormService.saveAndGetID(contactForm);
 
             // 生成联系单变更条目， 如果类型不是变更联系单时，这部分为空
