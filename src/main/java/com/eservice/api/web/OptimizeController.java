@@ -1,4 +1,5 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.optimize.Optimize;
@@ -25,7 +26,14 @@ public class OptimizeController {
     private OptimizeService optimizeService;
 
     @PostMapping("/add")
-    public Result add(Optimize optimize) {
+    public Result add(String jsonOptimizeFormAllInfo) {
+        Optimize optimize = JSON.parseObject(jsonOptimizeFormAllInfo, Optimize.class);
+        if (optimize == null || optimize.equals("")) {
+            return ResultGenerator.genFailResult("JSON数据异常");
+        }
+        if(optimize.getOrderNum() == null){
+            return ResultGenerator.genFailResult("异常，getOrderNum 为空");
+        }
         optimizeService.save(optimize);
         return ResultGenerator.genSuccessResult();
     }
@@ -55,4 +63,13 @@ public class OptimizeController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    @PostMapping("/selectOptimizeList")
+    public Result selectOptimizeList(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+        PageHelper.startPage(page, size);
+        List<Optimize> list = optimizeService.findAll();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 }
