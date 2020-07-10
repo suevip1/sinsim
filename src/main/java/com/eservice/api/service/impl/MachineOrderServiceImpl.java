@@ -33,21 +33,59 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
         return machineOrderMapper.getOrderAllDetail(id);
     }
 
-    public List<MachineOrderDetail> selectOrder(Integer id, Integer contract_id, String order_num, String contract_num, Integer status, String sellman,
-                                                String customer, String marketGroupName, String query_start_time, String query_finish_time, String machine_name, Boolean is_fuzzy) {
+    public List<MachineOrderDetail> selectOrder(Integer id,
+                                                Integer contract_id,
+                                                String order_num,
+                                                String contract_num,
+                                                Integer status,
+                                                String sellman,
+                                                String customer,
+                                                String marketGroupName,
+                                                String query_start_time,
+                                                String query_finish_time,
+                                                String queryStartTimeSign,
+                                                String queryFinishTimeSign,
+                                                String machine_name,
+                                                Boolean is_fuzzy) {
 
         List<MachineOrderDetail> machineOrderDetailList;
         /**
          * Note: 对每个订单都查询一次该订单的联系单状态，然后赋值。
          */
         if (is_fuzzy) {
-            machineOrderDetailList = machineOrderMapper.selectOrderFuzzy(id, contract_id, order_num, contract_num, status, sellman, customer, marketGroupName, query_start_time, query_finish_time, machine_name);
+            machineOrderDetailList = machineOrderMapper.selectOrderFuzzy(
+                    id,
+                    contract_id,
+                    order_num,
+                    contract_num,
+                    status,
+                    sellman,
+                    customer,
+                    marketGroupName,
+                    query_start_time,
+                    query_finish_time,
+                    queryStartTimeSign,
+                    queryFinishTimeSign,
+                    machine_name);
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
 
             }
         } else {
-            machineOrderDetailList = machineOrderMapper.selectOrder(id, contract_id, order_num, contract_num, status, sellman, customer, marketGroupName, query_start_time, query_finish_time, machine_name);
+            machineOrderDetailList = machineOrderMapper.selectOrder(
+                    id,
+                    contract_id,
+                    order_num,
+                    contract_num,
+                    status,
+                    sellman,
+                    customer,
+                    marketGroupName,
+                    query_start_time,
+                    query_finish_time,
+                    queryStartTimeSign,
+                    queryFinishTimeSign,
+                    machine_name);
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
             }

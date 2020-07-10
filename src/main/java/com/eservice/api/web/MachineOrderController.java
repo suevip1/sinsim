@@ -171,12 +171,28 @@ public class MachineOrderController {
             String sellman,
             String customer,
             String marketGroupName,
-            String query_start_time,
-            String query_finish_time,
+            String query_start_time, //这个是查询创建日期
+            String query_finish_time,//这个是查询创建日期
+            String queryStartTimeSign, //这个是查询审核日期
+            String queryFinishTimeSign,//这个是查询审核日期
             String machine_name,// 这个其实是机型
             @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page,size);
-        List<MachineOrderDetail> list = machineOrderService.selectOrder(id, contract_id,order_num, contract_num, status,sellman,customer,marketGroupName,query_start_time,query_finish_time,machine_name,is_fuzzy);
+        List<MachineOrderDetail> list = machineOrderService.selectOrder(
+                id,
+                contract_id,
+                order_num,
+                contract_num,
+                status,
+                sellman,
+                customer,
+                marketGroupName,
+                query_start_time,
+                query_finish_time,
+                queryStartTimeSign,
+                queryFinishTimeSign,
+                machine_name,
+                is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
@@ -237,18 +253,33 @@ public class MachineOrderController {
 
     @PostMapping("/exportToFinaceExcel")
     public Result exportToFinaceExcel(Integer id,
-                                Integer contract_id,
-                                String order_num,
-                                String contract_num,
-                                Integer status,
-                                String sellman,
-                                String customer,
-                                String marketGroupName,
-                                String query_start_time,
-                                String query_finish_time,
-                                String machine_name,
-                                @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
-            List<MachineOrderDetail> list = machineOrderService.selectOrder(id, contract_id,order_num, contract_num, status,sellman,customer,marketGroupName,query_start_time,query_finish_time,machine_name,is_fuzzy);
+                                      Integer contract_id,
+                                      String order_num,
+                                      String contract_num,
+                                      Integer status,
+                                      String sellman,
+                                      String customer,
+                                      String marketGroupName,
+                                      String query_start_time, //这个是查询创建日期
+                                      String query_finish_time,//这个是查询创建日期
+                                      String queryStartTimeSign, //这个是查询审核日期
+                                      String queryFinishTimeSign,//这个是查询审核日期
+                                      String machine_name,
+                                      @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
+        List<MachineOrderDetail> list = machineOrderService.selectOrder(
+                id,
+                contract_id,
+                order_num,
+                contract_num,
+                status,
+                sellman,
+                customer,
+                marketGroupName,
+                query_start_time,
+                query_finish_time,
+                machine_name,
+                queryStartTimeSign,
+                queryFinishTimeSign,is_fuzzy);
 
             HSSFWorkbook wb = null;
             FileOutputStream out = null;
@@ -419,18 +450,34 @@ public class MachineOrderController {
 
         @PostMapping("/exportToSaleExcel")
         public Result exportToSaleExcel(Integer id,
-                                    Integer contract_id,
-                                    String order_num,
-                                    String contract_num,
-                                    Integer status,
-                                    String sellman,
-                                    String customer,
-                                    String marketGroupName,
-                                    String query_start_time,
-                                    String query_finish_time,
-                                    String machine_name,
-                                    @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
-                List<MachineOrderDetail> list = machineOrderService.selectOrder(id, contract_id,order_num, contract_num, status,sellman,customer,marketGroupName,query_start_time,query_finish_time,machine_name,is_fuzzy);
+                                        Integer contract_id,
+                                        String order_num,
+                                        String contract_num,
+                                        Integer status,
+                                        String sellman,
+                                        String customer,
+                                        String marketGroupName,
+                                        String query_start_time, //这个是查询创建日期
+                                        String query_finish_time,//这个是查询创建日期
+                                        String queryStartTimeSign, //这个是查询审核日期
+                                        String queryFinishTimeSign,//这个是查询审核日期
+                                        String machine_name,
+                                        @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
+                List<MachineOrderDetail> list = machineOrderService.selectOrder(
+                        id,
+                        contract_id,
+                        order_num,
+                        contract_num,
+                        status,
+                        sellman,
+                        customer,
+                        marketGroupName,
+                        query_start_time,
+                        query_finish_time,
+                        machine_name,
+                        queryStartTimeSign,
+                        queryFinishTimeSign,
+                        is_fuzzy);
     
                 HSSFWorkbook wb = null;
                 FileOutputStream out = null;

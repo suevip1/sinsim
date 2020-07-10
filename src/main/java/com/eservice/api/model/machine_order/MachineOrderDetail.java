@@ -938,4 +938,26 @@ public class MachineOrderDetail {
     public void setLxdPassed(boolean lxdPassed) {
         this.lxdPassed = lxdPassed;
     }
+
+    @Column(name = "electric_trim")
+    private String electricTrim;
+
+    @Column(name = "electric_pc")
+    private String electricPc;
+
+    public String getElectricTrim() {
+        return electricTrim;
+    }
+
+    public void setElectricTrim(String electricTrim) {
+        this.electricTrim = electricTrim;
+    }
+
+    public String getElectricPc() {
+        return electricPc;
+    }
+
+    public void setElectricPc(String electricPc) {
+        this.electricPc = electricPc;
+    }
 }
