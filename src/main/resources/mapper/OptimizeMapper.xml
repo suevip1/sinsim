@@ -18,4 +18,46 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+  <select id="selectOptimizeList" resultMap="BaseResultMap">
+    SELECT
+	*
+    FROM
+        `optimize`
+    WHERE
+        1 = 1
+    <if test="projectName != null and projectName != ''">
+      and `optimize`.project_name like CONCAT('%','${projectName}','%' )
+    </if>
+    <if test="optimizePart != null and optimizePart != ''">
+      and `optimize`.optimiz_part like CONCAT('%','${optimizePart}','%' )
+    </if>
+    <if test="orderNum != null and orderNum != ''">
+      and `optimize`.order_num like CONCAT('%','${orderNum}','%' )
+    </if>
+    <if test="machineType != null and machineType != ''">
+      and `optimize`.machine_type like CONCAT('%','${machineType}','%' )
+    </if>
+    <if test="purpose != null and purpose != ''">
+      and `optimize`.purpose like CONCAT('%','${purpose}','%' )
+    </if>
+    <if test="owner != null and owner != ''">
+      and `optimize`.owner like CONCAT('%','${owner}','%' )
+    </if>
+    <if test="queryStartTimeCreate!=null and queryStartTimeCreate != '' ">
+      and DATE_FORMAT(optimize.create_date,'%Y-%m-%d') &gt;= #{queryStartTimeCreate}
+    </if>
+    <if test="queryFinishTimeCreate!=null and queryFinishTimeCreate != '' ">
+      and DATE_FORMAT(optimize.create_date,'%Y-%m-%d') &lt;= #{queryFinishTimeCreate}
+    </if>
+    <if test="queryStartTimeUpdate!=null and queryStartTimeUpdate != '' ">
+      and DATE_FORMAT(optimize.update_date,'%Y-%m-%d') >= #{queryStartTimeUpdate}
+    </if>
+    <if test="queryFinishTimeUpdate!=null and queryFinishTimeUpdate != '' ">
+      and DATE_FORMAT(optimize.update_date,'%Y-%m-%d') &lt;=  #{queryFinishTimeUpdate}
+    </if>
+
+    ORDER BY
+    optimize.create_date DESC,
+    optimize.update_date DESC
+  </select>
 </mapper>

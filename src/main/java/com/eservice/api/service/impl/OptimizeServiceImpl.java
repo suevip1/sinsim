@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -20,5 +21,31 @@ import javax.annotation.Resource;
 public class OptimizeServiceImpl extends AbstractService<Optimize> implements OptimizeService {
     @Resource
     private OptimizeMapper optimizeMapper;
+
+    public List<Optimize> selectOptimizeList(
+            String projectName,
+            String optimizePart,
+            String orderNum,
+            String queryStartTimeCreate,
+            String queryFinishTimeCreate,
+            String machineType,
+            String purpose,
+            String owner,
+            String queryStartTimeUpdate,
+            String queryFinishTimeUpdate
+    ){
+        return optimizeMapper.selectOptimizeList(
+                projectName,
+                optimizePart,
+                orderNum,
+                queryStartTimeCreate,
+                queryFinishTimeCreate,
+                machineType,
+                purpose,
+                owner,
+                queryStartTimeUpdate,
+                queryFinishTimeUpdate
+        );
+    }
 
 }

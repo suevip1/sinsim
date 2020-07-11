@@ -4,6 +4,7 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.optimize.Optimize;
 import com.eservice.api.service.OptimizeService;
+import com.eservice.api.service.impl.OptimizeServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ import java.util.List;
 @RequestMapping("/optimize")
 public class OptimizeController {
     @Resource
-    private OptimizeService optimizeService;
+    private OptimizeServiceImpl optimizeService;
 
     @PostMapping("/add")
     public Result add(String jsonOptimizeFormAllInfo) {
@@ -64,10 +65,44 @@ public class OptimizeController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    /**
+     * @param projectName
+     * @param optimizePart
+     * @param orderNum
+     * @param queryStartTimeCreate 创建日期
+     * @param queryFinishTimeCreate
+     * @param machineType
+     * @param purpose
+     * @param owner
+     * @param queryStartTimeUpdate 更新日期
+     * @param queryFinishTimeUpdate
+     * @return
+     */
     @PostMapping("/selectOptimizeList")
-    public Result selectOptimizeList(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+    public Result selectOptimizeList(@RequestParam(defaultValue = "0") Integer page,
+                                     @RequestParam(defaultValue = "0") Integer size,
+                                     String projectName,
+                                     String optimizePart,
+                                     String orderNum,
+                                     String queryStartTimeCreate,
+                                     String queryFinishTimeCreate,
+                                     String machineType,
+                                     String purpose,
+                                     String owner,
+                                     String queryStartTimeUpdate,
+                                     String queryFinishTimeUpdate ) {
         PageHelper.startPage(page, size);
-        List<Optimize> list = optimizeService.findAll();
+        List<Optimize> list = optimizeService.selectOptimizeList(
+                projectName,
+                optimizePart,
+                orderNum,
+                queryStartTimeCreate,
+                queryFinishTimeCreate,
+                machineType,
+                purpose,
+                owner,
+                queryStartTimeUpdate,
+                queryFinishTimeUpdate);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
