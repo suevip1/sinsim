@@ -297,6 +297,10 @@ public class CommonService {
                 fileType = "designAttached";
                 dateStr = "";
                 break;
+            case Constant.OPTIMIZE_ATTACHED_FILE:
+                fileType = "optimize";
+                dateStr = "";
+                break;
 
             default:
                 fileType = " ";

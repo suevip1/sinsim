@@ -177,6 +177,7 @@ public class Constant {
     public static final int LOADING_FILE = 2;
     public static final int LXD_ATTACHED_FILE = 3;
     public static final int DESIGN_ATTACHED_FILE = 4;
+    public static final int OPTIMIZE_ATTACHED_FILE = 5;
 
     //设计页面，文件类型
     public static final String STR_DESIGN_UPLOAD_FILE_TYPE_DRAWING = "图纸";
