@@ -1,9 +1,12 @@
-package com.eservice.api.model.optimize;
+package com.eservice.api.model.optimizeTest;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
-public class Optimize {
+public class OptimizeTest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

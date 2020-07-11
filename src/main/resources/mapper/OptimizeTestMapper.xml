@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.eservice.api.dao.OptimizeMapper">
-  <resultMap id="BaseResultMap" type="com.eservice.api.model.optimize.Optimize">
+<mapper namespace="com.eservice.api.dao.OptimizeTestMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.optimizeTest.OptimizeTest">
     <!--
       WARNING - @mbg.generated
     -->
@@ -22,42 +22,71 @@
     SELECT
 	*
     FROM
-        `optimize`
+        `optimize_test`
     WHERE
         1 = 1
     <if test="projectName != null and projectName != ''">
-      and `optimize`.project_name like CONCAT('%','${projectName}','%' )
+      and `optimize_test`.project_name like CONCAT('%','${projectName}','%' )
     </if>
     <if test="optimizePart != null and optimizePart != ''">
-      and `optimize`.optimiz_part like CONCAT('%','${optimizePart}','%' )
+      and `optimize_test`.optimiz_part like CONCAT('%','${optimizePart}','%' )
     </if>
     <if test="orderNum != null and orderNum != ''">
-      and `optimize`.order_num like CONCAT('%','${orderNum}','%' )
+      and `optimize_test`.order_num like CONCAT('%','${orderNum}','%' )
     </if>
     <if test="machineType != null and machineType != ''">
-      and `optimize`.machine_type like CONCAT('%','${machineType}','%' )
+      and `optimize_test`.machine_type like CONCAT('%','${machineType}','%' )
     </if>
     <if test="purpose != null and purpose != ''">
-      and `optimize`.purpose like CONCAT('%','${purpose}','%' )
+      and `optimize_test`.purpose like CONCAT('%','${purpose}','%' )
     </if>
     <if test="owner != null and owner != ''">
-      and `optimize`.owner like CONCAT('%','${owner}','%' )
+      and `optimize_test`.owner like CONCAT('%','${owner}','%' )
     </if>
     <if test="queryStartTimeCreate!=null and queryStartTimeCreate != '' ">
-      and DATE_FORMAT(optimize.create_date,'%Y-%m-%d') &gt;= #{queryStartTimeCreate}
+      and DATE_FORMAT(optimize_test.create_date,'%Y-%m-%d') &gt;= #{queryStartTimeCreate}
     </if>
     <if test="queryFinishTimeCreate!=null and queryFinishTimeCreate != '' ">
-      and DATE_FORMAT(optimize.create_date,'%Y-%m-%d') &lt;= #{queryFinishTimeCreate}
+      and DATE_FORMAT(optimize_test.create_date,'%Y-%m-%d') &lt;= #{queryFinishTimeCreate}
     </if>
     <if test="queryStartTimeUpdate!=null and queryStartTimeUpdate != '' ">
-      and DATE_FORMAT(optimize.update_date,'%Y-%m-%d') >= #{queryStartTimeUpdate}
+      and DATE_FORMAT(optimize_test.update_date,'%Y-%m-%d') >= #{queryStartTimeUpdate}
     </if>
     <if test="queryFinishTimeUpdate!=null and queryFinishTimeUpdate != '' ">
-      and DATE_FORMAT(optimize.update_date,'%Y-%m-%d') &lt;=  #{queryFinishTimeUpdate}
+      and DATE_FORMAT(optimize_test.update_date,'%Y-%m-%d') &lt;=  #{queryFinishTimeUpdate}
     </if>
 
     ORDER BY
-    optimize.create_date DESC,
-    optimize.update_date DESC
+    optimize_test.create_date DESC,
+    optimize_test.update_date DESC
   </select>
+
+  <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.optimizeTest.OptimizeTest"
+          keyProperty="id">
+    insert into
+    optimize_test(
+    project_name,
+    optimize_part,
+    order_num,
+    machine_type,
+    purpose,
+    owner,
+    working_hours,
+    results,
+    files,
+    create_date,
+    update_date)
+    values(
+    #{projectName},
+    #{optimizePart},
+    #{orderNum},
+    #{machineType},
+    #{purpose},
+    #{owner},
+    #{workingHours},
+    #{results},
+    #{files},
+    #{createDate},
+    #{updateDate})
+  </insert>
 </mapper>

@@ -1,10 +1,10 @@
 package com.eservice.api.web;
+
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
-import com.eservice.api.model.optimize.Optimize;
-import com.eservice.api.service.OptimizeService;
-import com.eservice.api.service.impl.OptimizeServiceImpl;
+import com.eservice.api.model.optimizeTest.OptimizeTest;
+import com.eservice.api.service.impl.OptimizeTestServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,46 +21,47 @@ import java.util.List;
 * @date 2020/07/07.
 */
 @RestController
-@RequestMapping("/optimize")
-public class OptimizeController {
+@RequestMapping("/optimize/test")
+public class OptimizeTestController {
     @Resource
-    private OptimizeServiceImpl optimizeService;
+    private OptimizeTestServiceImpl optimizeTestService;
 
     @PostMapping("/add")
     public Result add(String jsonOptimizeFormAllInfo) {
-        Optimize optimize = JSON.parseObject(jsonOptimizeFormAllInfo, Optimize.class);
-        if (optimize == null || optimize.equals("")) {
+        OptimizeTest optimizeTest = JSON.parseObject(jsonOptimizeFormAllInfo, OptimizeTest.class);
+        if (optimizeTest == null || optimizeTest.equals("")) {
             return ResultGenerator.genFailResult("JSON数据异常");
         }
-        if(optimize.getOrderNum() == null){
+        if(optimizeTest.getOrderNum() == null){
             return ResultGenerator.genFailResult("异常，getOrderNum 为空");
         }
-        optimizeService.save(optimize);
-        return ResultGenerator.genSuccessResult();
+
+        optimizeTestService.saveAndGetID(optimizeTest);
+        return ResultGenerator.genSuccessResult(optimizeTest.getId());
     }
 
     @PostMapping("/delete")
     public Result delete(@RequestParam Integer id) {
-        optimizeService.deleteById(id);
+        optimizeTestService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/update")
-    public Result update(Optimize optimize) {
-        optimizeService.update(optimize);
+    public Result update(OptimizeTest optimize) {
+        optimizeTestService.update(optimize);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/detail")
     public Result detail(@RequestParam Integer id) {
-        Optimize optimize = optimizeService.findById(id);
+        OptimizeTest optimize = optimizeTestService.findById(id);
         return ResultGenerator.genSuccessResult(optimize);
     }
 
     @PostMapping("/list")
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
-        List<Optimize> list = optimizeService.findAll();
+        List<OptimizeTest> list = optimizeTestService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
@@ -92,7 +93,7 @@ public class OptimizeController {
                                      String queryStartTimeUpdate,
                                      String queryFinishTimeUpdate ) {
         PageHelper.startPage(page, size);
-        List<Optimize> list = optimizeService.selectOptimizeList(
+        List<OptimizeTest> list = optimizeTestService.selectOptimizeList(
                 projectName,
                 optimizePart,
                 orderNum,
@@ -106,5 +107,4 @@ public class OptimizeController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
-
 }

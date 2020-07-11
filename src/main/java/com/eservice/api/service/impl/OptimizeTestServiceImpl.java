@@ -1,9 +1,9 @@
 package com.eservice.api.service.impl;
 
-import com.eservice.api.dao.OptimizeMapper;
-import com.eservice.api.model.optimize.Optimize;
-import com.eservice.api.service.OptimizeService;
 import com.eservice.api.core.AbstractService;
+import com.eservice.api.dao.OptimizeTestMapper;
+import com.eservice.api.model.optimizeTest.OptimizeTest;
+import com.eservice.api.service.OptimizeTestService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +18,11 @@ import java.util.List;
 */
 @Service
 @Transactional
-public class OptimizeServiceImpl extends AbstractService<Optimize> implements OptimizeService {
+public class OptimizeTestServiceImpl extends AbstractService<OptimizeTest> implements OptimizeTestService {
     @Resource
-    private OptimizeMapper optimizeMapper;
+    private OptimizeTestMapper optimizeTestMapper;
 
-    public List<Optimize> selectOptimizeList(
+    public List<OptimizeTest> selectOptimizeList(
             String projectName,
             String optimizePart,
             String orderNum,
@@ -34,7 +34,7 @@ public class OptimizeServiceImpl extends AbstractService<Optimize> implements Op
             String queryStartTimeUpdate,
             String queryFinishTimeUpdate
     ){
-        return optimizeMapper.selectOptimizeList(
+        return optimizeTestMapper.selectOptimizeList(
                 projectName,
                 optimizePart,
                 orderNum,
@@ -46,6 +46,11 @@ public class OptimizeServiceImpl extends AbstractService<Optimize> implements Op
                 queryStartTimeUpdate,
                 queryFinishTimeUpdate
         );
+    }
+
+
+    public void saveAndGetID(OptimizeTest optimizeTest){
+        optimizeTestMapper.saveAndGetID(optimizeTest);
     }
 
 }

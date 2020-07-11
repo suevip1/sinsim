@@ -528,10 +528,10 @@ CREATE TABLE `market_group` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for optimize
+-- Table structure for optimize_test
 -- ----------------------------
-DROP TABLE IF EXISTS `optimize`;
-CREATE TABLE `optimize` (
+DROP TABLE IF EXISTS `optimize_test`;
+CREATE TABLE `optimize_test` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `project_name` varchar(50) DEFAULT NULL COMMENT '项目名称',
   `optimize_part` varchar(50) DEFAULT NULL COMMENT '优化类部件',
