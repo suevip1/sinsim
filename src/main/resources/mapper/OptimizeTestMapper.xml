@@ -29,7 +29,7 @@
       and `optimize_test`.project_name like CONCAT('%','${projectName}','%' )
     </if>
     <if test="optimizePart != null and optimizePart != ''">
-      and `optimize_test`.optimiz_part like CONCAT('%','${optimizePart}','%' )
+      and `optimize_test`.optimize_part like CONCAT('%','${optimizePart}','%' )
     </if>
     <if test="orderNum != null and orderNum != ''">
       and `optimize_test`.order_num like CONCAT('%','${orderNum}','%' )

@@ -3,9 +3,11 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.optimizeTest.OptimizeTest;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.impl.MachineTypeServiceImpl;
 import com.eservice.api.service.impl.OptimizeTestServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -40,6 +42,9 @@ public class OptimizeTestController {
 
     @Resource
     private CommonService commonService;
+
+    @Resource
+    private MachineTypeServiceImpl machineTypeService;
 
     @PostMapping("/add")
     public Result add(String jsonOptimizeFormAllInfo) {
@@ -120,14 +125,23 @@ public class OptimizeTestController {
                                      String owner,
                                      String queryStartTimeUpdate,
                                      String queryFinishTimeUpdate ) {
+
         PageHelper.startPage(page, size);
+        String strMachineTypeName = null;
+        if(machineType != null && ! machineType.isEmpty()){
+            MachineType mt = machineTypeService.findById(Integer.valueOf(machineType));
+            if(mt != null){
+                strMachineTypeName = mt.getName();
+            }
+        }
+
         List<OptimizeTest> list = optimizeTestService.selectOptimizeList(
                 projectName,
                 optimizePart,
                 orderNum,
                 queryStartTimeCreate,
                 queryFinishTimeCreate,
-                machineType,
+                strMachineTypeName,
                 purpose,
                 owner,
                 queryStartTimeUpdate,
@@ -169,5 +183,29 @@ public class OptimizeTestController {
             e.printStackTrace();
             return ResultGenerator.genFailResult("设计附件 上传失败！" + e.getMessage());
         }
+    }
+
+    /**
+     * 根据优化ID 返回 对应的附件的文件名称 下载路径的前面部分是统一的，放在xxx_ip/download/下(nginx配置)，
+     * 比如，访问下面地址可以下载优化单附件
+     * http://xx.xx.xx.xx/optimizeAttached/曹457B__optimize__0.png
+     *
+     * @param optimizeTestId
+     * @return 类似 曹457B__optimize__0.png
+     */
+    @PostMapping("/getOptimizeAttachedFile")
+    public Result getOptimizeAttachedFile(@RequestParam Integer optimizeTestId) {
+
+        OptimizeTest ot = optimizeTestService.findById(optimizeTestId);
+        if (null == ot) {
+            return ResultGenerator.genFailResult("根据该 optimizeTestId 找不到对应的联系单");
+        }
+        if (ot.getFiles() == null) {
+            return ResultGenerator.genFailResult("该优化单没有附件");
+        }
+
+        String fileName = null;
+        fileName = ot.getFiles().substring(optimizeSavedDir.length());
+        return ResultGenerator.genSuccessResult(fileName);
     }
 }
