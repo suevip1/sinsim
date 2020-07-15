@@ -77,47 +77,52 @@
     SELECT * from contact_form cf
     left join contact_sign cs on cs.contact_form_id = cf.id
     where 1=1
+      <if test="contactNum!=null and contactNum != '' ">
+          and cf.num like CONCAT('%','${contactNum}','%' )
+      </if>
+      <if test="contactTitle!=null and contactTitle != '' ">
+          and cf.contact_title like CONCAT('%','${contactTitle}','%' )
+      </if>
+      <if test="contactType!=null and contactType != '' ">
+          and cf.contact_type like CONCAT('%','${contactType}','%' )
+      </if>
+      -- -- 销售部不要相互看到，都是要能看到其他非销售的部门的联系单
+      <if test="applicantDepartment!=null and applicantDepartment != '' ">
+          and
+          (cf.applicant_department like CONCAT('%','${applicantDepartment}','%')
+          --       OR
+          --       (cf.applicant_department != '内贸部' and cf.applicant_department != '外贸一部' and cf.applicant_department != '外贸二部' )
+          )
+      </if>
 
-    <if test="contactType!=null and contactType != '' ">
-    and cf.contact_type like CONCAT('%','${contactType}','%' )
-    </if>
--- -- 销售部不要相互看到，都是要能看到其他非销售的部门的联系单
-    <if test="applicantDepartment!=null and applicantDepartment != '' ">
-      and
-      (cf.applicant_department like CONCAT('%','${applicantDepartment}','%')
---       OR
---       (cf.applicant_department != '内贸部' and cf.applicant_department != '外贸一部' and cf.applicant_department != '外贸二部' )
-      )
-    </if>
+      <if test="userRoleName!=null and userRoleName != '' ">
+          -- TOOD
+      </if>
 
-    <if test="userRoleName!=null and userRoleName != '' ">
- -- TOOD
-    </if>
+      <if test="applicantPerson!=null and applicantPerson != '' ">
+          and cf.applicant_person like CONCAT('%','${applicantPerson}','%' )
+      </if>
 
-    <if test="applicantPerson!=null and applicantPerson != '' ">
-      and cf.applicant_person like CONCAT('%','${applicantPerson}','%' )
-    </if>
+      <if test="orderNum!=null and orderNum != '' ">
+          and cf.order_num like CONCAT('%','${orderNum}','%' )
+      </if>
 
-    <if test="orderNum!=null and orderNum != '' ">
-      and cf.order_num like CONCAT('%','${orderNum}','%' )
-    </if>
+      <if test="queryStartTime!=null and queryStartTime != '' ">
+          and DATE_FORMAT(cf.create_date,'%Y-%m-%d') &gt;= #{queryStartTime}
+      </if>
+      <if test="queryFinishTime!=null and queryFinishTime != '' ">
+          and DATE_FORMAT(cf.create_date,'%Y-%m-%d') &lt;= #{queryFinishTime}
+      </if>
 
-    <if test="queryStartTime!=null and queryStartTime != '' ">
-      and DATE_FORMAT(cf.create_date,'%Y-%m-%d') &gt;= #{queryStartTime}
-    </if>
-    <if test="queryFinishTime!=null and queryFinishTime != '' ">
-      and DATE_FORMAT(cf.create_date,'%Y-%m-%d') &lt;= #{queryFinishTime}
-    </if>
+      <if test="currentStep!=null and currentStep != '' ">
+          and cs.current_step like CONCAT('%','${currentStep}','%' )
+      </if>
 
-    <if test="currentStep!=null and currentStep != '' ">
-      and cs.current_step like CONCAT('%','${currentStep}','%' )
-    </if>
+      <if test="strStatus!=null and strStatus != '' ">
+          and cf.`status` = #{strStatus}
+      </if>
 
-    <if test="strStatus!=null and strStatus != '' ">
-      and cf.`status` = #{strStatus}
-    </if>
-
-    ORDER BY cs.update_time desc, cf.update_date desc, cf.create_date desc
+      ORDER BY cs.update_time desc, cf.update_date desc, cf.create_date desc
   </select>
   
   <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contact_form.ContactForm"

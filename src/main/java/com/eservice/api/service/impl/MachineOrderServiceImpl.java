@@ -106,7 +106,10 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
             if(orderNum.contains("(")) {
                 orderNum = orderNum.substring(0, orderNum.indexOf("("));
             }
-            contactFormDetailsList = contactFormService.selectContacts(null,
+            contactFormDetailsList = contactFormService.selectContacts(
+                    null,
+                    null,
+                    null,
                     orderNum,
                     null,
                     null,
