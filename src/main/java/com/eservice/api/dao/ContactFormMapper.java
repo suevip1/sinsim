@@ -9,16 +9,19 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface ContactFormMapper extends Mapper<ContactForm> {
-    List<ContactFormDetail> selectContacts(@Param("contactType")String contactType,
-                                           @Param("orderNum")String orderNum,
-                                           @Param("applicantDepartment")String applicantDepartment,
-                                           @Param("applicantPerson")String applicantPerson,
-                                           @Param("userRoleName")String userRoleName,
-                                           @Param("strStatus")String strStatus,
-                                           @Param("queryStartTime")String queryStartTime,
-                                           @Param("queryFinishTime")String queryFinishTime,
-                                           @Param("currentStep")String currentStep,
-                                           @Param("isFuzzy")Boolean isFuzzy);
+    List<ContactFormDetail> selectContacts(
+            @Param("contactNum")String contactNum,
+            @Param("contactTitle")String contactTitle,
+            @Param("contactType")String contactType,
+            @Param("orderNum")String orderNum,
+            @Param("applicantDepartment")String applicantDepartment,
+            @Param("applicantPerson")String applicantPerson,
+            @Param("userRoleName")String userRoleName,
+            @Param("strStatus")String strStatus,
+            @Param("queryStartTime")String queryStartTime,
+            @Param("queryFinishTime")String queryFinishTime,
+            @Param("currentStep")String currentStep,
+            @Param("isFuzzy")Boolean isFuzzy);
     void saveAndGetID(  ContactForm contactForm);
     List<ContactForm> getLxdLastSerialNumber( @Param("year")String year,
                                               @Param("department")String department);

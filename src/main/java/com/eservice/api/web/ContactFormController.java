@@ -491,7 +491,9 @@ public class ContactFormController {
 
     /**
      * 按条件 查下联系单信息
-     * 
+     *
+     * @param contactNum         联系单 编号
+     * @param contactTitle         联系单 主题
      * @param contactType         联系单类型
      * @param orderNum            订单 编号
      * @param applicantDepartment 发起部门
@@ -507,6 +509,8 @@ public class ContactFormController {
     @PostMapping("/selectContacts")
     public Result selectContacts(@RequestParam(defaultValue = "0") Integer page,
                                  @RequestParam(defaultValue = "0") Integer size,
+                                 String contactNum,
+                                 String contactTitle,
                                  String contactType,
                                  String orderNum,
                                  String applicantDepartment,
@@ -534,7 +538,10 @@ public class ContactFormController {
                 strStatus = Constant.STR_LXD_CANCELED;
             }
         }
-        List<ContactFormDetail> list = contactFormService.selectContacts(contactType,
+        List<ContactFormDetail> list = contactFormService.selectContacts(
+                contactNum,
+                contactTitle,
+                contactType,
                 orderNum,
                 applicantDepartment,
                 applicantPerson,
