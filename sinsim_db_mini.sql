@@ -489,6 +489,18 @@ CREATE TABLE `machine_order` (
   `update_time` datetime DEFAULT NULL COMMENT '订单信息更新时间',
   `end_time` datetime DEFAULT NULL COMMENT '订单结束时间',
   `all_urgent` tinyint(4) DEFAULT NULL COMMENT '该订单的机器全部加急；1表示加急,0表示取消加急(曾经加急后来取消了)，默认为null',
+  `embroidery_application` varchar(20) DEFAULT NULL COMMENT '绣品应用',
+  `line_type` varchar(20) DEFAULT NULL COMMENT '线种',
+  `highest_speed` varchar(20) DEFAULT NULL COMMENT '最高速度',
+  `platen_height` varchar(20) DEFAULT NULL COMMENT '台板高度',
+  `debug_pattern` varchar(20) DEFAULT NULL COMMENT '调试花样',
+  `else_auto_line_chage` varchar(20) DEFAULT NULL COMMENT '自动换底线',
+  `else_upper_shaft_refueling_method` varchar(20) DEFAULT NULL COMMENT '上轴加油方式',
+  `else_down_shaft_refueling_method` varchar(20) DEFAULT NULL COMMENT '下轴加油方式',
+  `bluetooth` varchar(20) DEFAULT NULL COMMENT '蓝牙功能',
+  `gold_wire_anti_twine` varchar(20) DEFAULT NULL COMMENT '金线防缠绕',
+  `pattern_docking_assistance` varchar(20) DEFAULT NULL COMMENT '花样对接辅助',
+  `gas_frame` varchar(20) DEFAULT NULL COMMENT '气框',
   PRIMARY KEY (`id`),
   KEY `fk_o_machine_type` (`machine_type`),
   KEY `fk_o_order_detail_id` (`order_detail_id`),
@@ -634,6 +646,8 @@ CREATE TABLE `order_detail` (
   `driver_horizon_num` tinyint(4) DEFAULT NULL COMMENT '驱动：横档数量',
   `driver_vertical_num` tinyint(4) DEFAULT NULL COMMENT '驱动：直档数量',
   `driver_reel` varchar(255) DEFAULT NULL COMMENT '驱动：绷架',
+  `electric_stable_voltage` varchar(20) DEFAULT NULL COMMENT '稳压电源',
+  `electric_shelf_light` varchar(20) DEFAULT NULL COMMENT '线架照明灯',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
