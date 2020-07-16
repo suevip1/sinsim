@@ -796,16 +796,19 @@ public class ContractController {
         /**
          * 某订单总价 = 机器价格*台数 + 装置价格*台数 - 优惠总价
          */
-        Integer totalPriceOfOrder = 0;
+//        Integer totalPriceOfOrder = 0;
+        Double totalPriceOfOrder = 0.0;
 
         /**
          * 某订单的机器总价
          */
-        Integer machineOrderSum = 0;
+//        Integer machineOrderSum = 0;
+        Double machineOrderSum = 0.0;
         /**
          * 合同总价 = 各订单总价之和
          */
-        Integer totalPriceOfContract = 0;
+//        Integer totalPriceOfContract = 0;
+        Double totalPriceOfContract = 0.0;
 
         //只有总经理，销售，财务等用户，生成的excel里才显示金额信息. '6','7','9','14','15'
         Boolean displayPrice = commonService.isDisplayPrice(account);
@@ -901,8 +904,8 @@ public class ContractController {
 
             String machineInfo = "";
             for (int i = 0; i < validMachineOrderCount; i++) {
-                totalPriceOfOrder = 0;
-                machineOrderSum = 0;
+                totalPriceOfOrder = 0.0;
+                machineOrderSum = 0.0;
                 machineOrderDetail = machineOrderService.getOrderAllDetail(validMachineOrderIdList.get(i));
                 focusLine = 5 + i + getLinesSum(equipmentNumArr, i ) ;
 
@@ -935,7 +938,9 @@ public class ContractController {
 
                 //E5,,..机器总价
                 cell = sheet1.getRow(focusLine).getCell((short) 4);
-                machineOrderSum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum();
+
+                machineOrderSum = Double.parseDouble(machineOrderDetail.getMachinePrice())* machineOrderDetail.getMachineNum();
+
                 totalPriceOfOrder += machineOrderSum;
                 if (displayPrice) {
                     cell.setCellValue(machineOrderSum);
@@ -951,7 +956,8 @@ public class ContractController {
                  */
                 JSONArray jsonArray = JSON.parseArray(machineOrderDetail.getEquipment());
                 Integer equipmentCount = 0;
-                int orderEquipmentTotal = 0;
+//                int orderEquipmentTotal = 0;
+                double orderEquipmentTotal = 0;
                 if (null != jsonArray) {
 
                     focusLine = 6 + i + getLinesSum(equipmentNumArr, i );
@@ -1004,11 +1010,13 @@ public class ContractController {
                          * 订单内该种装置的总价
                          */
                         cell = sheet1.getRow(focusLine + j).getCell((short) 4);
-                        int eqSum = eq.getNumber() * eq.getPrice() * machineOrderDetail.getMachineNum();
+//                        int eqSum = eq.getNumber() * eq.getPrice() * machineOrderDetail.getMachineNum();
+                        Double eqSum = eq.getNumber() * eq.getPrice() * machineOrderDetail.getMachineNum();
                         orderEquipmentTotal = orderEquipmentTotal + eqSum;
                         totalPriceOfOrder += eqSum;
                         if (displayPrice) {
-                            cell.setCellValue(new HSSFRichTextString((Integer.toString(eqSum))));
+//                            cell.setCellValue(new HSSFRichTextString((Integer.toString(eqSum))));
+                            cell.setCellValue(new HSSFRichTextString((eqSum.toString())));
                         } else {
                             cell.setCellValue(new HSSFRichTextString("/"));
                         }
@@ -1032,7 +1040,8 @@ public class ContractController {
                  * 该订单的 总优惠 = 优惠金额/台 * 台数 +  优惠金额 (用于抹零等)
                  * 既有 优惠金额/台，又有优惠金额 。类似折上折的意思
                  */
-                Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum() + Integer.parseInt(machineOrderDetail.getOrderTotalDiscounts());
+//                Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum() + Integer.parseInt(machineOrderDetail.getOrderTotalDiscounts());
+                Double sumOfDiscounts =Double.parseDouble(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum() + Double.parseDouble(machineOrderDetail.getOrderTotalDiscounts());
                 if (displayPrice) {
                     cell.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()));
                 } else {
@@ -1070,7 +1079,8 @@ public class ContractController {
                 // 居间费用总计,不计入订单总价
                 cell = sheet1.getRow(focusLine).getCell((short) 4);
                 if (displayPrice) {
-                    Integer sumOfIntermediary =Integer.parseInt(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
+//                    Integer sumOfIntermediary =Integer.parseInt(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
+                    Double sumOfIntermediary =Double.parseDouble(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
                     cell.setCellValue(new HSSFRichTextString(sumOfIntermediary.toString()));
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
@@ -1095,7 +1105,8 @@ public class ContractController {
                 //需求单小计
                 cell = sheet1.getRow(focusLine).getCell((short) 4);
                 if (displayPrice) {
-                    Integer orderTotalPrice = machineOrderSum + orderEquipmentTotal - sumOfDiscounts;
+//                    Integer orderTotalPrice = machineOrderSum + orderEquipmentTotal - sumOfDiscounts;
+                    Double orderTotalPrice = machineOrderSum + orderEquipmentTotal - sumOfDiscounts;
                     cell.setCellValue(new HSSFRichTextString(orderTotalPrice.toString()));
                 } else {
                     cell.setCellValue(new HSSFRichTextString("/"));
@@ -1211,8 +1222,8 @@ public class ContractController {
 
             //sheet2，sheet3...,第1,2,...个需求单
             for (int i = 0; i < machineOrderCount; i++) {
-                totalPriceOfOrder = 0;
-                machineOrderSum = 0;
+                totalPriceOfOrder = 0.0;
+                machineOrderSum = 0.0;
                 machineOrderDetail = machineOrderService.getOrderAllDetail(machineOrderIdList.get(i));
                 //把sheet名称改为订单的编号
                 wb.setSheetName(i + 1, machineOrderDetail.getOrderNum().replaceAll("/", "-"));
@@ -1457,10 +1468,11 @@ public class ContractController {
                         }
                         //总价
                         cell2 = sheetX.getRow(22 + j).getCell((short) 4);
-                        int eqSum = eq.getNumber() * eq.getPrice() * machineOrderDetail.getMachineNum();
+//                        int eqSum = eq.getNumber() * eq.getPrice() * machineOrderDetail.getMachineNum();
+                        Double eqSum = eq.getNumber() * eq.getPrice() * machineOrderDetail.getMachineNum();
                         totalPriceOfOrder += eqSum;
                         if (displayPrice) {
-                            cell2.setCellValue(new HSSFRichTextString((Integer.toString(eqSum))));
+                            cell2.setCellValue(new HSSFRichTextString(eqSum.toString()));
                         } else {
                             cell2.setCellValue(new HSSFRichTextString("/"));
                         }
@@ -1494,9 +1506,10 @@ public class ContractController {
                     /**
                      * 用 xx + yy 的形式展示具体的值，如果存在折上折时，可以清楚看到具体情况：  xx(即优惠金额/台 * 台数) + yy（即优惠金额）
                      */
-                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
+//                    Integer sumOfDiscounts =Integer.parseInt(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
+                    Double sumOfDiscounts =Double.parseDouble(machineOrderDetail.getDiscounts()) * machineOrderDetail.getMachineNum();
                     cell2.setCellValue(new HSSFRichTextString(sumOfDiscounts.toString()) + " + " + machineOrderDetail.getOrderTotalDiscounts());
-                    totalPriceOfOrder -= (sumOfDiscounts + Integer.parseInt( machineOrderDetail.getOrderTotalDiscounts()));
+                    totalPriceOfOrder -= (sumOfDiscounts + Double.parseDouble( machineOrderDetail.getOrderTotalDiscounts()));
                 } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
@@ -1518,7 +1531,7 @@ public class ContractController {
                 //居间费用总计  不计入订单总价
                 cell2 = sheetX.getRow(23 + equipmentCount).getCell((short) 4);
                 if (displayPrice) {
-                    Integer sumOfIntermediary =Integer.parseInt(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
+                    Double sumOfIntermediary =Double.parseDouble(machineOrderDetail.getIntermediaryPrice()) * machineOrderDetail.getMachineNum();
                     cell2.setCellValue(new HSSFRichTextString(sumOfIntermediary.toString()));
                 } else {
                     cell2.setCellValue(new HSSFRichTextString("/"));
@@ -1535,7 +1548,7 @@ public class ContractController {
                     cell2.setCellValue(new HSSFRichTextString("/"));
                 }
                 // 机器总价
-                machineOrderSum = Integer.parseInt(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum();
+                machineOrderSum = Double.parseDouble(machineOrderDetail.getMachinePrice()) * machineOrderDetail.getMachineNum();
                 cell2 = sheetX.getRow(24 + equipmentCount).getCell((short) 4);
                 if (displayPrice) {
                     cell2.setCellValue(machineOrderSum);
@@ -1770,6 +1783,7 @@ public class ContractController {
             return ResultGenerator.genFailResult("请输入合同编号！");
         } else {
             Condition condition = new Condition(Contract.class);
+            condition.createCriteria().andCondition("contract_num = ", contractNum);
             condition.createCriteria().andCondition("contract_num = ", contractNum);
             List<Contract> list = contractService.findByCondition(condition);
             if (list.size() == 0) {
