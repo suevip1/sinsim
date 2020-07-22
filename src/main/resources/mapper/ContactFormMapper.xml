@@ -21,6 +21,8 @@
     <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
     <result column="contact_content_else" jdbcType="VARCHAR" property="contactContentElse" />
 
+    <result column="attached_during_sign" jdbcType="VARCHAR" property="attachedDuringSign" />
+    <result column="attached_during_sign_man" jdbcType="VARCHAR" property="attachedDuringSignMan" />
   </resultMap>
 
   <resultMap id="ContactFormDetail" type="com.eservice.api.model.contact_form.ContactFormDetail">
@@ -50,6 +52,8 @@
       <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
       <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
       <result column="contact_content_else" jdbcType="VARCHAR" property="contactContentElse" />
+      <result column="attached_during_sign" jdbcType="VARCHAR" property="attachedDuringSign" />
+      <result column="attached_during_sign_man" jdbcType="VARCHAR" property="attachedDuringSignMan" />
     </association>
 
     <association property="contactSign" javaType="com.eservice.api.model.contact_sign.ContactSign" >
@@ -129,10 +133,12 @@
           keyProperty="id">
     insert into
     contact_form(contact_type, num, order_num, applicant_department, applicant_person,create_date, hope_date, contact_title,
-                contact_content, status, update_date, attached_file, contact_content_else)
+                contact_content, status, update_date, attached_file, contact_content_else,
+                attached_during_sign, attached_during_sign_man)
     values(
     #{contactType},#{num},#{orderNum},#{applicantDepartment},#{applicantPerson},#{createDate},#{hopeDate},#{contactTitle},
-    #{contactContent},#{status}, #{updateDate}, #{attachedFile}, #{contactContentElse})
+    #{contactContent},#{status}, #{updateDate}, #{attachedFile}, #{contactContentElse},
+    #{attachedDuringSign}, #{attachedDuringSignMan} )
   </insert>
 
   <!-- 这个有问题，在有多个change_item时返回有异常 注意collection 用法-->

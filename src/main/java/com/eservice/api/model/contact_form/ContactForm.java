@@ -294,4 +294,32 @@ public class ContactForm {
     public void setContactContentElse(String contactContentElse) {
         this.contactContentElse = contactContentElse;
     }
+
+    /**
+     * 附件，存放路径，给签核过程中的用
+     */
+    @Column(name = "attached_during_sign")
+    private String attachedDuringSign;
+
+    /**
+     * 上传/更新附件的人（签核过程中）
+     */
+    @Column(name = "attached_during_sign_man")
+    private String attachedDuringSignMan;
+
+    public String getAttachedDuringSign() {
+        return attachedDuringSign;
+    }
+
+    public void setAttachedDuringSign(String attachedDuringSign) {
+        this.attachedDuringSign = attachedDuringSign;
+    }
+
+    public String getAttachedDuringSignMan() {
+        return attachedDuringSignMan;
+    }
+
+    public void setAttachedDuringSignMan(String attachedDuringSignMan) {
+        this.attachedDuringSignMan = attachedDuringSignMan;
+    }
 }

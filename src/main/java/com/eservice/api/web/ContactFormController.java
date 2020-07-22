@@ -525,6 +525,8 @@ public class ContactFormController {
         try {
             // 联系单的编号，在保存文件时，文件名称中包含。
             String lxdNum = request.getParameterValues("lxdNum")[0];
+            //联系单创建者上传的附件, 签核过程中上传的附件
+            String type = request.getParameterValues("type")[0];
             List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("file");
             if (fileList == null || fileList.size() == 0) {
                 return ResultGenerator.genFailResult("Error: no available file");
@@ -537,8 +539,17 @@ public class ContactFormController {
 
             try {
                 // save file， 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入 。
-                String resultPath = commonService.saveFile(lxdAttachedSavedDir, file, lxdNum, "lxd",
-                        Constant.LXD_ATTACHED_FILE, 0);
+                String resultPath = null;
+                if(type.contains(Constant.STRING_LXD_ATTACHED_FILE_BY_CREATER)){
+                    resultPath = commonService.saveFile(lxdAttachedSavedDir, file, lxdNum, "lxd",
+                            Constant.LXD_ATTACHED_FILE_BY_CREATER, 0);
+                } else if(type.contains(Constant.STRING_LXD_ATTACHED_FILE_DURING_SIGN)) {
+                    resultPath = commonService.saveFile(lxdAttachedSavedDir, file, lxdNum, "lxd",
+                            Constant.LXD_ATTACHED_FILE_DURING_SIGN, 0);
+                } else {
+                    return ResultGenerator.genFailResult("没有匹配的附件类型！");
+                }
+
                 if (resultPath == null || resultPath == "") {
                     return ResultGenerator.genFailResult("文件名为空，联系单附件上传失败！");
                 }
@@ -605,10 +616,12 @@ public class ContactFormController {
      * http://xx.xx.xx.xx/lxdAttached/lxd_lxdNum111_lxdAttached__0.xlsx
      * 
      * @param contact_form_id
+     * @param flag : 哪种附件，比如新建联系单时添加的附件，签核时添加的附件
      * @return 类似 lxd_lxdNum111_lxdAttached__0.xlsx
      */
     @PostMapping("/getLxdAttachedFile")
-    public Result getLxdAttachedFile(@RequestParam Integer contact_form_id) {
+    public Result getLxdAttachedFile(@RequestParam Integer contact_form_id,
+                                     @RequestParam String flag) {
 
         ContactForm cf = contactFormService.findById(contact_form_id);
         if (null == cf) {
@@ -619,7 +632,14 @@ public class ContactFormController {
         }
 
         String fileName = null;
-        fileName = cf.getAttachedFile().substring(lxdAttachedSavedDir.length());
+        if(flag.contains(Constant.STRING_LXD_ATTACHED_FILE_BY_CREATER)){
+            fileName = cf.getAttachedFile().substring(lxdAttachedSavedDir.length());
+        } else if (flag.contains(Constant.STRING_LXD_ATTACHED_FILE_DURING_SIGN)){
+            fileName = cf.getAttachedDuringSign().substring(lxdAttachedSavedDir.length());
+        } else {
+            return ResultGenerator.genFailResult("没有对应的附件类型！");
+        }
+
         return ResultGenerator.genSuccessResult(fileName);
     }
 
