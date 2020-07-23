@@ -23,6 +23,7 @@ import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.user.User;
+import com.eservice.api.service.ContactFormService;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
@@ -513,10 +514,9 @@ public class ContactFormController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
-
     /**
      * 上传联系单附件文件 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入
-     * 
+     *
      * @param request 参数带一个文件，以及一个lxdNum（联系单的编号，客户可见）
      * @return 后端保存的文件名称（相对地址在： lxdAttachedSavedDir）
      */
@@ -525,8 +525,6 @@ public class ContactFormController {
         try {
             // 联系单的编号，在保存文件时，文件名称中包含。
             String lxdNum = request.getParameterValues("lxdNum")[0];
-            //联系单创建者上传的附件, 签核过程中上传的附件
-            String type = request.getParameterValues("type")[0];
             List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("file");
             if (fileList == null || fileList.size() == 0) {
                 return ResultGenerator.genFailResult("Error: no available file");
@@ -539,17 +537,8 @@ public class ContactFormController {
 
             try {
                 // save file， 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入 。
-                String resultPath = null;
-                if(type.contains(Constant.STRING_LXD_ATTACHED_FILE_BY_CREATER)){
-                    resultPath = commonService.saveFile(lxdAttachedSavedDir, file, lxdNum, "lxd",
-                            Constant.LXD_ATTACHED_FILE_BY_CREATER, 0);
-                } else if(type.contains(Constant.STRING_LXD_ATTACHED_FILE_DURING_SIGN)) {
-                    resultPath = commonService.saveFile(lxdAttachedSavedDir, file, lxdNum, "lxd",
-                            Constant.LXD_ATTACHED_FILE_DURING_SIGN, 0);
-                } else {
-                    return ResultGenerator.genFailResult("没有匹配的附件类型！");
-                }
-
+                String resultPath = commonService.saveFile(lxdAttachedSavedDir, file, lxdNum, "lxd",
+                        Constant.LXD_ATTACHED_FILE_BY_CREATER, 0);
                 if (resultPath == null || resultPath == "") {
                     return ResultGenerator.genFailResult("文件名为空，联系单附件上传失败！");
                 }
@@ -560,6 +549,74 @@ public class ContactFormController {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultGenerator.genFailResult("联系单附件 上传失败！" + e.getMessage());
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultGenerator.genFailResult("联系单附件 上传失败！" + e.getMessage());
+        }
+    }
+
+    /**
+     * 上传联系单 签核时的附件文件 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入
+     * 
+     * @param request 参数带一个文件，以及一个lxdNum（联系单的编号，客户可见）
+     * @return 后端保存的文件名称（相对地址在： lxdAttachedSavedDir）
+     */
+    @PostMapping("/uploadAttachedFileDuringSign")
+    public Result uploadAttachedFileDuringSign(HttpServletRequest request) {
+        try {
+            // 联系单的编号，在保存文件时，文件名称中包含。
+            String lxdNum = request.getParameterValues("lxdNum")[0];
+            String lxdFormId = null;
+            if(request.getParameterValues("lxdFormId") != null) {
+                lxdFormId = request.getParameterValues("lxdFormId")[0];
+            }
+            String attachedDuringSignMan = null;
+            if(request.getParameterValues("attachedDuringSignMan")!= null){
+                attachedDuringSignMan = request.getParameterValues("attachedDuringSignMan")[0];
+            }
+            List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("filesDuringSign");
+            if (fileList == null || fileList.size() == 0) {
+                return ResultGenerator.genFailResult("Error: no available file");
+            }
+            MultipartFile file = fileList.get(0);
+            File dir = new File(lxdAttachedSavedDir);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+
+            try {
+                // save file， 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入 。
+                String resultPath = null;
+                resultPath = commonService.saveFile(lxdAttachedSavedDir, file, lxdNum, "lxd",
+                        Constant.LXD_ATTACHED_FILE_DURING_SIGN, 0);
+
+
+                if (resultPath == null || resultPath == "") {
+                    return ResultGenerator.genFailResult("文件名为空，联系单附件上传失败！");
+                }
+                logger.info("====/contact/form/uploadAttachedFile(): success======== " + resultPath);
+
+                //在签核时上传了附件，要更新上传的人,以及附件， 或者未发起签核时，修改附件
+                if(lxdFormId != null ){
+                    ContactForm contactForm =  contactFormService.findById(Integer.parseInt(lxdFormId));
+                    if(contactForm == null){
+                        return ResultGenerator.genFailResult("根据该lxdFormId " + lxdFormId + ", 找不到对应的联系单");
+                    }
+
+                    contactForm.setAttachedDuringSignMan(attachedDuringSignMan);
+                    contactForm.setAttachedDuringSign(resultPath);
+
+                    contactFormService.update(contactForm);
+                }
+
+                return ResultGenerator.genSuccessResult(resultPath);
+            } catch (Exception e) {
+                e.printStackTrace();
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultGenerator.genFailResult("联系单附件 上传失败！" + e.getMessage());
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
