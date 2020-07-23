@@ -523,8 +523,13 @@ public class ContactFormController {
     @PostMapping("/uploadAttachedFile")
     public Result uploadAttachedFile(HttpServletRequest request) {
         try {
-            // 联系单的编号，在保存文件时，文件名称中包含。
+            /**
+             * 联系单的编号，在保存文件时，文件名称中包含。
+             * 在第一次新建时，联系单单号 名称中包含 xxx, 这个在add时会倍更新，对应的文件也会重命名。
+             */
             String lxdNum = request.getParameterValues("lxdNum")[0];
+            String type = request.getParameterValues("type")[0]; //联系单附件 or 联系单签核过程的附件
+            String uploadMan = request.getParameterValues("uploadMan")[0];
             List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("file");
             if (fileList == null || fileList.size() == 0) {
                 return ResultGenerator.genFailResult("Error: no available file");
@@ -536,87 +541,51 @@ public class ContactFormController {
             }
 
             try {
-                // save file， 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入 。
-                String resultPath = commonService.saveFile(lxdAttachedSavedDir, file, lxdNum, "lxd",
-                        Constant.LXD_ATTACHED_FILE_BY_CREATER, 0);
-                if (resultPath == null || resultPath == "") {
-                    return ResultGenerator.genFailResult("文件名为空，联系单附件上传失败！");
+                int typeInt = 0;
+                if(type.equals(Constant.STRING_LXD_ATTACHED_FILE_BY_CREATER)){
+                    typeInt = Constant.LXD_ATTACHED_FILE_BY_CREATER;
+                } else if (type.equals(Constant.STRING_LXD_ATTACHED_FILE_DURING_SIGN)){
+                    typeInt = Constant.LXD_ATTACHED_FILE_DURING_SIGN;
                 }
-                logger.info("====/contact/form/uploadAttachedFile(): success======== " + resultPath);
-                return ResultGenerator.genSuccessResult(resultPath);
-            } catch (Exception e) {
-                e.printStackTrace();
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return ResultGenerator.genFailResult("联系单附件 上传失败！" + e.getMessage());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultGenerator.genFailResult("联系单附件 上传失败！" + e.getMessage());
-        }
-    }
-
-    /**
-     * 上传联系单 签核时的附件文件 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入
-     * 
-     * @param request 参数带一个文件，以及一个lxdNum（联系单的编号，客户可见）
-     * @return 后端保存的文件名称（相对地址在： lxdAttachedSavedDir）
-     */
-    @PostMapping("/uploadAttachedFileDuringSign")
-    public Result uploadAttachedFileDuringSign(HttpServletRequest request) {
-        try {
-            // 联系单的编号，在保存文件时，文件名称中包含。
-            String lxdNum = request.getParameterValues("lxdNum")[0];
-            String lxdFormId = null;
-            if(request.getParameterValues("lxdFormId") != null) {
-                lxdFormId = request.getParameterValues("lxdFormId")[0];
-            }
-            String attachedDuringSignMan = null;
-            if(request.getParameterValues("attachedDuringSignMan")!= null){
-                attachedDuringSignMan = request.getParameterValues("attachedDuringSignMan")[0];
-            }
-            List<MultipartFile> fileList = ((MultipartHttpServletRequest) request).getFiles("filesDuringSign");
-            if (fileList == null || fileList.size() == 0) {
-                return ResultGenerator.genFailResult("Error: no available file");
-            }
-            MultipartFile file = fileList.get(0);
-            File dir = new File(lxdAttachedSavedDir);
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
-
-            try {
                 // save file， 只保存文件，不保存数据库，保存路径返回给前端，前端统一写入 。
-                String resultPath = null;
-                resultPath = commonService.saveFile(lxdAttachedSavedDir, file, lxdNum, "lxd",
-                        Constant.LXD_ATTACHED_FILE_DURING_SIGN, 0);
-
-
+                String resultPath = commonService.saveFile(lxdAttachedSavedDir, file, "", lxdNum,
+                        typeInt, 0);
                 if (resultPath == null || resultPath == "") {
                     return ResultGenerator.genFailResult("文件名为空，联系单附件上传失败！");
                 }
                 logger.info("====/contact/form/uploadAttachedFile(): success======== " + resultPath);
 
-                //在签核时上传了附件，要更新上传的人,以及附件， 或者未发起签核时，修改附件
-                if(lxdFormId != null ){
-                    ContactForm contactForm =  contactFormService.findById(Integer.parseInt(lxdFormId));
-                    if(contactForm == null){
-                        return ResultGenerator.genFailResult("根据该lxdFormId " + lxdFormId + ", 找不到对应的联系单");
+                /**
+                 * 如果是签核过程中上传的附件，在附件保存之后，还需要特别地把数据库更新。
+                 */
+                if(type.equals(Constant.STRING_LXD_ATTACHED_FILE_DURING_SIGN)) {
+                    List<ContactFormDetail> list = contactFormService.selectContacts(
+                            lxdNum,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,// 可能有多个联系单，所以不能用 Constant.STR_LXD_CHECKING_FINISHED,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null);
+                    if (list == null || list.isEmpty()) {
+                        return ResultGenerator.genFailResult(lxdNum + " 找不到对应的联系单！");
                     }
-
-                    contactForm.setAttachedDuringSignMan(attachedDuringSignMan);
+                    ContactForm contactForm = list.get(0);//
                     contactForm.setAttachedDuringSign(resultPath);
-
+                    contactForm.setAttachedDuringSignMan(uploadMan);
                     contactFormService.update(contactForm);
                 }
-
                 return ResultGenerator.genSuccessResult(resultPath);
             } catch (Exception e) {
                 e.printStackTrace();
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultGenerator.genFailResult("联系单附件 上传失败！" + e.getMessage());
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();

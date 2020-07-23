@@ -179,8 +179,8 @@ public class Constant {
     public static final int LXD_ATTACHED_FILE_BY_CREATER = 3;
     public static final int LXD_ATTACHED_FILE_DURING_SIGN = 4;
 
-    public static final String STRING_LXD_ATTACHED_FILE_BY_CREATER = "联系单创建者上传的附件";
-    public static final String STRING_LXD_ATTACHED_FILE_DURING_SIGN = "签核过程中上传的附件";
+    public static final String STRING_LXD_ATTACHED_FILE_BY_CREATER = "联系单附件";
+    public static final String STRING_LXD_ATTACHED_FILE_DURING_SIGN = "联系单签核过程附件";
     /**
      * 计划的方式："1"==>日计划， "2"==>弹性计划， "3" ==>自计划；未计划，但是在时间允许下安装组长自行安装的
      */
