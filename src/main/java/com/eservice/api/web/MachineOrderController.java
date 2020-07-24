@@ -392,8 +392,8 @@ public class MachineOrderController {
                     sheet1.getRow(r).getCell(8).setCellStyle(cellStyle);
 
                     sheet1.getRow(r).getCell(9).setCellValue(mod.getDiscounts());//优惠金额
-                    Integer totalAmount=Integer.parseInt(mod.getMachinePrice())*mod.getMachineNum()
-                    +epAmount - Integer.parseInt(mod.getDiscounts());
+                    Double totalAmount=Double.parseDouble(mod.getMachinePrice())*mod.getMachineNum()
+                    +epAmount - Double.parseDouble(mod.getDiscounts());
                     sheet1.getRow(r).getCell(9).setCellStyle(cellStyle);
 
                     sheet1.getRow(r).getCell(10).setCellValue(totalAmount);//总金额
@@ -572,8 +572,8 @@ public class MachineOrderController {
                         sheet1.getRow(r).getCell(8).setCellStyle(cellStyle);
     
                         sheet1.getRow(r).getCell(9).setCellValue(mod.getDiscounts());//优惠金额
-                        Integer totalAmount=Integer.parseInt(mod.getMachinePrice())* mod.getMachineNum()
-                        +epAmount - Integer.parseInt(mod.getDiscounts());
+                        Double totalAmount=Double.parseDouble(mod.getMachinePrice())* mod.getMachineNum()
+                        +epAmount - Double.parseDouble(mod.getDiscounts());
                         sheet1.getRow(r).getCell(9).setCellStyle(cellStyle);
 
                         sheet1.getRow(r).getCell(10).setCellValue(totalAmount);//总金额
