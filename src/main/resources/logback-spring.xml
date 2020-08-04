@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--配置一天一个日志文件，info信息存在一个文件中，error信息存在一个文件中-->
+<configuration>
+    <!--日志文件输出路径-->
+    <property name="LOG_HOME" value="C:/Users/wxm/Desktop/sinsim"/>
+    配置控制台打印信息
+    <appender name="ConsoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                %d - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+    <!--配置info文件-->
+    <appender name="InfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <!--过来命中就过滤掉-->
+            <onMatch>DENY</onMatch>
+            <!--没有命中就接受-->
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>
+                %d - %msg%n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->  <!--按天来回滚 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <fileNamePattern>${LOG_HOME}/info.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <!--保存的时间（天数）-->
+            <maxHistory>365</maxHistory>
+            <!--日志文件的总大小-->
+            <totalSizeCap>1GB</totalSizeCap>
+            <!-- 按时间回滚的同时，按文件大小来回滚 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+    <!--配置error文件-->
+    <appender name="ErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>
+                %d - %msg%n
+            </pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/error.%d.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <!--加载配置项-->
+    <root level="INFO">
+        <appender-ref ref="ConsoleLog"/>
+        <appender-ref ref="InfoLog"/>
+        <appender-ref ref="ErrorLog"/>
+    </root>
+</configuration>
