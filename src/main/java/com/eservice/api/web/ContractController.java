@@ -367,6 +367,7 @@ public class ContractController {
                 if (newOrder != null) {
                     //改单后，机器数量不变或者变少了，需要把这部分机器设置为取消（无论是否已生产）
                     if(newOrder.getMachineNum()<= machineList.size()) {
+                        logger.info("改单后，机器数量不变或者变少了, 新订单的机器数： " + newOrder.getMachineNum());
                         //step1 按新订单的机器数量，把 被改订单的机器 挂到新生成的订单
                         for (int m=0; m<newOrder.getMachineNum(); m++) {
                             Machine machine = machineList.get(m);
@@ -403,6 +404,7 @@ public class ContractController {
                          * 改单后，机器数量增加了，需要新增机器 ,原先：多出部分机器在审核完成以后自动添加
                          * --> 2020-0409：有联系单后不再需要审核订单了，所以需要在此生成机器。
                          */
+                        logger.info("改单后，机器数量增加到了： " + newOrder.getMachineNum());
                         ////step1  把 被改订单的机器 全部之间挂到新生成的订单，即旧订单就没机器了。
                         for (int n=0; n<machineList.size(); n++) {
                             Machine machine = machineList.get(n);
@@ -439,7 +441,7 @@ public class ContractController {
                                 machine.setIsUrgent(true);
                             }
                             machineService.save(machine);
-                            logger.info("have created nameplate: " + machine.getNameplate());
+                            logger.info("have created machine's id: " + machine.getId());
                         }
                     }
 
