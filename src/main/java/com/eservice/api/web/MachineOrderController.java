@@ -314,7 +314,7 @@ public class MachineOrderController {
                 sheet1.getRow(0).getCell(1).setCellValue("合同号");
                 sheet1.getRow(0).getCell(2).setCellValue("订单号");
                 sheet1.getRow(0).getCell(3).setCellValue("铭牌号");
-                sheet1.getRow(0).getCell(4).setCellValue("机型");
+                sheet1.getRow(0).getCell(4).setCellValue("机器信息");
                 sheet1.getRow(0).getCell(5).setCellValue("台数");
                 sheet1.getRow(0).getCell(6).setCellValue("单价");
                 sheet1.getRow(0).getCell(7).setCellValue("装置");
@@ -352,7 +352,8 @@ public class MachineOrderController {
                 //第二行开始，填入值
                 for(int i=0; i<list.size(); i++ ) {
                     int r = i+1;
-                    MachineOrderDetail mod=list.get(i);
+                    MachineOrderDetail mod = list.get(i);
+                    OrderDetail od = mod.getOrderDetail();
                     row = sheet1.createRow(r);//新创建一行
                     for(int c=0; c<34; c++){
                         row.createCell(c);//创建列单元格
@@ -367,8 +368,16 @@ public class MachineOrderController {
                     sheet1.getRow(r).getCell(3).setCellValue(mod.getNameplate());//
                     MachineType mt= mod.getMachineType();
                     if(mt!=null)
-                    {
-                        sheet1.getRow(r).getCell(4).setCellValue(mt.getName());//
+                    {   //机器信息
+                        String machineInfo = mt.getName() +"/"
+                                + mod.getNeedleNum() +"/"
+                                + mod.getHeadNum() +"/"
+                                + mod.getHeadDistance() +"/"
+                                + mod.getxDistance() +"/"
+                                + mod.getyDistance() +"/"
+                                + mod.getElectricTrim() +"/"
+                                + mod.getElectricPc();
+                        sheet1.getRow(r).getCell(4).setCellValue(machineInfo);//
                     }
                     sheet1.getRow(r).getCell(5).setCellValue(mod.getMachineNum());//
                     sheet1.getRow(r).getCell(6).setCellValue(mod.getMachinePrice());//
@@ -413,7 +422,6 @@ public class MachineOrderController {
                     sheet1.getRow(r).getCell(19).setCellValue(mod.getPackageMethod());//包装方式
                     sheet1.getRow(r).getCell(20).setCellValue("");//机架长度
 
-                    OrderDetail od=mod.getOrderDetail();
                     sheet1.getRow(r).getCell(21).setCellValue(od.getAxleNeedle());//针数
                     sheet1.getRow(r).getCell(22).setCellValue(mod.getHeadNum());//头数
                     sheet1.getRow(r).getCell(23).setCellValue(mod.getHeadDistance());//头距
@@ -512,7 +520,7 @@ public class MachineOrderController {
                     sheet1.getRow(0).getCell(1).setCellValue("合同号");
                     sheet1.getRow(0).getCell(2).setCellValue("订单号");
                     sheet1.getRow(0).getCell(3).setCellValue("铭牌号");
-                    sheet1.getRow(0).getCell(4).setCellValue("机型");
+                    sheet1.getRow(0).getCell(4).setCellValue("机器信息");
                     sheet1.getRow(0).getCell(5).setCellValue("台数");
                     sheet1.getRow(0).getCell(6).setCellValue("单价");
                     sheet1.getRow(0).getCell(7).setCellValue("装置");
@@ -546,8 +554,16 @@ public class MachineOrderController {
                         sheet1.getRow(r).getCell(3).setCellValue(mod.getNameplate());//
                         MachineType mt= mod.getMachineType();
                         if(mt!=null)
-                        {
-                            sheet1.getRow(r).getCell(4).setCellValue(mt.getName());//
+                        {   //机器信息
+                            String machineInfo = mt.getName() +"/"
+                                    + mod.getNeedleNum() +"/"
+                                    + mod.getHeadNum() +"/"
+                                    + mod.getHeadDistance() +"/"
+                                    + mod.getxDistance() +"/"
+                                    + mod.getyDistance() +"/"
+                                    + mod.getElectricTrim() +"/"
+                                    + mod.getElectricPc();
+                            sheet1.getRow(r).getCell(4).setCellValue(machineInfo);//
                         }
                         sheet1.getRow(r).getCell(5).setCellValue(mod.getMachineNum());//
                         sheet1.getRow(r).getCell(6).setCellValue(mod.getMachinePrice());//
