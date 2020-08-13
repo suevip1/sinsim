@@ -1,9 +1,6 @@
 package com.eservice.api.service.common;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +35,7 @@ import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,6 +73,8 @@ public class CommonService {
     @Resource
     private UserServiceImpl userService;
 
+    @Value("${sinsimPocess_call_aftersale}")
+    private String sinsimPocess_call_aftersale;
     Logger logger = Logger.getLogger(CommonService.class);
 
     /**
@@ -574,5 +574,47 @@ public class CommonService {
             displayPrice = false;
         }
         return displayPrice;
+    }
+
+    //执行curl命令行命令
+    public String execCurl(String[] cmds) {
+        logger.info(cmds);
+        ProcessBuilder process = new ProcessBuilder(cmds);
+        Process p;
+        try {
+            p = process.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+                builder.append(System.getProperty("line.separator"));
+            }
+            return builder.toString();
+
+        } catch (IOException e) {
+            System.out.print("error");
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+
+    public String sendSignInfoViWxMsg(@RequestParam String accountX,
+                                      @RequestParam(defaultValue = "") String machineOrderNumX,
+                                      @RequestParam(defaultValue = "") String lxdNumX) {
+
+        String url = sinsimPocess_call_aftersale
+                + "for/sinimproccess/sendRemind?account=accountX&machineOrderNum=machineOrderNumX&lxdNum=lxdNumX"
+                .replace("accountX", accountX)
+                .replace("machineOrderNumX", machineOrderNumX)
+                .replace("lxdNumX", lxdNumX);
+        String[] cmds = {"curl", "-X", "POST",
+                url,
+//                "-H", "accept: */*", "-H", "Content-Type: application/json;charset=UTF-8",
+//                "-d", "{ \\\"bodyName\\\": \\\"bodyValue\\\"}"
+        };
+        String result = execCurl(cmds);
+        logger.info(result);
+        return result;
     }
 }

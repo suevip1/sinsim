@@ -5,6 +5,7 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.role.Role;
 import com.eservice.api.model.user.User;
 import com.eservice.api.model.user.UserDetail;
+import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.DeviceServiceImpl;
 import com.eservice.api.service.impl.RoleServiceImpl;
@@ -41,6 +42,8 @@ public class UserController {
     @Resource
     private RoleServiceImpl roleService;
 
+    @Resource
+    private CommonService commonService;
     /**
      * 该值为default值， Android端传入的参数不能为“0”
      */
@@ -227,6 +230,13 @@ public class UserController {
         List<UserDetail> list = userService.selectAllInstallGroupByUserId(id);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    //测试 推送信息给售后
+    @PostMapping("/sendSignInfoViWxMsg")
+    public Result sendSignInfoViWxMsg(@RequestParam String account) {
+        String result = commonService.sendSignInfoViWxMsg(account,"11","22");
+        return ResultGenerator.genSuccessResult(result);
     }
 
 }
