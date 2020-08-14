@@ -9,23 +9,21 @@ import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_sign.OrderSign;
-import com.eservice.api.service.ContractService;
-import com.eservice.api.service.ContractSignService;
-import com.eservice.api.service.OrderSignService;
+import com.eservice.api.model.role.Role;
+import com.eservice.api.model.user.UserDetail;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +48,11 @@ public class OrderSignController {
     private MachineOrderServiceImpl machineOrderService;
     @Resource
     private RoleServiceImpl roleService;
+
+    @Resource
+    private UserServiceImpl userService;
+
+    private Logger logger = Logger.getLogger(OrderSignController.class);
 
     @PostMapping("/add")
     public Result add(String orderSign) {
@@ -102,6 +105,33 @@ public class OrderSignController {
                 orderSignObj.setCurrentStep(currentStep);
             }
             orderSignService.update(orderSignObj);
+
+            /**
+             * 推送公众号消息给轮到的人（通过售后系统）
+             */
+            if(orderSignObj.getCurrentStep().equals(Constant.SIGN_FINISHED)){
+                //todo 审核完成时，通知发起人
+            } else {
+                Role role = roleService.findBy("roleName", orderSignObj.getCurrentStep());
+                if (role == null) {
+                    logger.error("根据该 role_name " + orderSignObj.getCurrentStep() + "找不到Role");
+                } else {
+                    //如果是销售部经理还要细分发给哪个经理，
+                    if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
+                        //todo 等2020销售大区方案定下来之后再改
+                    } else {
+                        List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, null);
+                        if (userList.isEmpty() || userList == null) {
+                            logger.error("根据该roleId " + role.getId() + "找不到User");
+                        } else {
+                            //销售部之外，都只有一个经理
+                            UserDetail toUser = userList.get(0);
+                            MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
+                            commonService.sendSignInfoViWxMsg(toUser.getAccount(),machineOrder.getOrderNum(),"");
+                        }
+                    }
+                }
+            }
 
             MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
             Contract contract = contractService.findById(contractId);

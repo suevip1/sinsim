@@ -1,6 +1,7 @@
 package com.eservice.api.service.common;
 
 import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,8 +20,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.install_group.InstallGroup;
-import com.eservice.api.model.install_plan.InstallPlan;
-import com.eservice.api.model.install_plan_actual.InstallPlanActual;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_sign.OrderSign;
@@ -29,7 +28,6 @@ import com.eservice.api.model.role.Role;
 import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.user.User;
-import com.eservice.api.model.user.UserDetail;
 import com.eservice.api.service.impl.*;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
@@ -599,22 +597,71 @@ public class CommonService {
         }
     }
 
+    /**
+     * 发送信息给售后系统,通知签核
+     * @param accountX
+     * @param machineOrderNumX
+     * @param lxdNumX
+     * @return
+     */
     public String sendSignInfoViWxMsg(@RequestParam String accountX,
                                       @RequestParam(defaultValue = "") String machineOrderNumX,
                                       @RequestParam(defaultValue = "") String lxdNumX) {
 
+        try {
+            /**
+             * 事先做对账号等可能为中文的字符串进行encode转码,然后在售后端收到之后解码
+             * //OK在服务器:
+             *  curl -X POST -G
+             *   --data-urlencode "account=汤能萍"
+             *   --data-urlencode "machineOrderNumber=XXX2000"
+             *   localhost:/api/for/sinimproccess/sendRemind
+             *   但是在代码里不行.
+             */
+            accountX = URLEncoder.encode(accountX, "UTF-8");
+            machineOrderNumX = URLEncoder.encode(machineOrderNumX, "UTF-8");
+            lxdNumX = URLEncoder.encode(lxdNumX, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String url = sinsimPocess_call_aftersale
-                + "for/sinimproccess/sendRemind?account=accountX&machineOrderNum=machineOrderNumX&lxdNum=lxdNumX"
-                .replace("accountX", accountX)
-                .replace("machineOrderNumX", machineOrderNumX)
-                .replace("lxdNumX", lxdNumX);
-        String[] cmds = {"curl", "-X", "POST",
-                url,
-//                "-H", "accept: */*", "-H", "Content-Type: application/json;charset=UTF-8",
-//                "-d", "{ \\\"bodyName\\\": \\\"bodyValue\\\"}"
-        };
-        String result = execCurl(cmds);
-        logger.info(result);
+                + "for/sinimproccess/sendRemind";
+        accountX = "account=accountX".replaceAll("accountX",accountX);
+
+        String result = null;
+        if(!machineOrderNumX.equals("") ){
+            machineOrderNumX = "machineOrderNum=machineOrderNumX".replaceAll("machineOrderNumX",machineOrderNumX);
+
+            String[] cmds = {"curl",
+                    "-X",
+                    "POST",
+                    "-G",
+                    "--data-urlencode", ///这些貌似未起作用,最终还是要事先做encode转码,然后在售后端收到之后解码.
+                    accountX,
+                    "--data-urlencode",
+                    machineOrderNumX,
+                    url,
+                    "-H",
+                    "accept: */*",
+                    "-H",
+                    "Content-Type: application/json;charset=UTF-8"
+            };
+
+            result = execCurl(cmds);
+            logger.info(result);
+        }
+        if(!lxdNumX.equals("") ){ //todo
+
+            lxdNumX = "--data-urlencode \"lxdNum=${lxdNumX}\"".replaceAll("lxdNumX",lxdNumX);
+            String[] cmds = {"curl", "-X", "POST",
+                    "-G",  lxdNumX,
+                    url,
+            };
+
+            result = execCurl(cmds);
+            logger.info(result);
+        }
+
         return result;
     }
 }
