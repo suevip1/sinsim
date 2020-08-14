@@ -11,6 +11,7 @@ public class Constant {
      * 签核流程结束（返回值）
      */
     public static String SIGN_FINISHED = "签核完成";
+    public static String SING_STEP_SALES_MANAGER = "销售部经理"; //销售部特殊
 
     /**
      * 签核结果：“0”-->初始化；“1”-->接受； “2”-->驳回
