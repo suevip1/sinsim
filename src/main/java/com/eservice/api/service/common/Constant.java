@@ -173,14 +173,17 @@ public class Constant {
      * "2" --> 装车单
      * "3" --> 联系单创建者上传的附件
      * "4" --> 签核过程中上传的附件
+     * "5" --> 设计单的附件
+     * "6" --> 优化单的附件
      */
     public static final int ABNORMAL_IMAGE = 0;
     public static final int QUALITY_IMAGE = 1;
     public static final int LOADING_FILE = 2;
-<<<<<<< HEAD
-    public static final int LXD_ATTACHED_FILE = 3;
-    public static final int DESIGN_ATTACHED_FILE = 4;
-    public static final int OPTIMIZE_ATTACHED_FILE = 5;
+//    public static final int LXD_ATTACHED_FILE = 3;
+    public static final int LXD_ATTACHED_FILE_BY_CREATER = 3;
+    public static final int LXD_ATTACHED_FILE_DURING_SIGN = 4;
+    public static final int DESIGN_ATTACHED_FILE = 5;
+    public static final int OPTIMIZE_ATTACHED_FILE = 6;
 
     //设计页面，文件类型
     public static final String STR_DESIGN_UPLOAD_FILE_TYPE_DRAWING = "图纸";
@@ -188,9 +191,7 @@ public class Constant {
     public static final String STR_DESIGN_UPLOAD_FILE_TYPE_HOLE = "点孔";
     public static final String STR_DESIGN_UPLOAD_FILE_TYPE_TUBE= "方管";
     public static final String STR_DESIGN_UPLOAD_FILE_TYPE_BOM= "BOM";
-    public static final String STR_DESIGN_UPLOAD_FILE_TYPE_COVER= "罩盖"; 
-    public static final int LXD_ATTACHED_FILE_BY_CREATER = 3;
-    public static final int LXD_ATTACHED_FILE_DURING_SIGN = 4;
+    public static final String STR_DESIGN_UPLOAD_FILE_TYPE_COVER= "罩盖";
 
     public static final String STRING_LXD_ATTACHED_FILE_BY_CREATER = "联系单附件";
     public static final String STRING_LXD_ATTACHED_FILE_DURING_SIGN = "联系单签核过程附件"; 

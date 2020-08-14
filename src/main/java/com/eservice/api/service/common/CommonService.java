@@ -621,6 +621,7 @@ public class CommonService {
             accountX = URLEncoder.encode(accountX, "UTF-8");
             machineOrderNumX = URLEncoder.encode(machineOrderNumX, "UTF-8");
             lxdNumX = URLEncoder.encode(lxdNumX, "UTF-8");
+            logger.info("签核推送给售后, 账号：" + accountX + ",订单号：" + machineOrderNumX + ", 联系单号：" +lxdNumX);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -631,7 +632,6 @@ public class CommonService {
         String result = null;
         if(!machineOrderNumX.equals("") ){
             machineOrderNumX = "machineOrderNum=machineOrderNumX".replaceAll("machineOrderNumX",machineOrderNumX);
-
             String[] cmds = {"curl",
                     "-X",
                     "POST",
@@ -651,11 +651,20 @@ public class CommonService {
             logger.info(result);
         }
         if(!lxdNumX.equals("") ){ //todo
-
-            lxdNumX = "--data-urlencode \"lxdNum=${lxdNumX}\"".replaceAll("lxdNumX",lxdNumX);
-            String[] cmds = {"curl", "-X", "POST",
-                    "-G",  lxdNumX,
+            lxdNumX = "lxdNum=lxdNumX".replaceAll("lxdNumX",lxdNumX);
+            String[] cmds = {"curl",
+                    "-X",
+                    "POST",
+                    "-G",
+                    "--data-urlencode", ///这些貌似未起作用,最终还是要事先做encode转码,然后在售后端收到之后解码.
+                    accountX,
+                    "--data-urlencode",
+                    lxdNumX,
                     url,
+                    "-H",
+                    "accept: */*",
+                    "-H",
+                    "Content-Type: application/json;charset=UTF-8"
             };
 
             result = execCurl(cmds);

@@ -6,10 +6,14 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
+import com.eservice.api.model.role.Role;
+import com.eservice.api.model.user.UserDetail;
+import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.ContactFormServiceImpl;
 import com.eservice.api.service.impl.ContactSignServiceImpl;
 import com.eservice.api.service.impl.RoleServiceImpl;
+import com.eservice.api.service.impl.UserServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -40,6 +44,11 @@ public class ContactSignController {
     @Resource
     private RoleServiceImpl roleService;
 
+    @Resource
+    private UserServiceImpl userService;
+
+    @Resource
+    private CommonService commonService;
     private Logger logger = Logger.getLogger(ContactSignController.class);
 
     @PostMapping("/add")
@@ -101,6 +110,33 @@ public class ContactSignController {
             cs.setCurrentStep(currentStep);
         }
         contactSignService.update(cs);
+
+        /**
+         * 推送公众号消息给轮到联系单签核的人（通过售后系统）
+         */
+        if(cs.getCurrentStep().equals(Constant.SIGN_FINISHED)){
+            //todo 审核完成时，通知发起人
+        } else {
+            Role role = roleService.findBy("roleName", cs.getCurrentStep());
+            if (role == null) {
+                logger.error("根据该 role_name " + cs.getCurrentStep() + "找不到Role");
+            } else {
+                //如果是销售部经理还要细分发给哪个经理，
+                if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
+                    //todo 等2020销售大区方案定下来之后再改
+                } else {
+                    List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, null);
+                    if (userList.isEmpty() || userList == null) {
+                        logger.error("根据该roleId " + role.getId() + "找不到User");
+                    } else {
+                        //销售部之外，都只有一个经理
+                        UserDetail toUser = userList.get(0);
+                        ContactForm contactForm = contactFormService.findById(cs.getContactFormId());
+                        commonService.sendSignInfoViWxMsg(toUser.getAccount(),"",contactForm.getNum());
+                    }
+                }
+            }
+        }
 
         if (haveReject) {
             /**
