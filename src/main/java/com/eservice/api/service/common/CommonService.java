@@ -17,6 +17,9 @@ import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.contact_form.ContactForm;
+import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.install_group.InstallGroup;
@@ -28,6 +31,7 @@ import com.eservice.api.model.role.Role;
 import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.user.User;
+import com.eservice.api.service.ContactFormService;
 import com.eservice.api.service.impl.*;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
@@ -73,6 +77,9 @@ public class CommonService {
 
     @Value("${sinsimPocess_call_aftersale}")
     private String sinsimPocess_call_aftersale;
+
+    @Resource
+    private ContactFormService contactFormService;
     Logger logger = Logger.getLogger(CommonService.class);
 
     /**
@@ -672,5 +679,40 @@ public class CommonService {
         }
 
         return result;
+    }
+
+    //根据联系单的 签核信息 返回信息中的所有签核人
+    public List<User> getUsersInLxdSign(String contactSign) {
+        ContactSign cs = JSON.parseObject(contactSign,ContactSign.class);
+        if (cs == null) {
+            ResultGenerator.genFailResult("联系单审核信息JSON解析失败！");
+        }
+
+        ContactForm cf = contactFormService.findById(cs.getContactFormId());
+        if(null == cf){
+            ResultGenerator.genFailResult("根据传入的签核信息里的联系单ID 找不到对应的联系单");
+        }
+
+        List<SignContentItem> contactSignContentList = JSON.parseArray(cs.getSignContent(), SignContentItem.class);
+        List<User> userList = new ArrayList<>();
+        for (SignContentItem item : contactSignContentList) {
+            userList.add(userService.selectByAccount(item.getUser()));
+        }
+        return userList;
+    }
+
+    //根据订单的 签核信息 返回信息中的所有签核人
+    public List<User> getUsersInMachineOrderSign(String machineOrderSign) {
+        OrderSign os = JSON.parseObject(machineOrderSign,OrderSign.class);
+        if (os == null) {
+            ResultGenerator.genFailResult("订单审核信息JSON解析失败！");
+        }
+
+        List<SignContentItem> orderSignContentList = JSON.parseArray(os.getSignContent(), SignContentItem.class);
+        List<User> userList = new ArrayList<>();
+        for (SignContentItem item : orderSignContentList) {
+            userList.add(userService.selectByAccount(item.getUser()));
+        }
+        return userList;
     }
 }
