@@ -115,47 +115,7 @@ public class ContactSignController {
         /**
          * 推送公众号消息给轮到联系单签核的人（通过售后系统）
          */
-        if(cs.getCurrentStep().equals(Constant.SIGN_FINISHED)){
-            //  审核完成时，通知发起人
-            List<UserDetail> userList = userService.selectUsers(cf.getApplicantPerson(), null, null, null, null);
-            if (userList.isEmpty() || userList == null) {
-                logger.error("根据 " + cf.getApplicantPerson() + "找不到User");
-            } else {
-                //找到发起人
-                UserDetail toUser = userList.get(0);
-                commonService.sendSignInfoViWxMsg(toUser.getAccount(),"",cf.getNum());
-            }
-        } else {
-            Role role = roleService.findBy("roleName", cs.getCurrentStep());
-            if (role == null) {
-                logger.error("根据该 role_name " + cs.getCurrentStep() + "找不到Role");
-            } else {
-                //如果是销售部经理还要细分发给哪个经理，
-                if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
-                    //todo 等2020销售大区方案定下来之后再改
-                } else if(!haveReject){ //没有驳回，发给下1个签核人
-                    //如果是销售部经理还要细分发给哪个经理，
-                    if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
-                        //todo 等2020销售大区方案定下来之后再改
-                    } else {
-                        List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, null);
-                        if (userList.isEmpty() || userList == null) {
-                            logger.error("根据该roleId " + role.getId() + "找不到User");
-                        } else {
-                            //销售部之外，都只有一个经理
-                            UserDetail toUser = userList.get(0);
-                            ContactForm contactForm = contactFormService.findById(cs.getContactFormId());
-                            commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", contactForm.getNum());
-                        }
-                    }
-                } else {//驳回，发给所有参与签核的人。
-                    List<User> userNameList = commonService.getUsersInLxdSign(contactSign);
-                    for(User toUser : userNameList) {
-                        commonService.sendSignInfoViWxMsg(toUser.getAccount(),"",cf.getNum());
-                    }
-                }
-            }
-        }
+        commonService.pushLxdMsgToAftersale(cs,cf, haveReject);
 
         if (haveReject) {
             /**

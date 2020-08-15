@@ -107,47 +107,11 @@ public class OrderSignController {
             }
             orderSignService.update(orderSignObj);
 
-            /**
-             * 推送公众号消息给轮到的人（通过售后系统）
-             * 签核结束，推送给订单录单人，；
-             * 签核没有结束，推送给轮到签核的人，或者推送给所有参与签核的人（被拒时）；
-             */
+
             MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
             Contract contract = contractService.findById(contractId);
-            if(orderSignObj.getCurrentStep().equals(Constant.SIGN_FINISHED)){
-                List<UserDetail> userList = userService.selectUsers(contract.getRecordUser(), null, null, null, null);
-                if (userList.isEmpty() || userList == null) {
-                    logger.error("根据 " + contract.getRecordUser() + "找不到User");
-                } else {
-                    //找到录单人
-                    UserDetail toUser = userList.get(0);
-                    commonService.sendSignInfoViWxMsg(toUser.getAccount(),machineOrder.getOrderNum(),"");
-                }
-            } else {
-                Role role = roleService.findBy("roleName", orderSignObj.getCurrentStep());
-                if (role == null) {
-                    logger.error("根据该 role_name " + orderSignObj.getCurrentStep() + "找不到Role");
-                } else if(!haveReject){ //没有驳回，发给下1个签核人
-                    //如果是销售部经理还要细分发给哪个经理，
-                    if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
-                        //todo 等2020销售大区方案定下来之后再改
-                    } else {
-                        List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, null);
-                        if (userList.isEmpty() || userList == null) {
-                            logger.error("根据该roleId " + role.getId() + "找不到User");
-                        } else {
-                            //销售部之外，都只有一个经理
-                            UserDetail toUser = userList.get(0);
-                            commonService.sendSignInfoViWxMsg(toUser.getAccount(),machineOrder.getOrderNum(),"");
-                        }
-                    }
-                } else {//驳回，发给所有参与签核的人。
-                    List<User> userList = commonService.getUsersInMachineOrderSign(orderSign);
-                    for(User toUser : userList) {
-                        commonService.sendSignInfoViWxMsg(toUser.getAccount(),machineOrder.getOrderNum(),"");
-                    }
-                }
-            }
+
+            commonService.pushMachineOrderMsgToAftersale(orderSignObj,contract,machineOrder,haveReject);
 
             if (haveReject) {
                 machineOrder.setStatus(Constant.ORDER_REJECTED);
