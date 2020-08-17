@@ -760,11 +760,57 @@ CREATE TABLE `process_record` (
   KEY `fk_pr_process_id` (`process_id`),
   CONSTRAINT `fk_pr_machine_id` FOREIGN KEY (`machine_id`) REFERENCES `machine` (`id`),
   CONSTRAINT `fk_pr_process_id` FOREIGN KEY (`process_id`) REFERENCES `process` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4388 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of process_record
+-- Table structure for quality_inspect
 -- ----------------------------
+DROP TABLE IF EXISTS `quality_inspect`;
+CREATE TABLE `quality_inspect` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '不同机型，全部检验条目都放进去，对于不需要的质检项，可以让质检员按下不需要质检（质检员自己能判断）。机型和质检条目无关。',
+  `inspect_type` varchar(10) DEFAULT NULL COMMENT '类型：过程检验、出厂检验 ',
+  `inspect_name` varchar(20) DEFAULT NULL COMMENT '该项质检的名称（唯一性）',
+  `inspect_content` varchar(255) DEFAULT NULL COMMENT '质检内容',
+  `level` varchar(20) DEFAULT NULL COMMENT '等级，“重要，一般” 只是标明出来。',
+  `phase` varchar(20) DEFAULT NULL COMMENT '阶段1，阶段2，阶段3，阶段4.。。',
+  `task_name` varchar(20) DEFAULT NULL COMMENT '质检对应的工序, 一个工序可以有多个检验条目， “无此检验条目” 可以一个个点，也可以按照工序一次点一堆条目。',
+  `valid` tinyint(4) DEFAULT NULL COMMENT '是否启用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for quality_inspect_record
+-- ----------------------------
+DROP TABLE IF EXISTS `quality_inspect_record`;
+CREATE TABLE `quality_inspect_record` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '某机器的总体质检情况',
+  `machine_nameplate` varchar(30) DEFAULT NULL COMMENT '质检的是哪台机器',
+  `inspect_name` varchar(20) DEFAULT NULL COMMENT '质检的名称',
+  `inspect_person` varchar(10) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `record_status` varchar(10) DEFAULT NULL COMMENT '该条质检未开始，无此检验条目，质检合格，质检不合格。（没有质检中,因为是对一条质检内容而言,对机器有多条质检，才有质检中这样的状态）,“未检”按钮（因为无法检查，比如安装好了盖住了无法打开检验）,',
+  `record_remark` varchar(50) DEFAULT NULL COMMENT '允许输入对该条质检的备注，也可为空',
+  `re_inspect` varchar(255) DEFAULT NULL COMMENT ' 复检结果。 即最多复检一次。有弹框提示是否确认。不需要编辑。',
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for quality_inspect_total
+-- ----------------------------
+DROP TABLE IF EXISTS `quality_inspect_total`;
+CREATE TABLE `quality_inspect_total` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '某机器的总体质检情况',
+  `order_number` varchar(50) DEFAULT NULL,
+  `location` varchar(20) DEFAULT NULL COMMENT '机器的位置',
+  `machine_nameplate` varchar(20) DEFAULT NULL COMMENT '质检的是哪台机器',
+  `remark` varchar(255) DEFAULT NULL COMMENT '质检结果整体做一个备注信息。',
+  `machine_inspect_status` varchar(10) DEFAULT NULL COMMENT '该机器质检未开始，质检进行中，质检通过，质检未通过',
+  `remark_person` varchar(10) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for `quality_record_image`
