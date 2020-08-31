@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.QualityInspectMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.quality_inspect.QualityInspect">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="inspect_type" jdbcType="VARCHAR" property="inspectType" />
+    <result column="inspect_name" jdbcType="VARCHAR" property="inspectName" />
+    <result column="inspect_content" jdbcType="VARCHAR" property="inspectContent" />
+    <result column="level" jdbcType="VARCHAR" property="level" />
+    <result column="phase" jdbcType="VARCHAR" property="phase" />
+    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+    <result column="valid" jdbcType="TINYINT" property="valid" />
+  </resultMap>
+</mapper>

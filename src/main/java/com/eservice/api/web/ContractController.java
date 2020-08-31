@@ -756,6 +756,23 @@ public class ContractController {
                             List<SignContentItem> orderSignContentList = JSON.parseArray(sign.getSignContent(), SignContentItem.class);
                             sign.setCurrentStep(roleService.findById(orderSignContentList.get(0).getRoleId()).getRoleName());
                             orderSignService.update(sign);
+
+                            /**
+                             * 发起签核时 也给第一个签核人推送
+                             * //todo: 2020 销售新分区，新签核方式
+                             */
+//                            List<User> userList = new ArrayList<>();
+//                            for (SignContentItem item : orderSignContentList) {
+//                                //                    * 签核结果
+//                                //                    * "0" --> "初始化"
+//                                //                    * "1" --> "同意"
+//                                //                    * "2" --> "拒绝"
+//                                if (item.getResult().equals(0)) {//（虽然在签核流程里，但没有经过签核的人就不用了）
+//                                    userList.add(userService.selectByAccount(item.getUser()));
+//                                }
+//
+//                            }
+
                         }
                     }
                 }

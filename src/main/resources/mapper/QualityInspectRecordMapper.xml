@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.QualityInspectRecordMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.quality_inspect_record.QualityInspectRecord">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="machine_nameplate" jdbcType="VARCHAR" property="machineNameplate" />
+    <result column="inspect_name" jdbcType="VARCHAR" property="inspectName" />
+    <result column="inspect_person" jdbcType="VARCHAR" property="inspectPerson" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="record_status" jdbcType="VARCHAR" property="recordStatus" />
+    <result column="record_remark" jdbcType="VARCHAR" property="recordRemark" />
+    <result column="re_inspect" jdbcType="VARCHAR" property="reInspect" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <resultMap id="QualityInspectRecordDetailResultMap" type="com.eservice.api.model.quality_inspect_record.QualityInspectRecordDetail">
+    <!--
+        WARNING - @mbg.generated
+      -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="machine_nameplate" jdbcType="VARCHAR" property="machineNameplate" />
+    <result column="inspect_name" jdbcType="VARCHAR" property="inspectName" />
+    <result column="inspect_person" jdbcType="VARCHAR" property="inspectPerson" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="record_status" jdbcType="VARCHAR" property="recordStatus" />
+    <result column="record_remark" jdbcType="VARCHAR" property="recordRemark" />
+    <result column="re_inspect" jdbcType="VARCHAR" property="reInspect" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+
+    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+
+  </resultMap>
+  <select id="selectQualityInspectRecordDetail" resultMap="QualityInspectRecordDetailResultMap">
+    SELECT
+        *
+    FROM
+        quality_inspect_record qir
+    JOIN quality_inspect qi ON qir.inspect_name = qi.inspect_name
+    WHERE
+      1=1
+    <if test="taskName != null and taskName != ''">
+      and  qi.task_name = #{task_name}
+    </if>
+    <if test="recordStatus != null and recordStatus != ''">
+      and qir.record_status = #{recordStatus}
+    </if>
+    <if test="nameplate != null and nameplate != ''">
+      and qir.machine_nameplate like CONCAT('%','${nameplate}','%' )
+    </if>
+    <if test="inspectName != null and inspectName != ''">
+      and qir.inspect_name like CONCAT('%','${inspectName}','%' )
+    </if>
+    <if test="inspectPerson != null and inspectPerson != ''">
+      and qir.inspect_person like CONCAT('%','${inspectPerson}','%' )
+    </if>
+    <if test="recordRemark != null and recordRemark != ''">
+      and  qir.record_remark  like CONCAT('%','${recordRemark}','%' )
+    </if>
+    <if test="reInspect != null and reInspect != ''">
+      and  qir.re_inspect  like CONCAT('%','${reInspect}','%' )
+    </if>
+    <if test="queryStartTime != null and queryStartTime != '' ">
+      and DATE_FORMAT(qir.create_time,'%Y-%m-%d') &gt;= #{queryStartTime}
+    </if>
+    <if test="queryFinishTime!= null and queryFinishTime != '' ">
+      and DATE_FORMAT(qir.create_time,'%Y-%m-%d') &lt;= #{queryFinishTime}
+    </if>
+  </select>
+</mapper>
