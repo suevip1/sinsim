@@ -73,6 +73,7 @@ public class QualityInspectRecordController {
      */
     @PostMapping("selectQualityInspectRecordDetail")
     public Result selectQualityInspectRecordDetail(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                                   String orderNumber,
                                                    String taskName,
                                                    String recordStatus,
                                                    String nameplate,
@@ -84,6 +85,7 @@ public class QualityInspectRecordController {
                                                    String queryFinishTime ) {
         PageHelper.startPage(page, size);
         List<QualityInspectRecordDetail>  taskRecordDetailList = qualityInspectRecordService.selectQualityInspectRecordDetail(
+                orderNumber,
                 taskName,
                 recordStatus,
                 nameplate,

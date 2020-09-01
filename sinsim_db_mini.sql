@@ -130,6 +130,8 @@ CREATE TABLE `contact_form` (
   `status` varchar(255) DEFAULT NULL,
   `update_date` datetime DEFAULT NULL,
   `attached_file` varchar(255) DEFAULT NULL COMMENT '附件，存放路径',
+  `attached_during_sign` varchar(255) DEFAULT NULL,
+  `attached_during_sign_man` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_orderId` (`order_num`(191)) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4;
@@ -188,9 +190,8 @@ CREATE TABLE `contract` (
   `record_user` varchar(255) DEFAULT NULL COMMENT '录单人员',
   `is_valid` varchar(4) NOT NULL DEFAULT '1' COMMENT '指示合同是否有效，用于删除标记，可以理解为作废单据',
   `domestic_trade_zone` varchar(255) DEFAULT NULL COMMENT '内贸分区,外贸该字段为空',
-  PRIMARY KEY (`id`),
-  KEY `fk_dtz` (`domestic_trade_zone`)
-) ENGINE=InnoDB AUTO_INCREMENT=795 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1447 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for contract_reject_record
@@ -789,9 +790,11 @@ CREATE TABLE `quality_inspect_record` (
   `inspect_person` varchar(10) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `record_status` varchar(10) DEFAULT NULL COMMENT '该条质检未开始，无此检验条目，质检合格，质检不合格。（没有质检中,因为是对一条质检内容而言,对机器有多条质检，才有质检中这样的状态）,“未检”按钮（因为无法检查，比如安装好了盖住了无法打开检验）,',
-  `record_remark` varchar(50) DEFAULT NULL COMMENT '允许输入对该条质检的备注，也可为空',
-  `re_inspect` varchar(255) DEFAULT NULL COMMENT ' 复检结果。 即最多复检一次。有弹框提示是否确认。不需要编辑。',
+  `record_remark` varchar(100) DEFAULT NULL COMMENT '允许输入对该条质检的备注，也可为空',
+  `re_inspect` varchar(100) DEFAULT NULL COMMENT ' 复检结果。 即最多复检一次。有弹框提示是否确认。不需要编辑。',
   `update_time` datetime DEFAULT NULL,
+  `task_name` varchar(20) DEFAULT NULL COMMENT '工序名称，因为“质检内容：要允许编辑”，所以这个表要和quality_inspect脱离关系，所有质检信息都要保存在此表，不依赖质检内容的表。',
+  `order_number` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -893,7 +896,7 @@ CREATE TABLE `task` (
   `quality_user_id` int(10) unsigned DEFAULT NULL COMMENT '质检用户的ID',
   `group_id` int(10) unsigned DEFAULT NULL COMMENT '安装小组id',
   `guidance` text COMMENT '作业指导，后续可能会需要（一般是html格式）',
-  `standard_minutes` int(10) unsigned DEFAULT NULL COMMENT '该工序的标准用时,单位分钟。---update:工序没法确定一个标准时间，因为时间和工序，机型，头数，长度（比如台板）等等都有关，目前只能先记录下所有耗时时间。后面再考虑设计如何反映效率。',
+  `standard_minutes` int(10) unsigned DEFAULT NULL COMMENT '该工序的标准用时,单位分钟。---update:工序没法确定一个标准时间，因为时间和工序，机型，头数，长度（比如台板）等等都有关，目前只能先记录下所有耗时时间。后面再考虑设计如何反映效率。(目前未用该字段)',
   PRIMARY KEY (`id`),
   KEY `fk_t_group_id` (`group_id`),
   KEY `task_name` (`task_name`),

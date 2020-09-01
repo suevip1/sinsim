@@ -24,16 +24,19 @@ public class QualityInspectRecordServiceImpl extends AbstractService<QualityInsp
     private QualityInspectRecordMapper qualityInspectRecordMapper;
 
 
-    public List<QualityInspectRecordDetail> selectQualityInspectRecordDetail(String taskName,
-                                                                             String recordStatus,
-                                                                             String nameplate,
-                                                                             String inspectName,
-                                                                             String inspectPerson,
-                                                                             String recordRemark,
-                                                                             String reInspect,
-                                                                             String queryStartTime,
-                                                                             String queryFinishTime) {
+    public List<QualityInspectRecordDetail> selectQualityInspectRecordDetail(
+            String orderNumber,
+            String taskName,
+            String recordStatus,
+            String nameplate,
+            String inspectName,
+            String inspectPerson,
+            String recordRemark,
+            String reInspect,
+            String queryStartTime,
+            String queryFinishTime) {
         return qualityInspectRecordMapper.selectQualityInspectRecordDetail(
+                orderNumber,
                 taskName,
                 recordStatus,
                 nameplate,

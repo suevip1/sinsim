@@ -4,15 +4,17 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Table(name = "quality_inspect_record")
+//暂未使用
 public class QualityInspectRecordDetail extends QualityInspectRecord {
-    //质检对应工序的名称
-    String taskName;
+//    //质检对应工序的名称
+//    String taskName;
+//
+//    public String getTaskName() {
+//        return taskName;
+//    }
+//
+//    public void setTaskName(String taskName) {
+//        this.taskName = taskName;
+//    }
 
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
 }

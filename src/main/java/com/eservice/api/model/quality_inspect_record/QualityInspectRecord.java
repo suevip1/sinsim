@@ -200,4 +200,30 @@ public class QualityInspectRecord {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    /**
+     * 质检对应的工序, 一个工序可以有多个检验条目， “无此检验条目” 可以一个个点，也可以按照工序一次点一堆条目。
+     * 因为“质检内容：要允许编辑”，所以这个表要和quality_inspect脱离关系，所有质检信息都要保存在此表，不依赖质检内容的表。所以增加了taskName。
+     */
+    @Column(name = "task_name")
+    private String taskName;
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    @Column(name = "order_number")
+    private String orderNumber;
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
 }

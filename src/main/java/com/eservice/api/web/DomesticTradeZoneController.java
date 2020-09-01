@@ -63,7 +63,8 @@ public class DomesticTradeZoneController {
 
     // 根据账号或者区域,返回对应的全部内贸区域,以及用户信息
     @PostMapping("/getDomesticTradeZone")
-    public Result getDomesticTradeZone(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,String account,
+    public Result getDomesticTradeZone(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+                                       String account,
                                        String domesticTradeZone) {
         PageHelper.startPage(page, size);
         List<DomesticTradeZoneDetail> list = domesticTradeZoneService.getDomesticTradeZone(account, domesticTradeZone);
