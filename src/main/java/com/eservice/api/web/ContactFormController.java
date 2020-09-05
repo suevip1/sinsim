@@ -726,10 +726,16 @@ public class ContactFormController {
             HSSFCell titleCell = workSheet.getRow(4).getCell((short) 2);// 变更理由/主题
             titleCell.setCellValue(cf.getContactForm().getContactTitle());
 
-            HSSFCell contentCell = workSheet.getRow(5).getCell((short) 2);// 变更内容
-            contentCell.setCellValue(cf.getContactForm().getContactContent());
+            HSSFCell contentCell = workSheet.getRow(5).getCell((short) 2);// 变更内容 (包含已知常规内容 + “其他变更”)
+            if(cf.getContactForm().getContactContentElse() != null && ! cf.getContactForm().getContactContentElse().isEmpty()) {
+                contentCell.setCellValue(cf.getContactForm().getContactContent()
+                        + "(" + cf.getContactForm().getContactContentElse()
+                        + ")");
+            } else {
+                contentCell.setCellValue(cf.getContactForm().getContactContent());
+            }
             short startRow = 6;
-            if (isChange)// 是变更单
+            if (isChange)// 是变更单  （变更条目的列表）
             {
                 startRow = 7;
                 // 设置变更项目内容
