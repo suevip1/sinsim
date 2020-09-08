@@ -147,4 +147,8 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
         return machineOrderMapper.getMachineOrder(orderNum);
     }
 
+    public MachineOrder getMachineOrderByNameplate(String nameplate) {
+        return machineOrderMapper.getMachineOrderByNameplate(nameplate);
+    }
+
 }

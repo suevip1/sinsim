@@ -4,6 +4,7 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.task.Task;
 import com.eservice.api.service.TaskService;
+import com.eservice.api.service.impl.TaskServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ import java.util.List;
 @RequestMapping("/task")
 public class TaskController {
     @Resource
-    private TaskService taskService;
+    private TaskServiceImpl taskService;
 
     @PostMapping("/add")
     public Result add(Task task) {
@@ -60,4 +61,21 @@ public class TaskController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 根据铭牌号查找该机器的所有工序的名称，
+     * 可以用于创建与该工序对应的质检记录（状态为未质检）
+     * @param nameplate
+     * @return
+     */
+    @PostMapping("/getTaskByNameplate")
+    public Result getTaskByNameplate(@RequestParam(defaultValue = "0") Integer page,
+                                     @RequestParam(defaultValue = "0") Integer size,
+                                     @RequestParam String nameplate) {
+        PageHelper.startPage(page, size);
+        List<Task> list = taskService.getTaskByNameplate(nameplate);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 }

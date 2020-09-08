@@ -8,11 +8,14 @@ import com.eservice.api.model.machine.MachinePlan;
 import com.eservice.api.model.machine.MachineInfo;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_type.MachineType;
+import com.eservice.api.model.quality_inspect.QualityInspect;
+import com.eservice.api.model.quality_inspect_record.QualityInspectRecord;
+import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_record.TaskRecordDetail;
 import com.eservice.api.service.MachineTypeService;
+import com.eservice.api.service.QualityInspectRecordService;
 import com.eservice.api.service.common.Constant;
-import com.eservice.api.service.impl.MachineServiceImpl;
-import com.eservice.api.service.impl.TaskRecordServiceImpl;
+import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -52,6 +55,17 @@ public class MachineController {
     @Resource
     private TaskRecordServiceImpl taskRecordService;
 
+    @Resource
+    private TaskServiceImpl taskService;
+
+    @Resource
+    private QualityInspectServiceImpl qualityInspectService;
+
+    @Resource
+    private QualityInspectRecordService qualityInspectRecordService;
+
+    @Resource
+    private MachineOrderServiceImpl machineOrderService;
     /**
      * 导出的excel表格，和合同excel表格放同个地方
      */
@@ -100,17 +114,64 @@ public class MachineController {
         Machine machine1 = JSON.parseObject(machine, Machine.class);
         machine1.setUpdateTime(new Date());
         // 如果该机器有对应的工序是跳过未完成的，不允许设置为已完成。
-        if(machine1.getNameplate()!= null && !machine1.getNameplate().isEmpty()) {
+        if (machine1.getNameplate() != null && !machine1.getNameplate().isEmpty()) {
             List<TaskRecordDetail> list = taskRecordService.selectTaskRecordByMachineNameplate(machine1.getNameplate());
-            for (int i = 0; i <list.size() ; i++) {
-                if(list.get(i).getStatus().equals(Constant.TASK_SKIP)){
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getStatus().equals(Constant.TASK_SKIP)) {
                     return ResultGenerator.genFailResult("该机器还有处于跳过状态的工序:" + list.get(i).getTaskName() + "，不允许设置为完成!");
                 }
             }
         }
+
+        /**
+         * 如果是设置了 机器位置(从无到有)，则创建质检记录（状态为未质检），发消息给质检人员，表示要开始安装了，可以过来看了。
+         * 大概是因为有些质检需要在安装过程中看。
+         *
+         * 创建该机器的所有工序对应的所有质检项
+         */
+        Machine machineOld = machineService.findById(machine1.getId());
+        if (machineOld != null) {
+            if( (machineOld.getLocation() == null || machineOld.getLocation().isEmpty())
+                    && !machine1.getLocation().isEmpty()) {
+                MachineOrder machineOrder = machineOrderService.getMachineOrderByNameplate(machine1.getNameplate());
+                List<Task> taskList = taskService.getTaskByNameplate(machine1.getNameplate());
+                if (taskList != null) {
+                    logger.info("该机器包含的工序数：" + taskList.size());
+                    for (int i = 0; i < taskList.size(); i++) {
+                        //找到该工序名下的质检项
+                        List<QualityInspect> qualityInspectListlist = qualityInspectService.getQualityInspectByTaskName(taskList.get(i).getTaskName());
+                        if(qualityInspectListlist != null){
+                            logger.info(taskList.get(i).getTaskName() + " 工序包含的质检项有：" + qualityInspectListlist.size());
+                            for(int q=0; q<qualityInspectListlist.size(); q++) {
+                                QualityInspectRecord qualityInspectRecord = new QualityInspectRecord();
+                                qualityInspectRecord.setCreateTime(new Date());
+                                qualityInspectRecord.setTaskName(taskList.get(i).getTaskName());
+                                qualityInspectRecord.setInspectName(qualityInspectListlist.get(q).getInspectName());
+                                qualityInspectRecord.setMachineNameplate(machine1.getNameplate());
+                                if(machineOrder !=null){
+                                    qualityInspectRecord.setOrderNumber(machineOrder.getOrderNum());
+                                } else {
+                                    logger.warn("根据" + machine1.getNameplate() +" 找不到订单号");
+                                }
+                                qualityInspectRecord.setRecordStatus(Constant.STR_QUALITY_INSPECT_NOT_START);
+
+                                qualityInspectRecordService.save(qualityInspectRecord);
+                                logger.info("生成qualityInspectRecord成功， 铭牌号："
+                                        + qualityInspectRecord.getMachineNameplate()
+                                        + "，inspectName：" + qualityInspectRecord.getInspectName()
+                                        + "，taskName:" + qualityInspectRecord.getTaskName()
+                                        + "，状态：" + qualityInspectRecord.getRecordStatus());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         machineService.update(machine1);
         return ResultGenerator.genSuccessResult();
     }
+
 
     @PostMapping("/detail")
     public Result detail(@RequestParam Integer id) {

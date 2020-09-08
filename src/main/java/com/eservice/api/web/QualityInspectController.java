@@ -3,6 +3,7 @@ import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.quality_inspect.QualityInspect;
 import com.eservice.api.service.QualityInspectService;
+import com.eservice.api.service.impl.QualityInspectServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequestMapping("/quality/inspect")
 public class QualityInspectController {
     @Resource
-    private QualityInspectService qualityInspectService;
+    private QualityInspectServiceImpl qualityInspectService;
 
     @PostMapping("/add")
     public Result add(QualityInspect qualityInspect) {
@@ -55,4 +56,18 @@ public class QualityInspectController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 根据工序名称，查找该工序所要做的质检项。
+     */
+    @PostMapping("/getQualityInspectByTaskName")
+    public Result getQualityInspectByTaskName(@RequestParam(defaultValue = "0") Integer page,
+                                              @RequestParam(defaultValue = "0") Integer size,
+                                              String taskName) {
+        PageHelper.startPage(page, size);
+        List<QualityInspect> list = qualityInspectService.getQualityInspectByTaskName(taskName);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 }

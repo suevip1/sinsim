@@ -12,4 +12,15 @@
     <result column="guidance" jdbcType="LONGVARCHAR" property="guidance" />
     <result column="standard_minutes" jdbcType="INTEGER" property="standardMinutes" />
   </resultMap>
+  <select id="getTaskByNameplate" resultMap="BaseResultMap">
+    SELECT
+	  *
+    FROM
+        machine m
+    JOIN process_record pr ON pr.machine_id = m.id
+    JOIN task_record tr ON tr.process_record_id = pr.id
+    JOIN task ON task.task_name = tr.task_name
+    WHERE
+        m.nameplate = #{nameplate}
+  </select>
 </mapper>

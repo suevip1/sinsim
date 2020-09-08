@@ -201,10 +201,17 @@ public class MachineOrderController {
     @PostMapping("/getMachineOrder")
     public Result getMachineOrder(
             @RequestParam String orderNum ) {
-         MachineOrder machineOrder = machineOrderService.getMachineOrder(orderNum);
+        MachineOrder machineOrder = machineOrderService.getMachineOrder(orderNum);
         return ResultGenerator.genSuccessResult(machineOrder);
     }
 
+    @PostMapping("/getMachineOrderByNameplate")
+    public Result getMachineOrderByNameplate(
+            @RequestParam String nameplate ) {
+        MachineOrder machineOrder = machineOrderService.getMachineOrderByNameplate(nameplate);
+        return ResultGenerator.genSuccessResult(machineOrder);
+    }
+	
     @PostMapping("/isOrderNumExist")
     public Result isOrderNumExist(@RequestParam String orderNum) {
         if (orderNum == null) {

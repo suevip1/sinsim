@@ -14,4 +14,13 @@
     <result column="task_name" jdbcType="VARCHAR" property="taskName" />
     <result column="valid" jdbcType="TINYINT" property="valid" />
   </resultMap>
+
+  <select id="getQualityInspectByTaskName" resultMap="BaseResultMap">
+    SELECT
+        *
+    FROM
+        quality_inspect qi
+    WHERE
+        qi.task_name = #{taskName}
+  </select>
 </mapper>

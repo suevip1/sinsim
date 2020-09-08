@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -21,4 +22,7 @@ public class QualityInspectServiceImpl extends AbstractService<QualityInspect> i
     @Resource
     private QualityInspectMapper qualityInspectMapper;
 
+    public List<QualityInspect> getQualityInspectByTaskName(String taskName){
+        return qualityInspectMapper.getQualityInspectByTaskName(taskName);
+    }
 }

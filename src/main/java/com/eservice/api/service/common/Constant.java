@@ -158,13 +158,26 @@ public class Constant {
     public static final String STR_TASK_PLANED = "已计划";
     public static final String STR_TASK_INSTALL_WAITING = "待安装";
     public static final String STR_TASK_INSTALLING = "开始安装";
-    public static final String STR_TASK_INSTALLED = "安装完成";
+    public static final String STR_TASK_INSTALLED = "安装完成"; ///
     public static final String STR_TASK_QUALITY_DOING = "质检中";
     public static final String STR_TASK_QUALITY_DONE = "质检完成";
     public static final String STR_TASK_INSTALL_ABNORMAL = "安装异常";
     public static final String STR_TASK_QUALITY_ABNORMAL = "质检异常";
     public static final String STR_TASK_SKIP = "已跳过";
 
+    /**
+     * 二期的质检和原先不同，在定了 机器位置，则就要发消息给质检人员。
+     * 所以质检的状态，不和工序的状态共用。
+     * 包括：
+     * 该条质检未开始，无此检验条目，质检合格，质检不合格。
+     * （没有质检中,因为是对一条质检内容而言,对机器有多条质检，才有质检中这样的状态）,
+     * “未检”按钮（因为无法检查，比如安装好了盖住了无法打开检验）,
+     */
+    public static final String STR_QUALITY_INSPECT_NOT_START = "未质检";
+    public static final String STR_QUALITY_INSPECT_NOT_NEED = "无此检验条目";
+    public static final String STR_QUALITY_INSPECT_FAILURE = "质检不合格";
+    public static final String STR_QUALITY_INSPECT_SUCCESS = "质检合格";
+    public static final String STR_QUALITY_INSPECT_UNCHECKED = "未检";
 
     /**
      * 保存文件的类型

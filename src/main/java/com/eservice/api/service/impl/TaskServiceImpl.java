@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -20,5 +21,9 @@ import javax.annotation.Resource;
 public class TaskServiceImpl extends AbstractService<Task> implements TaskService {
     @Resource
     private TaskMapper taskMapper;
+
+    public List<Task> getTaskByNameplate(String nameplate){
+        return taskMapper.getTaskByNameplate(nameplate);
+    }
 
 }
