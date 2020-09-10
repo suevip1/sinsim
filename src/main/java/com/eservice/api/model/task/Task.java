@@ -14,7 +14,7 @@ public class Task {
     private String taskName;
 
     /**
-     * 质检用户的ID
+     * 质检用户的ID 目前没有设置，即没有采用 工序和质检员对应的方式。
      */
     @Column(name = "quality_user_id")
     private Integer qualityUserId;

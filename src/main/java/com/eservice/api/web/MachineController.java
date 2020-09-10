@@ -16,6 +16,8 @@ import com.eservice.api.service.MachineTypeService;
 import com.eservice.api.service.QualityInspectRecordService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
+import com.eservice.api.service.mqtt.MqttMessageHelper;
+import com.eservice.api.service.mqtt.ServerToClientMsg;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -66,6 +68,10 @@ public class MachineController {
 
     @Resource
     private MachineOrderServiceImpl machineOrderService;
+
+    @Resource
+    private MqttMessageHelper mqttMessageHelper;
+
     /**
      * 导出的excel表格，和合同excel表格放同个地方
      */
@@ -165,6 +171,15 @@ public class MachineController {
                         }
                     }
                 }
+                /**
+                 * 发MQTT消息给质检 （一个机器发一次，发给所有质检员/质检组长 谁订阅谁收到）
+                 */
+                ServerToClientMsg msg = new ServerToClientMsg();
+                msg.setOrderNum(machineOrder.getOrderNum());
+                msg.setNameplate(machine1.getNameplate());
+                msg.setType(ServerToClientMsg.MsgType.QUALITY_INSPECT);
+                mqttMessageHelper.sendToClient(Constant.S2C_MACHINE_QUALITY_INSPECT, JSON.toJSONString(msg));
+                logger.info("MQTT " + Constant.S2C_MACHINE_QUALITY_INSPECT + ", 铭牌号：" + msg.getNameplate() + "设置了区域位置");
             }
         }
 

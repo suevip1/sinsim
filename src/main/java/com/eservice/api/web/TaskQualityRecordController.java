@@ -84,7 +84,11 @@ public class TaskQualityRecordController {
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/update")
+    /**
+     * web在提交解决方案时“在用”，但是因为 app没有在用, 即没有提交质检结果的地方。所以实际上没有作用。
+     * 三期采用新的质检体系，这些都不会再被用
+     **/
+    @PostMapping("/update") ///
     public Result update(String taskQualityRecord) {
         TaskQualityRecord taskQualityRecord1 = JSON.parseObject(taskQualityRecord, TaskQualityRecord.class);
         taskQualityRecord1.setSolveTime(new Date());

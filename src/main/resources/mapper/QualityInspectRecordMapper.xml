@@ -35,15 +35,63 @@
     <result column="task_name" jdbcType="VARCHAR" property="taskName" />
     <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
 
+      <association property="machine" javaType="com.eservice.api.model.machine.Machine">
+          <!--
+         WARNING - @mbg.generated
+       -->
+          <id column="id" jdbcType="INTEGER" property="id"/>
+          <result column="order_id" jdbcType="INTEGER" property="orderId"/>
+          <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId"/>
+          <result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
+          <result column="location" jdbcType="VARCHAR" property="location"/>
+          <result column="status" jdbcType="TINYINT" property="status"/>
+          <result column="machine_type" jdbcType="INTEGER" property="machineType"/>
+          <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+          <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+          <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
+          <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
+          <result column="is_urgent" jdbcType="VARCHAR" property="isUrgent"/>
+      </association>
+      <association javaType="com.eservice.api.model.machine_order.MachineOrder" property="machineOrder">
+          <id column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+          <id column="machine_order_id" jdbcType="INTEGER" property="id"/>
+          <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId"/>
+          <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId"/>
+          <result column="create_user_id" jdbcType="INTEGER" property="createUserId"/>
+          <result column="contract_id" jdbcType="VARCHAR" property="contractId"/>
+          <!--<result column="customer" jdbcType="VARCHAR" property="customer" />-->
+          <result column="country" jdbcType="VARCHAR" property="country"/>
+          <result column="brand" jdbcType="VARCHAR" property="brand"/>
+          <result column="mo_machine_type" jdbcType="INTEGER" property="machineType"/>
+          <result column="needle_num" jdbcType="INTEGER" property="needleNum"/>
+          <result column="head_num" jdbcType="INTEGER" property="headNum"/>
+          <result column="head_distance" jdbcType="INTEGER" property="headDistance"/>
+          <result column="x_distance" jdbcType="VARCHAR" property="xDistance"/>
+          <result column="y_distance" jdbcType="VARCHAR" property="yDistance"/>
+          <result column="package_method" jdbcType="VARCHAR" property="packageMethod"/>
+          <result column="machine_num" jdbcType="TINYINT" property="machineNum"/>
+          <result column="machine_price" jdbcType="VARCHAR" property="machinePrice"/>
+          <result column="contract_ship_date" jdbcType="DATE" property="contractShipDate"/>
+          <result column="plan_ship_date" jdbcType="DATE" property="planShipDate"/>
+          <result column="sellman" jdbcType="VARCHAR" property="sellman"/>
+          <result column="machineOrder_status" jdbcType="TINYINT" property="status"/>
+          <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+          <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+          <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+          <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
+          <result column="all_urgent" jdbcType="TINYINT" property="allUrgent"/>
 
+      </association>
   </resultMap>
   <!--<select id="selectQualityInspectRecordDetail" resultMap="QualityInspectRecordDetailResultMap">-->
-  <select id="selectQualityInspectRecordDetail" resultMap="BaseResultMap">
+  <select id="selectQualityInspectRecordDetail" resultMap="QualityInspectRecordDetailResultMap">
     SELECT
         *
     FROM
         quality_inspect_record qir
 --     JOIN quality_inspect qi ON qir.inspect_name = qi.inspect_name
+      LEFT JOIN machine m ON qir.machine_nameplate = m.nameplate
+      LEFT JOIN machine_order mo ON mo.order_num = qir.order_number
     WHERE
       1=1
     <if test="orderNumber != null and orderNumber != ''">

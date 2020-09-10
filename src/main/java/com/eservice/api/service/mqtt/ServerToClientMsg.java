@@ -18,6 +18,10 @@ public class ServerToClientMsg {
         //总装排产
         public static final Integer INSTALL_PLAN = 4;
 
+        //通知质检员、质检组长
+        public static final Integer QUALITY_INSPECT = 5;
+
+
     }
 
     /**

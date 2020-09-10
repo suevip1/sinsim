@@ -266,6 +266,14 @@ public class Constant {
      */
     public static final String S2C_TASK_REMIND = "/s2c/task_remind/";
 
+    /**
+     * MQTT Topic： 后台通知前台App：该机器已经设置了区域，表示开始安装了，要过去质检了（虽然还未完成安装）。
+     * 注意： 现在有两次质检通知：
+     * 1. S2C_MACHINE_QUALITY_INSPECT
+     * 2. S2C_TASK_QUALITY  -- 目前没有在用
+     */
+    public static final String S2C_MACHINE_QUALITY_INSPECT = "/s2c/machine_quality_inspect/";
+
     public enum ValidEnum {
         INVALID(0), VALID(1);
         private Integer value;
