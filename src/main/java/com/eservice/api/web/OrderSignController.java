@@ -147,6 +147,7 @@ public class OrderSignController {
                 }
             }
             machineOrderService.update(machineOrder);
+            commonService.syncMachineOrderStatusInDesignDepInfo(machineOrder);
 
             //更新合同签核记录
             String step = commonService.getCurrentSignStep(contractId);

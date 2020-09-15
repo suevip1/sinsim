@@ -12,6 +12,7 @@ import com.eservice.api.model.contract.MachineOrderWrapper;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.design_dep_info.DesignDepInfo;
+import com.eservice.api.model.design_dep_info.DesignDepInfoDetail;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
@@ -88,7 +89,8 @@ public class ContractController {
     @Resource
     private MqttMessageHelper mqttMessageHelper;
 
-    @Resource DesignDepInfoServiceImpl designDepInfoService;
+    @Resource
+    DesignDepInfoServiceImpl designDepInfoService;
     @Value("${contract_excel_output_dir}")
     private String contractOutputDir;
     private Logger logger = Logger.getLogger(ContractController.class);
@@ -225,6 +227,7 @@ public class ContractController {
                 if (orderTemp.getStatus().equals(Constant.ORDER_INITIAL)) {
                     orderDetailService.update(temp);
                     machineOrderService.update(orderTemp);
+                    commonService.syncMachineOrderStatusInDesignDepInfo(orderTemp);
                     // 在改单之后，在重新提交之前，允许修改改单原因，即：改单原因不仅仅在改单时允许修改，在上述情况下也允许修改。
                     if( null != changeRecord ) {
                         orderChangeRecordService.update(changeRecord);
@@ -322,8 +325,11 @@ public class ContractController {
 
                 //改单的前提是原订单已审核完成，联系单已经审核通过，所以不需要再重新审核，
                 machineOrder.setStatus(Constant.ORDER_CHANGE_FINISHED);
+
                 machineOrder.setCreateTime(new Date());
                 machineOrderService.saveAndGetID(machineOrder);
+                ///设计单里的状态 也要改 -->改的地方多，统一放在定时器里去更新状态-->废弃，因为订单可能很多
+
                 newMachineOrderId = machineOrder.getId();
 
                 //初始化需求单审核记录
@@ -746,6 +752,7 @@ public class ContractController {
                     if (orderItem.getStatus().equals(Constant.ORDER_INITIAL)) {
                         orderItem.setStatus(Constant.ORDER_CHECKING);
                         machineOrderService.update(orderItem);
+                        commonService.syncMachineOrderStatusInDesignDepInfo(orderItem);
                         Condition signCondition = new Condition(OrderSign.class);
                         signCondition.createCriteria().andCondition("order_id = ", orderItem.getId());
                         List<OrderSign> orderSignList = orderSignService.findByCondition(signCondition);

@@ -90,6 +90,8 @@ public class ContractSignController {
                         item.setStatus(Constant.ORDER_CHECKING_FINISHED);
                     }
                     machineOrderService.update(item);
+
+                    commonService.syncMachineOrderStatusInDesignDepInfo(item);
                 }
                 //根据合同中的需求单进行机器添加
                 commonService.createMachineByContractId(contractSignObj.getContractId());
@@ -131,6 +133,7 @@ public class ContractSignController {
                             //需求单状态设置为“ORDER_REJECTED”
                             machineOrder.setStatus(Constant.ORDER_REJECTED);
                             machineOrderService.update(machineOrder);
+                            commonService.syncMachineOrderStatusInDesignDepInfo(machineOrder);
                         }
                     }
                 } else {//已驳回的重新审核后，更改合同状态为审核中.
@@ -146,6 +149,7 @@ public class ContractSignController {
                                 item.setStatus(Constant.ORDER_CHECKING);
                             }
                             machineOrderService.update(item);
+                            commonService.syncMachineOrderStatusInDesignDepInfo(item);
                         }
                     }
                 }

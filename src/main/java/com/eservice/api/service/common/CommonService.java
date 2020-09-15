@@ -24,6 +24,7 @@ import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.design_dep_info.DesignDepInfo;
+import com.eservice.api.model.design_dep_info.DesignDepInfoDetail;
 import com.eservice.api.model.install_group.InstallGroup;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
@@ -848,7 +849,8 @@ public class CommonService {
     }
 
     /**
-     *  在生成订单时，自动生成设计单
+     *  在生成订单、改单、拆单 时，自动生成设计单
+     *
      * @param machineOrder
      */
     public void createDesignDepInfo(MachineOrder machineOrder){
@@ -862,11 +864,40 @@ public class CommonService {
         }
         designDepInfo.setCountry(machineOrder.getCountry());
         designDepInfo.setMachineNum(machineOrder.getMachineNum());
-        designDepInfo.setOrderSignStatus(Constant.ORDER_INITIAL);
+        /**
+         * 不仅仅是初始化状态，因为还有改单，拆单对应的状态
+         */
+//        designDepInfo.setOrderSignStatus(Constant.ORDER_INITIAL);
+        designDepInfo.setOrderSignStatus(machineOrder.getStatus()); //注意这里是订单状态，不是订单签核状态
         designDepInfo.setOrderId(machineOrder.getId());
         designDepInfo.setCreatedDate(new Date());
         designDepInfo.setUpdatedDate(new Date());
         designDepInfoService.save(designDepInfo);
         logger.info("根据订单" + machineOrder.getOrderNum()+ "自动创建设计单");
+    }
+
+    /**
+     * 订单状态变化时，要同步更新到对应的设计单。（不是新增，新增是：在生成订单、改单、拆单 时，自动生成设计单）
+     * @param machineOrder
+     */
+    public void syncMachineOrderStatusInDesignDepInfo(MachineOrder machineOrder){
+        ///设计单里的状态 也要改 -->改的地方多，统一放在定时器里去更新状态-->废弃，因为订单可能很多
+        List<DesignDepInfoDetail> designDepInfoDetailList = designDepInfoService.selectDesignDepInfo(
+                machineOrder.getOrderNum(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        if(designDepInfoDetailList !=null) {
+            designDepInfoDetailList.get(0).setOrderSignStatus(machineOrder.getStatus());
+            designDepInfoService.update(designDepInfoDetailList.get(0));
+        } else {
+            logger.warn("根据该订单号找不到设计单，可能是旧的订单");
+        }
     }
 }
