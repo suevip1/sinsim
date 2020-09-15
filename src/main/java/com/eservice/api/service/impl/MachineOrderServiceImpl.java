@@ -2,13 +2,11 @@ package com.eservice.api.service.impl;
 
 import com.eservice.api.core.AbstractService;
 import com.eservice.api.dao.MachineOrderMapper;
-import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_form.ContactFormDetail;
-import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.service.MachineOrderService;
-import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.common.CommonService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +30,8 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
     @Resource
     private ContactFormServiceImpl contactFormService;
 
+    @Resource
+    private CommonService commonService;
     public MachineOrderDetail getOrderAllDetail(Integer id) {
         return machineOrderMapper.getOrderAllDetail(id);
     }
@@ -71,7 +71,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     queryFinishTimeSign,
                     machine_name);
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
-                machineOrderDetailList.get(i).setContactFormDetailList(relatedLxdPassed(machineOrderDetailList.get(i).getOrderNum()));
+                machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
 
             }
         } else {
@@ -90,16 +90,16 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     queryFinishTimeSign,
                     machine_name);
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
-                machineOrderDetailList.get(i).setContactFormDetailList(relatedLxdPassed(machineOrderDetailList.get(i).getOrderNum()));
+                machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
             }
         }
         return machineOrderDetailList;
     }
 
     /**
-     * 订单对应的联系单是否已经存在并且通过审核了
+     * 订单对应的所有联系单
      */
-    public List<ContactFormDetail> relatedLxdPassed(String orderNum) {
+    public List<ContactFormDetail> getRelatedLxdByOrderNum(String orderNum) {
         List<ContactFormDetail> contactFormDetailsList = new ArrayList<>();
         //根据需求单查找对应联系单，会用用最原始的需求单号（除去括号），所以可查出所有历史的联系单
         if(orderNum != null) {
@@ -136,6 +136,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
 
     public void saveAndGetID(MachineOrder machineOrder) {
         machineOrderMapper.saveAndGetID(machineOrder);
+        commonService.createDesignDepInfo(machineOrder);
     }
 
     public MachineOrder searchOrderIdByOrderLoadingListId(Integer ollId) {
@@ -148,6 +149,10 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
 
     public MachineOrder getMachineOrder(String orderNum) {
         return machineOrderMapper.getMachineOrder(orderNum);
+    }
+
+    public MachineOrder getMachineOrderByNameplate(String nameplate) {
+        return machineOrderMapper.getMachineOrderByNameplate(nameplate);
     }
 
 }

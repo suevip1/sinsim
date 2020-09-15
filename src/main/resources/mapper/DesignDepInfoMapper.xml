@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.DesignDepInfoMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.design_dep_info.DesignDepInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+    <result column="saleman" jdbcType="VARCHAR" property="saleman" />
+    <result column="guest_name" jdbcType="VARCHAR" property="guestName" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="machine_num" jdbcType="INTEGER" property="machineNum" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="order_sign_status" jdbcType="TINYINT" property="orderSignStatus" />
+    <result column="designer" jdbcType="VARCHAR" property="designer" />
+    <result column="created_date" jdbcType="TIMESTAMP" property="createdDate" />
+    <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate" />
+    <result column="machine_spec" jdbcType="VARCHAR" property="machineSpec" />
+    <result column="keywords" jdbcType="VARCHAR" property="keywords" />
+    <result column="drawing_file_done" jdbcType="BIT" property="drawingFileDone" />
+    <result column="loading_file_done" jdbcType="BIT" property="loadingFileDone" />
+    <result column="drawing_files" jdbcType="VARCHAR" property="drawingFiles" />
+    <result column="loading_files" jdbcType="VARCHAR" property="loadingFiles" />
+    <result column="hole_tube_required" jdbcType="BIT" property="holeTubeRequired" />
+    <result column="hole_files" jdbcType="VARCHAR" property="holeFiles" />
+    <result column="tube_files" jdbcType="VARCHAR" property="tubeFiles" />
+    <result column="bom_required" jdbcType="BIT" property="bomRequired" />
+    <result column="cover_required" jdbcType="BIT" property="coverRequired" />
+    <result column="cover_file" jdbcType="VARCHAR" property="coverFile" />
+    <result column="design_status" jdbcType="VARCHAR" property="designStatus" />
+    <result column="hole_done" jdbcType="BIT" property="holeDone" />
+    <result column="tube_done" jdbcType="BIT" property="tubeDone" />
+    <result column="bom_done" jdbcType="BIT" property="bomDone" />
+    <result column="cover_done" jdbcType="BIT" property="coverDone" />
+
+    <result column="drawing_man" jdbcType="VARCHAR" property="drawingMan"/>
+    <result column="loading_man" jdbcType="VARCHAR" property="loadingMan"/>
+    <result column="hole_man" jdbcType="VARCHAR" property="holeMan"/>
+    <result column="tube_man" jdbcType="VARCHAR" property="tubeMan"/>
+    <result column="bom_man" jdbcType="VARCHAR" property="bomMan"/>
+    <result column="cover_man" jdbcType="VARCHAR" property="coverMan"/>
+
+    <result column="drawing_update_time" jdbcType="VARCHAR" property="drawingUpdateTime" />
+    <result column="loading_update_time" jdbcType="VARCHAR" property="loadingUpdateTime" />
+    <result column="hole_update_time" jdbcType="VARCHAR" property="holeUpdateTime" />
+    <result column="tube_update_time" jdbcType="VARCHAR" property="tubeUpdateTime" />
+    <result column="bom_update_time" jdbcType="VARCHAR" property="bomUpdateTime" />
+    <result column="cover_update_time" jdbcType="VARCHAR" property="coverUpdateTime" />
+  </resultMap>
+  <resultMap id="DesignDepInfoDetailMap" type="com.eservice.api.model.design_dep_info.DesignDepInfoDetail">
+    <!--
+     WARNING - @mbg.generated
+   -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+    <result column="saleman" jdbcType="VARCHAR" property="saleman" />
+    <result column="guest_name" jdbcType="VARCHAR" property="guestName" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="machine_num" jdbcType="INTEGER" property="machineNum" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="order_sign_status" jdbcType="TINYINT" property="orderSignStatus" />
+    <result column="designer" jdbcType="VARCHAR" property="designer" />
+    <result column="created_date" jdbcType="TIMESTAMP" property="createdDate" />
+    <result column="updated_date" jdbcType="TIMESTAMP" property="updatedDate" />
+    <result column="machine_spec" jdbcType="VARCHAR" property="machineSpec" />
+    <result column="keywords" jdbcType="VARCHAR" property="keywords" />
+    <result column="drawing_file_done" jdbcType="BIT" property="drawingFileDone" />
+    <result column="loading_file_done" jdbcType="BIT" property="loadingFileDone" />
+    <result column="drawing_files" jdbcType="VARCHAR" property="drawingFiles" />
+    <result column="loading_files" jdbcType="VARCHAR" property="loadingFiles" />
+    <result column="hole_tube_required" jdbcType="BIT" property="holeTubeRequired" />
+    <result column="hole_files" jdbcType="VARCHAR" property="holeFiles" />
+    <result column="tube_files" jdbcType="VARCHAR" property="tubeFiles" />
+    <result column="bom_required" jdbcType="BIT" property="bomRequired" />
+    <result column="cover_required" jdbcType="BIT" property="coverRequired" />
+    <result column="cover_file" jdbcType="VARCHAR" property="coverFile" />
+    <result column="design_status" jdbcType="VARCHAR" property="designStatus" />
+    <result column="hole_done" jdbcType="BIT" property="holeDone" />
+    <result column="tube_done" jdbcType="BIT" property="tubeDone" />
+    <result column="bom_done" jdbcType="BIT" property="bomDone" />
+    <result column="cover_done" jdbcType="BIT" property="coverDone" />
+
+    <result column="drawing_man" jdbcType="VARCHAR" property="drawingMan"/>
+    <result column="loading_man" jdbcType="VARCHAR" property="loadingMan"/>
+    <result column="hole_man" jdbcType="VARCHAR" property="holeMan"/>
+    <result column="tube_man" jdbcType="VARCHAR" property="tubeMan"/>
+    <result column="bom_man" jdbcType="VARCHAR" property="bomMan"/>
+    <result column="cover_man" jdbcType="VARCHAR" property="coverMan"/>
+
+    <result column="drawing_update_time" jdbcType="VARCHAR" property="drawingUpdateTime" />
+    <result column="loading_update_time" jdbcType="VARCHAR" property="loadingUpdateTime" />
+    <result column="hole_update_time" jdbcType="VARCHAR" property="holeUpdateTime" />
+    <result column="tube_update_time" jdbcType="VARCHAR" property="tubeUpdateTime" />
+    <result column="bom_update_time" jdbcType="VARCHAR" property="bomUpdateTime" />
+    <result column="cover_update_time" jdbcType="VARCHAR" property="coverUpdateTime" />
+
+    <result column="update_time" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <select id="selectDesignDepInfo" resultMap="DesignDepInfoDetailMap">
+    SELECT
+    ddi.*, os.*
+    FROM
+    design_dep_info ddi
+    LEFT JOIN machine_order mo ON ddi.order_id = mo.id
+    LEFT JOIN order_sign os ON os.order_id = mo.id
+    WHERE 1=1
+    <if test="orderNum!=null and orderNum != '' ">
+      and ddi.order_num like CONCAT('%','${orderNum}','%' )
+    </if>
+    <if test="saleman!=null and saleman != '' ">
+      and ddi.saleman like CONCAT('%','${saleman}','%')
+    </if>
+
+    <if test="guestName!=null and guestName != '' ">
+      and ddi.guest_name like CONCAT('%','${guestName}','%')
+    </if>
+
+    <if test="orderStatus!=null">
+      and ddi.order_sign_status = #{orderStatus}
+    </if>
+    <if test="drawingLoadingDoneStatus!=null ">
+      and ddi.drawing_file_done = #{drawingLoadingDoneStatus}
+    </if>
+
+    <if test="machineSpec!=null and machineSpec != '' ">
+      and ddi.machine_spec like CONCAT('%','${machineSpec}','%' )
+    </if>
+    <if test="keywords!=null and keywords != '' ">
+      and ddi.keywords like CONCAT('%','${keywords}','%' )
+    </if>
+    <if test="designer!=null and designer != '' ">
+      and ddi.designer like CONCAT('%','${designer}','%' )
+    </if>
+
+    <if test="updateDateStart!=null and updateDateStart != '' ">
+      and DATE_FORMAT(ddi.updated_date,'%Y-%m-%d') &gt;= #{updateDateStart}
+    </if>
+    <if test="updateDateEnd!=null and updateDateEnd != '' ">
+      and DATE_FORMAT(ddi.updated_date,'%Y-%m-%d') &lt;= #{updateDateEnd}
+    </if>
+    ORDER BY
+    ddi.updated_date DESC,
+    ddi.created_date DESC
+  </select>
+
+  <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.design_dep_info.DesignDepInfo"
+          keyProperty="id">
+    insert into
+    design_dep_info(order_id,order_num, saleman, guest_name, country, machine_num,remark, order_sign_status, designer,
+    created_date, updated_date, machine_spec, keywords, drawing_file_done,loading_file_done,
+    drawing_files,loading_files,
+    drawing_man,loading_man,
+    drawing_update_time, loading_update_time,
+    hole_tube_required,
+    hole_files,
+    tube_files,
+    bom_required,
+    hole_man, tube_man,
+    hole_update_time, tube_update_time,
+    cover_required,cover_file,design_status,
+    hole_done, tube_done,
+    bom_done, cover_done,bom_man,bom_update_time,cover_man,cover_update_time )
+    values(
+    #{orderId},#{orderNum},#{saleman},#{guestName},#{country},#{machineNum},#{remark},#{orderSignStatus},#{designer},
+    #{createdDate},#{updatedDate},  #{machineSpec}, #{keywords}, #{drawingFileDone},#{loadingFileDone},
+    #{drawingFiles}, #{loadingFiles},
+    #{drawingMan},#{loadingMan},
+    #{drawingUpdateTime},#{loadingUpdateTime},
+    #{holeTubeRequired},
+    #{holeFiles},
+    #{tubeFiles},
+    #{bomRequired},
+    #{holeMan}, #{tubeMan},
+    #{holeUpdateTime}, #{tubeUpdateTime},
+    #{coverRequired},#{coverFile},#{designStatus},
+    #{holeDone},#{tubeDone},
+    #{bomDone}, #{coverDone},#{bomMan},#{bomUpdateTime},#{coverMan},#{coverUpdateTime})
+  </insert>
+</mapper>

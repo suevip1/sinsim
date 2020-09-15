@@ -6,10 +6,15 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
+import com.eservice.api.model.role.Role;
+import com.eservice.api.model.user.User;
+import com.eservice.api.model.user.UserDetail;
+import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.ContactFormServiceImpl;
 import com.eservice.api.service.impl.ContactSignServiceImpl;
 import com.eservice.api.service.impl.RoleServiceImpl;
+import com.eservice.api.service.impl.UserServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -40,6 +45,11 @@ public class ContactSignController {
     @Resource
     private RoleServiceImpl roleService;
 
+    @Resource
+    private UserServiceImpl userService;
+
+    @Resource
+    private CommonService commonService;
     private Logger logger = Logger.getLogger(ContactSignController.class);
 
     @PostMapping("/add")
@@ -101,6 +111,11 @@ public class ContactSignController {
             cs.setCurrentStep(currentStep);
         }
         contactSignService.update(cs);
+
+        /**
+         * 推送公众号消息给轮到联系单签核的人（通过售后系统）
+         */
+        commonService.pushLxdMsgToAftersale(cs,cf, haveReject);
 
         if (haveReject) {
             /**

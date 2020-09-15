@@ -17,8 +17,14 @@ import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.contact_form.ContactForm;
+import com.eservice.api.model.contact_sign.ContactSign;
+import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
+import com.eservice.api.model.design_dep_info.DesignDepInfo;
+import com.eservice.api.model.design_dep_info.DesignDepInfoDetail;
 import com.eservice.api.model.install_group.InstallGroup;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
@@ -28,6 +34,8 @@ import com.eservice.api.model.role.Role;
 import com.eservice.api.model.task.Task;
 import com.eservice.api.model.task_record.TaskRecord;
 import com.eservice.api.model.user.User;
+import com.eservice.api.model.user.UserDetail;
+import com.eservice.api.service.ContactFormService;
 import com.eservice.api.service.impl.*;
 import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.eservice.api.service.mqtt.ServerToClientMsg;
@@ -73,6 +81,18 @@ public class CommonService {
 
     @Value("${sinsimPocess_call_aftersale}")
     private String sinsimPocess_call_aftersale;
+
+    @Resource
+    private ContactFormService contactFormService;
+
+    @Resource
+    private CommonService commonService;
+
+    @Resource
+    private ContractServiceImpl contractService;
+    @Resource
+    private DesignDepInfoServiceImpl designDepInfoService;
+
     Logger logger = Logger.getLogger(CommonService.class);
 
     /**
@@ -295,6 +315,15 @@ public class CommonService {
                 fileType = "lxdAttached_during_sign";
                 dateStr = "";
                 break;
+            case Constant.DESIGN_ATTACHED_FILE:
+                fileType = "designAttached";
+                dateStr = "";
+                break;
+            case Constant.OPTIMIZE_ATTACHED_FILE:
+                fileType = "optimize";
+                dateStr = "";
+                break;
+
             default:
                 fileType = " ";
                 break;
@@ -609,6 +638,7 @@ public class CommonService {
              *   localhost:/api/for/sinimproccess/sendRemind
              *   但是在代码里不行.
              */
+            logger.info("签核推送给售后, 账号：" + accountX + ",订单号：" + machineOrderNumX + ", 联系单号：" +lxdNumX);
             accountX = URLEncoder.encode(accountX, "UTF-8");
             machineOrderNumX = URLEncoder.encode(machineOrderNumX, "UTF-8");
             lxdNumX = URLEncoder.encode(lxdNumX, "UTF-8");
@@ -622,7 +652,6 @@ public class CommonService {
         String result = null;
         if(!machineOrderNumX.equals("") ){
             machineOrderNumX = "machineOrderNum=machineOrderNumX".replaceAll("machineOrderNumX",machineOrderNumX);
-
             String[] cmds = {"curl",
                     "-X",
                     "POST",
@@ -642,11 +671,20 @@ public class CommonService {
             logger.info(result);
         }
         if(!lxdNumX.equals("") ){ //todo
-
-            lxdNumX = "--data-urlencode \"lxdNum=${lxdNumX}\"".replaceAll("lxdNumX",lxdNumX);
-            String[] cmds = {"curl", "-X", "POST",
-                    "-G",  lxdNumX,
+            lxdNumX = "lxdNum=lxdNumX".replaceAll("lxdNumX",lxdNumX);
+            String[] cmds = {"curl",
+                    "-X",
+                    "POST",
+                    "-G",
+                    "--data-urlencode", ///这些貌似未起作用,最终还是要事先做encode转码,然后在售后端收到之后解码.
+                    accountX,
+                    "--data-urlencode",
+                    lxdNumX,
                     url,
+                    "-H",
+                    "accept: */*",
+                    "-H",
+                    "Content-Type: application/json;charset=UTF-8"
             };
 
             result = execCurl(cmds);
@@ -654,5 +692,212 @@ public class CommonService {
         }
 
         return result;
+    }
+
+    //根据联系单的 签核信息 返回信息中的所有签核人（虽然在签核流程里，但没有经过签核的人就不用了）
+    public List<User> getUsersInLxdSign(ContactSign cs ) {
+        List<SignContentItem> contactSignContentList = JSON.parseArray(cs.getSignContent(), SignContentItem.class);
+        List<User> userList = new ArrayList<>();
+        for (SignContentItem item : contactSignContentList) {
+//                    * 签核结果
+//                    * "0" --> "初始化"
+//                    * "1" --> "同意"
+//                    * "2" --> "拒绝"
+            if( ! item.getResult().equals(0)) {//（虽然在签核流程里，但没有经过签核的人就不用了）
+                userList.add(userService.selectByAccount(item.getUser()));
+            }
+        }
+        return userList;
+    }
+
+    //根据订单的 签核信息 返回信息中的所有签核人（虽然在签核流程里，但没有经过签核的人就不用了）
+    public List<User> getUsersInMachineOrderSign(OrderSign os) {
+
+        List<SignContentItem> orderSignContentList = JSON.parseArray(os.getSignContent(), SignContentItem.class);
+        List<User> userList = new ArrayList<>();
+        for (SignContentItem item : orderSignContentList) {
+//                    * 签核结果
+//                    * "0" --> "初始化"
+//                    * "1" --> "同意"
+//                    * "2" --> "拒绝"
+            if( ! item.getResult().equals(0)) {//（虽然在签核流程里，但没有经过签核的人就不用了）
+                userList.add(userService.selectByAccount(item.getUser()));
+            }
+        }
+        return userList;
+    }
+
+    /**
+     * 推送公众号消息给轮到联系单签核的人（通过售后系统）
+     * @param cs
+     * @param cf
+     * @param haveReject 是否驳回 （ 虽然这个信息可以从cs中提取，但是调用该函数的地方前面已经提前过了，方便用）
+     */
+    public void pushLxdMsgToAftersale(ContactSign cs,
+                                      ContactForm cf,
+                                      boolean haveReject ) {
+
+        if (cs.getCurrentStep().equals(Constant.SIGN_FINISHED)) {
+            //  审核完成时，通知发起人
+            List<UserDetail> userList = userService.selectUsers(cf.getApplicantPerson(), null, null, null, 1);
+            if (userList.isEmpty() || userList == null) {
+                logger.error("根据 " + cf.getApplicantPerson() + "找不到User");
+            } else {
+                //找到发起人
+                UserDetail toUser = userList.get(0);
+                commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", cf.getNum());
+            }
+        } else {
+            Role role = roleService.findBy("roleName", cs.getCurrentStep());
+            if (role == null) {
+                logger.error("根据该 role_name " + cs.getCurrentStep() + "找不到Role");
+            } else {
+                //如果是销售部经理还要细分发给哪个经理，
+                if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
+                    //todo 等2020销售大区方案定下来之后再改
+                } else if (!haveReject) { //没有驳回，发给下1个签核人
+                    //如果是销售部经理还要细分发给哪个经理，
+                    if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
+                        //todo 等2020销售大区方案定下来之后再改
+                    } else {
+                        List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, 1);
+                        if (userList.isEmpty() || userList == null) {
+                            logger.error("根据该roleId " + role.getId() + "找不到User");
+                        } else {
+                            //可能有多个负责人，比如研发部现在就两个经理，都通知。
+                            for (UserDetail toUser : userList) {
+                                ContactForm contactForm = contactFormService.findById(cs.getContactFormId());
+                                commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", contactForm.getNum());
+                            }
+                        }
+                    }
+                } else {//驳回，发给所有参与签核的人。+ 联系单发起人
+                    List<User> userNameList = commonService.getUsersInLxdSign(cs);
+                    for (User toUser : userNameList) {
+                        commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", cf.getNum());
+                    }
+                    commonService.sendSignInfoViWxMsg(cf.getApplicantPerson(), "", cf.getNum());
+
+                }
+            }
+        }
+    }
+
+    /**
+     * 推送公众号消息给轮到 订单签核的人（通过售后系统）
+     * @param orderSignObj
+     * @param contract
+     * @param machineOrder
+     * @param haveReject 是否驳回 （ 虽然这个信息可以从cs中提取，但是调用该函数的地方前面已经提前过了，方便用）
+     */
+    public void pushMachineOrderMsgToAftersale(OrderSign orderSignObj,
+                                               Contract contract,
+                                               MachineOrder machineOrder,
+                                               boolean haveReject ) {
+        /**
+         * 推送公众号消息给轮到的人（通过售后系统）
+         * 签核结束，推送给订单录单人，；
+         * 签核没有结束，推送给轮到签核的人，或者推送给所有参与签核的人（被拒时）；
+         */
+        if (orderSignObj.getCurrentStep().equals(Constant.SIGN_FINISHED)) {
+            List<UserDetail> userList = userService.selectUsers(contract.getRecordUser(), null, null, null, 1);
+            if (userList.isEmpty() || userList == null) {
+                logger.error("根据 " + contract.getRecordUser() + "找不到User");
+            } else {
+                //找到录单人
+                UserDetail toUser = userList.get(0);
+                commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "");
+            }
+        } else {
+            Role role = roleService.findBy("roleName", orderSignObj.getCurrentStep());
+            if (role == null) {
+                logger.error("根据该 role_name " + orderSignObj.getCurrentStep() + "找不到Role");
+            } else if (!haveReject) { //没有驳回，发给下1个签核人
+                //如果是销售部经理还要细分发给哪个经理，
+                if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
+                    //todo 等2020销售大区方案定下来之后再改
+                } else {
+                    List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, 1);
+                    if (userList.isEmpty() || userList == null) {
+                        logger.error("根据该roleId " + role.getId() + "找不到User");
+                    } else {
+                        //可能有多个负责人，比如研发部现在就两个经理，都通知
+                        for (UserDetail toUser : userList) {
+                            commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "");
+                        }
+                    }
+                }
+            } else {//驳回，发给所有参与签核的人。+ 录单人
+                List<User> userList = commonService.getUsersInMachineOrderSign(orderSignObj);
+                for (User toUser : userList) {
+                    commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "");
+                }
+
+                //考虑录单人和签核人可能是相同的，这种情况只需要发一次
+                boolean isRecorderInUserList = false;
+                for (User toUser : userList) {
+                    if (toUser.getAccount().equals(contract.getRecordUser())) {
+                        isRecorderInUserList = true;
+                        break;
+                    }
+                }
+                if( ! isRecorderInUserList) {
+                    commonService.sendSignInfoViWxMsg(contract.getRecordUser(), machineOrder.getOrderNum(), "");
+                }
+            }
+        }
+    }
+
+    /**
+     *  在生成订单、改单、拆单 时，自动生成设计单
+     *
+     * @param machineOrder
+     */
+    public void createDesignDepInfo(MachineOrder machineOrder){
+        DesignDepInfo designDepInfo = new DesignDepInfo();
+        designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_UNPLANNED);
+        designDepInfo.setOrderNum(machineOrder.getOrderNum());
+        designDepInfo.setSaleman(machineOrder.getSellman());
+        Contract contract1 = contractService.getContractByOrderNumber(machineOrder.getOrderNum());
+        if(contract1 != null) {
+            designDepInfo.setGuestName(contract1.getCustomerName());
+        }
+        designDepInfo.setCountry(machineOrder.getCountry());
+        designDepInfo.setMachineNum(machineOrder.getMachineNum());
+        /**
+         * 不仅仅是初始化状态，因为还有改单，拆单对应的状态
+         */
+//        designDepInfo.setOrderSignStatus(Constant.ORDER_INITIAL);
+        designDepInfo.setOrderSignStatus(machineOrder.getStatus()); //注意这里是订单状态，不是订单签核状态
+        designDepInfo.setOrderId(machineOrder.getId());
+        designDepInfo.setCreatedDate(new Date());
+        designDepInfo.setUpdatedDate(new Date());
+        designDepInfoService.save(designDepInfo);
+        logger.info("根据订单" + machineOrder.getOrderNum()+ "自动创建设计单");
+    }
+
+    /**
+     * 订单状态变化时，要同步更新到对应的设计单。（不是新增，新增是：在生成订单、改单、拆单 时，自动生成设计单）
+     * @param machineOrder
+     */
+    public void syncMachineOrderStatusInDesignDepInfo(MachineOrder machineOrder){
+        ///设计单里的状态 也要改 -->改的地方多，统一放在定时器里去更新状态-->废弃，因为订单可能很多
+        List<DesignDepInfoDetail> designDepInfoDetailList = designDepInfoService.selectDesignDepInfo(
+                machineOrder.getOrderNum(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        if(designDepInfoDetailList !=null) {
+            designDepInfoDetailList.get(0).setOrderSignStatus(machineOrder.getStatus());
+            designDepInfoService.update(designDepInfoDetailList.get(0));
+        } else {
+            logger.warn("根据该订单号找不到设计单，可能是旧的订单");
+        }
     }
 }

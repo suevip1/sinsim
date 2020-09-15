@@ -473,4 +473,15 @@
 		where order_num = #{orderNum} and valid ='1'
 	</select>
 
+	<select id="getMachineOrderByNameplate" resultMap="BaseResultMap">
+		SELECT
+			*
+		FROM
+			machine_order mo
+		JOIN machine m ON mo.id = m.order_id
+		WHERE
+			mo.valid = '1'
+		AND m.nameplate = #{nameplate}
+	</select>
+
 </mapper>

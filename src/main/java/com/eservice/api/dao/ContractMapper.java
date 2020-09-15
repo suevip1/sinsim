@@ -39,4 +39,6 @@ public interface ContractMapper extends Mapper<Contract> {
 
     //selectAllCustomer
     List<ContractDetail> selectAllCustomer(@Param("name") String name);
+	
+    Contract getContractByOrderNumber(@Param("orderNumber") String orderNumber);
 }

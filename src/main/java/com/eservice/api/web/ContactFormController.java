@@ -19,11 +19,14 @@ import com.eservice.api.model.change_item.ChangeItem;
 import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_form.ContactFormAllInfo;
 import com.eservice.api.model.contact_form.ContactFormDetail;
+import com.eservice.api.model.contact_fulfill.ContactFulfill;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
+
 import com.eservice.api.model.user.User;
 import com.eservice.api.service.ContactFormService;
+
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.*;
@@ -74,6 +77,9 @@ public class ContactFormController {
 
     @Resource
     private MachineOrderServiceImpl machineOrderService;
+
+    @Resource
+    private ContactFulfillServiceImpl contactFulfillService;
 
     @Value("${lxd_attached_saved_dir}")
     private String lxdAttachedSavedDir;
@@ -177,6 +183,22 @@ public class ContactFormController {
             contactSign.setContactFormId(contactForm.getId());
             contactSignService.save(contactSign);
 
+            /**
+             * 联系单的落实，也在add时添加，比如技术部（联系单的主要落实者）也可以在发起联系单时，直接指定落实信息。
+             */
+            ContactFulfill contactFulfill = contactFormAllInfo.getContactFulfill();
+            if(contactFulfill != null ) {
+                contactFulfill.setContactFormId(contactForm.getId());
+                if(contactFulfill.getFulfillMan() == null || contactFulfill.getFulfillMan().equals("")){
+                    contactFulfill.setStatus(Constant.STR_FULFILL_STATUS_UN_ASSIGN);
+                } else {
+                    contactFulfill.setStatus(Constant.STR_FULFILL_STATUS_FULFILLING);
+                }
+                contactFulfill.setCreateDate(new Date());
+                contactFulfillService.save(contactFulfill);
+            } else {
+                logger.info("新增联系单时，落实单为空");
+            }
         } catch (Exception ex) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             logger.warn("添加联系单/联系单变更条目/联系单审核信息 出错: " + message);
@@ -414,6 +436,29 @@ public class ContactFormController {
             contactForm.setUpdateDate(new Date());
             contactFormService.update(contactForm); // 统一更新联系单
 
+            /**
+             * 联系单的落实，新增/更新
+             */
+            ContactFulfill contactFulfill = contactFormAllInfo.getContactFulfill();
+            if(contactFulfill != null ) {
+                contactFulfill.setContactFormId(contactForm.getId());
+                if(contactFulfill.getId() == null || contactFulfill.getId() ==0){
+                    ////workaround：不知道为啥前端会传个为0的contactFulfill.id，照理应该是null
+                    //新增加的落实信息，比如在二期旧的联系单上添加落实信息，比如在新建联系单时未写落实信息，后面再补上时。
+                    if(contactFulfill.getFulfillMan() ==null){
+                        contactFulfill.setStatus(Constant.STR_FULFILL_STATUS_UN_ASSIGN);
+                    } else {
+                        contactFulfill.setStatus(Constant.STR_FULFILL_STATUS_FULFILLING);
+                    }
+                    contactFulfill.setCreateDate(new Date());
+                    contactFulfillService.save(contactFulfill);
+                } else {
+                    contactFulfill.setUpdateDate(new Date());
+                    contactFulfillService.update(contactFulfill);
+                }
+            } else {
+                logger.info("更新联系单时，落实单为空");
+            }
         } catch (Exception ex) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             logger.warn("更新 联系单/联系单变更条目/联系单审核信息 出错: " + message);
