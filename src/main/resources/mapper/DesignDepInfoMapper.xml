@@ -143,7 +143,7 @@
     </if>
     ORDER BY
     ddi.updated_date DESC,
-    ddi.created_date
+    ddi.created_date DESC
   </select>
 
   <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.design_dep_info.DesignDepInfo"

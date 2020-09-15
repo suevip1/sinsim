@@ -186,4 +186,14 @@
         </if>
         GROUP BY customer_name
     </select>
+
+    <select id="getContractByOrderNumber" resultMap="BaseResultMap">
+        SELECT
+          *
+        FROM
+            contract c
+        JOIN machine_order mo ON mo.contract_id = c.id
+        WHERE
+            mo.order_num = #{orderNumber}
+    </select>
 </mapper>

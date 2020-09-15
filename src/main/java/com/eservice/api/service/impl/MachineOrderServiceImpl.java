@@ -6,6 +6,7 @@ import com.eservice.api.model.contact_form.ContactFormDetail;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.service.MachineOrderService;
+import com.eservice.api.service.common.CommonService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,8 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
     @Resource
     private ContactFormServiceImpl contactFormService;
 
+    @Resource
+    private CommonService commonService;
     public MachineOrderDetail getOrderAllDetail(Integer id) {
         return machineOrderMapper.getOrderAllDetail(id);
     }
@@ -133,6 +136,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
 
     public void saveAndGetID(MachineOrder machineOrder) {
         machineOrderMapper.saveAndGetID(machineOrder);
+        commonService.createDesignDepInfo(machineOrder);
     }
 
     public MachineOrder searchOrderIdByOrderLoadingListId(Integer ollId) {

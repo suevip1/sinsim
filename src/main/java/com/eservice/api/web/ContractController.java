@@ -11,6 +11,7 @@ import com.eservice.api.model.contract.Equipment;
 import com.eservice.api.model.contract.MachineOrderWrapper;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
+import com.eservice.api.model.design_dep_info.DesignDepInfo;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
@@ -83,12 +84,11 @@ public class ContractController {
     @Resource
     private MachineServiceImpl machineService;
     @Resource
-    private UserServiceImpl userService;
-    @Resource
     private RoleServiceImpl roleService;
     @Resource
     private MqttMessageHelper mqttMessageHelper;
 
+    @Resource DesignDepInfoServiceImpl designDepInfoService;
     @Value("${contract_excel_output_dir}")
     private String contractOutputDir;
     private Logger logger = Logger.getLogger(ContractController.class);
@@ -132,6 +132,7 @@ public class ContractController {
                 orderTemp.setOrderDetailId(temp.getId());
                 orderTemp.setContractId(contractId);
                 orderTemp.setStatus(Constant.ORDER_INITIAL);
+
                 machineOrderService.saveAndGetID(orderTemp);
 
                 //初始化需求单审核记录
@@ -1811,5 +1812,16 @@ public class ContractController {
                 return ResultGenerator.genFailResult("合同编号已存在！");
             }
         }
+    }
+
+    /**
+     * 根据订单号 返回合同
+     * @param orderNumber
+     * @return
+     */
+    @PostMapping("/getContractByOrderNumber")
+    public Result getContractByOrderNumber(@RequestParam String orderNumber) {
+        Contract contract = contractService.getContractByOrderNumber(orderNumber);
+        return ResultGenerator.genSuccessResult(contract);
     }
 }

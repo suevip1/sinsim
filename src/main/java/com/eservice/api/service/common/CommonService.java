@@ -23,6 +23,7 @@ import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
+import com.eservice.api.model.design_dep_info.DesignDepInfo;
 import com.eservice.api.model.install_group.InstallGroup;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
@@ -85,6 +86,11 @@ public class CommonService {
 
     @Resource
     private CommonService commonService;
+
+    @Resource
+    private ContractServiceImpl contractService;
+    @Resource
+    private DesignDepInfoServiceImpl designDepInfoService;
 
     Logger logger = Logger.getLogger(CommonService.class);
 
@@ -839,5 +845,28 @@ public class CommonService {
                 }
             }
         }
+    }
+
+    /**
+     *  在生成订单时，自动生成设计单
+     * @param machineOrder
+     */
+    public void createDesignDepInfo(MachineOrder machineOrder){
+        DesignDepInfo designDepInfo = new DesignDepInfo();
+        designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_UNPLANNED);
+        designDepInfo.setOrderNum(machineOrder.getOrderNum());
+        designDepInfo.setSaleman(machineOrder.getSellman());
+        Contract contract1 = contractService.getContractByOrderNumber(machineOrder.getOrderNum());
+        if(contract1 != null) {
+            designDepInfo.setGuestName(contract1.getCustomerName());
+        }
+        designDepInfo.setCountry(machineOrder.getCountry());
+        designDepInfo.setMachineNum(machineOrder.getMachineNum());
+        designDepInfo.setOrderSignStatus(Constant.ORDER_INITIAL);
+        designDepInfo.setOrderId(machineOrder.getId());
+        designDepInfo.setCreatedDate(new Date());
+        designDepInfo.setUpdatedDate(new Date());
+        designDepInfoService.save(designDepInfo);
+        logger.info("根据订单" + machineOrder.getOrderNum()+ "自动创建设计单");
     }
 }

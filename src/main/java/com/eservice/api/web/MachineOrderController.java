@@ -10,6 +10,7 @@ import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.order_detail.OrderDetail;
+import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.eservice.api.service.impl.MachineServiceImpl;
@@ -64,6 +65,9 @@ public class MachineOrderController {
     @Resource
     private MachineServiceImpl machineService;
 
+    @Resource
+    private CommonService commonService;
+
     private Logger logger = Logger.getLogger(MachineOrderController.class);
     /*
         为保证 MachineOrder表和OrderDetail表的一致性，MachineOrder表和OrderDetail表，都在这里统一完成
@@ -99,7 +103,11 @@ public class MachineOrderController {
 
         //orderDetail里返回的id 就是machineOrder里的order_detail_id
         machineOrder1.setOrderDetailId(savedOrderDetailID);
-        machineOrderService.save(machineOrder1);
+        machineOrderService.saveAndGetID(machineOrder1);
+        /**
+         * 在产生订单时，自动生成设计单
+         */
+        commonService.createDesignDepInfo(machineOrder1);
 
         return ResultGenerator.genSuccessResult();
     }
