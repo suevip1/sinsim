@@ -893,11 +893,11 @@ public class CommonService {
                 null,
                 null,
                 null);
-        if(designDepInfoDetailList !=null) {
+        if(designDepInfoDetailList !=null && designDepInfoDetailList.size() !=0) {
             designDepInfoDetailList.get(0).setOrderSignStatus(machineOrder.getStatus());
             designDepInfoService.update(designDepInfoDetailList.get(0));
         } else {
-            logger.warn("根据该订单号找不到设计单，可能是旧的订单");
+            logger.warn("根据该订单号找不到设计单，是没有设计单之前的旧订单");
         }
     }
 }
