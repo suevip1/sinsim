@@ -749,6 +749,9 @@ public class ContactFormController {
             HSSFCell numCell = workSheet.getRow(1).getCell((short) 1);// 表单编号
             numCell.setCellValue(new HSSFRichTextString(cf.getContactForm().getNum()));
 
+            numCell = workSheet.getRow(1).getCell((short) 6);// 订单号
+            numCell.setCellValue(new HSSFRichTextString(cf.getContactForm().getOrderNum()));
+
             HSSFCell dpartCell = workSheet.getRow(2).getCell((short) 2);// 提出部门
             dpartCell.setCellValue(cf.getContactForm().getApplicantDepartment());
 

@@ -37,12 +37,12 @@
       <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
       <result column="applicant_department" jdbcType="VARCHAR" property="applicantDepartment" />
       <result column="applicant_person" jdbcType="VARCHAR" property="applicantPerson" />
-      <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+      <result column="lxd_create_date" jdbcType="TIMESTAMP" property="createDate" />
       <result column="hope_date" jdbcType="TIMESTAMP" property="hopeDate" />
       <result column="contact_title" jdbcType="VARCHAR" property="contactTitle" />
       <result column="contact_content" jdbcType="VARCHAR" property="contactContent" />
-      <result column="status" jdbcType="VARCHAR" property="status" />
-      <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+      <result column="lxd_status" jdbcType="VARCHAR" property="status" />
+      <result column="lxd_update_date" jdbcType="TIMESTAMP" property="updateDate" />
 
       <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
       <result column="contact_content_else" jdbcType="VARCHAR" property="contactContentElse" />
@@ -128,7 +128,16 @@
     SELECT
       cf.*,
       cff.id as id_fulfill,
-      cff.*
+      cff.*,
+--       cff.create_date as fullfill_create_date,
+--       cff.update_date as fullfill_update_date,
+--       cff.status as fullfill_status
+
+      cf.create_date as lxd_create_date,
+      cf.update_date as lxd_update_date,
+      cf.status as lxd_status,
+
+      cs.current_step
       from contact_form cf
     left join contact_sign cs on cs.contact_form_id = cf.id
     LEFT JOIN contact_fulfill cff on cff.contact_form_id = cf.id

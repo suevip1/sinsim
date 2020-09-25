@@ -596,7 +596,7 @@ public class CommonService {
 
     //执行curl命令行命令
     public String execCurl(String[] cmds) {
-        logger.info(cmds);
+        logger.info("执行curl" );
         ProcessBuilder process = new ProcessBuilder(cmds);
         Process p;
         try {
@@ -644,6 +644,7 @@ public class CommonService {
             lxdNumX = URLEncoder.encode(lxdNumX, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            logger.warn(e.getMessage());
         }
         String url = sinsimPocess_call_aftersale
                 + "for/sinimproccess/sendRemind";
