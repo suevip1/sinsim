@@ -208,7 +208,13 @@ public class ContractController {
                 if (orderSign != null) {
                     orderSignService.deleteById(orderSign.getId());
                 }
-                //删除需求单
+                //删除需求单  ....
+                /**
+                 *  同时要删除对应的设计单.
+                 *  比如，在更新订单时，改了订单号，旧的订单会被删除，此时如果没有删除对应设计单，会无法删除订单。
+                 *  后来改为订单审核完成才生成设计单，上述情形应该不存在了。
+                 */
+                deleteDDIbyOrder(item);
                 machineOrderService.deleteById(item.getId());
                 //删除detail
                 orderDetailService.deleteById(item.getOrderDetailId());
@@ -270,6 +276,36 @@ public class ContractController {
         return ResultGenerator.genSuccessResult();
     }
 
+    /**
+     * 删除了该订单 对应的设计单
+     * @param machineOrderDetail
+     */
+    private void deleteDDIbyOrder(MachineOrderDetail machineOrderDetail){
+        List<DesignDepInfoDetail> designDepInfoDetailList = designDepInfoService.selectDesignDepInfo(
+                machineOrderDetail.getOrderNum(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        if(designDepInfoDetailList !=null && designDepInfoDetailList.size() !=0) {
+            logger.info("syncMachineOrderStatusInDesignDepInfo,designDepInfoDetailList.size():" + designDepInfoDetailList.size());
+            designDepInfoDetailList.get(0).setOrderSignStatus(machineOrderDetail.getStatus());
+            logger.info("designDepInfoDetailList.get(0).getOrderNum()" + designDepInfoDetailList.get(0).getOrderNum());
+            logger.info("designDepInfoDetailList.get(0).getId()" + designDepInfoDetailList.get(0).getId());
+            logger.info("designDepInfoDetailList.get(0).getOrderId()" + designDepInfoDetailList.get(0).getOrderId());
+            designDepInfoService.deleteById(designDepInfoDetailList.get(0).getId());
+            logger.info("删除了该订单" + machineOrderDetail.getOrderNum() + " 对应的设计单");
+        } else {
+            logger.warn("删除该订单 " + machineOrderDetail.getOrderNum() + "  对应的设计单，根据该订单号找不到设计单，设计单还没生成，或是没有设计单之前的旧订单");
+        }
+
+
+    }
     /**
      * 联系单审核通过才允许改单，
      * 改单后新生成的订单不用再审批，因为联系单已经审核过了。

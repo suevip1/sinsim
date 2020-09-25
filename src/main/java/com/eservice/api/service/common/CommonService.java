@@ -858,6 +858,9 @@ public class CommonService {
         DesignDepInfo designDepInfo = new DesignDepInfo();
         designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_UNPLANNED);
         designDepInfo.setOrderNum(machineOrder.getOrderNum());
+        if(machineOrder.getOrderNum() == null){
+            logger.error(machineOrder.getId() + "订单号为null");
+        }
         designDepInfo.setSaleman(machineOrder.getSellman());
         Contract contract1 = contractService.getContractByOrderNumber(machineOrder.getOrderNum());
         if(contract1 != null) {
@@ -874,7 +877,7 @@ public class CommonService {
         designDepInfo.setCreatedDate(new Date());
         designDepInfo.setUpdatedDate(new Date());
         designDepInfoService.save(designDepInfo);
-        logger.info("根据订单" + machineOrder.getOrderNum()+ "自动创建设计单");
+        logger.info("根据订单" + machineOrder.getOrderNum()+ " 自动创建设计单");
     }
 
     /**
@@ -895,10 +898,15 @@ public class CommonService {
                 null,
                 null);
         if(designDepInfoDetailList !=null && designDepInfoDetailList.size() !=0) {
+            logger.info("syncMachineOrderStatusInDesignDepInfo,designDepInfoDetailList.size():" + designDepInfoDetailList.size());
             designDepInfoDetailList.get(0).setOrderSignStatus(machineOrder.getStatus());
+            logger.info("designDepInfoDetailList.get(0).getOrderNum()" + designDepInfoDetailList.get(0).getOrderNum());
+            logger.info("designDepInfoDetailList.get(0).getId()" + designDepInfoDetailList.get(0).getId());
+            logger.info("designDepInfoDetailList.get(0).getOrderId()" + designDepInfoDetailList.get(0).getOrderId());
             designDepInfoService.update(designDepInfoDetailList.get(0));
         } else {
-            logger.warn("根据该订单号找不到设计单，是没有设计单之前的旧订单");
+            logger.warn("[syncMachineOrderStatusInDesignDepInfo]" + machineOrder.getOrderNum()
+                    + ":根据该订单号找不到设计单，设计单还没生成，或是没有设计单之前的旧订单！");
         }
     }
 }
