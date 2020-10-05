@@ -42,7 +42,8 @@
       <result column="contact_title" jdbcType="VARCHAR" property="contactTitle" />
       <result column="contact_content" jdbcType="VARCHAR" property="contactContent" />
       <result column="lxd_status" jdbcType="VARCHAR" property="status" />
-      <result column="lxd_update_date" jdbcType="TIMESTAMP" property="updateDate" />
+      <!-- 联系单的更新时间-->
+      <result column="cs_update_time" jdbcType="TIMESTAMP" property="updateDate" />
 
       <result column="attached_file" jdbcType="VARCHAR" property="attachedFile" />
       <result column="contact_content_else" jdbcType="VARCHAR" property="contactContentElse" />
@@ -137,7 +138,8 @@
       cf.update_date as lxd_update_date,
       cf.status as lxd_status,
 
-      cs.current_step
+      cs.current_step,
+      cs.update_time as cs_update_time
       from contact_form cf
     left join contact_sign cs on cs.contact_form_id = cf.id
     LEFT JOIN contact_fulfill cff on cff.contact_form_id = cf.id
