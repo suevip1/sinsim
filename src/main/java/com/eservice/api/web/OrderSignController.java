@@ -144,6 +144,10 @@ public class OrderSignController {
                 if(currentStep.equals(Constant.SIGN_FINISHED)) {
                     machineOrder.setStatus(Constant.ORDER_CHECKING_FINISHED);
                     commonService.createMachineByOrderId(machineOrder);
+                    /**
+                     * 订单审核完成时，创建设计单
+                     */
+                    commonService.createDesignDepInfo(machineOrder);
                 }
             }
             machineOrderService.update(machineOrder);

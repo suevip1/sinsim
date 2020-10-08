@@ -136,7 +136,13 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
 
     public void saveAndGetID(MachineOrder machineOrder) {
         machineOrderMapper.saveAndGetID(machineOrder);
-        commonService.createDesignDepInfo(machineOrder);
+ 
+        /**
+         * 在创建订单时就创建设计单，会有问题，比如创建订单时，改动订单号等，会带来要删除旧设计单并新建新的设计单等相关问题
+         * 所以改为 订单审批完成时再创建设计单。 这样简化逻辑。
+         */
+//        commonService.createDesignDepInfo(machineOrder);
+ 
     }
 
     public MachineOrder searchOrderIdByOrderLoadingListId(Integer ollId) {

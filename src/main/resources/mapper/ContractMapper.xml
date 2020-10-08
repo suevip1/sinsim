@@ -193,7 +193,7 @@
         FROM
             contract c
         JOIN machine_order mo ON mo.contract_id = c.id
-        WHERE
-            mo.order_num = #{orderNumber}
+        WHERE 
+            mo.order_num = #{orderNumber} and valid='1' 
     </select>
 </mapper>
