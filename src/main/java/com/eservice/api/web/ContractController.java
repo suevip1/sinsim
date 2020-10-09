@@ -365,7 +365,6 @@ public class ContractController {
                 machineOrder.setCreateTime(new Date());
                 machineOrderService.saveAndGetID(machineOrder);
                 ///设计单里的状态 也要改 -->改的地方多，统一放在定时器里去更新状态-->废弃，因为订单可能很多
-//                commonService.syncMachineOrderStatusInDesignDepInfo(machineOrder);
 
                 newMachineOrderId = machineOrder.getId();
 

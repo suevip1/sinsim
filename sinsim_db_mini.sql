@@ -132,6 +132,7 @@ CREATE TABLE `contact_form` (
   `attached_file` varchar(255) DEFAULT NULL COMMENT '附件，存放路径',
   `attached_during_sign` varchar(255) DEFAULT NULL,
   `attached_during_sign_man` varchar(255) DEFAULT NULL,
+  `designated_sale_manager` varchar(10) DEFAULT NULL COMMENT '如果有销售部的签核，可以指定哪个销售经理',
   PRIMARY KEY (`id`),
   KEY `fk_orderId` (`order_num`(191)) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4;

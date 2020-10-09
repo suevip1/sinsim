@@ -902,11 +902,7 @@ public class CommonService {
                 null);
  
         if(designDepInfoDetailList !=null && designDepInfoDetailList.size() !=0) {
-            logger.info("syncMachineOrderStatusInDesignDepInfo,designDepInfoDetailList.size():" + designDepInfoDetailList.size());
             designDepInfoDetailList.get(0).setOrderSignStatus(machineOrder.getStatus());
-            logger.info("designDepInfoDetailList.get(0).getOrderNum()" + designDepInfoDetailList.get(0).getOrderNum());
-            logger.info("designDepInfoDetailList.get(0).getId()" + designDepInfoDetailList.get(0).getId());
-            logger.info("designDepInfoDetailList.get(0).getOrderId()" + designDepInfoDetailList.get(0).getOrderId());
             designDepInfoService.update(designDepInfoDetailList.get(0));
         } else {
             logger.warn("[syncMachineOrderStatusInDesignDepInfo]" + machineOrder.getOrderNum()

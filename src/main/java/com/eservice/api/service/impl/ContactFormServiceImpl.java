@@ -53,6 +53,7 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
             String queryStartTime,
             String queryFinishTime,
             String currentStep,
+            String designatedSaleManager,
             Boolean isFuzzy){
         return contactFormMapper.selectContacts(
                 contactNum,
@@ -66,6 +67,7 @@ public class ContactFormServiceImpl extends AbstractService<ContactForm> impleme
                 queryStartTime,
                 queryFinishTime,
                 currentStep,
+                designatedSaleManager,
                 isFuzzy);
     }
 

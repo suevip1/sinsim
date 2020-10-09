@@ -21,6 +21,7 @@ public interface ContactFormMapper extends Mapper<ContactForm> {
             @Param("queryStartTime")String queryStartTime,
             @Param("queryFinishTime")String queryFinishTime,
             @Param("currentStep")String currentStep,
+            @Param("designatedSaleManager")String designatedSaleManager,
             @Param("isFuzzy")Boolean isFuzzy);
     void saveAndGetID(  ContactForm contactForm);
     List<ContactForm> getLxdLastSerialNumber( @Param("year")String year,

@@ -322,4 +322,15 @@ public class ContactForm {
     public void setAttachedDuringSignMan(String attachedDuringSignMan) {
         this.attachedDuringSignMan = attachedDuringSignMan;
     }
+
+    // 指定销售部经理去签核
+    private String designatedSaleManager;
+
+    public String getDesignatedSaleManager() {
+        return designatedSaleManager;
+    }
+
+    public void setDesignatedSaleManager(String designatedSaleManager) {
+        this.designatedSaleManager = designatedSaleManager;
+    }
 }

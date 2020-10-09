@@ -524,6 +524,7 @@ public class ContactFormController {
                                  String queryStartTime,
                                  String queryFinishTime,
                                  String currentStep,
+                                 String designatedSaleManager, //指定的要去签核的销售部经理
                                  @RequestParam(defaultValue = "true") Boolean isFuzzy) {
         PageHelper.startPage(page, size);
 
@@ -554,6 +555,7 @@ public class ContactFormController {
                 queryStartTime,
                 queryFinishTime,
                 currentStep,
+                designatedSaleManager,
                 isFuzzy);
 
         PageInfo pageInfo = new PageInfo(list);
@@ -612,6 +614,7 @@ public class ContactFormController {
                             null,
                             null,
                             null,// 可能有多个联系单，所以不能用 Constant.STR_LXD_CHECKING_FINISHED,
+                            null,
                             null,
                             null,
                             null,
