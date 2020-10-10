@@ -57,13 +57,13 @@
       <association property="contactFulfill" javaType="com.eservice.api.model.contact_fulfill.ContactFulfill">
           <id column="id_fulfill" jdbcType="INTEGER" property="id" />
           <result column="contact_form_id" jdbcType="INTEGER" property="contactFormId" />
-          <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-          <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
-          <result column="hope_date" jdbcType="TIMESTAMP" property="hopeDate" />
+          <result column="fullfill_create_date" jdbcType="TIMESTAMP" property="createDate" />
+          <result column="fullfill_update_date" jdbcType="TIMESTAMP" property="updateDate" />
+          <result column="fullfill_hope_date" jdbcType="TIMESTAMP" property="hopeDate" />
           <result column="fulfill_man" jdbcType="VARCHAR" property="fulfillMan" />
           <result column="message" jdbcType="VARCHAR" property="message" />
           <result column="feedback" jdbcType="VARCHAR" property="feedback" />
-          <result column="status" jdbcType="VARCHAR" property="status" />
+          <result column="fullfill_status" jdbcType="VARCHAR" property="status" />
           <result column="filfull_success" jdbcType="VARCHAR" property="filfullSuccess" />
       </association>
 
@@ -131,11 +131,17 @@
   <select id="selectContacts" resultMap="ContactFormDetail">
     SELECT
       cf.*,
-      cff.id as id_fulfill,
-      cff.*,
---       cff.create_date as fullfill_create_date,
---       cff.update_date as fullfill_update_date,
---       cff.status as fullfill_status
+--       cff.*,
+      cff.id AS id_fulfill,
+      cff.contact_form_id,
+      cff.create_date as fullfill_create_date ,
+      cff.hope_date as fullfill_hope_date,
+      cff.update_date as fullfill_update_date,
+      cff.fulfill_man,
+      cff.message,
+      cff.feedback,
+      cff.`status` as fullfill_status,
+      cff.filfull_success,
 
       cf.create_date as lxd_create_date,
       cf.update_date as lxd_update_date,
@@ -191,12 +197,17 @@
       <if test="strStatus!=null and strStatus != '' ">
           and cf.`status` = #{strStatus}
       </if>
---
+--   但是所有人 都要看 自己发起的联系单。并且向以前兼容旧的联系单，旧的联系单没有指定 designatedSaleManager, 这些联系单要可见。
       <if test="designatedSaleManager!=null and designatedSaleManager != '' ">
-          and cf.designated_sale_manager = #{designatedSaleManager}
+          and (cf.designated_sale_manager = #{designatedSaleManager}
+          || cf.applicant_person = #{designatedSaleManager}
+          || cf.designated_sale_manager = ''
+          || cf.designated_sale_manager is null )
       </if>
 
-      ORDER BY cs.update_time desc, cf.update_date desc, cf.create_date desc
+--        ORDER BY cs.update_time desc, cf.update_date desc, cf.create_date desc
+      ORDER BY cs_update_time desc, lxd_update_date desc, lxd_create_date desc
+
   </select>
   
   <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.contact_form.ContactForm"

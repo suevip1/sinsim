@@ -507,6 +507,8 @@ public class ContactFormController {
      * @param queryStartTime
      * @param queryFinishTime
      * @Param currentStep -审核的当前步骤
+     * @Param designatedSaleManager -- 指定的要去签核的销售部经理, 但是所有人 都要看 自己发起的联系单.
+     *                                  即，查询 指定的销售部经理为 designatedSaleManager的订单，以及 designatedSaleManager 自己发起的订单
      * @param isFuzzy
      * @return
      */
@@ -524,7 +526,7 @@ public class ContactFormController {
                                  String queryStartTime,
                                  String queryFinishTime,
                                  String currentStep,
-                                 String designatedSaleManager, //指定的要去签核的销售部经理
+                                 String designatedSaleManager, //指定的要去签核的销售部经理 但是所有人 都要看 自己发起的联系单
                                  @RequestParam(defaultValue = "true") Boolean isFuzzy) {
         PageHelper.startPage(page, size);
 
