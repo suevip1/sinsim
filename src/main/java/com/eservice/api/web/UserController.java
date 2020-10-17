@@ -239,4 +239,19 @@ public class UserController {
         return ResultGenerator.genSuccessResult(result);
     }
 
+    /**
+     *  获取所有具有 某种 权限的账号
+     * @param thatPermit， 比如 /home/designDep/optimize 是优化单权限
+     * @return
+     */
+    @PostMapping("/getUsersHaveThatPermit")
+    public Result getUsersHaveOptimizePermit(@RequestParam(defaultValue = "0") Integer page,
+                                                @RequestParam(defaultValue = "0") Integer size,
+                                                @RequestParam String thatPermit) {
+        PageHelper.startPage(page, size);
+        List<User> list = userService.getUsersHaveOptimizePermit(thatPermit);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 }

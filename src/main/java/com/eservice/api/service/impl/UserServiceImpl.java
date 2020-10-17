@@ -42,4 +42,7 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     public List<UserDetail> selectAllInstallGroupByUserId(Integer id){
         return userMapper.selectAllInstallGroupByUserId(id);
     }
+    public List<User> getUsersHaveOptimizePermit(String thatPermit){
+        return userMapper.getUsersHaveOptimizePermit(thatPermit);
+    }
 }

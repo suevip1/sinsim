@@ -16,4 +16,5 @@ public interface UserMapper extends Mapper<User> {
                                   @Param("groupId")Integer groupId, @Param("valid")Integer valid);
     User selectByAccount(@Param("account") String account);
     List<UserDetail> selectAllInstallGroupByUserId(@Param("id") Integer id);
+    List<User> getUsersHaveOptimizePermit(@Param("thatPermit")String thatPermit);
 }
