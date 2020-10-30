@@ -850,34 +850,44 @@ public class CommonService {
     }
 
     /**
-     *  在生成订单、改单、拆单 时，自动生成设计单
+     *  在生成订单、改单、拆单 时，自动生成设计单 ---签核完成时。
      *
      * @param machineOrder
      */
-    public void createDesignDepInfo(MachineOrder machineOrder){
+    public void createDesignDepInfo(MachineOrder machineOrder) {
         DesignDepInfo designDepInfo = new DesignDepInfo();
         designDepInfo.setDesignStatus(Constant.STR_DESIGN_STATUS_UNPLANNED);
         designDepInfo.setOrderNum(machineOrder.getOrderNum());
-        if(machineOrder.getOrderNum() == null){
+        if (machineOrder.getOrderNum() == null) {
             logger.error(machineOrder.getId() + "订单号为null");
         }
+
         designDepInfo.setSaleman(machineOrder.getSellman());
-        Contract contract1 = contractService.getContractByOrderNumber(machineOrder.getOrderNum());
-        if(contract1 != null) {
-            designDepInfo.setGuestName(contract1.getCustomerName());
-        }
-        designDepInfo.setCountry(machineOrder.getCountry());
-        designDepInfo.setMachineNum(machineOrder.getMachineNum());
-        /**
-         * 不仅仅是初始化状态，因为还有改单，拆单对应的状态
-         */
+        try {
+            List<Contract> list = contractService.getContractByOrderNumber(machineOrder.getOrderNum());
+            if(list.size() >1){
+                logger.error(machineOrder.getOrderNum() + ":该编号存在多个合同" + "自动创建设计单 失败");
+                return;
+            }
+            Contract contract1 = list.get(0);
+            if (contract1 != null) {
+                designDepInfo.setGuestName(contract1.getCustomerName());
+            }
+            designDepInfo.setCountry(machineOrder.getCountry());
+            designDepInfo.setMachineNum(machineOrder.getMachineNum());
+            /**
+             * 不仅仅是初始化状态，因为还有改单，拆单对应的状态
+             */
 //        designDepInfo.setOrderSignStatus(Constant.ORDER_INITIAL);
-        designDepInfo.setOrderSignStatus(machineOrder.getStatus()); //注意这里是订单状态，不是订单签核状态
-        designDepInfo.setOrderId(machineOrder.getId());
-        designDepInfo.setCreatedDate(new Date());
-        designDepInfo.setUpdatedDate(new Date());
-        designDepInfoService.save(designDepInfo);
-        logger.info("根据订单" + machineOrder.getOrderNum()+ " 自动创建设计单");
+            designDepInfo.setOrderSignStatus(machineOrder.getStatus()); //注意这里是订单状态，不是订单签核状态
+            designDepInfo.setOrderId(machineOrder.getId());
+            designDepInfo.setCreatedDate(new Date());
+            designDepInfo.setUpdatedDate(new Date());
+            designDepInfoService.save(designDepInfo);
+            logger.info("根据订单" + machineOrder.getOrderNum() + " 自动创建设计单");
+        } catch (Exception e) {
+            logger.error("自动创建设计单 失败 " + e.getMessage());
+        }
     }
 
     /**

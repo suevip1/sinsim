@@ -66,8 +66,9 @@ public class ContractServiceImpl extends AbstractService<Contract> implements Co
         return contractMapper.selectAllCustomer(name);
     }
 	
-    public Contract getContractByOrderNumber(String orderNumber){
-        return contractMapper.getContractByOrderNumber(orderNumber);
+    public   List<Contract> getContractByOrderNumber(String orderNumber){
+        List<Contract> list = contractMapper.getContractByOrderNumber(orderNumber);
+        return  list;
     }
 
 }

@@ -156,7 +156,7 @@ public class UserController {
 
         User user = userService.selectByAccount(account);
         if(user == null){
-            return ResultGenerator.genFailResult(account + " 不存在！");
+            return ResultGenerator.genFailResult(account + " 不存在该账号！");
         } else if(user.getValid() == Constant.INVALID){
             return ResultGenerator.genFailResult("禁止登录，" + account + " 已设为离职");
         }
