@@ -1263,7 +1263,20 @@ public class ContractController {
                 cell.setCellValue(new HSSFRichTextString("意见"));
                 //4.签核意见
                 cell = sheet1.getRow(focusLine++).getCell((short) 4);
-                cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
+                if(displayPrice) {
+                    cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
+                } else {
+                    /**
+                     * 财务(财务会计，财务经理，成本核算员)的意见，仅特定人员可见
+                     */
+                    if (// signContentItemList.get(k).getRoleId().equals(7) //销售部经理
+                        //    || signContentItemList.get(k).getRoleId().equals(9)     //销售员
+                            signContentItemList.get(k).getRoleId().equals(13)    //成本核算员
+                            || signContentItemList.get(k).getRoleId().equals(14)    //财务经理
+                            || signContentItemList.get(k).getRoleId().equals(15) )  //财务会计
+
+                        cell.setCellValue(new HSSFRichTextString("/"));
+                }
 
             }
             //删除最后多余一行

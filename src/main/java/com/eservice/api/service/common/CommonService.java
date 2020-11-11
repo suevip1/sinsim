@@ -580,12 +580,12 @@ public class CommonService {
         User user = userService.selectByAccount(account);
         if (user != null) {
             Integer roleId = user.getRoleId();
-            if ((6 == roleId)
-                    || (7 == roleId)
-                    || (9 == roleId)
-                    || (13 == roleId)
-                    || (14 == roleId)
-                    || (15 == roleId)) {
+            if ((6 == roleId)           //总经理
+                    || (7 == roleId)    //销售部经理
+                    || (9 == roleId)    //销售员
+                    || (13 == roleId)   //成本核算员
+                    || (14 == roleId)   //财务经理
+                    || (15 == roleId)) {//财务会计
                 displayPrice = true;
             }
         } else {
