@@ -437,7 +437,7 @@ public class MachineOrderController {
                     sheet1.getRow(r).getCell(19).setCellValue(mod.getPackageMethod());//包装方式
                     sheet1.getRow(r).getCell(20).setCellValue("");//机架长度
 
-                    sheet1.getRow(r).getCell(21).setCellValue(od.getAxleNeedle());//针数
+                    sheet1.getRow(r).getCell(21).setCellValue(mod.getNeedleNum());//针数
                     sheet1.getRow(r).getCell(22).setCellValue(mod.getHeadNum());//头数
                     sheet1.getRow(r).getCell(23).setCellValue(mod.getHeadDistance());//头距
                     sheet1.getRow(r).getCell(24).setCellValue(mod.getxDistance());//X行程
