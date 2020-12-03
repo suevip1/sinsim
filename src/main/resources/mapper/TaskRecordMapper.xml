@@ -141,6 +141,11 @@
             <result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
             <result column="all_urgent" jdbcType="TINYINT" property="allUrgent"/>
 
+            <result column="order_type" jdbcType="VARCHAR" property="orderType"/>
+            <result column="gross_profit" jdbcType="VARCHAR" property="grossProfit"/>
+            <result column="business_expense" jdbcType="VARCHAR" property="businessExpense"/>
+            <result column="warranty_fee" jdbcType="VARCHAR" property="warrantyFee"/>
+
         </association>
         <association javaType="com.eservice.api.model.order_loading_list.OrderLoadingList" property="orderLoadingList">
             <id column="order_loading_list_id" property="id"/>

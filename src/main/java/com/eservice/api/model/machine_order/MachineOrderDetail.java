@@ -881,6 +881,49 @@ public class MachineOrderDetail {
         this.allUrgent = allUrgent;
     }
 
+    //订单分类：1.直销 2.经销商 3.代理商
+    private String orderType;
+
+    //毛利率：百分比数字
+    private String grossProfit;
+
+    //业务费
+    private String businessExpense;
+
+    //保修费
+    private String warrantyFee;
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
+
+    public String getGrossProfit() {
+        return grossProfit;
+    }
+
+    public void setGrossProfit(String grossProfit) {
+        this.grossProfit = grossProfit;
+    }
+
+    public String getBusinessExpense() {
+        return businessExpense;
+    }
+
+    public void setBusinessExpense(String businessExpense) {
+        this.businessExpense = businessExpense;
+    }
+
+    public String getWarrantyFee() {
+        return warrantyFee;
+    }
+
+    public void setWarrantyFee(String warrantyFee) {
+        this.warrantyFee = warrantyFee;
+    }
     /**
     获取订单详情
      */

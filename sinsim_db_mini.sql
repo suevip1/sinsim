@@ -125,14 +125,30 @@ CREATE TABLE `contact_form` (
   `create_date` datetime NOT NULL COMMENT '申请日期',
   `hope_date` datetime DEFAULT NULL COMMENT '希望完成的日期',
   `contact_title` varchar(255) NOT NULL COMMENT '联络主题、变更理由/主题',
-  `contact_content` varchar(255) DEFAULT NULL COMMENT '联络内容',
+  `contact_content` varchar(500) DEFAULT NULL COMMENT '联络内容',
   `contact_content_else` varchar(255) DEFAULT NULL COMMENT '“其他变更，需说明”时的输入',
   `status` varchar(255) DEFAULT NULL,
   `update_date` datetime DEFAULT NULL,
   `attached_file` varchar(255) DEFAULT NULL COMMENT '附件，存放路径',
+  `attached_during_sign` varchar(255) DEFAULT NULL,
+  `attached_during_sign_man` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_orderId` (`order_num`(191)) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `contact_fulfill`;
+CREATE TABLE `contact_fulfill` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '落实单',
+  `contact_form_id` int(10) unsigned DEFAULT NULL COMMENT '联系单的ID',
+  `create_date` datetime DEFAULT NULL COMMENT '落实单的创建时间',
+  `update_date` datetime DEFAULT NULL COMMENT '落实单的更新时间',
+  `hope_date` datetime DEFAULT NULL COMMENT '希望完成日期',
+  `fulfill_man` varchar(255) DEFAULT NULL COMMENT '指定的落实人',
+  `message` varchar(500) DEFAULT NULL COMMENT '意见建议信息',
+  `feedback` varchar(500) DEFAULT NULL COMMENT '落实人的反馈信息',
+  `status` varchar(20) DEFAULT NULL COMMENT '落实状态: 初始化,未指定落实人员，落实进行中，落实完成',
+  `filfull_success` tinyint(4) DEFAULT NULL COMMENT '0: 未成功； 1：成功',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=279 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for contact_sign
@@ -217,6 +233,53 @@ CREATE TABLE `data_config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据配置表, 比如用于合同订单里的下拉选项的配置。';
 
 -- ----------------------------
+DROP TABLE IF EXISTS `design_dep_info`;
+CREATE TABLE `design_dep_info` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `order_id` int(10) unsigned NOT NULL,
+  `order_num` varchar(255) NOT NULL COMMENT '订单号， 可读性强，注意不是唯一，比如废弃的订单号',
+  `saleman` varchar(255) NOT NULL,
+  `guest_name` varchar(255) NOT NULL COMMENT '客户名称',
+  `country` varchar(255) NOT NULL,
+  `machine_num` int(11) NOT NULL COMMENT '机器数量',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注信息,比如关于机型的改进点，等等。方便后续查询。',
+  `order_sign_status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '订单的审核状态',
+  `designer` varchar(255) DEFAULT NULL COMMENT '安排的设计人员',
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  `machine_spec` varchar(255) DEFAULT NULL COMMENT '设备规格',
+  `keywords` varchar(255) DEFAULT NULL COMMENT '关键字',
+  `loading_file_done` tinyint(1) DEFAULT '0' COMMENT '人工选择装车单是否完成',
+  `drawing_file_done` tinyint(1) DEFAULT '0' COMMENT '人工选择图纸是否完成',
+  `loading_files` varchar(255) DEFAULT NULL COMMENT ' 装车单 附件文件，空表示没有完成',
+  `drawing_files` varchar(255) DEFAULT NULL COMMENT '机架图纸的 附件文件，空表示没有完成',
+  `drawing_man` varchar(20) DEFAULT NULL COMMENT '图纸的更新人',
+  `loading_man` varchar(20) DEFAULT NULL COMMENT '装车单的更新人',
+  `loading_update_time` datetime DEFAULT NULL COMMENT '装车单的更新时间',
+  `drawing_update_time` datetime DEFAULT NULL COMMENT '图纸的更新时间',
+  `hole_tube_required` tinyint(1) DEFAULT NULL COMMENT '点孔、方管 是否需要，0不需要1需要',
+  `hole_done` tinyint(1) DEFAULT '0' COMMENT 'hole 是否完成',
+  `tube_done` tinyint(1) DEFAULT '0' COMMENT 'tube 是否完成',
+  `hole_files` varchar(255) DEFAULT NULL COMMENT '点孔的附件文件，空表示没有完成',
+  `tube_files` varchar(255) DEFAULT NULL COMMENT '方管的附件文件，空表示没有完成',
+  `hole_man` varchar(20) DEFAULT NULL COMMENT '点孔的更新人',
+  `tube_man` varchar(20) DEFAULT NULL COMMENT '方管的更新人',
+  `hole_update_time` datetime DEFAULT NULL,
+  `tube_update_time` datetime DEFAULT NULL,
+  `bom_required` tinyint(1) DEFAULT NULL COMMENT 'bom表文件,选是和否就好，不需要附件。',
+  `bom_done` tinyint(1) DEFAULT '0',
+  `bom_man` varchar(20) DEFAULT NULL COMMENT 'bom更新人',
+  `bom_update_time` datetime DEFAULT NULL,
+  `cover_required` tinyint(1) DEFAULT NULL COMMENT '是否需要罩盖，0不需要，1需要',
+  `cover_done` tinyint(1) DEFAULT '0',
+  `cover_man` varchar(20) DEFAULT NULL COMMENT '罩盖更新人',
+  `cover_update_time` datetime DEFAULT NULL,
+  `cover_file` varchar(255) DEFAULT NULL COMMENT '罩盖附件',
+  `design_status` varchar(255) DEFAULT '未计划' COMMENT '未计划  设计中   完成（全部完成）/改单',
+  PRIMARY KEY (`id`),
+  KEY `fkid` (`order_id`),
+  CONSTRAINT `fkid` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=254 DEFAULT CHARSET=utf8mb4;
 -- Table structure for `device`
 -- ----------------------------
 DROP TABLE IF EXISTS `device`;
@@ -420,6 +483,10 @@ CREATE TABLE `machine_order` (
   `update_time` datetime DEFAULT NULL COMMENT '订单信息更新时间',
   `end_time` datetime DEFAULT NULL COMMENT '订单结束时间',
   `all_urgent` tinyint(4) DEFAULT NULL COMMENT '该订单的机器全部加急；1表示加急,0表示取消加急(曾经加急后来取消了)，默认为null',
+  `order_type` varchar(20) DEFAULT NULL COMMENT '订单分类：1.直销 2.经销商 3.代理商',
+  `gross_profit` varchar(10) DEFAULT NULL COMMENT '毛利率：百分比数字',
+  `business_expense` varchar(100) DEFAULT NULL COMMENT '业务费',
+  `warranty_fee` varchar(100) DEFAULT NULL COMMENT '保修费',
   PRIMARY KEY (`id`),
   KEY `fk_o_machine_type` (`machine_type`),
   KEY `fk_o_order_detail_id` (`order_detail_id`),
@@ -464,6 +531,22 @@ CREATE TABLE `market_group` (
 INSERT INTO `market_group` VALUES ('1', '外贸一部');
 INSERT INTO `market_group` VALUES ('2', '外贸二部');
 INSERT INTO `market_group` VALUES ('3', '内贸部');
+DROP TABLE IF EXISTS `optimize_test`;
+CREATE TABLE `optimize_test` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `project_name` varchar(50) DEFAULT NULL COMMENT '项目名称',
+  `optimize_part` varchar(50) DEFAULT NULL COMMENT '优化类部件',
+  `order_num` varchar(50) DEFAULT NULL COMMENT '订单号',
+  `machine_type` varchar(50) DEFAULT NULL COMMENT '机型',
+  `purpose` varchar(500) DEFAULT NULL COMMENT '目的',
+  `owner` varchar(10) DEFAULT NULL COMMENT '负责人',
+  `working_hours` varchar(10) DEFAULT NULL COMMENT '工时',
+  `results` varchar(255) DEFAULT NULL COMMENT '效果',
+  `files` varchar(255) DEFAULT NULL COMMENT '附件',
+  `create_date` datetime DEFAULT NULL,
+  `update_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for `order_cancel_record`
@@ -543,8 +626,8 @@ CREATE TABLE `order_detail` (
   `framework_platen_color` varchar(255) DEFAULT NULL COMMENT '机架台板：台板颜色',
   `framework_ring` varchar(255) DEFAULT NULL COMMENT '机架台板：吊环',
   `framework_bracket` varchar(255) DEFAULT NULL COMMENT '机架台板：电脑托架',
+  `framework_pole_height` varchar(255) DEFAULT NULL,
   `framework_stop` varchar(255) DEFAULT NULL COMMENT '机架台板：急停装置',
-  `framework_pole_height` varchar(255) DEFAULT NULL COMMENT '线架立柱高度',
   `framework_light` varchar(255) DEFAULT NULL COMMENT '机架台板：日光灯',
   `driver_type` varchar(255) DEFAULT NULL COMMENT '驱动：类型',
   `driver_method` varchar(255) DEFAULT NULL COMMENT '驱动：方式',
