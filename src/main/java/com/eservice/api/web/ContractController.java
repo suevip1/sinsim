@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
+import com.eservice.api.core.ResultCode;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract.ContractDetail;
@@ -112,6 +113,14 @@ public class ContractController {
         if (contract1 == null) {
             return ResultGenerator.genFailResult("Contract对象JSON解析失败！");
         }
+
+        Condition condition = new Condition(Contract.class);
+        condition.createCriteria().andCondition("contract_num = ", contract1.getContractNum());
+        List<Contract> list = contractService.findByCondition(condition);
+        if (list.size() != 0) {
+           logger.error("合同编号已存在");
+           return ResultGenerator.genFailResult("合同编号已存在！请换一个编号");
+        }
         contract1.setCreateTime(new Date());
         contractService.saveAndGetID(contract1);
         Integer contractId = contract1.getId();
@@ -134,6 +143,14 @@ public class ContractController {
                 orderTemp.setOrderDetailId(temp.getId());
                 orderTemp.setContractId(contractId);
                 orderTemp.setStatus(Constant.ORDER_INITIAL);
+
+                Condition condition2 = new Condition(Contract.class);
+                condition2.createCriteria().andCondition("order_num = ", orderTemp.getOrderNum());
+                List<MachineOrder> orderList = machineOrderService.findByCondition(condition2);
+                if (orderList.size() != 0) {
+                    logger.error("订单号已存在！请换一个");
+                    return ResultGenerator.genFailResult("订单号已存在！请换一个");
+                }
 
                 machineOrderService.saveAndGetID(orderTemp);
 
@@ -1262,7 +1279,20 @@ public class ContractController {
                 cell.setCellValue(new HSSFRichTextString("意见"));
                 //4.签核意见
                 cell = sheet1.getRow(focusLine++).getCell((short) 4);
-                cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
+                if(displayPrice) {
+                    cell.setCellValue(new HSSFRichTextString(signContentItemList.get(k).getComment()));
+                } else {
+                    /**
+                     * 财务(财务会计，财务经理，成本核算员)的意见，仅特定人员可见
+                     */
+                    if (// signContentItemList.get(k).getRoleId().equals(7) //销售部经理
+                        //    || signContentItemList.get(k).getRoleId().equals(9)     //销售员
+                            signContentItemList.get(k).getRoleId().equals(13)    //成本核算员
+                            || signContentItemList.get(k).getRoleId().equals(14)    //财务经理
+                            || signContentItemList.get(k).getRoleId().equals(15) )  //财务会计
+
+                        cell.setCellValue(new HSSFRichTextString("/"));
+                }
 
             }
             //删除最后多余一行
@@ -1860,11 +1890,16 @@ public class ContractController {
     /**
      * 根据订单号 返回合同
      * @param orderNumber
-     * @return
+     * @return 应该返回一个， 返回多个的情况是异常。
      */
     @PostMapping("/getContractByOrderNumber")
     public Result getContractByOrderNumber(@RequestParam String orderNumber) {
-        Contract contract = contractService.getContractByOrderNumber(orderNumber);
-        return ResultGenerator.genSuccessResult(contract);
+
+        List<Contract> list = contractService.getContractByOrderNumber(orderNumber);
+        if(list.size() >1){
+            return ResultGenerator.genFailResult("该编号存在多个合同");
+        } else {
+            return ResultGenerator.genSuccessResult(list);
+        }
     }
 }

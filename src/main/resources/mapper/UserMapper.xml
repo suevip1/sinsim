@@ -89,4 +89,13 @@
         where group_id=(select group_id from user where user.id=#{id}) and u.valid='1'and r.id=17
         <!-- role id为17是安装工 -->
     </select>
+    <select id="getUsersHaveOptimizePermit" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            role
+        JOIN user u ON u.role_id = role.id
+        WHERE
+            role.role_scope like CONCAT('%','${thatPermit}','%' )
+    </select>
 </mapper>

@@ -41,6 +41,11 @@
 		<result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
 		<result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
 		<result column="all_urgent" jdbcType="TINYINT" property="allUrgent"/>
+
+		<result column="order_type" jdbcType="VARCHAR" property="orderType"/>
+		<result column="gross_profit" jdbcType="VARCHAR" property="grossProfit"/>
+		<result column="business_expense" jdbcType="VARCHAR" property="businessExpense"/>
+		<result column="warranty_fee" jdbcType="VARCHAR" property="warrantyFee"/>
 	</resultMap>
 
 	<resultMap id="MachineOrderDetailMap" type="com.eservice.api.model.machine_order.MachineOrderDetail">
@@ -85,6 +90,12 @@
 		<result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
 		<result column="mark" jdbcType="LONGVARCHAR" property="mark"/>
 		<result column="all_urgent" jdbcType="TINYINT" property="allUrgent"/>
+
+		<result column="order_type" jdbcType="VARCHAR" property="orderType"/>
+		<result column="gross_profit" jdbcType="VARCHAR" property="grossProfit"/>
+		<result column="business_expense" jdbcType="VARCHAR" property="businessExpense"/>
+		<result column="warranty_fee" jdbcType="VARCHAR" property="warrantyFee"/>
+
 		<result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
 
 		<result column="electric_trim" jdbcType="VARCHAR" property="electricTrim"/>
@@ -174,10 +185,16 @@
 			keyProperty="id">
     insert into
     machine_order(order_num, original_order_id, contract_id, order_detail_id, create_user_id,country, brand, needle_num, head_num, head_distance, x_distance, y_distance,
-    package_method,wrap_machine,wrap_machine_change,package_mark,machine_num,machine_type, machine_price,intermediary_price,discounts, order_total_discounts, equipment, contract_ship_date, plan_ship_date, sellman, maintain_type, maintain_person,status,create_time, update_time, end_time, mark, all_urgent)
+    package_method,wrap_machine,wrap_machine_change,package_mark,machine_num,machine_type, machine_price,
+    intermediary_price,discounts, order_total_discounts, equipment, contract_ship_date, plan_ship_date,
+    sellman, maintain_type, maintain_person,status,create_time, update_time, end_time, mark, all_urgent,
+    order_type, gross_profit, business_expense, warranty_fee)
     values(
     #{orderNum},#{originalOrderId},#{contractId},#{orderDetailId},#{createUserId},#{country},#{brand},#{needleNum},#{headNum},#{headDistance},#{xDistance},
-    #{yDistance},#{packageMethod},#{wrapMachine},#{wrapMachineChange},#{packageMark},#{machineNum},#{machineType},#{machinePrice},#{intermediaryPrice},#{discounts},#{orderTotalDiscounts},#{equipment},#{contractShipDate},#{planShipDate},#{sellman},#{maintainType},#{maintainPerson},#{status},#{createTime},#{updateTime},#{endTime},#{mark},#{allUrgent})
+    #{yDistance},#{packageMethod},#{wrapMachine},#{wrapMachineChange},#{packageMark},#{machineNum},#{machineType},
+    #{machinePrice},#{intermediaryPrice},#{discounts},#{orderTotalDiscounts},#{equipment},#{contractShipDate},#{planShipDate},
+    #{sellman},#{maintainType},#{maintainPerson},#{status},#{createTime},#{updateTime},#{endTime},#{mark},#{allUrgent},
+    #{orderType},#{grossProfit},#{businessExpense},#{warrantyFee})
   </insert>
 
 	<select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
