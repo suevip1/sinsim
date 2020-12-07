@@ -87,6 +87,8 @@ public class OrderSignController {
             List<SignContentItem> orderSignContentList = JSON.parseArray(orderSignObj.getSignContent(), SignContentItem.class);
             boolean haveReject = false;
             String currentStep = "";
+
+            MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
             for (SignContentItem item : orderSignContentList) {
                 //如果签核内容中有“拒绝”状态的签核信息，需要将该
                 if (item.getResult().equals(Constant.SIGN_REJECT)) {
@@ -95,6 +97,14 @@ public class OrderSignController {
                 if(item.getResult() == 0) {
                     currentStep = roleService.findById(item.getRoleId()).getRoleName();
                     break;
+                }
+                /**
+                 * 订单审核完成时，创建设计单 2020-1207改了：
+                 * 如果是技术部经理签核且通过，则要生成对应的设计单
+                 */
+                if(item.getRoleId() == Constant.ROLE_ID_TECH_MANAGER && item.getResult().equals(Constant.SIGN_APPROVE)){
+                    logger.info("技术部经理签核，且通过");
+                    commonService.createDesignDepInfo(machineOrder);
                 }
             }
 
@@ -127,14 +137,12 @@ public class OrderSignController {
                         } else {
                             //销售部之外，都只有一个经理
                             UserDetail toUser = userList.get(0);
-                            MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
                             commonService.sendSignInfoViWxMsg(toUser.getAccount(),machineOrder.getOrderNum(),"");
                         }
                     }
                 }
             }
 
-            MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
             Contract contract = contractService.findById(contractId);
 
             commonService.pushMachineOrderMsgToAftersale(orderSignObj,contract,machineOrder,haveReject);
@@ -170,10 +178,6 @@ public class OrderSignController {
                 if(currentStep.equals(Constant.SIGN_FINISHED)) {
                     machineOrder.setStatus(Constant.ORDER_CHECKING_FINISHED);
                     commonService.createMachineByOrderId(machineOrder);
-                    /**
-                     * 订单审核完成时，创建设计单
-                     */
-                    commonService.createDesignDepInfo(machineOrder);
                 }
             }
             machineOrderService.update(machineOrder);
