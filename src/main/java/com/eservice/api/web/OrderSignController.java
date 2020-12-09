@@ -7,6 +7,7 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
+import com.eservice.api.model.design_dep_info.DesignDepInfoDetail;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.model.role.Role;
@@ -52,6 +53,8 @@ public class OrderSignController {
 
     @Resource
     private UserServiceImpl userService;
+    @Resource
+    private DesignDepInfoServiceImpl designDepInfoService;
 
     private Logger logger = Logger.getLogger(OrderSignController.class);
 
@@ -101,10 +104,26 @@ public class OrderSignController {
                 /**
                  * 订单审核完成时，创建设计单 2020-1207改了：
                  * 如果是技术部经理签核且通过，则要生成对应的设计单
+                 * 并且没有生成过联系单
                  */
-                if(item.getRoleId() == Constant.ROLE_ID_TECH_MANAGER && item.getResult().equals(Constant.SIGN_APPROVE)){
+                if(item.getRoleId() == Constant.ROLE_ID_TECH_MANAGER
+                        && item.getResult().equals(Constant.SIGN_APPROVE)){
                     logger.info("技术部经理签核，且通过");
-                    commonService.createDesignDepInfo(machineOrder);
+                    // 查找订单对应的设计单
+                    List<DesignDepInfoDetail> designDepInfoDetailList = designDepInfoService.selectDesignDepInfo(
+                            machineOrder.getOrderNum(),
+                            null,
+                            null,
+                            Integer.valueOf(Constant.ORDER_CHECKING), //审核中
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null);
+                    if(designDepInfoDetailList == null || designDepInfoDetailList.size() ==0) {
+                        commonService.createDesignDepInfo(machineOrder);
+                    }
                 }
             }
 
