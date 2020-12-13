@@ -333,4 +333,17 @@ public class Constant {
     public static final String STR_DESIGN_STATUS_BOM_DONE = "BOM完成";
     public static final String STR_DESIGN_STATUS_ALL_DONE = "全部完成";
 
+    public static final Integer ROLE_ID_ADMIN = 1;
+    public static final Integer ROLE_ID_PRODUCTION_ADMIN = 2;
+    public static final Integer ROLE_ID_INSTALL_GROUP_LEADER = 3;
+    public static final Integer ROLE_ID_PRODUCTION_MANAGER = 4;
+    public static final Integer ROLE_ID_STAFF = 5;
+    public static final Integer ROLE_ID_GM = 6;
+    public static final Integer ROLE_ID_SALES_MANAGER = 7;
+    public static final Integer ROLE_ID_TECH_MANAGER = 8;
+    public static final Integer ROLE_ID_SALES = 9;
+    public static final Integer ROLE_ID_TECHNICIAN = 10;
+    public static final Integer ROLE_ID_QUALITY_INSPECTOR = 11;
+    public static final Integer ROLE_ID_PMC = 12;
+
 }

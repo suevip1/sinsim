@@ -7,6 +7,7 @@ import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract_sign.ContractSign;
 import com.eservice.api.model.contract_sign.SignContentItem;
+import com.eservice.api.model.design_dep_info.DesignDepInfoDetail;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.model.role.Role;
@@ -52,6 +53,8 @@ public class OrderSignController {
 
     @Resource
     private UserServiceImpl userService;
+    @Resource
+    private DesignDepInfoServiceImpl designDepInfoService;
 
     private Logger logger = Logger.getLogger(OrderSignController.class);
 
@@ -87,6 +90,8 @@ public class OrderSignController {
             List<SignContentItem> orderSignContentList = JSON.parseArray(orderSignObj.getSignContent(), SignContentItem.class);
             boolean haveReject = false;
             String currentStep = "";
+
+            MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
             for (SignContentItem item : orderSignContentList) {
                 //如果签核内容中有“拒绝”状态的签核信息，需要将该
                 if (item.getResult().equals(Constant.SIGN_REJECT)) {
@@ -95,6 +100,30 @@ public class OrderSignController {
                 if(item.getResult() == 0) {
                     currentStep = roleService.findById(item.getRoleId()).getRoleName();
                     break;
+                }
+                /**
+                 * 订单审核完成时，创建设计单 2020-1207改了：
+                 * 如果是技术部经理签核且通过，则要生成对应的设计单
+                 * 并且没有生成过联系单
+                 */
+                if(item.getRoleId() == Constant.ROLE_ID_TECH_MANAGER
+                        && item.getResult().equals(Constant.SIGN_APPROVE)){
+                    logger.info("技术部经理签核，且通过");
+                    // 查找订单对应的设计单
+                    List<DesignDepInfoDetail> designDepInfoDetailList = designDepInfoService.selectDesignDepInfo(
+                            machineOrder.getOrderNum(),
+                            null,
+                            null,
+                            Integer.valueOf(Constant.ORDER_CHECKING), //审核中
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null);
+                    if(designDepInfoDetailList == null || designDepInfoDetailList.size() ==0) {
+                        commonService.createDesignDepInfo(machineOrder);
+                    }
                 }
             }
 
@@ -107,8 +136,32 @@ public class OrderSignController {
             }
             orderSignService.update(orderSignObj);
 
+            /**
+             * 推送公众号消息给轮到的人（通过售后系统）
+             */
+            if(orderSignObj.getCurrentStep().equals(Constant.SIGN_FINISHED)){
+                //todo 审核完成时，通知发起人
+            } else {
+                Role role = roleService.findBy("roleName", orderSignObj.getCurrentStep());
+                if (role == null) {
+                    logger.error("根据该 role_name " + orderSignObj.getCurrentStep() + "找不到Role");
+                } else {
+                    //如果是销售部经理还要细分发给哪个经理，
+                    if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
+                        //todo 等2020销售大区方案定下来之后再改
+                    } else {
+                        List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, null);
+                        if (userList.isEmpty() || userList == null) {
+                            logger.error("根据该roleId " + role.getId() + "找不到User");
+                        } else {
+                            //销售部之外，都只有一个经理
+                            UserDetail toUser = userList.get(0);
+                            commonService.sendSignInfoViWxMsg(toUser.getAccount(),machineOrder.getOrderNum(),"");
+                        }
+                    }
+                }
+            }
 
-            MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
             Contract contract = contractService.findById(contractId);
 
             commonService.pushMachineOrderMsgToAftersale(orderSignObj,contract,machineOrder,haveReject);
@@ -144,10 +197,6 @@ public class OrderSignController {
                 if(currentStep.equals(Constant.SIGN_FINISHED)) {
                     machineOrder.setStatus(Constant.ORDER_CHECKING_FINISHED);
                     commonService.createMachineByOrderId(machineOrder);
-                    /**
-                     * 订单审核完成时，创建设计单
-                     */
-                    commonService.createDesignDepInfo(machineOrder);
                 }
             }
             machineOrderService.update(machineOrder);

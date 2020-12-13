@@ -165,7 +165,7 @@ public class AbnormalRecordController {
     /**
      * 根据异常类型、异常提交时间、提交者、解决者，返回abnormalRecordDetail
      *
-     * @return
+     * finishStatus: 1--解决; 2--未解决
      */
     @PostMapping("/selectAbnormalRecordDetailList")
     public Result selectAbnormalRecordDetailList(@RequestParam(defaultValue = "0") Integer page,
