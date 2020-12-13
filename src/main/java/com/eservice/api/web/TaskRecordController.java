@@ -3,6 +3,7 @@ import com.eservice.api.model.install_group.InstallGroup;
 import com.eservice.api.model.install_plan.InstallPlan;
 import com.eservice.api.model.install_plan_actual.InstallPlanActual;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
+import com.eservice.api.model.quality_inspect_record.QualityInspectRecord;
 import com.eservice.api.service.common.NodeDataModel;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
@@ -111,6 +112,11 @@ public class TaskRecordController {
     private InstallPlanServiceImpl installPlanService;
     @Resource
     private InstallPlanActualServiceImpl installPlanActualService;
+
+    @Resource
+    private QualityInspectRecordServiceImpl qualityInspectRecordService;
+
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TaskRecordController.class);
 
     @PostMapping("/add")
     public Result add(String taskRecord) {
@@ -264,12 +270,12 @@ public class TaskRecordController {
      *
      * @param page
      * @param size
-     * @param userAccount
+     * @param userAccount -- 新的质检方案，质检不再指定质检人, 质检人可以为空
      * @return
      */
     @PostMapping("selectAllQaTaskRecordDetailByUserAccount")
     public Result selectAllQaTaskRecordDetailByUserAccount(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
-                                                           @RequestParam String userAccount) {
+                                                           String userAccount) {
         PageHelper.startPage(page, size);
         List<TaskRecordDetail> ListTaskRecordDetail = taskRecordService.selectAllQaTaskRecordDetailByUserAccount(userAccount);
         PageInfo pageInfo = new PageInfo(ListTaskRecordDetail);
@@ -646,6 +652,7 @@ public class TaskRecordController {
         if (id == null || id < 0) {
             return ResultGenerator.genFailResult("TaskRecord的ID为空，数据更新失败！");
         }
+        logger.info(tr.getTaskName() + ", taskRecord的状态: " + tr.getStatus());
         taskRecordService.update(tr);
 
         ProcessRecord pr = JSON.parseObject(processRecord, ProcessRecord.class);
@@ -660,7 +667,7 @@ public class TaskRecordController {
 
     /**
      * 比如app扫码&结束开始时调用该接口，开始/完成一个工序各调用一次。
-     * （质检报正常也是调该接口，即无论是否质检都调这个接口）
+     * （质检报正常也是调该接口，即无论是否质检都调这个接口 --原先的质检已经弃用了）
      *
      * app扫码报异常时，调用 addTrArAi （app报正常时，调用的是 updateTaskInfo， 少了两个参数）
      * （质检报正常也是调addTrArAi）
@@ -700,6 +707,7 @@ public class TaskRecordController {
                 }
             }
             catch (Exception ex) {
+                logger.warn("updateTaskInfo exception: " + ex.getMessage());
             }
             tr.setInstallBeginTime(new Date());
         }
