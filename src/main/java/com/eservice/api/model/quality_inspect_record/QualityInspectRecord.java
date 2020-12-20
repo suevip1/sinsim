@@ -32,6 +32,8 @@ public class QualityInspectRecord {
 
     /**
      * 该条质检未开始，无此检验条目，质检合格，质检不合格。（没有质检中,因为是对一条质检内容而言,对机器有多条质检，才有质检中这样的状态）,“未检”按钮（因为无法检查，比如安装好了盖住了无法打开检验）,
+     *
+     * 为了和安装工序taskRecord交互，这个字段最终用的是数字。
      */
     @Column(name = "record_status")
     private String recordStatus;

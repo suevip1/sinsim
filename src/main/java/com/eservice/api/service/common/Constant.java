@@ -142,6 +142,13 @@ public class Constant {
      * "7" --> 安装异常
      * "8" --> 质检异常
      * "9" --> 跳过
+     *
+     *  3期新质检
+     * "10" --> 未开始质检
+     * "11" --> 无此检验条目
+     * "12" --> 质检不合格
+     * "13" --> 质检合格
+     * "14" --> 未检
      */
     public static final Byte TASK_INITIAL = 0;
     public static final Byte TASK_PLANED = 1;
@@ -149,10 +156,18 @@ public class Constant {
     public static final Byte TASK_INSTALLING = 3;
     public static final Byte TASK_INSTALLED = 4;
     public static final Byte TASK_QUALITY_DOING = 5;
+    // 质检不再基于工序，这个可以拿掉 TODO
     public static final Byte TASK_QUALITY_DONE = 6;
     public static final Byte TASK_INSTALL_ABNORMAL = 7;
     public static final Byte TASK_QUALITY_ABNORMAL = 8;
     public static final Byte TASK_SKIP = 9;
+
+
+    public static final Byte TASK_QUALITY_INSPECT_NOT_STARTED = 10;
+    public static final Byte TASK_QUALITY_INSPECT_NO_SUCH_ITEM = 11;
+    public static final Byte TASK_QUALITY_INSPECT_NG = 12;
+    public static final Byte TASK_QUALITY_INSPECT_OK = 13;
+    public static final Byte TASK_QUALITY_INSPECT_HAVE_NOT_CHECKED = 14;
 
     public static final String STR_TASK_INITIAL = "初始化";
     public static final String STR_TASK_PLANED = "已计划";
@@ -173,11 +188,11 @@ public class Constant {
      * （没有质检中,因为是对一条质检内容而言,对机器有多条质检，才有质检中这样的状态）,
      * “未检”按钮（因为无法检查，比如安装好了盖住了无法打开检验）,
      */
-    public static final String STR_QUALITY_INSPECT_NOT_START = "未质检";
+    public static final String STR_QUALITY_INSPECT_NOT_START = "待质检";
     public static final String STR_QUALITY_INSPECT_NOT_NEED = "无此检验条目";
     public static final String STR_QUALITY_INSPECT_FAILURE = "质检不合格";
     public static final String STR_QUALITY_INSPECT_SUCCESS = "质检合格";
-    public static final String STR_QUALITY_INSPECT_UNCHECKED = "未检";
+    public static final String STR_QUALITY_INSPECT_HAVE_NOT_CHECKED = "未检";
 
     /**
      * 保存文件的类型

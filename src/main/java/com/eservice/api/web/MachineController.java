@@ -130,10 +130,11 @@ public class MachineController {
         }
 
         /**
+         * 3期新质检：
          * 如果是设置了 机器位置(从无到有)，则创建质检记录（状态为未质检），发消息给质检人员，表示要开始安装了，可以过来看了。
          * 大概是因为有些质检需要在安装过程中看。
          *
-         * 创建该机器的所有工序对应的所有质检项
+         * 创建该机器的所有工序对应的所有质检项， 注意: 如果工序没有包含质检项，则不会生成该工序的质检项。
          */
         Machine machineOld = machineService.findById(machine1.getId());
         if (machineOld != null) {
@@ -159,7 +160,9 @@ public class MachineController {
                                 } else {
                                     logger.warn("根据" + machine1.getNameplate() +" 找不到订单号");
                                 }
-                                qualityInspectRecord.setRecordStatus(Constant.STR_QUALITY_INSPECT_NOT_START);
+//                                qualityInspectRecord.setRecordStatus(Constant.STR_QUALITY_INSPECT_NOT_START);
+                                qualityInspectRecord.setRecordStatus(Constant.TASK_QUALITY_INSPECT_NOT_STARTED.toString());
+
 
                                 qualityInspectRecordService.save(qualityInspectRecord);
                                 logger.info("生成qualityInspectRecord成功， 铭牌号："

@@ -72,7 +72,8 @@ public class QualityInspectRecordController {
      * @return
      */
     @PostMapping("selectQualityInspectRecordDetail")
-    public Result selectQualityInspectRecordDetail(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
+    public Result selectQualityInspectRecordDetail(@RequestParam(defaultValue = "0") Integer page,
+                                                   @RequestParam(defaultValue = "0") Integer size,
                                                    String orderNumber,
                                                    String taskName,
                                                    String recordStatus,

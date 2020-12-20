@@ -23,7 +23,7 @@
     <!--
         WARNING - @mbg.generated
       -->
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="qirID" jdbcType="INTEGER" property="id" />
     <result column="machine_nameplate" jdbcType="VARCHAR" property="machineNameplate" />
     <result column="inspect_name" jdbcType="VARCHAR" property="inspectName" />
     <result column="inspect_person" jdbcType="VARCHAR" property="inspectPerson" />
@@ -35,26 +35,44 @@
     <result column="task_name" jdbcType="VARCHAR" property="taskName" />
     <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
 
-      <association property="machine" javaType="com.eservice.api.model.machine.Machine">
+      <!-- task Record-->
+      <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+      <result column="process_record_id" jdbcType="INTEGER" property="processRecordId"/>
+      <result column="node_key" jdbcType="TINYINT" property="nodeKey"/>
+      <result column="leader" jdbcType="VARCHAR" property="leader"/>
+      <!--<result column="status_in_task_record" jdbcType="TINYINT" property="status"/>-->
+      <result column="record_status" jdbcType="TINYINT" property="status"/>
+
+      <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime"/>
+      <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime"/>
+      <result column="quality_begin_time" jdbcType="TIMESTAMP" property="qualityBeginTime"/>
+      <result column="quality_end_time" jdbcType="TIMESTAMP" property="qualityEndTime"/>
+      <result column="worker_list" jdbcType="LONGVARCHAR" property="workerList"/>
+      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+      <result column="wait_timespan" jdbcType="INTEGER" property="waitTimespan"/>
+      <result column="cmt_feedback" jdbcType="VARCHAR" property="cmtFeedback"/>
+
+      <association javaType="com.eservice.api.model.machine.Machine" property="machine" >
           <!--
          WARNING - @mbg.generated
        -->
-          <id column="id" jdbcType="INTEGER" property="id"/>
+          <id column="machine_id_in_association" jdbcType="INTEGER" property="id"/>
           <result column="order_id" jdbcType="INTEGER" property="orderId"/>
           <result column="machine_strid" jdbcType="VARCHAR" property="machineStrId"/>
           <result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
           <result column="location" jdbcType="VARCHAR" property="location"/>
-          <result column="status" jdbcType="TINYINT" property="status"/>
+          <result column="status_in_machine" jdbcType="TINYINT" property="status"/>
           <result column="machine_type" jdbcType="INTEGER" property="machineType"/>
           <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
           <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
           <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
           <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
           <result column="is_urgent" jdbcType="VARCHAR" property="isUrgent"/>
-      </association>
+      </association >
       <association javaType="com.eservice.api.model.machine_order.MachineOrder" property="machineOrder">
-          <id column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+
           <id column="machine_order_id" jdbcType="INTEGER" property="id"/>
+          <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
           <result column="original_order_id" jdbcType="INTEGER" property="originalOrderId"/>
           <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId"/>
           <result column="create_user_id" jdbcType="INTEGER" property="createUserId"/>
@@ -83,22 +101,45 @@
 
       </association>
   </resultMap>
-  <!--<select id="selectQualityInspectRecordDetail" resultMap="QualityInspectRecordDetailResultMap">-->
+
   <select id="selectQualityInspectRecordDetail" resultMap="QualityInspectRecordDetailResultMap">
-    SELECT
-        *
-    FROM
-        quality_inspect_record qir
---     JOIN quality_inspect qi ON qir.inspect_name = qi.inspect_name
-      LEFT JOIN machine m ON qir.machine_nameplate = m.nameplate
-      LEFT JOIN machine_order mo ON mo.order_num = qir.order_number
-    WHERE
-      1=1
+      SELECT
+--       distinct
+      qir.id as qirID,
+      qir.create_time,
+      qir.inspect_name,
+      qir.inspect_person,
+      qir.machine_nameplate,
+      qir.order_number,
+      qir.record_remark,
+      qir.record_status,
+      qir.re_inspect,
+      qir.task_name,
+      qir.update_time,
+      m.id AS machine_id_in_association
+      ,
+      m.location,
+      m.nameplate,
+
+      mo.id AS machine_order_id,
+      mo.order_num,
+      mo.head_num,
+      mo.needle_num,
+
+      tr.`status` as status_in_task_record
+
+      FROM
+      quality_inspect_record qir
+       JOIN machine m ON qir.machine_nameplate = m.nameplate
+       JOIN machine_order mo ON mo.order_num = qir.order_number
+       JOIN process_record pr ON pr.machine_id = m.id
+       JOIN task_record tr ON tr.process_record_id = pr.id
+      WHERE
+      1 = 1
     <if test="orderNumber != null and orderNumber != ''">
       and qir.order_number like CONCAT('%','${orderNumber}','%' )
     </if>
     <if test="taskName != null and taskName != ''">
---       and  qi.task_name = #{taskName}
       and  qir.task_name = #{taskName}
     </if>
     <if test="recordStatus != null and recordStatus != ''">
@@ -126,6 +167,7 @@
       and DATE_FORMAT(qir.create_time,'%Y-%m-%d') &lt;= #{queryFinishTime}
     </if>
 
+    GROUP BY qirID
     ORDER BY qir.create_time DESC, qir.update_time DESC
   </select>
 </mapper>
