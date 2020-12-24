@@ -19,6 +19,7 @@ public class QualityInspect {
 
     /**
      * 该项质检的名称（唯一性）
+     * QualityInspectRecord和QualityInspect如何联系： 共同的 inspect_name ，inspect_name是唯一的。
      */
     @Column(name = "inspect_name")
     private String inspectName;

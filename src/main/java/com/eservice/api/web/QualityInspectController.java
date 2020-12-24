@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -27,6 +28,15 @@ public class QualityInspectController {
 
     @PostMapping("/add")
     public Result add(QualityInspect qualityInspect) {
+        //质检名称唯一性
+        Condition condition = new Condition(QualityInspect.class);
+        condition.createCriteria().andCondition("valid = ", 1); //1 is valid
+        List<QualityInspect> list = qualityInspectService.findByCondition(condition);
+        for(int k=0; k<list.size(); k++){
+            if(list.get(k).getInspectName().equals(qualityInspect.getInspectName())){
+                return ResultGenerator.genFailResult(qualityInspect.getInspectName() + "已经存在该名称，请换一个名称");
+            }
+        }
         qualityInspectService.save(qualityInspect);
         return ResultGenerator.genSuccessResult();
     }
@@ -70,4 +80,16 @@ public class QualityInspectController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    @PostMapping("/getQualityInspect")
+    public Result getQualityInspect(@RequestParam(defaultValue = "0") Integer page,
+                                    @RequestParam(defaultValue = "0") Integer size,
+                                    Byte isValid) {
+        PageHelper.startPage(page, size);
+
+        Condition condition = new Condition(QualityInspect.class);
+        condition.createCriteria().andCondition("valid = ", isValid);
+        List<QualityInspect> list = qualityInspectService.findByCondition(condition);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }

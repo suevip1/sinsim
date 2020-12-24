@@ -100,7 +100,7 @@ public class QualityInspectRecord {
 
     /**
      * 设置质检的名称
-     *
+     * QualityInspectRecord和QualityInspect如何联系： 共同的 inspect_name ，inspect_name是唯一的。
      * @param inspectName 质检的名称
      */
     public void setInspectName(String inspectName) {
@@ -206,6 +206,7 @@ public class QualityInspectRecord {
     /**
      * 质检对应的工序, 一个工序可以有多个检验条目， “无此检验条目” 可以一个个点，也可以按照工序一次点一堆条目。
      * 因为“质检内容：要允许编辑”，所以这个表要和quality_inspect脱离关系，所有质检信息都要保存在此表，不依赖质检内容的表。所以增加了taskName。
+     * QualityInspectRecord和QualityInspect如何联系： 共同的 inspect_name ，inspect_name是唯一的。
      */
     @Column(name = "task_name")
     private String taskName;
