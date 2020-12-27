@@ -2,6 +2,7 @@ package com.eservice.api.model.quality_inspect_record;
 
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.quality_inspect.QualityInspect;
 import com.eservice.api.model.task_record.TaskRecord;
 
 import javax.persistence.*;
@@ -9,16 +10,6 @@ import java.util.Date;
 
 @Table(name = "quality_inspect_record")
 public class QualityInspectRecordDetail extends QualityInspectRecord {
-//    //质检对应工序的名称
-//    String taskName;
-//
-//    public String getTaskName() {
-//        return taskName;
-//    }
-//
-//    public void setTaskName(String taskName) {
-//        this.taskName = taskName;
-//    }
 
     //下面这些信息 是为了给app端用，本来可以不需要，但是为了减少app端的改动先这样提供。
     private Machine machine;
@@ -123,20 +114,6 @@ public class QualityInspectRecordDetail extends QualityInspectRecord {
      */
     @Column(name = "cmt_feedback")
     private String cmtFeedback;
-
-//    /**
-//     * @return task_name
-//     */
-//    public String getTaskName() {
-//        return taskName;
-//    }
-//
-//    /**
-//     * @param taskName
-//     */
-//    public void setTaskName(String taskName) {
-//        this.taskName = taskName;
-//    }
 
     /**
      * @return process_record_id
@@ -277,5 +254,15 @@ public class QualityInspectRecordDetail extends QualityInspectRecord {
 
     public Integer getWaitTimespan() {
         return waitTimespan;
+    }
+
+    private QualityInspect qualityInspect;
+
+    public QualityInspect getQualityInspect() {
+        return qualityInspect;
+    }
+
+    public void setQualityInspect(QualityInspect qualityInspect) {
+        this.qualityInspect = qualityInspect;
     }
 }

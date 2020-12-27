@@ -100,6 +100,19 @@
           <result column="all_urgent" jdbcType="TINYINT" property="allUrgent"/>
 
       </association>
+      <association javaType="com.eservice.api.model.quality_inspect.QualityInspect" property="qualityInspect">
+          <!--
+               WARNING - @mbg.generated
+             -->
+          <id column="quality_inspect_id" jdbcType="INTEGER" property="id" />
+          <result column="inspect_type" jdbcType="VARCHAR" property="inspectType" />
+          <result column="inspect_name" jdbcType="VARCHAR" property="inspectName" />
+          <result column="inspect_content" jdbcType="VARCHAR" property="inspectContent" />
+          <result column="level" jdbcType="VARCHAR" property="level" />
+          <result column="phase" jdbcType="VARCHAR" property="phase" />
+          <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+          <result column="valid" jdbcType="TINYINT" property="valid" />
+      </association>
   </resultMap>
 
   <select id="selectQualityInspectRecordDetail" resultMap="QualityInspectRecordDetailResultMap">
@@ -116,6 +129,15 @@
       qir.re_inspect,
       qir.task_name,
       qir.update_time,
+
+      qi.id as quality_inspect_id,
+      qi.inspect_content,
+--       qi.inspect_name, 相同且唯一
+      qi.inspect_type,
+      qi.`level`,
+      qi.phase,
+      qi.valid,
+
       m.id AS machine_id_in_association
       ,
       m.location,
@@ -130,10 +152,11 @@
 
       FROM
       quality_inspect_record qir
-       JOIN machine m ON qir.machine_nameplate = m.nameplate
-       JOIN machine_order mo ON mo.order_num = qir.order_number
-       JOIN process_record pr ON pr.machine_id = m.id
-       JOIN task_record tr ON tr.process_record_id = pr.id
+      JOIN machine m ON qir.machine_nameplate = m.nameplate
+      JOIN machine_order mo ON mo.order_num = qir.order_number
+      JOIN process_record pr ON pr.machine_id = m.id
+      JOIN task_record tr ON tr.process_record_id = pr.id
+      JOIN quality_inspect qi on qi.inspect_name  = qir.inspect_name
       WHERE
       1 = 1
     <if test="orderNumber != null and orderNumber != ''">
