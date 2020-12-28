@@ -190,6 +190,19 @@
       and DATE_FORMAT(qir.create_time,'%Y-%m-%d') &lt;= #{queryFinishTime}
     </if>
 
+      <if test="inspectName != null and inspectName != ''">
+          and qi.inspect_name like CONCAT('%','${inspectName}','%' )
+      </if>
+      <if test="inspectType != null and inspectType != ''">
+          and qi.inspect_type = #{inspectType}
+      </if>
+      <if test="inspectPhase != null and inspectPhase != ''">
+          and qi.phase = #{inspectPhase}
+      </if>
+      <if test="inspectContent != null and inspectContent != ''">
+          and qi.inspect_content like CONCAT('%','${inspectContent}','%' )
+      </if>
+
     GROUP BY qirID
     ORDER BY qir.create_time DESC, qir.update_time DESC
   </select>

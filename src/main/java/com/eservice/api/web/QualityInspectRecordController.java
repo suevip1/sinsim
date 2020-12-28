@@ -79,11 +79,14 @@ public class QualityInspectRecordController {
                                                    String recordStatus,
                                                    String nameplate,
                                                    String inspectName,
+                                                   String inspectType,
+                                                   String inspectPhase,
+                                                   String inspectContent,
                                                    String inspectPerson,
                                                    String recordRemark,
                                                    String reInspect,
                                                    String queryStartTime,
-                                                   String queryFinishTime ) {
+                                                   String queryFinishTime) {
         PageHelper.startPage(page, size);
         List<QualityInspectRecordDetail>  taskRecordDetailList = qualityInspectRecordService.selectQualityInspectRecordDetail(
                 orderNumber,
@@ -91,6 +94,9 @@ public class QualityInspectRecordController {
                 recordStatus,
                 nameplate,
                 inspectName,
+                inspectType,
+                inspectPhase,
+                inspectContent,
                 inspectPerson,
                 recordRemark,
                 reInspect,
