@@ -23,4 +23,28 @@
     WHERE
         qi.task_name = #{taskName}
   </select>
+  <select id="getQualityInspect" resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM
+    quality_inspect qi
+    WHERE
+    1=1
+
+    <if test="taskName != null and taskName != ''">
+      and  qi.task_name = #{taskName}
+    </if>
+    <if test="inspectName != null and inspectName != ''">
+      and qi.inspect_name like CONCAT('%','${inspectName}','%' )
+    </if>
+    <if test="inspectType != null and inspectType != ''">
+      and qi.inspect_type = #{inspectType}
+    </if>
+    <if test="inspectPhase != null and inspectPhase != ''">
+      and qi.phase = #{inspectPhase}
+    </if>
+    <if test="inspectContent != null and inspectContent != ''">
+      and qi.inspect_content like CONCAT('%','${inspectContent}','%' )
+    </if>
+  </select>
 </mapper>

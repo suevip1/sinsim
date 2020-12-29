@@ -83,12 +83,29 @@ public class QualityInspectController {
     @PostMapping("/getQualityInspect")
     public Result getQualityInspect(@RequestParam(defaultValue = "0") Integer page,
                                     @RequestParam(defaultValue = "0") Integer size,
+                                    String taskName,
+                                    String inspectName,
+                                    String inspectType,
+                                    String inspectPhase,
+                                    String inspectContent,
                                     Byte isValid) {
         PageHelper.startPage(page, size);
 
-        Condition condition = new Condition(QualityInspect.class);
-        condition.createCriteria().andCondition("valid = ", isValid);
-        List<QualityInspect> list = qualityInspectService.findByCondition(condition);
+//        Condition condition = new Condition(QualityInspect.class);
+//        condition.createCriteria().andCondition("valid = ", isValid);
+//        if(inspectName !=null && !inspectName.isEmpty()) {
+////            condition.createCriteria().andLike("inspect_name ",inspectName);
+////            condition.createCriteria().andLike("inspectName",inspectName);
+////            condition.createCriteria().andLike("inspectName","%"+ inspectName +"%");
+//
+//        }
+        List<QualityInspect> list = qualityInspectService.getQualityInspect(
+                taskName,
+                inspectName,
+                inspectType,
+                inspectPhase,
+                inspectContent,
+                isValid);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }

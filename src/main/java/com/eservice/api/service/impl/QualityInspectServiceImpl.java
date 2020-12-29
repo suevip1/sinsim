@@ -22,7 +22,24 @@ public class QualityInspectServiceImpl extends AbstractService<QualityInspect> i
     @Resource
     private QualityInspectMapper qualityInspectMapper;
 
-    public List<QualityInspect> getQualityInspectByTaskName(String taskName){
+    public List<QualityInspect> getQualityInspectByTaskName(String taskName) {
         return qualityInspectMapper.getQualityInspectByTaskName(taskName);
     }
+
+    public List<QualityInspect> getQualityInspect(
+            String taskName,
+            String inspectName,
+            String inspectType,
+            String inspectPhase,
+            String inspectContent,
+            Byte isValid) {
+        return qualityInspectMapper.getQualityInspect(
+                taskName,
+                inspectName,
+                inspectType,
+                inspectPhase,
+                inspectContent,
+                isValid);
+    }
+
 }
