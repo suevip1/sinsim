@@ -484,7 +484,7 @@ CREATE TABLE `machine_order` (
   `end_time` datetime DEFAULT NULL COMMENT '订单结束时间',
   `all_urgent` tinyint(4) DEFAULT NULL COMMENT '该订单的机器全部加急；1表示加急,0表示取消加急(曾经加急后来取消了)，默认为null',
   `order_type` varchar(20) DEFAULT NULL COMMENT '订单分类：1.直销 2.经销商 3.代理商',
-  `gross_profit` varchar(10) DEFAULT NULL COMMENT '毛利率：百分比数字',
+  `gross_profit` varchar(200) DEFAULT NULL COMMENT '毛利率：百分比数字,已改为从成本核算员审核意见中抽取',
   `business_expense` varchar(100) DEFAULT NULL COMMENT '业务费',
   `warranty_fee` varchar(100) DEFAULT NULL COMMENT '保修费',
   PRIMARY KEY (`id`),

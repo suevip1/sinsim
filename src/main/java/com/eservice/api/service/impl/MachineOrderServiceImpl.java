@@ -1,12 +1,16 @@
 package com.eservice.api.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.AbstractService;
 import com.eservice.api.dao.MachineOrderMapper;
 import com.eservice.api.model.contact_form.ContactFormDetail;
+import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
+import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.service.MachineOrderService;
 import com.eservice.api.service.common.CommonService;
+import com.eservice.api.service.common.Constant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +58,11 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
         List<MachineOrderDetail> machineOrderDetailList;
         /**
          * Note: 对每个订单都查询一次该订单的联系单状态，然后赋值。
+         *
+         * 订单中【毛利率】取消单独录入，
+         * 改为财务意见栏填写，格式为【毛利率：20%，偏低5%】样式，
+         * 需要财务部统一按格式录入，财务报表中显示【毛利率】一栏
+         * 所以从财务部成本核算员审核意见中，截取【毛利率】开始的字段
          */
         if (is_fuzzy) {
             machineOrderDetailList = machineOrderMapper.selectOrderFuzzy(
@@ -73,6 +82,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
 
+                machineOrderDetailList.get(i).setGrossProfit(getGrossProfitByOrderSignContent(machineOrderDetailList.get(i).getOrderSign()));//
             }
         } else {
             machineOrderDetailList = machineOrderMapper.selectOrder(
@@ -91,6 +101,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     machine_name);
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
+                machineOrderDetailList.get(i).setGrossProfit(getGrossProfitByOrderSignContent(machineOrderDetailList.get(i).getOrderSign()));//
             }
         }
         return machineOrderDetailList;
@@ -132,6 +143,29 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
 //        } else {
 //            return false;
 //        }
+    }
+
+    //从订单的成本核算员签核意见中，查找毛利率
+    public String getGrossProfitByOrderSignContent(OrderSign orderSign) {
+        String grossProfitString = "";
+        List<SignContentItem> signContentItemList = JSON.parseArray(orderSign.getSignContent(), SignContentItem.class);
+        for (SignContentItem signContentItem : signContentItemList) {
+            //格式为【毛利率：20%，偏低5%】样式，需要财务部统一按格式录入，财务报表中显示【毛利率】一栏
+            if(signContentItem.getRoleId().equals(Constant.ROLE_ID_COST_ACCOUNTANT)){
+                int start = 0;
+                start = signContentItem.getComment().indexOf("【毛利率】");
+                if(start == -1) {
+                    start = signContentItem.getComment().indexOf("[毛利率]");
+                }
+                if(start == -1) {
+                    start = signContentItem.getComment().indexOf("毛利率");
+                }
+                if(start != -1) {
+                    grossProfitString = signContentItem.getComment().substring(start);
+                }
+            }
+        }
+        return grossProfitString;
     }
 
     public void saveAndGetID(MachineOrder machineOrder) {
