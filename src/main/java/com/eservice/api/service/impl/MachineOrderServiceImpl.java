@@ -81,8 +81,11 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     machine_name);
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
-
-                machineOrderDetailList.get(i).setGrossProfit(getGrossProfitByOrderSignContent(machineOrderDetailList.get(i).getOrderSign()));//
+                // 不应该在每次查询时都设置一次值。已改为在成本核算员签核时设置。
+                /**
+                 * 注意，毛利率不再在订单录入时填写，需要等成本核算员签核之后，才从签核信息张截取
+                 */
+//                machineOrderDetailList.get(i).setGrossProfit(getGrossProfitByOrderSignContent(machineOrderDetailList.get(i).getOrderSign()));//
             }
         } else {
             machineOrderDetailList = machineOrderMapper.selectOrder(
@@ -101,7 +104,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     machine_name);
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
-                machineOrderDetailList.get(i).setGrossProfit(getGrossProfitByOrderSignContent(machineOrderDetailList.get(i).getOrderSign()));//
+//                machineOrderDetailList.get(i).setGrossProfit(getGrossProfitByOrderSignContent(machineOrderDetailList.get(i).getOrderSign()));//
             }
         }
         return machineOrderDetailList;

@@ -125,7 +125,7 @@ CREATE TABLE `contact_form` (
   `create_date` datetime NOT NULL COMMENT '申请日期',
   `hope_date` datetime DEFAULT NULL COMMENT '希望完成的日期',
   `contact_title` varchar(255) NOT NULL COMMENT '联络主题、变更理由/主题',
-  `contact_content` varchar(500) DEFAULT NULL COMMENT '联络内容',
+  `contact_content` varchar(1000) DEFAULT NULL COMMENT '工作联系单的 联络内容',
   `contact_content_else` varchar(255) DEFAULT NULL COMMENT '“其他变更，需说明”时的输入',
   `status` varchar(255) DEFAULT NULL,
   `update_date` datetime DEFAULT NULL,

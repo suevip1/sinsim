@@ -884,7 +884,7 @@ public class MachineOrderDetail {
     //订单分类：1.直销 2.经销商 3.代理商
     private String orderType;
 
-    //毛利率：百分比数字
+    //毛利率： 来自于成本核算员的签核内容，从“毛利”字符开始截取。
     private String grossProfit;
 
     //业务费
@@ -892,6 +892,17 @@ public class MachineOrderDetail {
 
     //保修费
     private String warrantyFee;
+
+    //机架长度，来自于技术部经理的签核内容，从“长度”字符开始截取。
+    private String machineFrameLength;
+
+    public String getMachineFrameLength() {
+        return machineFrameLength;
+    }
+
+    public void setMachineFrameLength(String machineFrameLength) {
+        this.machineFrameLength = machineFrameLength;
+    }
 
     public String getOrderType() {
         return orderType;

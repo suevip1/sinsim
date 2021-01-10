@@ -923,4 +923,24 @@ public class CommonService {
                     + ":根据该订单号找不到设计单，设计单还没生成，或是没有设计单之前的旧订单！");
         }
     }
+	
+    /**
+     * 获取某个角色的订单签核意见
+     */
+    public String getSignContent(OrderSign orderSign, Integer roleID){
+        String contentStr = orderSign.getSignContent();
+        List<SignContentItem> orderSignContentList = JSON.parseArray(contentStr, SignContentItem.class);
+
+        if(orderSignContentList == null || orderSignContentList.isEmpty()){
+            logger.warn("ERROR: orderSignContentList 为空");
+            return "ERROR: orderSignContentList 为空";
+        }
+        for (SignContentItem item : orderSignContentList) {
+            if(item.getRoleId() == roleID) {
+                logger.info("roleID: " + roleID + "的comment为：" + item.getComment());
+                return item.getComment();
+            }
+        }
+        return "ERROR: 找不到该RoleID对应的签核";
+    }
 }

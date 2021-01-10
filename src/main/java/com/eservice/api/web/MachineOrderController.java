@@ -3,7 +3,6 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
-import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract.Equipment;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
@@ -432,10 +431,13 @@ public class MachineOrderController {
                     sheet1.getRow(r).getCell(16).setCellValue(mod.getPayMethod());//付款方式
                     //sheet1.getRow(r).getCell(16).setCellStyle(wrapStyle);
 //                    sheet1.getRow(r).getCell(17).setCellValue(0);//定金率 先空着
-                    sheet1.getRow(r).getCell(18).setCellValue(mod.getGrossProfit());//毛利
+                    // 改为要从成本核算员的意见中抽取 毛利率
+                    sheet1.getRow(r).getCell(18).setCellValue(mod.getGrossProfit());//毛利率
 
                     sheet1.getRow(r).getCell(19).setCellValue(mod.getPackageMethod());//包装方式
-                    sheet1.getRow(r).getCell(20).setCellValue("");//机架长度
+
+                    // 订单中关于技术部的意见里长度：***，显示在财务报表中，显示方式为【机架长度】一栏
+                    sheet1.getRow(r).getCell(20).setCellValue(mod.getMachineFrameLength());//机架长度
 
                     sheet1.getRow(r).getCell(21).setCellValue(mod.getNeedleNum());//针数
                     sheet1.getRow(r).getCell(22).setCellValue(mod.getHeadNum());//头数
