@@ -191,7 +191,7 @@
     package_method,wrap_machine,wrap_machine_change,package_mark,machine_num,machine_type, machine_price,
     intermediary_price,discounts, order_total_discounts, equipment, contract_ship_date, plan_ship_date,
     sellman, maintain_type, maintain_person,status,create_time, update_time, end_time, mark, all_urgent,
-    order_type, gross_profit, business_expense, warranty_fee)
+    order_type, gross_profit, business_expense, warranty_fee, machine_frame_length)
     values(
     #{orderNum},#{originalOrderId},#{contractId},#{orderDetailId},#{createUserId},#{country},#{brand},#{needleNum},#{headNum},#{headDistance},#{xDistance},
     #{yDistance},#{packageMethod},#{wrapMachine},#{wrapMachineChange},#{packageMark},#{machineNum},#{machineType},
