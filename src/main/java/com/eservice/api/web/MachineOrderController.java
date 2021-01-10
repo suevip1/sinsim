@@ -526,7 +526,8 @@ public class MachineOrderController {
                     headcellstyle.setFont(headfont);
                     Row row;
                     row = sheet1.createRow(0);//新创建一行，行号为row+1
-                    for(int c=0; c<15; c++){//列头
+                    int columnSum = 16;
+                    for(int c=0; c<columnSum; c++){//列头
                         row.createCell(c);//创建一个单元格，列号为col+1
                         sheet1.setColumnWidth(c,4500);
                         sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
@@ -547,7 +548,8 @@ public class MachineOrderController {
                     sheet1.getRow(0).getCell(11).setCellValue("币种");
                     sheet1.getRow(0).getCell(12).setCellValue("销售员"); 
                     sheet1.getRow(0).getCell(13).setCellValue("业务费"); //销售费
-                    sheet1.getRow(0).getCell(14).setCellValue("付款方式"); 
+                    sheet1.getRow(0).getCell(14).setCellValue("付款方式");
+                    sheet1.getRow(0).getCell(15).setCellValue("毛利");
                     DataFormat dataFormat = wb.createDataFormat();
                     CellStyle cellStyle;
                     HSSFCellStyle wrapStyle=wb.createCellStyle();     
@@ -557,7 +559,7 @@ public class MachineOrderController {
                         int r = i+1;
                         MachineOrderDetail mod=list.get(i);
                         row = sheet1.createRow(r);//新创建一行
-                        for(int c=0; c<15; c++){
+                        for(int c=0; c<columnSum; c++){
                             row.createCell(c);//创建列单元格
                            
                         }
@@ -618,7 +620,7 @@ public class MachineOrderController {
                         sheet1.getRow(r).getCell(13).setCellStyle(cellStyle);
 
                         sheet1.getRow(r).getCell(14).setCellValue(mod.getPayMethod());//付款方式
-                        //sheet1.getRow(r).getCell(14).setCellStyle(wrapStyle);
+                        sheet1.getRow(r).getCell(15).setCellValue(mod.getGrossProfit());//毛利率
                     }
                   
                     downloadPath = reportOutputPath + "销售报表" + ".xls";
