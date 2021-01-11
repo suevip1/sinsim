@@ -317,7 +317,8 @@ public class MachineOrderController {
                 headcellstyle.setFont(headfont);
                 Row row;
                 row = sheet1.createRow(0);//新创建一行，行号为row+1
-                for(int c=0; c<34; c++){//列头
+                int columnSum = 35;
+                for(int c=0; c<columnSum; c++){//列头
                     row.createCell(c);//创建一个单元格，列号为col+1
                     sheet1.setColumnWidth(c,4500);
                     sheet1.getRow(0).getCell(c).setCellStyle(headcellstyle);
@@ -358,7 +359,8 @@ public class MachineOrderController {
                 sheet1.getRow(0).getCell(30).setCellValue("夹线器"); 
                 sheet1.getRow(0).getCell(31).setCellValue("跳跃方式"); 
                 sheet1.getRow(0).getCell(32).setCellValue("旋梭"); 
-                sheet1.getRow(0).getCell(33).setCellValue("面线夹持"); 
+                sheet1.getRow(0).getCell(33).setCellValue("面线夹持");
+                sheet1.getRow(0).getCell(34).setCellValue("订单类型");
                 DataFormat dataFormat = wb.createDataFormat();
                 CellStyle cellStyle;
                 HSSFCellStyle wrapStyle=wb.createCellStyle();     
@@ -369,7 +371,7 @@ public class MachineOrderController {
                     MachineOrderDetail mod = list.get(i);
                     OrderDetail od = mod.getOrderDetail();
                     row = sheet1.createRow(r);//新创建一行
-                    for(int c=0; c<34; c++){
+                    for(int c=0; c<columnSum; c++){
                         row.createCell(c);//创建列单元格
                     }
                     sheet1.getRow(r).getCell(0).setCellValue(mod.getCustomer());//客户
@@ -453,6 +455,7 @@ public class MachineOrderController {
                     sheet1.getRow(r).getCell(31).setCellValue(od.getAxleJump());//跳跃方式
                     sheet1.getRow(r).getCell(32).setCellValue(od.getAxleHook());//旋梭
                     sheet1.getRow(r).getCell(33).setCellValue(od.getAxleUpperThread());//面线夹持
+                    sheet1.getRow(r).getCell(34).setCellValue(mod.getOrderType());//订单类型
                 }
               
                 downloadPath = reportOutputPath + "账务报表" + ".xls";
@@ -526,7 +529,7 @@ public class MachineOrderController {
                     headcellstyle.setFont(headfont);
                     Row row;
                     row = sheet1.createRow(0);//新创建一行，行号为row+1
-                    int columnSum = 16;
+                    int columnSum = 18;
                     for(int c=0; c<columnSum; c++){//列头
                         row.createCell(c);//创建一个单元格，列号为col+1
                         sheet1.setColumnWidth(c,4500);
@@ -550,6 +553,8 @@ public class MachineOrderController {
                     sheet1.getRow(0).getCell(13).setCellValue("业务费"); //销售费
                     sheet1.getRow(0).getCell(14).setCellValue("付款方式");
                     sheet1.getRow(0).getCell(15).setCellValue("毛利");
+                    sheet1.getRow(0).getCell(16).setCellValue("订单类型");
+                    sheet1.getRow(0).getCell(17).setCellValue("保修费");
                     DataFormat dataFormat = wb.createDataFormat();
                     CellStyle cellStyle;
                     HSSFCellStyle wrapStyle=wb.createCellStyle();     
@@ -621,6 +626,9 @@ public class MachineOrderController {
 
                         sheet1.getRow(r).getCell(14).setCellValue(mod.getPayMethod());//付款方式
                         sheet1.getRow(r).getCell(15).setCellValue(mod.getGrossProfit());//毛利率
+                        sheet1.getRow(r).getCell(16).setCellValue(mod.getOrderType());//订单类型
+                        sheet1.getRow(r).getCell(17).setCellValue(mod.getWarrantyFee());//保修费
+
                     }
                   
                     downloadPath = reportOutputPath + "销售报表" + ".xls";
