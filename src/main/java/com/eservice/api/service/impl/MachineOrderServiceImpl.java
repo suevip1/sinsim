@@ -44,7 +44,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                                                 Integer contract_id,
                                                 String order_num,
                                                 String contract_num,
-                                                Integer status,
+                                                String status,
                                                 String sellman,
                                                 String customer,
                                                 String marketGroupName,
@@ -54,6 +54,13 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                                                 String queryFinishTimeSign,
                                                 String machine_name,
                                                 Boolean is_fuzzy) {
+
+        String[] arr;
+        if(status == null || status.equals("")){
+            arr = null;
+        } else {
+            arr = status.split(",");
+        }
 
         List<MachineOrderDetail> machineOrderDetailList;
         /**
@@ -70,7 +77,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     contract_id,
                     order_num,
                     contract_num,
-                    status,
+                    arr,
                     sellman,
                     customer,
                     marketGroupName,
@@ -93,7 +100,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     contract_id,
                     order_num,
                     contract_num,
-                    status,
+                    arr,
                     sellman,
                     customer,
                     marketGroupName,

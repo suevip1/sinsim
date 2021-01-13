@@ -162,9 +162,24 @@ public class MachineOrderController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
-    /*
-    根据条件查询订单。
-    比如 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单
+    /**
+     *   根据条件查询订单。
+     * 比如 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单
+     * @param id
+     * @param contract_id
+     * @param order_num
+     * @param contract_num
+     * @param status   支持多个状态用逗号隔开， "2,3,4"
+     * @param sellman
+     * @param customer
+     * @param marketGroupName
+     * @param query_start_time
+     * @param query_finish_time
+     * @param queryStartTimeSign
+     * @param queryFinishTimeSign
+     * @param machine_name
+     * @param is_fuzzy
+     * @return
      */
     //注意这个接口在不带参数时查询全部数据会有一定耗时，加了联系单查询。
     @PostMapping("/selectOrders")
@@ -174,7 +189,7 @@ public class MachineOrderController {
             Integer contract_id,
             String order_num,
             String contract_num,
-            Integer status,
+            String status,
             String sellman,
             String customer,
             String marketGroupName,
@@ -270,7 +285,7 @@ public class MachineOrderController {
                                       Integer contract_id,
                                       String order_num,
                                       String contract_num,
-                                      Integer status,
+                                      String status,
                                       String sellman,
                                       String customer,
                                       String marketGroupName,
@@ -483,7 +498,7 @@ public class MachineOrderController {
                                         Integer contract_id,
                                         String order_num,
                                         String contract_num,
-                                        Integer status,
+                                        String status,
                                         String sellman,
                                         String customer,
                                         String marketGroupName,

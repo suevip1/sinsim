@@ -312,8 +312,14 @@
 		<if test="market_group_name != null and market_group_name != ''">
 			and con.market_group_name like CONCAT('%','${market_group_name}','%' )
 		</if>
-		<if test="status != null">
-			and mo.status=${status}
+		<!--<if test="status != null">-->
+			<!--and mo.status=${status}-->
+		<!--</if>-->
+		<if test="statusArr != null">
+			and mo.status in
+			<foreach collection="statusArr" item="item" open="(" close=")"  separator="," >
+				#{item}
+			</foreach>
 		</if>
 		<if test="sellman != null and sellman != '' ">
 			and mo.sellman like CONCAT('%','${sellman}','%' )
@@ -447,8 +453,14 @@
 		<if test="market_group_name != null and market_group_name != ''">
 			and con.market_group_name like CONCAT('%','${market_group_name}','%' )
 		</if>
-		<if test="status != null">
-			and mo.status=${status}
+		<!--<if test="status != null">-->
+			<!--and mo.status=${status}-->
+		<!--</if> -->
+		<if test="statusArr != null">
+			and mo.status in
+			<foreach collection="statusArr" item="item" open="(" close=")"  separator="," >
+				#{item}
+			</foreach>
 		</if>
 		<if test="sellman != null and sellman != '' ">
 			and mo.sellman = CONCAT('%','${sellman}','%' )
