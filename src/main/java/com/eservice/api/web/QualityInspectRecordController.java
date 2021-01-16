@@ -105,4 +105,39 @@ public class QualityInspectRecordController {
         PageInfo pageInfo = new PageInfo(taskRecordDetailList);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    @PostMapping("selectQualityInspectRecordDetailGroupByMachine")
+    public Result selectQualityInspectRecordDetailGroupByMachine(@RequestParam(defaultValue = "0") Integer page,
+                                                   @RequestParam(defaultValue = "0") Integer size,
+                                                   String orderNumber,
+                                                   String taskName,
+                                                   String recordStatus,
+                                                   String nameplate,
+                                                   String inspectName,
+                                                   String inspectType,
+                                                   String inspectPhase,
+                                                   String inspectContent,
+                                                   String inspectPerson,
+                                                   String recordRemark,
+                                                   String reInspect,
+                                                   String queryStartTime,
+                                                   String queryFinishTime) {
+        PageHelper.startPage(page, size);
+        List<QualityInspectRecordDetail>  taskRecordDetailList = qualityInspectRecordService.selectQualityInspectRecordDetailGroupByMachine(
+                orderNumber,
+                taskName,
+                recordStatus,
+                nameplate,
+                inspectName,
+                inspectType,
+                inspectPhase,
+                inspectContent,
+                inspectPerson,
+                recordRemark,
+                reInspect,
+                queryStartTime,
+                queryFinishTime );
+        PageInfo pageInfo = new PageInfo(taskRecordDetailList);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }

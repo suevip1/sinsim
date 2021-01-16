@@ -54,4 +54,33 @@ public class QualityInspectRecordServiceImpl extends AbstractService<QualityInsp
                 queryFinishTime );
     }
 
+    public List<QualityInspectRecordDetail> selectQualityInspectRecordDetailGroupByMachine(
+            String orderNumber,
+            String taskName,
+            String recordStatus,
+            String nameplate,
+            String inspectName,
+            String inspectType,
+            String inspectPhase,
+            String inspectContent,
+            String inspectPerson,
+            String recordRemark,
+            String reInspect,
+            String queryStartTime,
+            String queryFinishTime) {
+        return qualityInspectRecordMapper.selectQualityInspectRecordDetailGroupByMachine(
+                orderNumber,
+                taskName,
+                recordStatus,
+                nameplate,
+                inspectName,
+                inspectType,
+                inspectPhase,
+                inspectContent,
+                inspectPerson,
+                recordRemark,
+                reInspect,
+                queryStartTime,
+                queryFinishTime );
+    }
 }

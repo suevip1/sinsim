@@ -22,4 +22,20 @@ public interface QualityInspectRecordMapper extends Mapper<QualityInspectRecord>
             @Param("reInspect") String reInspect,
             @Param("queryStartTime") String queryStartTime,
             @Param("queryFinishTime") String queryFinishTime );
+			
+    List<QualityInspectRecordDetail> selectQualityInspectRecordDetailGroupByMachine(
+            @Param("orderNumber") String orderNumber,
+            @Param("taskName") String taskName,
+            @Param("recordStatus") String recordStatus,
+            @Param("nameplate") String nameplate ,
+            @Param("inspectName") String inspectName,
+            @Param("inspectType") String inspectType,
+            @Param("inspectPhase") String inspectPhase,
+            @Param("inspectContent") String inspectContent,
+            @Param("inspectPerson") String inspectPerson,
+            @Param("recordRemark") String recordRemark,
+            @Param("reInspect") String reInspect,
+            @Param("queryStartTime") String queryStartTime,
+            @Param("queryFinishTime") String queryFinishTime );
+
 }

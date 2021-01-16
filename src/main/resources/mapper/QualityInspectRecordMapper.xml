@@ -206,4 +206,24 @@
     GROUP BY qirID
     ORDER BY qir.create_time DESC, qir.update_time DESC
   </select>
+
+    <select id="selectQualityInspectRecordDetailGroupByMachine" resultMap="QualityInspectRecordDetailResultMap">
+    SELECT DISTINCT
+        (m.nameplate),
+        qir.record_status,
+        m.location,
+        mo.id AS machine_order_id,
+        mo.order_num
+    FROM
+        quality_inspect_record qir
+    JOIN machine m ON qir.machine_nameplate = m.nameplate
+    JOIN machine_order mo ON mo.order_num = qir.order_number
+    WHERE
+        1 = 1
+    AND qir.record_status = 10
+    ORDER BY
+        qir.create_time DESC,
+        qir.update_time DESC
+    </select>
+
 </mapper>
