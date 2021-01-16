@@ -46,6 +46,8 @@
 		<result column="gross_profit" jdbcType="VARCHAR" property="grossProfit"/>
 		<result column="business_expense" jdbcType="VARCHAR" property="businessExpense"/>
 		<result column="warranty_fee" jdbcType="VARCHAR" property="warrantyFee"/>
+		<result column="machine_frame_length" jdbcType="VARCHAR" property="machineFrameLength"/>
+
 	</resultMap>
 
 	<resultMap id="MachineOrderDetailMap" type="com.eservice.api.model.machine_order.MachineOrderDetail">
@@ -95,6 +97,7 @@
 		<result column="gross_profit" jdbcType="VARCHAR" property="grossProfit"/>
 		<result column="business_expense" jdbcType="VARCHAR" property="businessExpense"/>
 		<result column="warranty_fee" jdbcType="VARCHAR" property="warrantyFee"/>
+		<result column="machine_frame_length" jdbcType="VARCHAR" property="machineFrameLength"/>
 
 		<result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
 
@@ -188,13 +191,13 @@
     package_method,wrap_machine,wrap_machine_change,package_mark,machine_num,machine_type, machine_price,
     intermediary_price,discounts, order_total_discounts, equipment, contract_ship_date, plan_ship_date,
     sellman, maintain_type, maintain_person,status,create_time, update_time, end_time, mark, all_urgent,
-    order_type, gross_profit, business_expense, warranty_fee)
+    order_type, gross_profit, business_expense, warranty_fee, machine_frame_length)
     values(
     #{orderNum},#{originalOrderId},#{contractId},#{orderDetailId},#{createUserId},#{country},#{brand},#{needleNum},#{headNum},#{headDistance},#{xDistance},
     #{yDistance},#{packageMethod},#{wrapMachine},#{wrapMachineChange},#{packageMark},#{machineNum},#{machineType},
     #{machinePrice},#{intermediaryPrice},#{discounts},#{orderTotalDiscounts},#{equipment},#{contractShipDate},#{planShipDate},
     #{sellman},#{maintainType},#{maintainPerson},#{status},#{createTime},#{updateTime},#{endTime},#{mark},#{allUrgent},
-    #{orderType},#{grossProfit},#{businessExpense},#{warrantyFee})
+    #{orderType},#{grossProfit},#{businessExpense},#{warrantyFee}, #{machineFrameLength})
   </insert>
 
 	<select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
@@ -309,8 +312,14 @@
 		<if test="market_group_name != null and market_group_name != ''">
 			and con.market_group_name like CONCAT('%','${market_group_name}','%' )
 		</if>
-		<if test="status != null">
-			and mo.status=${status}
+		<!--<if test="status != null">-->
+			<!--and mo.status=${status}-->
+		<!--</if>-->
+		<if test="statusArr != null">
+			and mo.status in
+			<foreach collection="statusArr" item="item" open="(" close=")"  separator="," >
+				#{item}
+			</foreach>
 		</if>
 		<if test="sellman != null and sellman != '' ">
 			and mo.sellman like CONCAT('%','${sellman}','%' )
@@ -444,8 +453,14 @@
 		<if test="market_group_name != null and market_group_name != ''">
 			and con.market_group_name like CONCAT('%','${market_group_name}','%' )
 		</if>
-		<if test="status != null">
-			and mo.status=${status}
+		<!--<if test="status != null">-->
+			<!--and mo.status=${status}-->
+		<!--</if> -->
+		<if test="statusArr != null">
+			and mo.status in
+			<foreach collection="statusArr" item="item" open="(" close=")"  separator="," >
+				#{item}
+			</foreach>
 		</if>
 		<if test="sellman != null and sellman != '' ">
 			and mo.sellman = CONCAT('%','${sellman}','%' )

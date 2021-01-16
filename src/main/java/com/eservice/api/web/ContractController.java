@@ -1743,9 +1743,27 @@ public class ContractController {
 
                     }
                     //最后删除多余一行
-                    sheetX.shiftRows(41 + equipmentCount + orderSignCount + 1,
+                    sheetX.shiftRows(41 + equipmentCount + orderSignCount + 1 ,
                             sheetX.getLastRowNum(),
                             -1);
+
+                    // 订单类型、
+                    cell = sheetX.getRow(41 + equipmentCount + orderSignCount).getCell((short) 1);
+                    cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderType()));
+                    //业务费、
+                    cell = sheetX.getRow(41 + equipmentCount + orderSignCount).getCell((short) 3);
+                    if (displayPrice) {
+                        cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getBusinessExpense()));
+                    } else {
+                        cell.setCellValue(new HSSFRichTextString("/"));
+                    }
+                    //保修费
+                    cell = sheetX.getRow(41 + equipmentCount + orderSignCount).getCell((short) 5);
+                    if (displayPrice) {
+                    cell.setCellValue(new HSSFRichTextString(machineOrderDetail.getWarrantyFee()));
+                    } else {
+                        cell.setCellValue(new HSSFRichTextString("/"));
+                    }
                 }
             }
 

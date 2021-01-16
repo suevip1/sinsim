@@ -125,6 +125,52 @@ public class OrderSignController {
                         commonService.createDesignDepInfo(machineOrder);
                     }
                 }
+                /**
+                 * 技术部签核，更新相关内容：
+                 * 1. 机架长度 来自于技术部经理的签核内容，从“长度”字符开始截取。
+                 */
+                if(item.getRoleId() == Constant.ROLE_ID_TECH_MANAGER){
+                    String commentOfTechManager = item.getComment();
+                    int start = 0;
+                    start = commentOfTechManager.indexOf("机架长度");
+                    if(start == -1) {
+                        start = commentOfTechManager.indexOf("【长度】");
+                    }
+                    if(start == -1) {
+                        start = commentOfTechManager.indexOf("[长度]");
+                    }
+                    if(start == -1) {
+                        start = commentOfTechManager.indexOf("长度");
+                    }
+
+                    if(start != -1) {
+                        machineOrder.setMachineFrameLength(commentOfTechManager.substring(start));
+                        machineOrderService.update(machineOrder);
+                        logger.info("更新了机架长度为: " + commentOfTechManager.substring(start));
+                    }
+
+                }
+                /**
+                 * 成本核算员签核，更新相关内容：
+                 * 1. 毛利率
+                 */
+                if(item.getRoleId() == Constant.ROLE_ID_COST_ACCOUNTANT){
+                    String grossProfitString = "";
+                        int start = 0;
+                        start = item.getComment().indexOf("【毛利率】");
+                        if(start == -1) {
+                            start = item.getComment().indexOf("[毛利率]");
+                        }
+                        if(start == -1) {
+                            start = item.getComment().indexOf("毛利率");
+                        }
+                        if(start != -1) {
+                            grossProfitString = item.getComment().substring(start);
+                            machineOrder.setGrossProfit(grossProfitString);
+                            machineOrderService.update(machineOrder);
+                            logger.info("更新了毛利率为: " + grossProfitString );
+                        }
+                }
             }
 
             //都已经签核

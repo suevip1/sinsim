@@ -360,5 +360,6 @@ public class Constant {
     public static final Integer ROLE_ID_TECHNICIAN = 10;
     public static final Integer ROLE_ID_QUALITY_INSPECTOR = 11;
     public static final Integer ROLE_ID_PMC = 12;
+    public static final Integer ROLE_ID_COST_ACCOUNTANT = 13;;//成本核算员
 
 }

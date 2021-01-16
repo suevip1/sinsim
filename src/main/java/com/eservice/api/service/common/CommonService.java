@@ -580,7 +580,8 @@ public class CommonService {
         User user = userService.selectByAccount(account);
         if (user != null) {
             Integer roleId = user.getRoleId();
-            if ((6 == roleId)           //总经理
+            if ((1 == roleId)           //管理员
+                    || (6 == roleId)           //总经理
                     || (7 == roleId)    //销售部经理
                     || (9 == roleId)    //销售员
                     || (13 == roleId)   //成本核算员
@@ -594,7 +595,10 @@ public class CommonService {
         return displayPrice;
     }
 
-    //执行curl命令行命令
+    /**
+     *  执行curl命令行命令
+     *  会有异步等待时间，问题不大
+     */
     public String execCurl(String[] cmds) {
         logger.info("执行curl" );
         ProcessBuilder process = new ProcessBuilder(cmds);
@@ -915,5 +919,25 @@ public class CommonService {
             logger.warn("[syncMachineOrderStatusInDesignDepInfo]" + machineOrder.getOrderNum()
                     + ":根据该订单号找不到设计单，设计单还没生成，或是没有设计单之前的旧订单！");
         }
+    }
+	
+    /**
+     * 获取某个角色的订单签核意见
+     */
+    public String getSignContent(OrderSign orderSign, Integer roleID){
+        String contentStr = orderSign.getSignContent();
+        List<SignContentItem> orderSignContentList = JSON.parseArray(contentStr, SignContentItem.class);
+
+        if(orderSignContentList == null || orderSignContentList.isEmpty()){
+            logger.warn("ERROR: orderSignContentList 为空");
+            return "ERROR: orderSignContentList 为空";
+        }
+        for (SignContentItem item : orderSignContentList) {
+            if(item.getRoleId() == roleID) {
+                logger.info("roleID: " + roleID + "的comment为：" + item.getComment());
+                return item.getComment();
+            }
+        }
+        return "ERROR: 找不到该RoleID对应的签核";
     }
 }

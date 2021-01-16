@@ -125,7 +125,7 @@ CREATE TABLE `contact_form` (
   `create_date` datetime NOT NULL COMMENT '申请日期',
   `hope_date` datetime DEFAULT NULL COMMENT '希望完成的日期',
   `contact_title` varchar(255) NOT NULL COMMENT '联络主题、变更理由/主题',
-  `contact_content` varchar(500) DEFAULT NULL COMMENT '联络内容',
+  `contact_content` varchar(1000) DEFAULT NULL COMMENT '工作联系单的 联络内容',
   `contact_content_else` varchar(255) DEFAULT NULL COMMENT '“其他变更，需说明”时的输入',
   `status` varchar(255) DEFAULT NULL,
   `update_date` datetime DEFAULT NULL,
@@ -508,7 +508,7 @@ CREATE TABLE `machine_order` (
   `update_time` datetime DEFAULT NULL COMMENT '订单信息更新时间',
   `end_time` datetime DEFAULT NULL COMMENT '订单结束时间',
   `all_urgent` tinyint(4) DEFAULT NULL COMMENT '该订单的机器全部加急；1表示加急,0表示取消加急(曾经加急后来取消了)，默认为null',
-<<<<<<< HEAD
+
   `embroidery_application` varchar(20) DEFAULT NULL COMMENT '绣品应用',
   `line_type` varchar(20) DEFAULT NULL COMMENT '线种',
   `highest_speed` varchar(20) DEFAULT NULL COMMENT '最高速度',
@@ -523,9 +523,14 @@ CREATE TABLE `machine_order` (
   `gas_frame` varchar(20) DEFAULT NULL COMMENT '气框', 
   
   `order_type` varchar(20) DEFAULT NULL COMMENT '订单分类：1.直销 2.经销商 3.代理商',
-  `gross_profit` varchar(10) DEFAULT NULL COMMENT '毛利率：百分比数字',
+  `gross_profit` varchar(255) DEFAULT NULL COMMENT '毛利率：百分比数字,已改为从成本核算员审核意见中抽取',
   `business_expense` varchar(100) DEFAULT NULL COMMENT '业务费',
+
   `warranty_fee` varchar(100) DEFAULT NULL COMMENT '保修费', 
+
+  `warranty_fee` varchar(100) DEFAULT NULL COMMENT '保修费',
+  `machine_frame_length` varchar(255) DEFAULT NULL COMMENT '机架长度，截取自于技术部经理的审核意见中',
+
   PRIMARY KEY (`id`),
   KEY `fk_o_machine_type` (`machine_type`),
   KEY `fk_o_order_detail_id` (`order_detail_id`),
@@ -567,12 +572,11 @@ CREATE TABLE `market_group` (
 -- ----------------------------
 -- Table structure for optimize_test
 -- ----------------------------
-<<<<<<< HEAD
-=======
+ 
 INSERT INTO `market_group` VALUES ('1', '外贸一部');
 INSERT INTO `market_group` VALUES ('2', '外贸二部');
 INSERT INTO `market_group` VALUES ('3', '内贸部');
->>>>>>> sheJiBu3Qi
+ 
 DROP TABLE IF EXISTS `optimize_test`;
 CREATE TABLE `optimize_test` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -588,11 +592,7 @@ CREATE TABLE `optimize_test` (
   `create_date` datetime DEFAULT NULL,
   `update_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-<<<<<<< HEAD
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-=======
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4;
->>>>>>> sheJiBu3Qi
 
 -- ----------------------------
 -- Table structure for `order_cancel_record`

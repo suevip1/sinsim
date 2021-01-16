@@ -145,6 +145,7 @@
             <result column="gross_profit" jdbcType="VARCHAR" property="grossProfit"/>
             <result column="business_expense" jdbcType="VARCHAR" property="businessExpense"/>
             <result column="warranty_fee" jdbcType="VARCHAR" property="warrantyFee"/>
+            <result column="machine_frame_length" jdbcType="VARCHAR" property="machineFrameLength"/>
 
         </association>
         <association javaType="com.eservice.api.model.order_loading_list.OrderLoadingList" property="orderLoadingList">
