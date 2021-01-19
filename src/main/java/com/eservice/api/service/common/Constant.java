@@ -188,7 +188,7 @@ public class Constant {
      * （没有质检中,因为是对一条质检内容而言,对机器有多条质检，才有质检中这样的状态）,
      * “未检”按钮（因为无法检查，比如安装好了盖住了无法打开检验）,
      */
-    public static final String STR_QUALITY_INSPECT_NOT_START = "待质检";
+    public static final String STR_QUALITY_INSPECT_NOT_STARTED = "待质检";
     public static final String STR_QUALITY_INSPECT_NOT_NEED = "无此检验条目";
     public static final String STR_QUALITY_INSPECT_FAILURE = "质检不合格";
     public static final String STR_QUALITY_INSPECT_SUCCESS = "质检合格";

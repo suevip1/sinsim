@@ -1,9 +1,10 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.quality_inspect_record.QualityInspectRecord;
 import com.eservice.api.model.quality_inspect_record.QualityInspectRecordDetail;
-import com.eservice.api.service.QualityInspectRecordService;
 import com.eservice.api.service.impl.QualityInspectRecordServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
 * Class Description: xxx
@@ -25,6 +28,8 @@ import java.util.List;
 public class QualityInspectRecordController {
     @Resource
     private QualityInspectRecordServiceImpl qualityInspectRecordService;
+
+    private Logger logger = Logger.getLogger(QualityInspectRecordController.class);
 
     @PostMapping("/add")
     public Result add(QualityInspectRecord qualityInspectRecord) {
@@ -44,6 +49,28 @@ public class QualityInspectRecordController {
         return ResultGenerator.genSuccessResult();
     }
 
+    /**
+     *  更新质检记录
+     *  接收的是JSON化的数组
+     */
+    @PostMapping("/updateQualityInspectRecordList")
+    public Result updateQualityInspectRecordList(String mQualityInspectRecordTobeUploadList) {
+
+        logger.info(mQualityInspectRecordTobeUploadList);
+        JSONArray jsonArray = JSON.parseArray(mQualityInspectRecordTobeUploadList);
+
+        if (null != jsonArray) {
+            int size = jsonArray.size();
+            logger.info("更新质检记录，size: " + size);
+            for(int i=0; i<size; i++){
+                QualityInspectRecord qualityInspectRecordTobeUpdate = JSON.parseObject((String) jsonArray.get(i).toString(), QualityInspectRecord.class);
+                qualityInspectRecordTobeUpdate.setUpdateTime(new Date());
+                qualityInspectRecordService.update(qualityInspectRecordTobeUpdate);
+            }
+        }
+        return ResultGenerator.genSuccessResult();
+    }
+	
     @PostMapping("/detail")
     public Result detail(@RequestParam Integer id) {
         QualityInspectRecord qualityInspectRecord = qualityInspectRecordService.findById(id);

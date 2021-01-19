@@ -763,6 +763,13 @@ public class TaskRecordController {
         }
 
         //开始安装时不用，只有在安装结束时才要更新 --> 现在没有质检了，扫码完成时，app直接发 质检完成
+        /**
+         *  2020 3期。
+         *  质检的结果 quality/inspect/record, 和原先taskRecord工序没有关系了。
+         *  因为新的质检内容和工序没有工关系，即不是每个工序都检，不是按工序来做质检。
+         *  二期的质检没有在实施，二期的质检是在安装工序的最后，加一个“出厂检查”工序
+         */
+
         if(tr.getStatus().equals(Constant.TASK_QUALITY_DONE)) {
             createInstallPlanActual(tr);
         }

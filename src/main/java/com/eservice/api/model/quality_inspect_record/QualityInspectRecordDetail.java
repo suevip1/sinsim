@@ -54,7 +54,12 @@ public class QualityInspectRecordDetail extends QualityInspectRecord {
     private String leader;
 
     /**
-     * task状态，“1”==>未开始， “2”==>进行中，“3”==>完成， “4”==>异常
+     *  3期新质检
+     * "10" --> 未开始质检
+     * "11" --> 无此检验条目
+     * "12" --> 质检不合格
+     * "13" --> 质检合格
+     * "14" --> 未检
      */
     private Byte status;
 

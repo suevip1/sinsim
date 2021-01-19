@@ -160,6 +160,10 @@ public class MachineController {
                                 } else {
                                     logger.warn("根据" + machine1.getNameplate() +" 找不到订单号");
                                 }
+
+                                /**
+                                 * 因为要和APP其他状态共用一些代码，所以这里不要用字符串，用数字
+                                 */
 //                                qualityInspectRecord.setRecordStatus(Constant.STR_QUALITY_INSPECT_NOT_START);
                                 qualityInspectRecord.setRecordStatus(Constant.TASK_QUALITY_INSPECT_NOT_STARTED.toString());
 
