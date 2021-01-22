@@ -38,10 +38,16 @@ public class QualityInspectRecordServiceImpl extends AbstractService<QualityInsp
             String reInspect,
             String queryStartTime,
             String queryFinishTime) {
+        String[] recordStatusArr;
+        if(recordStatus == null || recordStatus.equals("")){
+            recordStatusArr = null;
+        } else {
+            recordStatusArr = recordStatus.split(",");
+        }
         return qualityInspectRecordMapper.selectQualityInspectRecordDetail(
                 orderNumber,
                 taskName,
-                recordStatus,
+                recordStatusArr,
                 nameplate,
                 inspectName,
                 inspectType,

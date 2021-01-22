@@ -165,9 +165,13 @@
     <if test="taskName != null and taskName != ''">
       and  qir.task_name = #{taskName}
     </if>
-    <if test="recordStatus != null and recordStatus != ''">
-      and qir.record_status = #{recordStatus}
-    </if>
+
+      <if test="recordStatusArr != null">
+          and qir.record_status in
+          <foreach collection="recordStatusArr" item="item" open="(" close=")"  separator="," >
+              #{item}
+          </foreach>
+      </if>
     <if test="nameplate != null and nameplate != ''">
       and qir.machine_nameplate like CONCAT('%','${nameplate}','%' )
     </if>
@@ -208,9 +212,11 @@
   </select>
 
     <select id="selectQualityInspectRecordDetailGroupByMachine" resultMap="QualityInspectRecordDetailResultMap">
+--  同个机器，质检项inspect_name 可能会有多个， 在app 上会处理：同个机器的多个质检项，只显示第一项，到详情页面里，会重新获取全部质检项
     SELECT DISTINCT
         (m.nameplate),
         qir.record_status,
+        qir.inspect_name,
         m.location,
         mo.id AS machine_order_id,
         mo.order_num
@@ -220,7 +226,8 @@
     JOIN machine_order mo ON mo.order_num = qir.order_number
     WHERE
         1 = 1
-    AND qir.record_status = 10
+--         已经质检OK、不需要再看了的，就不再显示； 未检或者NG的才显示
+    AND (qir.record_status = 10 or qir.record_status = 12)
     ORDER BY
         qir.create_time DESC,
         qir.update_time DESC

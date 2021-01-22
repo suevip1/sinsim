@@ -11,7 +11,7 @@ public interface QualityInspectRecordMapper extends Mapper<QualityInspectRecord>
     List<QualityInspectRecordDetail> selectQualityInspectRecordDetail(
             @Param("orderNumber") String orderNumber,
             @Param("taskName") String taskName,
-            @Param("recordStatus") String recordStatus,
+            @Param("recordStatusArr") String[] recordStatusArr,
             @Param("nameplate") String nameplate ,
             @Param("inspectName") String inspectName,
             @Param("inspectType") String inspectType,

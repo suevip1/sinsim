@@ -88,7 +88,7 @@ public class QualityInspectRecordController {
     /**
      *  查询质检记录
      * @param taskName      --工序名称
-     * @param recordStatus  -- 质检状态（结果）
+     * @param recordStatus  -- 质检状态（结果）--支持多个状态，以逗号分割
      * @param nameplate     --机器铭牌号
      * @param inspectName   --质检的名称
      * @param inspectPerson --质检人员名称
@@ -103,7 +103,7 @@ public class QualityInspectRecordController {
                                                    @RequestParam(defaultValue = "0") Integer size,
                                                    String orderNumber,
                                                    String taskName,
-                                                   String recordStatus,
+                                                   String recordStatus,///支持多个状态用逗号隔开， "2,3,4"
                                                    String nameplate,
                                                    String inspectName,
                                                    String inspectType,
