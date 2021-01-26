@@ -114,7 +114,8 @@
           <result column="valid" jdbcType="TINYINT" property="valid" />
       </association>
   </resultMap>
-
+             <!--and DATE_FORMAT(qir.create_time,'%Y-%m-%d') &gt;= #{queryStartTime}-->
+             <!--应该是查询质检的上传时间比较好 -->
   <select id="selectQualityInspectRecordDetail" resultMap="QualityInspectRecordDetailResultMap">
       SELECT
 --       distinct
@@ -188,10 +189,10 @@
       and  qir.re_inspect  like CONCAT('%','${reInspect}','%' )
     </if>
     <if test="queryStartTime != null and queryStartTime != '' ">
-      and DATE_FORMAT(qir.create_time,'%Y-%m-%d') &gt;= #{queryStartTime}
+        and DATE_FORMAT(qir.update_time,'%Y-%m-%d') &gt;= #{queryStartTime}
     </if>
     <if test="queryFinishTime!= null and queryFinishTime != '' ">
-      and DATE_FORMAT(qir.create_time,'%Y-%m-%d') &lt;= #{queryFinishTime}
+        and DATE_FORMAT(qir.update_time,'%Y-%m-%d') &lt;=  #{queryFinishTime}
     </if>
 
       <if test="inspectName != null and inspectName != ''">
@@ -208,7 +209,7 @@
       </if>
 
     GROUP BY qirID
-    ORDER BY qir.create_time DESC, qir.update_time DESC
+    ORDER BY  qir.update_time DESC, qir.create_time DESC
   </select>
 
     <select id="selectQualityInspectRecordDetailGroupByMachine" resultMap="QualityInspectRecordDetailResultMap">

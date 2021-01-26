@@ -56,7 +56,7 @@ public class QualityInspectRecordController {
     @PostMapping("/updateQualityInspectRecordList")
     public Result updateQualityInspectRecordList(String mQualityInspectRecordTobeUploadList) {
 
-        logger.info(mQualityInspectRecordTobeUploadList);
+//        logger.info(mQualityInspectRecordTobeUploadList);
         JSONArray jsonArray = JSON.parseArray(mQualityInspectRecordTobeUploadList);
 
         if (null != jsonArray) {
@@ -64,7 +64,10 @@ public class QualityInspectRecordController {
             logger.info("更新质检记录，size: " + size);
             for(int i=0; i<size; i++){
                 QualityInspectRecord qualityInspectRecordTobeUpdate = JSON.parseObject((String) jsonArray.get(i).toString(), QualityInspectRecord.class);
-                qualityInspectRecordTobeUpdate.setUpdateTime(new Date());
+
+               //  机器的所有质检一起发过来，但是时间不能都更新，应该只更新改变的, 所以在APP上设置更新时间
+              //  qualityInspectRecordTobeUpdate.setUpdateTime(new Date());
+
                 qualityInspectRecordService.update(qualityInspectRecordTobeUpdate);
             }
         }
