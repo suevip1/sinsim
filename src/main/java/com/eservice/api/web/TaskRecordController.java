@@ -671,8 +671,102 @@ public class TaskRecordController {
      *
      * app扫码报异常时，调用 addTrArAi （app报正常时，调用的是 updateTaskInfo， 少了两个参数）
      * （质检报正常也是调addTrArAi）
-     * @param taskRecord
-     * @return
+     *
+     * 开始安装，eg：
+     * [     {
+     "cmtFeedback":"",
+     "id":55531,
+     "installBeginTime":"20210127141618",
+     "leader":"",
+     "machine":{
+         "createTime":"1609394393000",
+         "id":5756,
+         "isUrgent":false,
+         "location":"上C2",
+         "machineStrId":"CBB142313294",
+         "machineType":2,
+         "nameplate":"2011201",
+         "orderId":2872,
+         "status":3,
+         "updateTime":"1609739671000"
+     },
+     "machineOrder":{
+         "contractShipDate":"1608652800000",
+         "headNum":"24",
+         "id":2872,
+         "machineType":2,
+         "needleNum":"9",
+         "orderNum":"骆1417C",
+         "planShipDate":1609862400000
+     },
+     "nodeKey":-19,
+     "processRecordId":5367,
+     "status":3,  ====> "3" --> 开始安装
+     "task":{
+         "id":2,
+         "qualityUserId":0
+     },
+     "taskName":"下轴安装",
+     "taskPlan":{
+         "createTime":"1609394393000",
+         "id":51821,
+         "planTime":1609776000000,
+         "planType":1,
+         "taskRecordId":55531,
+         "updateTime":"1609739671000",
+         "userId":169
+     },
+     "workerList":""
+     }     ]
+     扫描结束安装：
+     [     {
+     "cmtFeedback":"拜拜拜拜布b",
+     "id":55531,
+     "installBeginTime":"20210127141618",
+     "installEndTime":"20210127141958",
+     "leader":"a1",
+     "machine":{
+         "createTime":"1609394393000",
+         "id":5756,
+         "isUrgent":false,
+         "location":"上C2",
+         "machineStrId":"CBB142313294",
+         "machineType":2,
+         "nameplate":"2011201",
+         "orderId":2872,
+         "status":3,
+         "updateTime":"1609739671000"
+     },
+     "machineOrder":{
+         "contractShipDate":"1608652800000",
+         "headNum":"24",
+         "id":2872,
+         "machineType":2,
+         "needleNum":"9",
+         "orderNum":"骆1417C",
+         "planShipDate":1609862400000
+     },
+     "nodeKey":-19,
+     "processRecordId":5367,
+     "qualityBeginTime":"20210127141958",
+     "qualityEndTime":"20210127141958",
+     "status":6,  ========> "6" --> 质检完成， 三期新质检，这里不再是6，改为4
+     "task":{
+         "id":2,
+         "qualityUserId":0
+     },
+     "taskName":"下轴安装",
+     "taskPlan":{
+         "createTime":"1609394393000",
+         "id":51821,
+         "planTime":1609776000000,
+         "planType":1,
+         "taskRecordId":55531,
+         "updateTime":"1609739671000",
+         "userId":169
+     },
+     "workerList":"赵建富"
+     }     ]
      */
     @PostMapping("/updateTaskInfo")
     @Transactional(rollbackFor = Exception.class)

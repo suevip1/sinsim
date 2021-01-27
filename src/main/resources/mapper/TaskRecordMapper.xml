@@ -265,6 +265,8 @@
         ORDER BY location, order_num
     </select>
 
+    <!--3期质检，安装完成后状态为安装完成，所以4、5不需要了-->
+    <!--and (tr.status=2 or tr.status=3 or tr.status=4 or tr.status=5 or tr.status=7 or tr.status=8)-->
     <select id="selectAllInstallTaskRecordDetailByUserAccount" resultMap="TaskRecordDetail">
         select
         tr.id, tr.task_name, tr.process_record_id, tr.node_key, tr.leader, tr.worker_list, tr.status taskRecord_status, tr.install_begin_time, tr.install_end_time,tr.quality_begin_time, tr.quality_end_time,
@@ -286,7 +288,7 @@
         join install_group  on install_group.id = t.group_id
         join user on user.group_id = install_group.id
         where user.account  = #{userAccount}
-        and (tr.status=2 or tr.status=3 or tr.status=4 or tr.status=5 or tr.status=7 or tr.status=8)
+        and (tr.status=2 or tr.status=3   or tr.status=7 or tr.status=8)
         ORDER BY location, order_num
     </select>
 

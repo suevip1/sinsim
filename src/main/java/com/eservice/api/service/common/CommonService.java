@@ -380,8 +380,10 @@ public class CommonService {
                         ndItem.setWorkList(tr.getWorkerList());
                     }
                     ndList.set(index, ndItem);
-                    //如果当前工序是质检完成状态或者跳过状态，需要检查其子节点是否可以开始
-                    if (tr.getStatus().intValue() == Constant.TASK_QUALITY_DONE.intValue() || tr.getStatus().intValue() == Constant.TASK_SKIP.intValue()) {
+                    //如果当前工序是质检完成状态或者跳过状态，需要检查其子节点是否可以开始 -->3期时，工序安装完成，状态不再是“质检完成”而是“安装完成”
+                    if (tr.getStatus().intValue() == Constant.TASK_QUALITY_DONE.intValue()
+                            || tr.getStatus().intValue() == Constant.TASK_INSTALLED.intValue()
+                            || tr.getStatus().intValue() == Constant.TASK_SKIP.intValue()) {
                         List<LinkDataModel> linkDataList = JSON.parseArray(pr.getLinkData(), LinkDataModel.class);
                         for (LinkDataModel item : linkDataList) {
                             if (String.valueOf(item.getFrom()).equals(String.valueOf(ndItem.getKey()))) {
@@ -403,7 +405,9 @@ public class CommonService {
                                                         if (parentOfChildNode.getCategory() != null && (parentOfChildNode.getCategory().equals("Start") || parentOfChildNode.getCategory().equals("End"))) {
                                                             break;
                                                         }
-                                                        if (Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()
+                                                        //3期质检，安装完成是真的“安装完成”。3期之前，安装完成时，状态是“质检完成”
+                                                        if ((Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()
+                                                                && Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_INSTALLED.intValue())
                                                                 && Integer.valueOf(parentOfChildNode.getTaskStatus()) != Constant.TASK_SKIP.intValue()) {
                                                             allParentFinished = false;
                                                         }
@@ -459,12 +463,14 @@ public class CommonService {
                             && (ndList.get(i).getCategory().equals("Start") || ndList.get(i).getCategory().equals("End"))) {
                         continue;
                     }
-                    if (ndList.get(i).getTaskStatus() != null && Integer.parseInt(ndList.get(i).getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue()) {
+                    if (ndList.get(i).getTaskStatus() != null &&
+                            (Integer.parseInt(ndList.get(i).getTaskStatus()) != Constant.TASK_QUALITY_DONE.intValue() && Integer.parseInt(ndList.get(i).getTaskStatus()) != Constant.TASK_INSTALLED.intValue())) {
                         isFinished = false;
                     }
                 }
                 //所有工序完成
-                if (isFinished && tr.getStatus() == Constant.TASK_QUALITY_DONE.intValue()) {
+                if (isFinished &&
+                        (tr.getStatus() == Constant.TASK_QUALITY_DONE.intValue() || tr.getStatus() == Constant.TASK_INSTALLED.intValue())) {
                     pr.setEndTime(new Date());
                     //安装完成
                     machine.setStatus(Constant.MACHINE_INSTALLED);
