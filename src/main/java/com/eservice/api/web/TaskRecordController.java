@@ -856,7 +856,7 @@ public class TaskRecordController {
             mqttMessageHelper.sendToClient(Constant.S2C_TASK_QUALITY + taskList.get(0).getQualityUserId(), JSON.toJSONString(msg));
         }
 
-        //开始安装时不用，只有在安装结束时才要更新 --> 现在没有质检了，扫码完成时，app直接发 质检完成
+        //开始安装时不用，只有在安装结束时才要更新 --> 3期之前没有质检了，扫码完成时，app直接发 质检完成，3期加了新质检。
         /**
          *  2020 3期。
          *  质检的结果 quality/inspect/record, 和原先taskRecord工序没有关系了。
@@ -864,7 +864,7 @@ public class TaskRecordController {
          *  二期的质检没有在实施，二期的质检是在安装工序的最后，加一个“出厂检查”工序
          */
 
-        if(tr.getStatus().equals(Constant.TASK_QUALITY_DONE)) {
+        if(tr.getStatus().equals(Constant.TASK_INSTALLED)) {
             createInstallPlanActual(tr);
         }
         return ResultGenerator.genSuccessResult();

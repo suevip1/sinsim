@@ -209,7 +209,8 @@
       </if>
 
     GROUP BY qirID
-    ORDER BY  qir.update_time DESC, qir.create_time DESC
+--       按对应的工序相同的排在一起。
+    ORDER BY qir.task_name,  qir.update_time DESC, qir.create_time DESC
   </select>
 
     <select id="selectQualityInspectRecordDetailGroupByMachine" resultMap="QualityInspectRecordDetailResultMap">
@@ -220,16 +221,23 @@
         qir.inspect_name,
         m.location,
         mo.id AS machine_order_id,
-        mo.order_num
+        mo.order_num,
+--         还需要显示安装工序到哪了 --暂时不用了，保留
+        tr.*
     FROM
         quality_inspect_record qir
-    JOIN machine m ON qir.machine_nameplate = m.nameplate
-    JOIN machine_order mo ON mo.order_num = qir.order_number
+      JOIN machine m ON qir.machine_nameplate = m.nameplate
+      JOIN machine_order mo ON mo.order_num = qir.order_number
+      JOIN process_record pr ON pr.machine_id = m.id
+      JOIN task_record tr ON tr.process_record_id = pr.id
+      JOIN quality_inspect qi on qi.inspect_name  = qir.inspect_name
     WHERE
         1 = 1
 --         已经质检OK、不需要再看了的，就不再显示； 未检或者NG的才显示
     AND (qir.record_status = 10 or qir.record_status = 12)
     ORDER BY
+--     同个位置区域，同个订单的机器列一起
+        location, order_num,
         qir.create_time DESC,
         qir.update_time DESC
     </select>
