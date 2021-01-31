@@ -152,4 +152,19 @@ public class OrderSign {
     public void setCurrentStep(String currentStep) {
         this.currentStep = currentStep;
     }
+
+    /**
+     * 改单拆单后新的订单的ID, 让改单拆单后的订单也可以查到签核记录
+     * -->暂不启用，因为改单拆单时，已经生成新的订单审核记录
+     */
+//    @Column(name = "order_id_for_changed_spiltted")
+//    private Integer orderIdForChangedSpiltted;
+//
+//    public Integer getOrderIdForChangedSpiltted() {
+//        return orderIdForChangedSpiltted;
+//    }
+//
+//    public void setOrderIdForChangedSpiltted(Integer orderIdForChangedSpiltted) {
+//        this.orderIdForChangedSpiltted = orderIdForChangedSpiltted;
+//    }
 }

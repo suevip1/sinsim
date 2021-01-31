@@ -385,12 +385,19 @@ public class ContractController {
 
                 newMachineOrderId = machineOrder.getId();
 
+                /**
+                 * 为了让改单后的新订单也能看到签核的时间等，改单新生成的订单，也有对应的审核记录，
+                 * 审核内容和步骤，来自于旧的审核记录。
+                 */
                 //初始化需求单审核记录
                 OrderSign orderSignData = orderItem.getOrderSign();
                 OrderSign orderSign = new OrderSign();
+
                 orderSign.setSignContent(orderSignData.getSignContent());
                 orderSign.setOrderId(machineOrder.getId());
-                orderSign.setCreateTime(new Date());
+                orderSign.setCreateTime(orderSignData.getCreateTime());
+                orderSign.setCurrentStep(orderSignData.getCurrentStep());
+                orderSign.setUpdateTime(orderSignData.getUpdateTime());
                 orderSignService.save(orderSign);
 
                 //改单记录(插入或者修改)
@@ -672,12 +679,19 @@ public class ContractController {
                 machineOrderService.saveAndGetID(machineOrder);
                 newMachineOrderId = machineOrder.getId();
 
+                /**
+                 * 为了让 拆单后的新订单也能看到签核的时间等， 新生成的订单，也有对应的审核记录，
+                 * 审核内容和步骤，来自于旧的审核记录。
+                 */
                 //初始化需求单审核记录
                 OrderSign orderSignData = orderItem.getOrderSign();
                 OrderSign orderSign = new OrderSign();
+
                 orderSign.setSignContent(orderSignData.getSignContent());
                 orderSign.setOrderId(machineOrder.getId());
-                orderSign.setCreateTime(new Date());
+                orderSign.setCreateTime(orderSignData.getCreateTime());
+                orderSign.setCurrentStep(orderSignData.getCurrentStep());
+                orderSign.setUpdateTime(orderSignData.getUpdateTime());
                 orderSignService.save(orderSign);
 
                 //被拆分出来的机器绑定到新的需求单

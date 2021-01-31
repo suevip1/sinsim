@@ -103,6 +103,7 @@
 
 		<result column="electric_trim" jdbcType="VARCHAR" property="electricTrim"/>
 		<result column="electric_pc" jdbcType="VARCHAR" property="electricPc"/>
+		<result column="domestic_trade_zone" jdbcType="VARCHAR" property="domesticTradeZone"/>
 
 		<association javaType="com.eservice.api.model.order_detail.OrderDetail" property="orderDetail">
 			<!--&amp;lt;id column="id" jdbcType="INTEGER" property="id" /&amp;gt;-->
@@ -174,6 +175,8 @@
 			<result column="os_create_time" jdbcType="TIMESTAMP" property="createTime"/>
 			<result column="os_update_time" jdbcType="TIMESTAMP" property="updateTime"/>
 			<result column="sign_content" jdbcType="LONGVARCHAR" property="signContent"/>
+			<!--<result column="order_id_for_changed_spiltted" jdbcType="INTEGER" property="orderIdForChangedSpiltted"/>-->
+
 		</association>
 		<association javaType="com.eservice.api.model.order_loading_list.OrderLoadingList" property="orderLoadingList">
 			<id column="order_loading_list_id" jdbcType="INTEGER" property="id"/>
@@ -265,6 +268,7 @@
 			con.customer_name AS customer,
 			con.pay_method,
 			con.currency_type,
+			con.domestic_trade_zone,
 			oll.id AS order_loading_list_id,
 			oll.file_name,
 			oll.type AS file_type,
@@ -406,6 +410,7 @@
 			con.customer_name AS customer,
 			con.pay_method,
 			con.currency_type,
+			con.domestic_trade_zone,
 			oll.id AS order_loading_list_id,
 			oll.file_name,
 			oll.type AS file_type,

@@ -1014,4 +1014,17 @@ public class MachineOrderDetail {
     public void setElectricPc(String electricPc) {
         this.electricPc = electricPc;
     }
+
+    //内贸部分区
+    @Column(name = "domestic_trade_zone")
+    private String domesticTradeZone;
+
+    public String getDomesticTradeZone() {
+        return domesticTradeZone;
+    }
+
+    public void setDomesticTradeZone(String domesticTradeZone) {
+        this.domesticTradeZone = domesticTradeZone;
+    }
+
 }
