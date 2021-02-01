@@ -751,7 +751,7 @@ public class ContactFormController {
             HSSFSheet workSheet = wb.getSheetAt(0);
 
             // 在相应的单元格进行赋值(A2)
-            HSSFCell numCell = workSheet.getRow(1).getCell((short) 1);// 表单编号
+            HSSFCell numCell = workSheet.getRow(1).getCell((short) 3);// 表单编号
             numCell.setCellValue(new HSSFRichTextString(cf.getContactForm().getNum()));
 
             numCell = workSheet.getRow(1).getCell((short) 6);// 订单号
