@@ -78,6 +78,8 @@ public class ContractController {
     @Resource
     private OrderSignServiceImpl orderSignService;
     @Resource
+    private ContactFormServiceImpl contactFormService;
+    @Resource
     private CommonService commonService;
     @Resource
     private OrderChangeRecordServiceImpl orderChangeRecordService;
@@ -387,7 +389,7 @@ public class ContractController {
 
                 /**
                  * 为了让改单后的新订单也能看到签核的时间等，改单新生成的订单，也有对应的审核记录，
-                 * 审核内容和步骤，来自于旧的审核记录。
+                 * 审核内容和步骤，来自于旧的审核记录。（和原订单的一样的签核记录）
                  */
                 //初始化需求单审核记录
                 OrderSign orderSignData = orderItem.getOrderSign();
@@ -599,6 +601,44 @@ public class ContractController {
         return ResultGenerator.genSuccessResult(newMachineOrderId);
 
     }
+
+    /**
+     * 为所有已改单，已拆单，补充签核记录（和原订单的一样的签核记录）
+     * 用于：报表里只显示已改后的新订单，要显示终审日期），
+     * 因为之前联系单签核之后，新改新拆的订单的审核数据在报表里也要用到了。
+     *
+     * 这个接口只要在部署前执行一次，因为以后改单拆单的签核，已经在代码里有做了（和原订单的一样的签核记录）
+     */
+    @PostMapping("/syncOrdersignForChangedAndSplitted")
+    public Result syncOrdersignForChangedAndSplitted(){
+        int count = 0;
+        List<OrderSign> allOrderSignList = orderSignService.findAll();
+        for(int i=0; i<allOrderSignList.size(); i++){
+            if(allOrderSignList.get(i).getSignContent().equals("[]") || allOrderSignList.get(i).getUpdateTime()== null ){
+                MachineOrder machineOrder = machineOrderService.findById(allOrderSignList.get(i).getOrderId());
+                if(machineOrder.getStatus() == Constant.ORDER_SPLIT_FINISHED || machineOrder.getStatus() == Constant.ORDER_CHANGE_FINISHED) {
+                    logger.info("已改单/拆单 订单 " + machineOrder.getOrderNum() + "，需要补充签核记录");
+                    List<OrderSign> theOriginalOrderSignList = orderSignService.getOrderSignListByOrderId(machineOrder.getOriginalOrderId());
+                    if(theOriginalOrderSignList.size() !=1) {
+                        logger.error("异常，找到的原订单的签核记录不是1个");
+                        return ResultGenerator.genFailResult("异常，找到的原订单的签核记录不是1个");
+                    }
+
+                    allOrderSignList.get(i).setCurrentStep(theOriginalOrderSignList.get(0).getCurrentStep());
+                    allOrderSignList.get(i).setSignContent(theOriginalOrderSignList.get(0).getSignContent());
+
+                    //这个时间，考虑改为来自于联系单的终审时间 ，目前用旧的审核
+//                    contactFormService.
+                    allOrderSignList.get(i).setUpdateTime(theOriginalOrderSignList.get(0).getUpdateTime());
+                    orderSignService.update(allOrderSignList.get(i));
+                    count++;
+                    logger.info(count + ": 已改单/拆单 订单 " + machineOrder.getOrderNum() + "更新了 签核记录");
+                }
+            }
+        }
+        return ResultGenerator.genSuccessResult("一共更新了 " + count + " 个签核");
+    }
+
 
     @PostMapping("/splitOrder")
     @Transactional(rollbackFor = Exception.class)
