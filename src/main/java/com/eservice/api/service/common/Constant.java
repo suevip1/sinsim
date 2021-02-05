@@ -14,11 +14,12 @@ public class Constant {
     public static String SING_STEP_SALES_MANAGER = "销售部经理"; //销售部特殊
 
     /**
-     * 签核结果：“0”-->初始化；“1”-->接受； “2”-->驳回
+     * 签核结果：“0”-->初始化；“1”-->接受； “2”-->驳回; 3: 不需要签核，比如 内贸订单，不需要外贸总监签核
      */
     public static final Integer SIGN_INITIAL = 0;
     public static final Integer SIGN_APPROVE = 1;
     public static final Integer SIGN_REJECT = 2;
+    public static final Integer SIGN_NO_NEED = 3;
 
     /**
      * 合同状态， 对应于contract表中的status
@@ -355,11 +356,15 @@ public class Constant {
     public static final Integer ROLE_ID_STAFF = 5;
     public static final Integer ROLE_ID_GM = 6;
     public static final Integer ROLE_ID_SALES_MANAGER = 7;
+    public static final Integer ROLE_ID_FOREIGN_DIRECTOR = 30; //外贸总监
     public static final Integer ROLE_ID_TECH_MANAGER = 8;
     public static final Integer ROLE_ID_SALES = 9;
     public static final Integer ROLE_ID_TECHNICIAN = 10;
     public static final Integer ROLE_ID_QUALITY_INSPECTOR = 11;
     public static final Integer ROLE_ID_PMC = 12;
     public static final Integer ROLE_ID_COST_ACCOUNTANT = 13;//成本核算员
+
+    public static final String STR_DEPARTMENT_DOMESTIC = "内贸部";
+    public static final String STR_DEPARTMENT_FOREIGN = "外贸部"; //一部二部，统一到外贸部经理曹建挺签核，然后到总监骆晓军签核
 
 }

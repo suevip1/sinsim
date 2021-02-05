@@ -167,4 +167,21 @@ public class OrderSign {
 //    public void setOrderIdForChangedSpiltted(Integer orderIdForChangedSpiltted) {
 //        this.orderIdForChangedSpiltted = orderIdForChangedSpiltted;
 //    }
+
+    /**
+     * 销售部门，在生成签核时生成
+     * 外贸部门时，需要外贸销售经理签核+外贸总监签核，签核流程里包含外贸总监
+     * 内贸部时，签核流程里的外贸总监灰掉。
+     *
+     */
+    @Column(name = "sales_department")
+    private String salesDepartment;
+
+    public String getSalesDepartment() {
+        return salesDepartment;
+    }
+
+    public void setSalesDepartment(String salesDepartment) {
+        this.salesDepartment = salesDepartment;
+    }
 }

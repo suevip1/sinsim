@@ -78,6 +78,8 @@ public class ContractController {
     @Resource
     private OrderSignServiceImpl orderSignService;
     @Resource
+    private UserServiceImpl userService;
+    @Resource
     private ContactFormServiceImpl contactFormService;
     @Resource
     private CommonService commonService;
@@ -138,6 +140,9 @@ public class ContractController {
         //插入需求单记录
         List<MachineOrderWrapper> machineOrderWapperList = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
         if (machineOrderWapperList != null) {
+            //是内贸还是外贸的订单
+            String salesDepartment = null;
+            User machineOrderCreator = null;
             for (int i = 0; i < machineOrderWapperList.size(); i++) {
                 OrderDetail temp = machineOrderWapperList.get(i).getOrderDetail();
                 MachineOrder orderTemp = machineOrderWapperList.get(i).getMachineOrder();
@@ -162,6 +167,16 @@ public class ContractController {
                 orderSign.setSignContent(orderSignData.getSignContent());
                 orderSign.setOrderId(orderTemp.getId());
                 orderSign.setCreateTime(new Date());
+                //是内贸还是外贸
+                if(salesDepartment == null) {
+                    machineOrderCreator = userService.findById(orderTemp.getCreateUserId());
+                    if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_DOMESTIC)) {
+                        salesDepartment = Constant.STR_DEPARTMENT_DOMESTIC;
+                    } else {
+                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN;
+                    }
+                    orderSign.setSalesDepartment(salesDepartment);
+                }
                 orderSignService.save(orderSign);
             }
         } else {

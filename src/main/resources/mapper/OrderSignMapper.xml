@@ -12,6 +12,7 @@
     <result column="sign_content" jdbcType="LONGVARCHAR" property="signContent" />
     <result column="current_step" jdbcType="LONGVARCHAR" property="currentStep" />
     <!--<result column="order_id_for_changed_spiltted" jdbcType="INTEGER" property="orderIdForChangedSpiltted"/>-->
+    <result column="sales_department" jdbcType="VARCHAR" property="salesDepartment"/>
   </resultMap>
 
   <!--获取某个合同下，有效的需求单签核记录；当前"3"表示拆单，“6”表示取消，这些订单签核记录作为判断当前签核流程的基础内容-->

@@ -89,6 +89,7 @@ public class OrderSignController {
             //更新需求单状态
             List<SignContentItem> orderSignContentList = JSON.parseArray(orderSignObj.getSignContent(), SignContentItem.class);
             boolean haveReject = false;
+            boolean needMakeUpOrderSignForForeignDirector = false;
             String currentStep = "";
 
             MachineOrder machineOrder = machineOrderService.findById(orderSignObj.getOrderId());
@@ -97,7 +98,8 @@ public class OrderSignController {
                 if (item.getResult().equals(Constant.SIGN_REJECT)) {
                     haveReject = true;
                 }
-                if(item.getResult() == 0) {
+                
+                if(item.getResult() == Constant.SIGN_INITIAL  ) {
                     currentStep = roleService.findById(item.getRoleId()).getRoleName();
                     break;
                 }
@@ -171,16 +173,40 @@ public class OrderSignController {
                             logger.info("更新了毛利率为: " + grossProfitString );
                         }
                 }
+
+                /**
+                 * 外贸部特殊情况，【外贸部销售经理】审核之后，再由【外贸部总监】审核
+                 * 非外贸部，不需要经过【外贸部总监】审核
+                 */
+                if(orderSignObj.getCurrentStep().equals(Constant.SING_STEP_SALES_MANAGER)
+                && item.getRoleId() == Constant.ROLE_ID_SALES_MANAGER
+                        && item.getResult().equals(Constant.SIGN_APPROVE) ) {
+                    User userSalesManager = userService.selectByAccount(item.getUser());
+                    if(userSalesManager.getMarketGroupName().equals("外贸一部") || userSalesManager.getMarketGroupName().equals("外贸二部")){
+                        logger.info("外贸部经理签核，且通过，需要【外贸部总监】审核");
+
+                    } else {
+                        /**
+                         * 内贸部的订单不需要外贸总监审核
+                         * 外贸总监已经在流程中，把数据补充填上，流程往后走
+                         */
+                        needMakeUpOrderSignForForeignDirector = true;
+                    }
+                }
             }
 
             //都已经签核
             if(!haveReject) {
-                if(currentStep.equals("")) {
+                if (currentStep.equals("")) {
                     currentStep = Constant.SIGN_FINISHED;
                 }
                 orderSignObj.setCurrentStep(currentStep);
+                orderSignService.update(orderSignObj);
+
+                if (needMakeUpOrderSignForForeignDirector) {
+                    makeUpSignContent(orderSignObj);
+                }
             }
-            orderSignService.update(orderSignObj);
 
             /**
              * 推送公众号消息给轮到的人（通过售后系统）
@@ -286,6 +312,34 @@ public class OrderSignController {
 //            contractSignService.update(contractSign);
         }
         return ResultGenerator.genSuccessResult();
+    }
+
+    /**
+     * workaround, 补充外贸总监的签核，并把currentStep移到下一步
+     * 内贸部订单时，补充外贸总监的签核 SIGN_NO_NEED
+     */
+    public void makeUpSignContent(OrderSign orderSign){
+        String currentStep = "";
+        List<SignContentItem> orderSignContentList = JSON.parseArray(orderSign.getSignContent(), SignContentItem.class);
+        for (SignContentItem item : orderSignContentList){
+            if(item.getRoleId() == Constant.ROLE_ID_FOREIGN_DIRECTOR){
+                item.setDate(new Date());
+                item.setUser("--");
+                // * "0" --> "初始化" 没有经过签核不要用1，否则推送消息时会推送
+                item.setResult(Constant.SIGN_NO_NEED);
+                item.setComment("--");
+            }
+
+            // 外贸总监之后 找到下一个作为当前步骤
+            if(item.getResult() == Constant.SIGN_INITIAL && item.getRoleId() != Constant.ROLE_ID_FOREIGN_DIRECTOR) {
+                currentStep = roleService.findById(item.getRoleId()).getRoleName();
+                break;
+            }
+        }
+        orderSign.setSignContent(JSONObject.toJSONString(orderSignContentList));
+
+        orderSign.setCurrentStep(currentStep);
+        orderSignService.update(orderSign);
     }
 
     @PostMapping("/detail")
