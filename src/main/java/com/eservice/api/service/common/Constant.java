@@ -365,6 +365,6 @@ public class Constant {
     public static final Integer ROLE_ID_COST_ACCOUNTANT = 13;//成本核算员
 
     public static final String STR_DEPARTMENT_DOMESTIC = "内贸部";
-    public static final String STR_DEPARTMENT_FOREIGN = "外贸部"; //一部二部，统一到外贸部经理曹建挺签核，然后到总监骆晓军签核
+    public static final String STR_DEPARTMENT_FOREIGN_FUZZY = "外贸";//一部二部，统一到外贸部经理曹建挺签核，然后到总监骆晓军签核
 
 }

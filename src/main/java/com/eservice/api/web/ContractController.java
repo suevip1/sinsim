@@ -173,7 +173,7 @@ public class ContractController {
                     if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_DOMESTIC)) {
                         salesDepartment = Constant.STR_DEPARTMENT_DOMESTIC;
                     } else {
-                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN;
+                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_FUZZY;
                     }
                     orderSign.setSalesDepartment(salesDepartment);
                 }
@@ -840,9 +840,16 @@ public class ContractController {
 //        } else
 //            logger.info("userDomesticTradeZoneListStr is: " + userDomesticTradeZoneListStr);
 
+        //workaround
+        if (marketGroupName != null && !marketGroupName.isEmpty()) {
+            if (marketGroupName.substring(0, 2).equals(Constant.STR_DEPARTMENT_FOREIGN_FUZZY)) {
+                marketGroupName = Constant.STR_DEPARTMENT_FOREIGN_FUZZY;
+            }
+        }
         List<ContractDetail> list = contractService.selectContracts(contractNum, status, sellman, recordUser, roleName, marketGroupName, query_start_time, query_finish_time, userDomesticTradeZoneListStr, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+
     }
 
     @PostMapping("/startSign")
