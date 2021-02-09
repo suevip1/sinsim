@@ -57,7 +57,7 @@ public class UserController {
             return ResultGenerator.genFailResult("密码不存在!");
         } else if (userObj.getAccount() == null || userObj.getAccount().isEmpty()) {
             return ResultGenerator.genFailResult("用户名不存在或为空！");
-        } else if(userService.selectUsers(userObj.getAccount(),null,null,null,null).size() > 0){
+        } else if(userService.selectUsers(userObj.getAccount(),null,null,null, null,null).size() > 0){
             return ResultGenerator.genFailResult("账号已存在！");
         }else {
             userService.save(userObj);
@@ -113,9 +113,10 @@ public class UserController {
                               String name,
                               Integer roleId,
                               Integer groupId,
+                              String marketGroupName,
                               Integer valid) {
         PageHelper.startPage(page, size);
-        List<UserDetail> list = userService.selectUsers(account,name,roleId,groupId,valid);
+        List<UserDetail> list = userService.selectUsers(account,name,roleId,groupId, marketGroupName, valid);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
@@ -234,8 +235,8 @@ public class UserController {
 
     //测试 推送信息给售后
     @PostMapping("/sendSignInfoViWxMsg")
-    public Result sendSignInfoViWxMsg(@RequestParam String account) {
-        String result = commonService.sendSignInfoViWxMsg(account,"11","22");
+    public Result sendSignInfoViWxMsg(@RequestParam String account, String msgInfo) {
+        String result = commonService.sendSignInfoViWxMsg(account,"11","22", msgInfo);
         return ResultGenerator.genSuccessResult(result);
     }
 

@@ -27,8 +27,8 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
         return userMapper.getUserAllDetail(id);
     }
 
-    public List<UserDetail> selectUsers(String account, String name, Integer roleId, Integer groupId, Integer valid) {
-        return userMapper.selectUsers(account, name, roleId, groupId, valid);
+    public List<UserDetail> selectUsers(String account, String name, Integer roleId, Integer groupId, String marketGroupName, Integer valid) {
+        return userMapper.selectUsers(account, name, roleId, groupId, marketGroupName, valid);
     }
 
     public UserDetail requestLogin(String account, String password) {

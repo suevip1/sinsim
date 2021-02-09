@@ -367,4 +367,7 @@ public class Constant {
     public static final String STR_DEPARTMENT_DOMESTIC = "内贸部";
     public static final String STR_DEPARTMENT_FOREIGN_FUZZY = "外贸";//一部二部，统一到外贸部经理曹建挺签核，然后到总监骆晓军签核
 
+    public static final String STR_MSG_PUSH_IS_START_TO_SIGN = "开始签核";
+    public static final String STR_MSG_PUSH_IS_TURN_TO_SIGN = "轮到签核";
+    public static final String STR_MSG_PUSH_SIGN_REFUESED = "签核被拒绝";
 }

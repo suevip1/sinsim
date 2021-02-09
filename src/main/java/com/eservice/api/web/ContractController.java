@@ -167,6 +167,7 @@ public class ContractController {
                 orderSign.setSignContent(orderSignData.getSignContent());
                 orderSign.setOrderId(orderTemp.getId());
                 orderSign.setCreateTime(new Date());
+                orderSign.setCurrentStep("");
                 //是内贸还是外贸
                 if(salesDepartment == null) {
                     machineOrderCreator = userService.findById(orderTemp.getCreateUserId());
@@ -177,7 +178,9 @@ public class ContractController {
                     }
                     orderSign.setSalesDepartment(salesDepartment);
                 }
-                orderSignService.save(orderSign);
+                orderSignService.saveAndGetID(orderSign);
+                //第一个轮到签核的人也发消息推送  --> 此时为未提交状态，不需要发推送
+
             }
         } else {
             //手动回滚事务
@@ -898,17 +901,11 @@ public class ContractController {
                              * 发起签核时 也给第一个签核人推送
                              * //todo: 2020 销售新分区，新签核方式
                              */
-//                            List<User> userList = new ArrayList<>();
-//                            for (SignContentItem item : orderSignContentList) {
-//                                //                    * 签核结果
-//                                //                    * "0" --> "初始化"
-//                                //                    * "1" --> "同意"
-//                                //                    * "2" --> "拒绝"
-//                                if (item.getResult().equals(0)) {//（虽然在签核流程里，但没有经过签核的人就不用了）
-//                                    userList.add(userService.selectByAccount(item.getUser()));
-//                                }
-//
-//                            }
+                            commonService.pushMachineOrderMsgToAftersale(sign,
+                                    contract,
+                                    orderItem,
+                                    false,
+                                    Constant.STR_MSG_PUSH_IS_TURN_TO_SIGN);
 
                         }
                     }

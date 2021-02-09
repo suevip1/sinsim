@@ -115,7 +115,7 @@ public class ContactSignController {
         /**
          * 推送公众号消息给轮到联系单签核的人（通过售后系统）
          */
-        commonService.pushLxdMsgToAftersale(cs,cf, haveReject);
+        commonService.pushLxdMsgToAftersale(cs,cf, haveReject, Constant.STR_MSG_PUSH_IS_TURN_TO_SIGN);
 
         if (haveReject) {
             /**

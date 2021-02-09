@@ -670,16 +670,19 @@ public class ContactFormController {
                     }
                 }
                 contactSign.setCurrentStep(currentStep);
+                logger.info("开始 联系单签核 currentStep " + currentStep);
                 contactSignService.update(contactSign);// 更新审核数据currentstep
 
                 // 更新联系单状态为 STR_LXD_CHECKING
                 ContactForm contactForm = contactFormService.findById(lxdId);
                 if (contactForm == null) {
-                    return ResultGenerator.genFailResult("合同编号ID无效");
+                    return ResultGenerator.genFailResult("联系单号ID无效");
                 } else {
                     contactForm.setStatus(Constant.STR_LXD_CHECKING);
                     contactForm.setUpdateDate(new Date());
+                    logger.info("联系单签核 setStatus " + Constant.STR_LXD_CHECKING);
                     contactFormService.update(contactForm);
+                    commonService.pushLxdMsgToAftersale(contactSign,contactForm, false, Constant.STR_MSG_PUSH_IS_START_TO_SIGN);
                 }
             }
         }

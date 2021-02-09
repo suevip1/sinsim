@@ -9,4 +9,5 @@ import java.util.List;
 public interface OrderSignMapper extends Mapper<OrderSign> {
     List<OrderSign> getValidOrderSigns(@Param("contractId") Integer contractId);
     List<OrderSign> getOrderSignListByOrderId(@Param("orderId") Integer orderId);
+    void saveAndGetID(OrderSign orderSign);
 }

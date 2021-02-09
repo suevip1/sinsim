@@ -32,4 +32,7 @@ public class OrderSignServiceImpl extends AbstractService<OrderSign> implements 
     public List<OrderSign> getOrderSignListByOrderId(Integer orderId){
         return  orderSignMapper.getOrderSignListByOrderId(orderId);
     }
+    public void saveAndGetID(OrderSign orderSign) {
+        orderSignMapper.saveAndGetID(orderSign);
+    }
 }

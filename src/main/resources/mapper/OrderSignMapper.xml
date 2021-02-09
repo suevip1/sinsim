@@ -28,4 +28,12 @@
     FROM order_sign os
     WHERE os.order_id = #{orderId}
   </select>
+
+  <insert id="saveAndGetID" useGeneratedKeys="true" parameterType="com.eservice.api.model.order_sign.OrderSign"
+          keyProperty="id">
+    insert into
+    order_sign(order_id, create_time, update_time, sign_content, current_step, sales_department)
+    values(
+    #{orderId},#{createTime},#{updateTime},#{signContent},#{currentStep},#{salesDepartment} )
+  </insert>
 </mapper>

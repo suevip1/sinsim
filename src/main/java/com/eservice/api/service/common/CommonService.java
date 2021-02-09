@@ -636,8 +636,10 @@ public class CommonService {
      */
     public String sendSignInfoViWxMsg(@RequestParam String accountX,
                                       @RequestParam(defaultValue = "") String machineOrderNumX,
-                                      @RequestParam(defaultValue = "") String lxdNumX) {
+                                      @RequestParam(defaultValue = "") String lxdNumX,
+                                      @RequestParam(defaultValue = "") String msgInfo ) {
 
+        String oriAccountX = accountX;
         try {
             /**
              * 事先做对账号等可能为中文的字符串进行encode转码,然后在售后端收到之后解码
@@ -648,7 +650,7 @@ public class CommonService {
              *   localhost:/api/for/sinimproccess/sendRemind
              *   但是在代码里不行.
              */
-            logger.info("签核推送给售后, 账号：" + accountX + ",订单号：" + machineOrderNumX + ", 联系单号：" +lxdNumX);
+
             accountX = URLEncoder.encode(accountX, "UTF-8");
             machineOrderNumX = URLEncoder.encode(machineOrderNumX, "UTF-8");
             lxdNumX = URLEncoder.encode(lxdNumX, "UTF-8");
@@ -671,13 +673,16 @@ public class CommonService {
                     accountX,
                     "--data-urlencode",
                     machineOrderNumX,
+                    "--data-urlencode",
+                    msgInfo,
                     url,
                     "-H",
                     "accept: */*",
                     "-H",
                     "Content-Type: application/json;charset=UTF-8"
             };
-
+            logger.info("curl url:" + url + ", accountX:" + accountX + ", machineOrderNumX:" + machineOrderNumX);
+            logger.info("签核推送给售后. curl url:" + url + ", accountX:" + oriAccountX + ", machineOrderNumX:" + machineOrderNumX);
             result = execCurl(cmds);
             logger.info(result);
         }
@@ -691,13 +696,15 @@ public class CommonService {
                     accountX,
                     "--data-urlencode",
                     lxdNumX,
+                    "--data-urlencode",
+                    msgInfo,
                     url,
                     "-H",
                     "accept: */*",
                     "-H",
                     "Content-Type: application/json;charset=UTF-8"
             };
-
+            logger.info("签核推送给售后. curl url:" + url + ", accountX:" + oriAccountX + ", lxdNumX:" + lxdNumX);
             result = execCurl(cmds);
             logger.info(result);
         }
@@ -742,49 +749,55 @@ public class CommonService {
      */
     public void pushLxdMsgToAftersale(ContactSign cs,
                                       ContactForm cf,
-                                      boolean haveReject ) {
+                                      boolean haveReject,
+                                      String msgInfo ) {
 
         if (cs.getCurrentStep().equals(Constant.SIGN_FINISHED)) {
             //  审核完成时，通知发起人
-            List<UserDetail> userList = userService.selectUsers(cf.getApplicantPerson(), null, null, null, 1);
+            List<UserDetail> userList = userService.selectUsers(cf.getApplicantPerson(), null, null, null, null, 1);
             if (userList.isEmpty() || userList == null) {
                 logger.error("根据 " + cf.getApplicantPerson() + "找不到User");
             } else {
                 //找到发起人
                 UserDetail toUser = userList.get(0);
-                commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", cf.getNum());
+                commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", cf.getNum(), msgInfo);
             }
         } else {
+            /**
+             * 审核没有结束，
+             *      驳回  ：推送给参与签核的人，以及发起人
+             *      无驳回：推送给下一个轮到签核的角色
+             */
             Role role = roleService.findBy("roleName", cs.getCurrentStep());
             if (role == null) {
                 logger.error("根据该 role_name " + cs.getCurrentStep() + "找不到Role");
+                return;
+            }
+            List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, null,1);
+
+            if (haveReject) {
+                List<User> userNameList = commonService.getUsersInLxdSign(cs);
+                for (User toUser : userNameList) {
+                    commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", cf.getNum(), msgInfo);
+                }
+                commonService.sendSignInfoViWxMsg(cf.getApplicantPerson(), "", cf.getNum(), msgInfo);
+
             } else {
                 //如果是销售部经理还要细分发给哪个经理，
                 if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
-                    //todo 等2020销售大区方案定下来之后再改
-                } else if (!haveReject) { //没有驳回，发给下1个签核人
-                    //如果是销售部经理还要细分发给哪个经理，
-                    if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
-                        //todo 等2020销售大区方案定下来之后再改
+                    String userSalesManagerAccount = cf.getDesignatedSaleManager();
+                    commonService.sendSignInfoViWxMsg(userSalesManagerAccount, "", cf.getNum(), msgInfo);
+                } else {
+
+                    if (userList.isEmpty() || userList == null) {
+                        logger.error("根据该roleId " + role.getId() + "找不到User");
                     } else {
-                        List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, 1);
-                        if (userList.isEmpty() || userList == null) {
-                            logger.error("根据该roleId " + role.getId() + "找不到User");
-                        } else {
-                            //可能有多个负责人，比如研发部现在就两个经理，都通知。
-                            for (UserDetail toUser : userList) {
-                                ContactForm contactForm = contactFormService.findById(cs.getContactFormId());
-                                commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", contactForm.getNum());
-                            }
+                        //可能有多个负责人，比如研发部现在就两个经理，都通知。
+                        for (UserDetail toUser : userList) {
+                            ContactForm contactForm = contactFormService.findById(cs.getContactFormId());
+                            commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", contactForm.getNum(), msgInfo);
                         }
                     }
-                } else {//驳回，发给所有参与签核的人。+ 联系单发起人
-                    List<User> userNameList = commonService.getUsersInLxdSign(cs);
-                    for (User toUser : userNameList) {
-                        commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", cf.getNum());
-                    }
-                    commonService.sendSignInfoViWxMsg(cf.getApplicantPerson(), "", cf.getNum());
-
                 }
             }
         }
@@ -800,44 +813,37 @@ public class CommonService {
     public void pushMachineOrderMsgToAftersale(OrderSign orderSignObj,
                                                Contract contract,
                                                MachineOrder machineOrder,
-                                               boolean haveReject ) {
+                                               boolean haveReject,
+                                               String msgInfo) {
         /**
-         * 推送公众号消息给轮到的人（通过售后系统）
-         * 签核结束，推送给订单录单人，；
-         * 签核没有结束，推送给轮到签核的人，或者推送给所有参与签核的人（被拒时）；
+         * 签核结束，推送给订单录单人；
          */
         if (orderSignObj.getCurrentStep().equals(Constant.SIGN_FINISHED)) {
-            List<UserDetail> userList = userService.selectUsers(contract.getRecordUser(), null, null, null, 1);
+            List<UserDetail> userList = userService.selectUsers(contract.getRecordUser(), null, null, null, null,1);
             if (userList.isEmpty() || userList == null) {
                 logger.error("根据 " + contract.getRecordUser() + "找不到User");
             } else {
                 //找到录单人
                 UserDetail toUser = userList.get(0);
-                commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "");
+                commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "", msgInfo);
             }
         } else {
+            /**
+             * 签核没有结束:
+             *      驳回：推送给所有参与签核的人；
+             *      非驳回：推送给轮到签核的角色
+             */
             Role role = roleService.findBy("roleName", orderSignObj.getCurrentStep());
             if (role == null) {
                 logger.error("根据该 role_name " + orderSignObj.getCurrentStep() + "找不到Role");
-            } else if (!haveReject) { //没有驳回，发给下1个签核人
-                //如果是销售部经理还要细分发给哪个经理，
-                if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
-                    //todo 等2020销售大区方案定下来之后再改
-                } else {
-                    List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, 1);
-                    if (userList.isEmpty() || userList == null) {
-                        logger.error("根据该roleId " + role.getId() + "找不到User");
-                    } else {
-                        //可能有多个负责人，比如研发部现在就两个经理，都通知
-                        for (UserDetail toUser : userList) {
-                            commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "");
-                        }
-                    }
-                }
-            } else {//驳回，发给所有参与签核的人。+ 录单人
+                return;
+            }
+
+            if (haveReject) {
+                //驳回，发给所有参与签核的人。+ 录单人
                 List<User> userList = commonService.getUsersInMachineOrderSign(orderSignObj);
                 for (User toUser : userList) {
-                    commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "");
+                    commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "", msgInfo);
                 }
 
                 //考虑录单人和签核人可能是相同的，这种情况只需要发一次
@@ -849,7 +855,35 @@ public class CommonService {
                     }
                 }
                 if( ! isRecorderInUserList) {
-                    commonService.sendSignInfoViWxMsg(contract.getRecordUser(), machineOrder.getOrderNum(), "");
+                    commonService.sendSignInfoViWxMsg(contract.getRecordUser(), machineOrder.getOrderNum(), "", msgInfo);
+                }
+            } else {
+                //没有驳回，发给下1个签核人
+                //如果是销售部经理还要细分发给哪个部门的销售经理，
+                if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
+                    List<UserDetail> toSalesManagerList = null;
+                    //旧的签核记录里，没有SalesDepartment
+                    if(orderSignObj.getSalesDepartment() !=null ) {
+                        if (orderSignObj.getSalesDepartment().equals(Constant.STR_DEPARTMENT_DOMESTIC)) {
+                            toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_DOMESTIC, 1);
+                        } else {
+                            toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_FOREIGN_FUZZY, 1);
+                        }
+                        for (UserDetail toUser : toSalesManagerList) {
+                            commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "", msgInfo);
+                        }
+                    }
+
+                } else {
+                    List<UserDetail> userList = userService.selectUsers(null, null, role.getId(), null, null,1);
+                    if (userList.isEmpty() || userList == null) {
+                        logger.error("根据该roleId " + role.getId() + "找不到User");
+                    } else {
+                        //可能有多个负责人，比如研发部现在就两个经理，都通知
+                        for (UserDetail toUser : userList) {
+                            commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "", msgInfo);
+                        }
+                    }
                 }
             }
         }

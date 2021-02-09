@@ -64,6 +64,10 @@
         <if test="roleId != null and roleId > 0">
             and u.role_id = ${roleId}
         </if>
+        <if test="marketGroupName != null and marketGroupName != '' ">
+            and u.market_group_name like CONCAT('%','${marketGroupName}','%' )
+        </if>
+
         <if test="valid != null">
             and u.valid = ${valid}
         </if>
