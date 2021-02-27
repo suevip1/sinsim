@@ -3,21 +3,12 @@ package com.eservice.api.service.common;
 import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contact_form.ContactForm;
 import com.eservice.api.model.contact_sign.ContactSign;
 import com.eservice.api.model.contract.Contract;
@@ -79,8 +70,8 @@ public class CommonService {
     @Resource
     private UserServiceImpl userService;
 
-    @Value("${sinsimPocess_call_aftersale}")
-    private String sinsimPocess_call_aftersale;
+//    @Value("${sinsimPocess_call_aftersale}")
+//    private String sinsimPocess_call_aftersale;
 
     @Resource
     private ContactFormService contactFormService;
@@ -603,7 +594,8 @@ public class CommonService {
 
     /**
      *  执行curl命令行命令
-     *  会有异步等待时间，问题不大
+     *  会有异步等待时间，问题不大。
+     *  --> 如果网络不通，比如IP不对，会好几秒才返回，所以需要正确获取主机docker0的IP （各docker的Gateway）
      *
      *  特别注意： 这是在docker内部执行的。
      */
@@ -629,7 +621,16 @@ public class CommonService {
             return e.getMessage();
         }
     }
+	
+    public String getLinuxLocalIp() {
+        // docker的 gateway 就是服务器本机 docker0 网卡的ip
+        String gatewayIp = "";
 
+        String cmdToGetGatewayIp = "docker inspect -f '{{range .NetworkSettings.Networks}}{{.Gateway}}{{end}}'  allinone_server_process_1";
+        gatewayIp = executeLinuxCmd(cmdToGetGatewayIp);
+
+        return gatewayIp;
+    }
     /**
      * 执行Linux命令
      * 注意 这个执行，是在docker镜像内部执行。
@@ -655,6 +656,7 @@ public class CommonService {
                 logger.info("执行结果InterruptedException: " + e.getMessage());
             }
             process.destroy();
+            logger.info("执行命令 返回 " + out.toString());
             return out.toString();
         } catch (IOException e) {
             e.printStackTrace();
@@ -674,11 +676,12 @@ public class CommonService {
                                       @RequestParam(defaultValue = "") String msgInfo ) {
 
         Date now = new Date();
-        String str = executeLinuxCmd("touch /tmp/executeLinuxCmd" + now.getTime());
-        logger.info("cmdsTest result:" + str);
+
 
         String result = null;
-        String url = sinsimPocess_call_aftersale
+        String docker0_ip = getLinuxLocalIp();
+//        String url = sinsimPocess_call_aftersale
+        String url = docker0_ip + "/api/"
                 + "for/sinimproccess/sendRemind";
         logger.info("推送,准备开始. curl url:" + url + ", accountX:" + accountX + ", machineOrderNumX:" + machineOrderNumX+ ", lxdNumX:" + lxdNumX + ", msgInfo:" + msgInfo );
         try {
