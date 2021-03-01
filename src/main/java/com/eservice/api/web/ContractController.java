@@ -259,6 +259,10 @@ public class ContractController {
         }
 
         for (MachineOrderWrapper item : machineOrderWapperlist) {
+
+            //是内贸还是外贸的订单
+            String salesDepartment = null;
+            User machineOrderCreator = null;
             MachineOrder orderTemp = item.getMachineOrder();
             OrderChangeRecord changeRecord = item.getOrderChangeRecord();
             if (orderTemp.getId() != null && orderTemp.getId() != 0) {
@@ -291,7 +295,18 @@ public class ContractController {
                 orderSign.setSignContent(orderSignData.getSignContent());
                 orderSign.setOrderId(orderTemp.getId());
                 orderSign.setCreateTime(new Date());
+                //是内贸还是外贸
+                if(salesDepartment == null) {
+                    machineOrderCreator = userService.findById(orderTemp.getCreateUserId());
+                    if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_DOMESTIC)) {
+                        salesDepartment = Constant.STR_DEPARTMENT_DOMESTIC;
+                    } else {
+                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_FUZZY;
+                    }
+                    orderSign.setSalesDepartment(salesDepartment);
+                }
                 orderSignService.save(orderSign);
+
             }
         }
         //前端只要操作了“保存”，合同的状态回到“CONTRACT_INITIAL”状态
