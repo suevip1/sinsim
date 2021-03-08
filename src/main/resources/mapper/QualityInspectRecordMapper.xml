@@ -41,7 +41,8 @@
       <result column="node_key" jdbcType="TINYINT" property="nodeKey"/>
       <result column="leader" jdbcType="VARCHAR" property="leader"/>
       <!--<result column="status_in_task_record" jdbcType="TINYINT" property="status"/>-->
-      <result column="record_status" jdbcType="TINYINT" property="status"/>
+      <!--<result column="record_status" jdbcType="TINYINT" property="status"/>-->
+      <result column="status" jdbcType="TINYINT" property="status"/>
 
       <result column="install_begin_time" jdbcType="TIMESTAMP" property="installBeginTime"/>
       <result column="install_end_time" jdbcType="TIMESTAMP" property="installEndTime"/>

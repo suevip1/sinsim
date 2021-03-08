@@ -101,5 +101,6 @@
         JOIN user u ON u.role_id = role.id
         WHERE
             role.role_scope like CONCAT('%','${thatPermit}','%' )
+            AND u.valid = '1'
     </select>
 </mapper>
