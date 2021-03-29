@@ -198,8 +198,18 @@ public class MachineOrderController {
             String queryStartTimeSign, //这个是查询审核日期
             String queryFinishTimeSign,//这个是查询审核日期
             String machine_name,// 这个其实是机型
+            String oderSignCurrentStep, //订单签核的当前步骤
             @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page,size);
+
+        //workaround
+//        外贸经理：看外贸一部、二部订单，查询用词"外贸“ 两个字，后台已经模糊查询，匹配“外贸一部”和“外贸二部”
+//        外贸总监：看外贸一部、二部订单，查询用词"外贸“ 两个字，后台已经模糊查询，匹配“外贸一部”和“外贸二部”
+//        if (marketGroupName != null && !marketGroupName.isEmpty()) {
+//            if (marketGroupName.equals(Constant.STR_DEPARTMENT_FOREIGN_FUZZY)) {
+//                marketGroupName = Constant.STR_DEPARTMENT_FOREIGN_FUZZY;
+//            }
+//        }
         List<MachineOrderDetail> list = machineOrderService.selectOrder(
                 id,
                 contract_id,
@@ -214,6 +224,8 @@ public class MachineOrderController {
                 queryStartTimeSign,
                 queryFinishTimeSign,
                 machine_name,
+                oderSignCurrentStep,
+//                department,
                 is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
@@ -294,6 +306,7 @@ public class MachineOrderController {
                                       String queryStartTimeSign, //这个是查询审核日期
                                       String queryFinishTimeSign,//这个是查询审核日期
                                       String machine_name,
+                                      String oderSignCurrentStep, //订单签核的当前步骤
                                       @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         List<MachineOrderDetail> list = machineOrderService.selectOrder(
                 id,
@@ -308,7 +321,10 @@ public class MachineOrderController {
                 query_finish_time,
                 machine_name,
                 queryStartTimeSign,
-                queryFinishTimeSign,is_fuzzy);
+                queryFinishTimeSign,
+                oderSignCurrentStep,
+//                department,
+                is_fuzzy);
 
             HSSFWorkbook wb = null;
             FileOutputStream out = null;
@@ -507,6 +523,7 @@ public class MachineOrderController {
                                         String queryStartTimeSign, //这个是查询审核日期
                                         String queryFinishTimeSign,//这个是查询审核日期
                                         String machine_name,
+                                        String oderSignCurrentStep,
                                         @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
                 List<MachineOrderDetail> list = machineOrderService.selectOrder(
                         id,
@@ -522,6 +539,7 @@ public class MachineOrderController {
                         machine_name,
                         queryStartTimeSign,
                         queryFinishTimeSign,
+                        oderSignCurrentStep,
                         is_fuzzy);
     
                 HSSFWorkbook wb = null;

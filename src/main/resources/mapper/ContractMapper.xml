@@ -157,7 +157,7 @@
             and c.record_user = ${record_user}
         </if>
         <if test="market_group_name != null and market_group_name != '' ">
-            and c.market_group_name = ${market_group_name}
+            and c.market_group_name like CONCAT('%','${market_group_name}','%' )
         </if>
         <if test="role_name!=null and role_name != '' ">
             and os.current_step = ${role_name}

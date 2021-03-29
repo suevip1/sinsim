@@ -911,8 +911,10 @@ public class CommonService {
                     if(orderSignObj.getSalesDepartment() !=null ) {
                         if (orderSignObj.getSalesDepartment().equals(Constant.STR_DEPARTMENT_DOMESTIC)) {
                             toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_DOMESTIC, 1);
-                        } else {
-                            toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_FOREIGN_FUZZY, 1);
+                        } else if (orderSignObj.getSalesDepartment().equals(Constant.STR_DEPARTMENT_FOREIGN_1)){
+                            toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_FOREIGN_1, 1);
+                        } else if (orderSignObj.getSalesDepartment().equals(Constant.STR_DEPARTMENT_FOREIGN_2)){
+                            toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_FOREIGN_2, 1);
                         }
                         for (UserDetail toUser : toSalesManagerList) {
                             logger.info("订单继续签核，发给下销售经理  " + toUser.getAccount());

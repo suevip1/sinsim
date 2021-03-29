@@ -23,7 +23,8 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
                                               @Param("query_finish_time") String query_finish_time,
                                               @Param("queryStartTimeSign") String queryStartTimeSign,
                                               @Param("queryFinishTimeSign") String queryFinishTimeSign,
-                                              @Param("machine_name") String machine_name);
+                                              @Param("machine_name") String machine_name,
+                                              @Param("oderSignCurrentStep") String oderSignCurrentStep );
     List<MachineOrderDetail>  selectOrder(@Param("id") Integer id,
                                           @Param("contract_id") Integer contract_id,
                                           @Param("order_num") String order_num,
@@ -36,7 +37,8 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
                                           @Param("query_finish_time") String query_finish_time,
                                           @Param("queryStartTimeSign") String queryStartTimeSign,
                                           @Param("queryFinishTimeSign") String queryFinishTimeSign,
-                                          @Param("machine_name") String machine_name);
+                                          @Param("machine_name") String machine_name,
+                                          @Param("oderSignCurrentStep") String oderSignCurrentStep );
 
     void saveAndGetID(MachineOrder machineOrder);
 

@@ -351,6 +351,9 @@
 		<if test="machine_name!=null and machine_name != '' ">
 			and mt.name like CONCAT('%','${machine_name}','%' )
 		</if>
+		<if test="oderSignCurrentStep != null and oderSignCurrentStep != '' ">
+			and os.current_step = #{oderSignCurrentStep}
+		</if>
 		GROUP BY mo.id
 		ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
 	</select>
@@ -493,6 +496,10 @@
 		</if>
 		<if test="machine_name!=null and machine_name != '' ">
 			and mt.name = CONCAT('%','${machine_name}','%' )
+		</if>
+
+		<if test="oderSignCurrentStep != null and oderSignCurrentStep != '' ">
+			and os.current_step = #{oderSignCurrentStep}
 		</if>
 		GROUP BY mo.id
 		ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC

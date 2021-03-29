@@ -53,6 +53,8 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                                                 String queryStartTimeSign,
                                                 String queryFinishTimeSign,
                                                 String machine_name,
+                                                String oderSignCurrentStep,
+//                                                String department,
                                                 Boolean is_fuzzy) {
 
         String[] arr;
@@ -85,7 +87,10 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     query_finish_time,
                     queryStartTimeSign,
                     queryFinishTimeSign,
-                    machine_name);
+                    machine_name,
+                    oderSignCurrentStep
+//                    department
+            );
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
                 // 不应该在每次查询时都设置一次值。已改为在成本核算员签核时设置。
@@ -108,7 +113,8 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     query_finish_time,
                     queryStartTimeSign,
                     queryFinishTimeSign,
-                    machine_name);
+                    machine_name,
+                    oderSignCurrentStep );
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
 //                machineOrderDetailList.get(i).setGrossProfit(getGrossProfitByOrderSignContent(machineOrderDetailList.get(i).getOrderSign()));//

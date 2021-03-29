@@ -168,13 +168,15 @@ public class ContractController {
                 orderSign.setOrderId(orderTemp.getId());
                 orderSign.setCreateTime(new Date());
                 orderSign.setCurrentStep("");
-                //是内贸还是外贸
+                //是内贸还是外贸 --> 因为要查询订单是哪个部门，所以要细化到外贸一部还是二部
                 if(salesDepartment == null) {
                     machineOrderCreator = userService.findById(orderTemp.getCreateUserId());
                     if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_DOMESTIC)) {
                         salesDepartment = Constant.STR_DEPARTMENT_DOMESTIC;
-                    } else {
-                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_FUZZY;
+                    } else if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_FOREIGN_1)) {
+                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_1;
+                    }  else if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_FOREIGN_2)) {
+                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_2;
                     }
                     orderSign.setSalesDepartment(salesDepartment);
                 }
@@ -217,7 +219,8 @@ public class ContractController {
         List<MachineOrderWrapper> machineOrderWapperlist = JSONObject.parseArray(requisitionForms, MachineOrderWrapper.class);
         //先获取当前合同的所有订单
         List<MachineOrderDetail> originalOrderList = machineOrderService.selectOrder(null, contract1.getId(), null, null, null,
-                null, null, null, null, null, null, null,null,false);
+                null, null, null, null, null, null,
+                null,null,null,false);
         ///删除该合同下，不在本次保存范围内的需求单
         for (MachineOrderDetail item : originalOrderList) {
             boolean exist = false;
@@ -295,13 +298,15 @@ public class ContractController {
                 orderSign.setSignContent(orderSignData.getSignContent());
                 orderSign.setOrderId(orderTemp.getId());
                 orderSign.setCreateTime(new Date());
-                //是内贸还是外贸
+                //是内贸还是外贸一部，二部
                 if(salesDepartment == null) {
                     machineOrderCreator = userService.findById(orderTemp.getCreateUserId());
                     if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_DOMESTIC)) {
                         salesDepartment = Constant.STR_DEPARTMENT_DOMESTIC;
-                    } else {
-                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_FUZZY;
+                    } else if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_FOREIGN_1)) {
+                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_1;
+                    }  else if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_FOREIGN_2)) {
+                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_2;
                     }
                     orderSign.setSalesDepartment(salesDepartment);
                 }
@@ -832,7 +837,13 @@ public class ContractController {
      * @param sellman
      * @param recordUser    录单人
      * @param roleName      当前审批阶段的角色名称
-     * @param marketGroupName   订单属于哪个市场部（仅仅分内贸部，外贸一部，外贸二部）
+     * @param marketGroupName   订单属于哪个市场部（仅仅分内贸部，外贸一部，外贸二部，没有“外贸部”）
+     * 查询时， contract.market_group_name的内容有3钟：”内贸部","外贸一部", "外贸二部"
+     *                              如果是内贸经理、内贸销售员：只看内贸订单，查询用词"内贸部“
+     *                              如果是外贸经理：看外贸一部、二部订单，查询用词"外贸“ 两个字，后台会匹配“外贸一部”和“外贸二部”
+     *                              如果是外贸一部销售员：只看外贸一部订单，查询用词"外贸一部“ 4个字
+     *                              如果是外贸二部销售员：只看外贸二部订单，查询用词"外贸二部“ 4个字
+     *                              如果是外贸总监：看外贸一部、二部订单，查询用词"外贸“ 两个字，后台会匹配“外贸一部”和“外贸二部”
      * @param query_start_time
      * @param query_finish_time
      * @param userDomesticTradeZoneListStr 登录者的内贸分区，可以多个，非内贸经理时，为空。
@@ -853,17 +864,14 @@ public class ContractController {
                                   String userDomesticTradeZoneListStr,
                                   @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page, size);
-//        if(userDomesticTradeZoneListStr !=null && !userDomesticTradeZoneListStr.isEmpty()) {
-//            logger.info("userDomesticTradeZoneListStr is: " + userDomesticTradeZoneListStr );
-//        } else
-//            logger.info("userDomesticTradeZoneListStr is: " + userDomesticTradeZoneListStr);
 
-        //workaround
-        if (marketGroupName != null && !marketGroupName.isEmpty()) {
-            if (marketGroupName.substring(0, 2).equals(Constant.STR_DEPARTMENT_FOREIGN_FUZZY)) {
-                marketGroupName = Constant.STR_DEPARTMENT_FOREIGN_FUZZY;
-            }
-        }
+//        外贸经理：看外贸一部、二部订单，查询用词"外贸“ 两个字，后台已经模糊查询，匹配“外贸一部”和“外贸二部”
+//        外贸总监：看外贸一部、二部订单，查询用词"外贸“ 两个字，后台一i就模糊查询，匹配“外贸一部”和“外贸二部”
+//        if (marketGroupName != null && !marketGroupName.isEmpty()) {
+//            if (marketGroupName.equals(Constant.STR_DEPARTMENT_FOREIGN_FUZZY)) {
+//                marketGroupName = Constant.STR_DEPARTMENT_FOREIGN_FUZZY;
+//            }
+//        }
         List<ContractDetail> list = contractService.selectContracts(contractNum, status, sellman, recordUser, roleName, marketGroupName, query_start_time, query_finish_time, userDomesticTradeZoneListStr, is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
