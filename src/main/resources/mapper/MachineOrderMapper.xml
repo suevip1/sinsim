@@ -318,6 +318,9 @@
 		<if test="market_group_name != null and market_group_name != ''">
 			and con.market_group_name like CONCAT('%','${market_group_name}','%' )
 		</if>
+		<if test="searchDepartment != null and searchDepartment != ''">
+			and con.market_group_name like CONCAT('%','${searchDepartment}','%' )
+		</if>
 		<!--<if test="status != null">-->
 			<!--and mo.status=${status}-->
 		<!--</if>-->
@@ -463,6 +466,9 @@
 		</if>
 		<if test="market_group_name != null and market_group_name != ''">
 			and con.market_group_name like CONCAT('%','${market_group_name}','%' )
+		</if>
+		<if test="searchDepartment != null and searchDepartment != ''">
+			and con.market_group_name like CONCAT('%','${searchDepartment}','%' )
 		</if>
 		<!--<if test="status != null">-->
 			<!--and mo.status=${status}-->

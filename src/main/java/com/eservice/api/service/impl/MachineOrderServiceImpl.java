@@ -54,7 +54,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                                                 String queryFinishTimeSign,
                                                 String machine_name,
                                                 String oderSignCurrentStep,
-//                                                String department,
+                                                String searchDepartment,
                                                 Boolean is_fuzzy) {
 
         String[] arr;
@@ -88,8 +88,8 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     queryStartTimeSign,
                     queryFinishTimeSign,
                     machine_name,
-                    oderSignCurrentStep
-//                    department
+                    oderSignCurrentStep,
+                    searchDepartment
             );
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
@@ -114,7 +114,8 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     queryStartTimeSign,
                     queryFinishTimeSign,
                     machine_name,
-                    oderSignCurrentStep );
+                    oderSignCurrentStep,
+                    searchDepartment);
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
 //                machineOrderDetailList.get(i).setGrossProfit(getGrossProfitByOrderSignContent(machineOrderDetailList.get(i).getOrderSign()));//
