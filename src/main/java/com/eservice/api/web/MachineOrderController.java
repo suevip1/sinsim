@@ -3,17 +3,18 @@ package com.eservice.api.web;
 import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.contract.Contract;
 import com.eservice.api.model.contract.Equipment;
+import com.eservice.api.model.contract_sign.SignContentItem;
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
 import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.order_detail.OrderDetail;
+import com.eservice.api.model.order_sign.OrderSign;
 import com.eservice.api.service.common.CommonService;
 import com.eservice.api.service.common.Constant;
-import com.eservice.api.service.impl.MachineOrderServiceImpl;
-import com.eservice.api.service.impl.MachineServiceImpl;
-import com.eservice.api.service.impl.OrderDetailServiceImpl;
+import com.eservice.api.service.impl.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -57,6 +58,12 @@ public class MachineOrderController {
     @Resource
 //    private MachineOrderService machineOrderService;
     private MachineOrderServiceImpl machineOrderService;
+
+    @Resource
+    private ContractServiceImpl contractService;
+
+    @Resource
+    private OrderSignServiceImpl orderSignService;
 
     @Resource
     private OrderDetailServiceImpl orderDetailService;
@@ -321,9 +328,9 @@ public class MachineOrderController {
                 marketGroupName,
                 query_start_time,
                 query_finish_time,
-                machine_name,
                 queryStartTimeSign,
                 queryFinishTimeSign,
+                machine_name,
                 oderSignCurrentStep,
                 searchDepartment,
                 is_fuzzy);
@@ -539,13 +546,13 @@ public class MachineOrderController {
                         marketGroupName,
                         query_start_time,
                         query_finish_time,
-                        machine_name,
                         queryStartTimeSign,
                         queryFinishTimeSign,
+                        machine_name,
                         oderSignCurrentStep,
                         searchDepartment,
                         is_fuzzy);
-    
+
                 HSSFWorkbook wb = null;
                 FileOutputStream out = null;
                 String downloadPath = "";
@@ -554,7 +561,7 @@ public class MachineOrderController {
                     */
                 String downloadPathForNginx = "";
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-                String dateString;
+
                 try {
                     //生成一个空的Excel文件
                     wb=new HSSFWorkbook();
@@ -568,7 +575,7 @@ public class MachineOrderController {
                     headcellstyle.setFont(headfont);
                     Row row;
                     row = sheet1.createRow(0);//新创建一行，行号为row+1
-                    int columnSum = 18;
+                    int columnSum = 22;
                     for(int c=0; c<columnSum; c++){//列头
                         row.createCell(c);//创建一个单元格，列号为col+1
                         sheet1.setColumnWidth(c,4500);
@@ -576,31 +583,38 @@ public class MachineOrderController {
                     }
                   
                     //第一行为标题
-                    sheet1.getRow(0).getCell(0).setCellValue("客户");
-                    sheet1.getRow(0).getCell(1).setCellValue("合同号");
-                    sheet1.getRow(0).getCell(2).setCellValue("订单号");
+                    int columnX = 0;
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("客户");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("国家");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("部门");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("合同号");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("订单号");
 //                    sheet1.getRow(0).getCell(3).setCellValue("铭牌号");
-                    sheet1.getRow(0).getCell(3).setCellValue("机器信息");
-                    sheet1.getRow(0).getCell(4).setCellValue("台数");
-                    sheet1.getRow(0).getCell(5).setCellValue("单价");
-                    sheet1.getRow(0).getCell(6).setCellValue("装置");
-                    sheet1.getRow(0).getCell(7).setCellValue("装置总价");
-                    sheet1.getRow(0).getCell(8).setCellValue("优惠金额");
-                    sheet1.getRow(0).getCell(9).setCellValue("订单总金额");
-                    sheet1.getRow(0).getCell(10).setCellValue("币种");
-                    sheet1.getRow(0).getCell(11).setCellValue("销售员");
-                    sheet1.getRow(0).getCell(12).setCellValue("业务费"); //销售费
-                    sheet1.getRow(0).getCell(13).setCellValue("付款方式");
-                    sheet1.getRow(0).getCell(14).setCellValue("毛利");
-                    sheet1.getRow(0).getCell(15).setCellValue("订单类型");
-                    sheet1.getRow(0).getCell(16).setCellValue("保修费");
-                    sheet1.getRow(0).getCell(17).setCellValue("填表日期");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("机器信息");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("台数");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("单价");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("装置");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("装置数量");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("装置总价");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("优惠金额");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("订单总金额(美元)");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("订单总金额(人民币)");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("订单总金额(欧元)");
+//                    sheet1.getRow(0).getCell(columnX++).setCellValue("币种");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("销售员");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("业务费"); //销售费
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("付款方式");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("毛利");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("订单类型");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("保修费");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("签核完成时间");
                     DataFormat dataFormat = wb.createDataFormat();
                     CellStyle cellStyle;
                     HSSFCellStyle wrapStyle=wb.createCellStyle();     
                     wrapStyle.setWrapText(true);     
                     //第二行开始，填入值
                     for(int i=0; i<list.size(); i++ ) {
+                        String dateStringSignFinish = "未完成签核";
                         int r = i+1;
                         MachineOrderDetail mod=list.get(i);
                         row = sheet1.createRow(r);//新创建一行
@@ -608,12 +622,44 @@ public class MachineOrderController {
                             row.createCell(c);//创建列单元格
                            
                         }
-                        sheet1.getRow(r).getCell(0).setCellValue(mod.getCustomer());//客户
-                        sheet1.getRow(r).getCell(1).setCellValue(mod.getContractNum());//合同号
-                        sheet1.getRow(r).getCell(2).setCellValue(mod.getOrderNum());//
-                        sheet1.getRow(r).getCell(0).setCellStyle(wrapStyle);
-                        sheet1.getRow(r).getCell(1).setCellStyle(wrapStyle);
-                        sheet1.getRow(r).getCell(2).setCellStyle(wrapStyle);
+
+                        //合同的内容也用到
+                        Contract contract = contractService.findById(list.get(i).getContractId());
+                        if(contract == null){
+                            logger.error("异常，根据合同ID号，查找不到合同");
+                            return ResultGenerator.genFailResult("异常，根据合同ID号，查找不到合同");
+                        }
+                        //签核也用到：签核完成时间
+                        List<OrderSign> orderSignList = orderSignService.getOrderSignListByOrderId(mod.getOrderSign().getOrderId());
+                        OrderSign orderSign = null;
+                        List<SignContentItem> signContentItemList = null;
+                        if (orderSignList.size() > 0) {
+                            //订单的签核记录只有在新增合同-订单时，才创建订单的签核记录，所以这里 getOrderSignListByOrderId其实只返回一个签核记录
+                            orderSign = orderSignList.get(orderSignList.size() - 1);
+                            if(orderSign.getCurrentStep() == null ){
+                                logger.warn("异常，orderSign.getCurrentStep()为null, 比如测试数据手动乱改动时可能出现");
+                            }
+                            if(orderSign.getCurrentStep() != null && orderSign.getCurrentStep().equals("签核完成")) {
+                                //如果签核完成，取最后一个角色的签核时间
+                                signContentItemList = JSON.parseArray(orderSign.getSignContent(), SignContentItem.class);
+                                // 注意订单签核没有enable开关
+                                if (signContentItemList.get(signContentItemList.size() - 1).getDate() != null) {
+                                    dateStringSignFinish = formatter.format(signContentItemList.get(signContentItemList.size() - 1).getDate());
+                                 } else {
+                                    logger.warn("signContentItemList.get(signContentItemList.size()-1).getDate() 是 null，比如测试数据手动乱改动时可能出现");
+                                }
+                            }
+
+                        }
+                        columnX = 0;
+                        sheet1.getRow(r).getCell(columnX).setCellValue(mod.getCustomer());//客户
+                        sheet1.getRow(r).getCell(columnX++).setCellStyle(wrapStyle);
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getCountry());//国家
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(contract.getMarketGroupName());//部门
+                        sheet1.getRow(r).getCell(columnX).setCellValue(mod.getContractNum());//合同号
+                        sheet1.getRow(r).getCell(columnX++).setCellStyle(wrapStyle);
+                        sheet1.getRow(r).getCell(columnX).setCellValue(mod.getOrderNum());//
+                        sheet1.getRow(r).getCell(columnX++).setCellStyle(wrapStyle);
 
 //                        sheet1.getRow(r).getCell(3).setCellValue(mod.getNameplate());//
                         MachineType mt= mod.getMachineType();
@@ -627,49 +673,67 @@ public class MachineOrderController {
                                     + mod.getyDistance() +"/"
                                     + mod.getElectricTrim() +"/"
                                     + mod.getElectricPc();
-                            sheet1.getRow(r).getCell(3).setCellValue(machineInfo);//
+                            sheet1.getRow(r).getCell(columnX++).setCellValue(machineInfo);//
                         }
-                        sheet1.getRow(r).getCell(4).setCellValue(mod.getMachineNum());//
-                        sheet1.getRow(r).getCell(5).setCellValue(mod.getMachinePrice());//
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getMachineNum());//
+                        sheet1.getRow(r).getCell(columnX).setCellValue(mod.getMachinePrice());//
                         cellStyle=wb.createCellStyle();
                         cellStyle.setDataFormat(dataFormat.getFormat("#,##0.00"));//金额格式
-                        sheet1.getRow(r).getCell(5).setCellStyle(cellStyle);
+                        sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
 
                         List<Equipment> epArray = JSON.parseArray(mod.getEquipment(), Equipment.class);
                         String strEp="";
+                        int equipmentCount =0;//订单内  各种装置数量之和
                         int epAmount=0;
                         for(Equipment itemEquipment:epArray)
                         {
                             strEp+=itemEquipment.getName()+":"+itemEquipment.getNumber()+"个"+"\r\n";
                             epAmount+=itemEquipment.getPrice()*itemEquipment.getNumber();
+                            equipmentCount += itemEquipment.getNumber();
                         }
 
                        
-                        sheet1.getRow(r).getCell(6).setCellStyle(wrapStyle);
-                        sheet1.getRow(r).getCell(6).setCellValue(new HSSFRichTextString(strEp));//装置
+//                        sheet1.getRow(r).getCell(columnX).setCellStyle(wrapStyle);
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(new HSSFRichTextString(strEp));//装置
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(equipmentCount);//装置数量
                         
-                        sheet1.getRow(r).getCell(7).setCellValue(epAmount);//装置金额
-                        sheet1.getRow(r).getCell(7).setCellStyle(cellStyle);
+                        sheet1.getRow(r).getCell(columnX).setCellValue(epAmount);//装置总价
+                        sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
     
-                        sheet1.getRow(r).getCell(8).setCellValue(mod.getDiscounts());//优惠金额
+                        sheet1.getRow(r).getCell(columnX).setCellValue(mod.getDiscounts());//优惠金额
                         Double totalAmount=Double.parseDouble(mod.getMachinePrice())* mod.getMachineNum()
                         +epAmount - Double.parseDouble(mod.getDiscounts());
-                        sheet1.getRow(r).getCell(8).setCellStyle(cellStyle);
+                        sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
 
-                        sheet1.getRow(r).getCell(9).setCellValue(totalAmount);//总金额
-                        sheet1.getRow(r).getCell(9).setCellStyle(cellStyle);
+                        if(mod.getCurrencyType().equals("美元")) {
+                            sheet1.getRow(r).getCell(columnX).setCellValue(totalAmount);//总金额（美元）
+                            sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
+                            columnX++;
+                            columnX++; //
+                        }
+                        if(mod.getCurrencyType().equals("人民币")) {
+                            columnX++;
+                            sheet1.getRow(r).getCell(columnX).setCellValue(totalAmount);//总金额（人民币）
+                            sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
+                            columnX++;
+                        }
+                        if(mod.getCurrencyType().equals("欧元")) {
+                            columnX++;
+                            columnX++;
+                            sheet1.getRow(r).getCell(columnX).setCellValue(totalAmount);//总金额（欧元）
+                            sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
+                        }
 
-                        sheet1.getRow(r).getCell(10).setCellValue(mod.getCurrencyType());//币种
-                        sheet1.getRow(r).getCell(11).setCellValue(mod.getSellman());//销售员
-                        sheet1.getRow(r).getCell(12).setCellValue(mod.getBusinessExpense());//销售费 业务费
-                        sheet1.getRow(r).getCell(12).setCellStyle(cellStyle);
+//                        sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getCurrencyType());//币种
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getSellman());//销售员
+                        sheet1.getRow(r).getCell(columnX).setCellValue(mod.getBusinessExpense());//销售费 业务费
+                        sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
 
-                        sheet1.getRow(r).getCell(13).setCellValue(mod.getPayMethod());//付款方式
-                        sheet1.getRow(r).getCell(14).setCellValue(mod.getGrossProfit());//毛利率
-                        sheet1.getRow(r).getCell(15).setCellValue(mod.getOrderType());//订单类型
-                        sheet1.getRow(r).getCell(16).setCellValue(mod.getWarrantyFee());//保修费
-                        dateString = formatter.format(mod.getCreateTime());
-                        sheet1.getRow(r).getCell(17).setCellValue(dateString);//填表日期
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getPayMethod());//付款方式
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getGrossProfit());//毛利率
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getOrderType());//订单类型
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getWarrantyFee());//保修费
+                        sheet1.getRow(r).getCell(columnX++).setCellValue(dateStringSignFinish);//签核完成时间
 
                     }
                   

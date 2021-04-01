@@ -338,10 +338,9 @@ public class OrderSignController {
     /**
      * 根据orderId获取签核信息
      *
-     * @param page
-     * @param size
      * @param orderId
-     * @return
+     * @return  订单的签核记录只有在新增合同-订单时，才创建订单的签核记录，所以这里其实只返回一个签核记录，先保留这样用list
+     *          （之前考虑过比如驳回造成的多次签核的分别放在不同的签核记录里，最后其实是放在同个签核记录里）
      */
     @PostMapping("/getOrderSignListByOrderId")
     public Result getOrderSignListByOrderId(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,
