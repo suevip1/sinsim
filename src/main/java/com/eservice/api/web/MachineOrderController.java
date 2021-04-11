@@ -613,6 +613,15 @@ public class MachineOrderController {
                     HSSFCellStyle wrapStyle=wb.createCellStyle();     
                     wrapStyle.setWrapText(true);     
                     //第二行开始，填入值
+                    int allOrdersEquipmentCount = 0;//各订单的装置数量-合计
+                    int allOrdersEquipemntAmountCount = 0;//各订单的装置总价-合计
+                    int allOrdersDiscountCount = 0;//各订单的优惠金额-合计
+                    int allOrdersTotalPriceCount_USD = 0;//各订单订单总金额（美元）	合计
+                    int allOrdersTotalPriceCount_RMB = 0;//各订单订单总金额（人民币）合计
+                    int allOrdersTotalPriceCount_EUR= 0;//各订单订单总金额（欧元）合计
+
+                    cellStyle=wb.createCellStyle();
+                    cellStyle.setDataFormat(dataFormat.getFormat("#,##0.00"));//金额格式
                     for(int i=0; i<list.size(); i++ ) {
                         String dateStringSignFinish = "未完成签核";
                         int r = i+1;
@@ -677,47 +686,53 @@ public class MachineOrderController {
                         }
                         sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getMachineNum());//
                         sheet1.getRow(r).getCell(columnX).setCellValue(mod.getMachinePrice());//
-                        cellStyle=wb.createCellStyle();
-                        cellStyle.setDataFormat(dataFormat.getFormat("#,##0.00"));//金额格式
                         sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
 
                         List<Equipment> epArray = JSON.parseArray(mod.getEquipment(), Equipment.class);
                         String strEp="";
                         int equipmentCount =0;//订单内  各种装置数量之和
-                        int epAmount=0;
+                        int epPriceAmount=0;
                         for(Equipment itemEquipment:epArray)
                         {
                             strEp+=itemEquipment.getName()+":"+itemEquipment.getNumber()+"个"+"\r\n";
-                            epAmount+=itemEquipment.getPrice()*itemEquipment.getNumber();
+                            epPriceAmount+=itemEquipment.getPrice()*itemEquipment.getNumber();
                             equipmentCount += itemEquipment.getNumber();
                         }
-
+                        allOrdersEquipmentCount += equipmentCount;
+                        allOrdersEquipemntAmountCount +=epPriceAmount;
                        
 //                        sheet1.getRow(r).getCell(columnX).setCellStyle(wrapStyle);
                         sheet1.getRow(r).getCell(columnX++).setCellValue(new HSSFRichTextString(strEp));//装置
                         sheet1.getRow(r).getCell(columnX++).setCellValue(equipmentCount);//装置数量
                         
-                        sheet1.getRow(r).getCell(columnX).setCellValue(epAmount);//装置总价
+                        sheet1.getRow(r).getCell(columnX).setCellValue(epPriceAmount);//装置总价
                         sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
     
                         sheet1.getRow(r).getCell(columnX).setCellValue(mod.getDiscounts());//优惠金额
-                        Double totalAmount=Double.parseDouble(mod.getMachinePrice())* mod.getMachineNum()
-                        +epAmount - Double.parseDouble(mod.getDiscounts());
+                        allOrdersDiscountCount += Integer.valueOf( mod.getDiscounts());
+                        Double totalAmount = Double.parseDouble(mod.getMachinePrice())* mod.getMachineNum()
+                                            + epPriceAmount *mod.getMachineNum()
+                                            - Double.parseDouble(mod.getOrderTotalDiscounts())        //优惠金额 （需求单总价格优惠金额）
+                                            - Double.parseDouble(mod.getDiscounts())*mod.getMachineNum();        //每台的优惠金额
+//                                            - Double.parseDouble(mod.getIntermediaryPrice())*mod.getMachineNum();//每台的居间费用 和总价无关
                         sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
 
                         if(mod.getCurrencyType().equals("美元")) {
+                            allOrdersTotalPriceCount_USD += totalAmount;
                             sheet1.getRow(r).getCell(columnX).setCellValue(totalAmount);//总金额（美元）
                             sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
                             columnX++;
                             columnX++; //
                         }
                         if(mod.getCurrencyType().equals("人民币")) {
+                            allOrdersTotalPriceCount_RMB += totalAmount;
                             columnX++;
                             sheet1.getRow(r).getCell(columnX).setCellValue(totalAmount);//总金额（人民币）
                             sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
                             columnX++;
                         }
                         if(mod.getCurrencyType().equals("欧元")) {
+                            allOrdersTotalPriceCount_EUR += totalAmount;
                             columnX++;
                             columnX++;
                             sheet1.getRow(r).getCell(columnX).setCellValue(totalAmount);//总金额（欧元）
@@ -736,7 +751,23 @@ public class MachineOrderController {
                         sheet1.getRow(r).getCell(columnX++).setCellValue(dateStringSignFinish);//签核完成时间
 
                     }
-                  
+                    //最后一行 汇总
+                    Row rowSum = sheet1.createRow(list.size()+1);//新创建一行
+                    for(int c=0; c<columnSum; c++){
+                        rowSum.createCell(c);//创建列单元格
+
+                    }
+                    rowSum.getCell(9).setCellValue(allOrdersEquipmentCount);//各订单的装置数量-合计
+                    rowSum.getCell(10).setCellValue(allOrdersEquipemntAmountCount);//各订单的装置总价 合计
+                    rowSum.getCell(10).setCellStyle(cellStyle);
+                    rowSum.getCell(11).setCellValue(allOrdersDiscountCount);//优惠金额  合计
+                    rowSum.getCell(12).setCellValue(allOrdersTotalPriceCount_USD);//订单总金额（美元）	合计
+                    rowSum.getCell(12).setCellStyle(cellStyle);
+                    rowSum.getCell(13).setCellValue(allOrdersTotalPriceCount_RMB);//订单总金额（人民币）合计
+                    rowSum.getCell(13).setCellStyle(cellStyle);
+                    rowSum.getCell(14).setCellValue(allOrdersTotalPriceCount_EUR);//订单总金额（欧元）合计
+                    rowSum.getCell(14).setCellStyle(cellStyle);
+
                     downloadPath = reportOutputPath + "销售报表" + ".xls";
                     downloadPathForNginx = "/report/" + "销售报表" + ".xls";
                     out = new FileOutputStream(downloadPath);
