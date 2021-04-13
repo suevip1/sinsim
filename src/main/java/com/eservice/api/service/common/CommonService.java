@@ -86,6 +86,7 @@ public class CommonService {
 
     Logger logger = Logger.getLogger(CommonService.class);
 
+//    public String gatewayIpFromDockerFile ="aaa"; //main是静态域，所以不方便从main参数里获取值，已改为从文件里读取。
     /**
      * 用于返回对应合同的所有签核记录，每一次提交审核以后，都需要通过该API获取所有审核内容，再设置审核状态
      *
@@ -621,19 +622,45 @@ public class CommonService {
             return e.getMessage();
         }
     }
-	
-    public String getLinuxLocalIp() {
+
+    /**
+     * 废弃，因为 docker inspect 命令无法在java环境里执行，只能在服务器主机执行。
+     * @return
+     */
+    public String getDockerGatewayIp() {
         // docker的 gateway 就是服务器本机 docker0 网卡的ip
         String gatewayIp = "";
 
         String cmdToGetGatewayIp = "docker inspect -f '{{range .NetworkSettings.Networks}}{{.Gateway}}{{end}}'  allinone_server_process_1";
         gatewayIp = executeLinuxCmd(cmdToGetGatewayIp);
+        /**
+         * 这个linux命令是由JAVA执行的，即在docker里执行的，这样是无法获取 服务器本机 docker0 网卡的ip的。
+         * 只能在服务器本机执行才能获取 服务器本机 docker0 网卡的ip
+         */
+
+        return gatewayIp;
+    }
+
+    /**
+     * docker的gateway的IP是会变化的，可以在文件里改，不用重新编译。
+     * @return
+     */
+    public String getDockerGatewayIpFromFile() {
+        // docker的 gateway 就是服务器本机 docker0 网卡的ip
+        String gatewayIp = "";
+
+        String cmdToGetGatewayIp = "cat /opt/sinsim/upload-data/dockerGatewayIp";
+        gatewayIp = executeLinuxCmd(cmdToGetGatewayIp);
+        /**
+         * 这个linux命令是由JAVA执行的，即在docker里执行的，这样是无法获取 服务器本机 docker0 网卡的ip的。
+         * 只能在服务器本机执行才能获取 服务器本机 docker0 网卡的ip
+         */
 
         return gatewayIp;
     }
     /**
      * 执行Linux命令
-     * 注意 这个执行，是在docker镜像内部执行。
+     * 【注意】 这个执行，是在docker镜像内部执行。java里的执行都是docker里执行，不是在服务器本机执行。
      * @param cmd
      * @return 返回的是命令执行的结果（String）。
      */
@@ -676,10 +703,13 @@ public class CommonService {
                                       @RequestParam(defaultValue = "") String msgInfo ) {
 
         Date now = new Date();
-
-
+//return "skip sendSignInfoViWxMsg";
+ //注意，本地和服务器不一样
         String result = null;
-        String docker0_ip = getLinuxLocalIp();
+        logger.info("step000");
+        String docker0_ip = getDockerGatewayIpFromFile();
+//        String docker0_ip = gatewayIpFromDockerFile;
+        logger.info("step001, docker0_ip:" + docker0_ip);
 //        String url = sinsimPocess_call_aftersale
         String url = docker0_ip + "/api/"
                 + "for/sinimproccess/sendRemind";
@@ -714,6 +744,10 @@ public class CommonService {
                     accountX,
                     "--data-urlencode",
                     machineOrderNumX,
+//                    "--data-urlencode",
+//                    department,
+//                    "--data-urlencode",
+//                    applicantPerson,
                     "--data-urlencode",
                     msgInfo,
                     url,
@@ -916,9 +950,12 @@ public class CommonService {
                         } else if (orderSignObj.getSalesDepartment().equals(Constant.STR_DEPARTMENT_FOREIGN_2)){
                             toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_FOREIGN_2, 1);
                         }
-                        for (UserDetail toUser : toSalesManagerList) {
-                            logger.info("订单继续签核，发给下销售经理  " + toUser.getAccount());
-                            commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "", msgInfo);
+
+                        if(toSalesManagerList != null) {
+                            for (UserDetail toUser : toSalesManagerList) {
+                                logger.info("订单继续签核，发给下销售经理  " + toUser.getAccount());
+                                commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "", msgInfo);
+                            }
                         }
                     }
 
