@@ -693,14 +693,17 @@ public class CommonService {
     /**
      * 发送信息给售后系统,通知签核
      * @param accountX
-     * @param machineOrderNumX
-     * @param lxdNumX
+     * @param machineOrderNum_X
+     * @param lxdNum_X
      * @return
      */
     public String sendSignInfoViWxMsg(@RequestParam String accountX,
-                                      @RequestParam(defaultValue = "") String machineOrderNumX,
-                                      @RequestParam(defaultValue = "") String lxdNumX,
-                                      @RequestParam(defaultValue = "") String msgInfo ) {
+                                      @RequestParam(defaultValue = "") String machineOrderNum_X,
+                                      @RequestParam(defaultValue = "") String lxdNum_X,
+                                      @RequestParam(defaultValue = "") String StrCreateDate_X,
+                                      @RequestParam(defaultValue = "") String department_X,
+                                      @RequestParam(defaultValue = "") String applicantPerson_X,
+                                      @RequestParam(defaultValue = "") String msgInfo_X ) {
 
         Date now = new Date();
 //return "skip sendSignInfoViWxMsg";
@@ -713,7 +716,14 @@ public class CommonService {
 //        String url = sinsimPocess_call_aftersale
         String url = docker0_ip + "/api/"
                 + "for/sinimproccess/sendRemind";
-        logger.info("推送,准备开始. curl url:" + url + ", accountX:" + accountX + ", machineOrderNumX:" + machineOrderNumX+ ", lxdNumX:" + lxdNumX + ", msgInfo:" + msgInfo );
+        logger.info("推送,准备开始. curl url:" + url
+                + ", accountX:" + accountX
+                + ", machineOrderNum_X:" + machineOrderNum_X
+                + ", lxdNum_X:" + lxdNum_X
+                + ", department_X" + department_X
+                + ", applicantPerson_X" + applicantPerson_X
+                + ", createDate_X:" + StrCreateDate_X
+                + ", msgInfo_X:" + msgInfo_X );
         try {
             /**
              * 事先做对账号等可能为中文的字符串进行encode转码,然后在售后端收到之后解码
@@ -726,16 +736,24 @@ public class CommonService {
              */
 
             accountX = URLEncoder.encode(accountX, "UTF-8");
-            machineOrderNumX = URLEncoder.encode(machineOrderNumX, "UTF-8");
-            lxdNumX = URLEncoder.encode(lxdNumX, "UTF-8");
+            machineOrderNum_X = URLEncoder.encode(machineOrderNum_X, "UTF-8");
+            lxdNum_X = URLEncoder.encode(lxdNum_X, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             logger.warn(e.getMessage());
         }
         accountX = "account=accountX".replaceAll("accountX",accountX);
 
-        if(!machineOrderNumX.equals("") ){
-            machineOrderNumX = "machineOrderNum=machineOrderNumX".replaceAll("machineOrderNumX",machineOrderNumX);
+        logger.info("订单签核推送给售后,(解码后) curl url:" + url
+                + ", accountX:" + accountX
+                + ", machineOrderNumX:" + machineOrderNum_X
+                + "StrCreateDate_X.:" + StrCreateDate_X
+                + ",department_X:" + department_X
+                + ",applicantPerson_X:" + applicantPerson_X
+                + ",msgInfo_X:" + msgInfo_X);
+        if(!machineOrderNum_X.equals("") ){
+            machineOrderNum_X = "machineOrderNum=machineOrderNumX".replaceAll("machineOrderNumX",machineOrderNum_X);
+            // todo 替换X
             String[] cmds = {"curl",
                     "-X",
                     "POST",
@@ -743,26 +761,31 @@ public class CommonService {
                     "--data-urlencode", ///这些貌似未起作用,最终还是要事先做encode转码,然后在售后端收到之后解码.
                     accountX,
                     "--data-urlencode",
-                    machineOrderNumX,
-//                    "--data-urlencode",
-//                    department,
-//                    "--data-urlencode",
-//                    applicantPerson,
+                    machineOrderNum_X,
                     "--data-urlencode",
-                    msgInfo,
+                    StrCreateDate_X.toString(),
+                    "--data-urlencode",
+                    department_X,
+                    "--data-urlencode",
+                    applicantPerson_X,
+                    "--data-urlencode",
+                    msgInfo_X,
                     url,
                     "-H",
                     "accept: */*",
                     "-H",
                     "Content-Type: application/json;charset=UTF-8"
             };
-            logger.info("订单签核推送给售后 curl url:" + url + ", accountX:" + accountX + ", machineOrderNumX:" + machineOrderNumX);
             result = execCurl(cmds);
        //     executeLinuxCmd("curl -X POST localhost/api/for/sinimproccess/sendRemind?account=neimao&&machineOrderNumX=mo111&&msgInfo=msg222");
-            logger.info(result);
+            logger.info("result:" + result);
         }
-        if(!lxdNumX.equals("") ){ //todo
-            lxdNumX = "lxdNum=lxdNumX".replaceAll("lxdNumX",lxdNumX);
+        if(!lxdNum_X.equals("") ){ //todo
+            lxdNum_X = "lxdNum=lxdNum_X".replaceAll("lxdNum_X",lxdNum_X);
+            StrCreateDate_X = "StrCreateDate=StrCreateDate_X".replaceAll("StrCreateDate_X",StrCreateDate_X);
+            department_X = "department=department_X".replaceAll("department_X",department_X);
+            applicantPerson_X = "applicantPerson=applicantPerson_X".replaceAll("applicantPerson_X",applicantPerson_X);
+            msgInfo_X = "msgInfo=msgInfo_X".replaceAll("msgInfo_X",msgInfo_X);
             String[] cmds = {"curl",
                     "-X",
                     "POST",
@@ -770,18 +793,24 @@ public class CommonService {
                     "--data-urlencode", ///这些貌似未起作用,最终还是要事先做encode转码,然后在售后端收到之后解码.
                     accountX,
                     "--data-urlencode",
-                    lxdNumX,
+                    lxdNum_X,
                     "--data-urlencode",
-                    msgInfo,
+                    StrCreateDate_X,
+                    "--data-urlencode",
+                    department_X,
+                    "--data-urlencode",
+                    applicantPerson_X,
+                    "--data-urlencode",
+                    msgInfo_X,
                     url,
                     "-H",
                     "accept: */*",
                     "-H",
                     "Content-Type: application/json;charset=UTF-8"
             };
-            logger.info("联系单 签核推送给售后. curl url:" + url + ", accountX:" + accountX + ", lxdNumX:" + lxdNumX);
+
             result = execCurl(cmds);
-            logger.info(result);
+            logger.info("result:" + result);
         }
 
         return result;
@@ -827,6 +856,11 @@ public class CommonService {
                                       boolean haveReject,
                                       String msgInfo ) {
 
+        //指定格式，因为售后解析要用到
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //指定北京时间
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        String createDateStr = formatter.format(cf.getCreateDate());
         if (cs.getCurrentStep().equals(Constant.SIGN_FINISHED)) {
             //  审核完成时，通知发起人
             List<UserDetail> userList = userService.selectUsers(cf.getApplicantPerson(), null, null, null, null, 1);
@@ -835,7 +869,13 @@ public class CommonService {
             } else {
                 //找到发起人
                 UserDetail toUser = userList.get(0);
-                commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", cf.getNum(), msgInfo);
+                commonService.sendSignInfoViWxMsg(toUser.getAccount(),
+                        "",
+                        cf.getNum(),
+                        createDateStr,
+                        cf.getApplicantDepartment(),
+                        cf.getApplicantPerson(),
+                        msgInfo);
             }
         } else {
             /**
@@ -853,15 +893,39 @@ public class CommonService {
             if (haveReject) {
                 List<User> userNameList = commonService.getUsersInLxdSign(cs);
                 for (User toUser : userNameList) {
-                    commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", cf.getNum(), msgInfo);
+                    logger.info("被拒绝，发给参与签核的人 " + toUser.getAccount());
+                    commonService.sendSignInfoViWxMsg(toUser.getAccount(),
+                            "",
+                            cf.getNum(),
+                            createDateStr,
+                            cf.getApplicantDepartment(),
+                            cf.getApplicantPerson(),
+                            msgInfo);
                 }
-                commonService.sendSignInfoViWxMsg(cf.getApplicantPerson(), "", cf.getNum(), msgInfo);
+                logger.info("被拒绝，发给发起签核的人 " + cf.getApplicantPerson());
+                commonService.sendSignInfoViWxMsg(cf.getApplicantPerson(),
+                        "",
+                        cf.getNum(),
+                        createDateStr,
+                        cf.getApplicantDepartment(),
+                        cf.getApplicantPerson(),
+                        msgInfo);
 
             } else {
+                /**
+                 * 没有被拒绝，只需要发给下一个
+                 */
                 //如果是销售部经理还要细分发给哪个经理，
                 if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
                     String userSalesManagerAccount = cf.getDesignatedSaleManager();
-                    commonService.sendSignInfoViWxMsg(userSalesManagerAccount, "", cf.getNum(), msgInfo);
+                    logger.info(" 发给被指定的销售部经理 " + userSalesManagerAccount);
+                    commonService.sendSignInfoViWxMsg(userSalesManagerAccount,
+                            "",
+                            cf.getNum(),
+                            createDateStr,
+                            cf.getApplicantDepartment(),
+                            cf.getApplicantPerson(),
+                            msgInfo);
                 } else {
 
                     if (userList.isEmpty() || userList == null) {
@@ -870,7 +934,14 @@ public class CommonService {
                         //可能有多个负责人，比如研发部现在就两个经理，都通知。
                         for (UserDetail toUser : userList) {
                             ContactForm contactForm = contactFormService.findById(cs.getContactFormId());
-                            commonService.sendSignInfoViWxMsg(toUser.getAccount(), "", contactForm.getNum(), msgInfo);
+                            logger.info(" 发给参与签核的角色(可能多个) " + toUser.getAccount());
+                            commonService.sendSignInfoViWxMsg(toUser.getAccount(),
+                                    "",
+                                    contactForm.getNum(),
+                                    createDateStr,
+                                    cf.getApplicantDepartment(),
+                                    cf.getApplicantPerson(),
+                                    msgInfo);
                         }
                     }
                 }
@@ -890,6 +961,11 @@ public class CommonService {
                                                MachineOrder machineOrder,
                                                boolean haveReject,
                                                String msgInfo) {
+        //指定格式，因为售后解析要用到
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //指定北京时间
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        String createDateStr = formatter.format(machineOrder.getCreateTime());
         /**
          * 签核结束，推送给订单录单人；
          */
@@ -901,7 +977,13 @@ public class CommonService {
                 //找到录单人
                 UserDetail toUser = userList.get(0);
                 logger.info("订单签核结束，推送给订单录单人");
-                commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "", msgInfo);
+                commonService.sendSignInfoViWxMsg(toUser.getAccount(),
+                        machineOrder.getOrderNum(),
+                        "",
+                        createDateStr,
+                        contract.getMarketGroupName(),
+                        contract.getRecordUser(),
+                        msgInfo);
             }
         } else {
             /**
@@ -921,7 +1003,13 @@ public class CommonService {
                 for (User toUser : userList) {
 
                     logger.info("订单驳回，发给参与签核的 " + toUser.getAccount());
-                    commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "", msgInfo);
+                    commonService.sendSignInfoViWxMsg(toUser.getAccount(),
+                            machineOrder.getOrderNum(),
+                            "",
+                            createDateStr,
+                            contract.getMarketGroupName(),
+                            contract.getRecordUser(),
+                            msgInfo);
                 }
 
                 //考虑录单人和签核人可能是相同的，这种情况只需要发一次
@@ -934,7 +1022,13 @@ public class CommonService {
                 }
                 if( ! isRecorderInUserList) {
                     logger.info("订单驳回，发给录单人 " + contract.getRecordUser());
-                    commonService.sendSignInfoViWxMsg(contract.getRecordUser(), machineOrder.getOrderNum(), "", msgInfo);
+                    commonService.sendSignInfoViWxMsg(contract.getRecordUser(),
+                            machineOrder.getOrderNum(),
+                            "",
+                            createDateStr,
+                            contract.getMarketGroupName(),
+                            contract.getRecordUser(),
+                            msgInfo);
                 }
             } else {
                 //没有驳回，发给下1个签核人
@@ -954,7 +1048,13 @@ public class CommonService {
                         if(toSalesManagerList != null) {
                             for (UserDetail toUser : toSalesManagerList) {
                                 logger.info("订单继续签核，发给下销售经理  " + toUser.getAccount());
-                                commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "", msgInfo);
+                                commonService.sendSignInfoViWxMsg(toUser.getAccount(),
+                                        machineOrder.getOrderNum(),
+                                        "",
+                                        createDateStr,
+                                        contract.getMarketGroupName(),
+                                        contract.getRecordUser(),
+                                        msgInfo);
                             }
                         }
                     }
@@ -967,7 +1067,13 @@ public class CommonService {
                         //可能有多个负责人，比如研发部现在就两个经理，都通知
                         for (UserDetail toUser : userList) {
                             logger.info("订单继续签核，发给下1个签核人 " + toUser.getAccount());
-                            commonService.sendSignInfoViWxMsg(toUser.getAccount(), machineOrder.getOrderNum(), "", msgInfo);
+                            commonService.sendSignInfoViWxMsg(toUser.getAccount(),
+                                    machineOrder.getOrderNum(),
+                                    "",
+                                    createDateStr,
+                                    contract.getMarketGroupName(),
+                                    contract.getRecordUser(),
+                                    msgInfo);
                         }
                     }
                 }

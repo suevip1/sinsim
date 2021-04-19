@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -235,8 +236,18 @@ public class UserController {
 
     //测试 推送信息给售后
     @PostMapping("/sendSignInfoViWxMsg")
-    public Result sendSignInfoViWxMsg(@RequestParam String account, String msgInfo) {
-        String result = commonService.sendSignInfoViWxMsg(account,"11","22", msgInfo);
+    public Result sendSignInfoViWxMsg(@RequestParam String account,
+                                      @RequestParam(defaultValue = "") Date createDate,
+                                      @RequestParam(defaultValue = "") String department,
+                                      @RequestParam(defaultValue = "") String applicantPerson,
+                                      String msgInfo) {
+        String result = commonService.sendSignInfoViWxMsg(account,
+                "11",
+                "22",
+                createDate.toString(),
+                department,
+                applicantPerson,
+                msgInfo);
         return ResultGenerator.genSuccessResult(result);
     }
 
