@@ -372,4 +372,5 @@ public class Constant {
     public static final String STR_MSG_PUSH_IS_START_TO_SIGN = "开始签核";
     public static final String STR_MSG_PUSH_IS_TURN_TO_SIGN = "轮到签核";
     public static final String STR_MSG_PUSH_SIGN_REFUESED = "签核被拒绝";
+    public static final String STR_MSG_PUSH_SIGN_DONE = "签核完成";
 }

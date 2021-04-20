@@ -112,7 +112,7 @@ public class ContactSignController {
         }
         contactSignService.update(cs);
 
-
+        String msgInfo = null;
         if (haveReject) {
             /**
              * 被拒绝了，
@@ -130,9 +130,9 @@ public class ContactSignController {
             contactFormService.update(cf);
 
             /**
-             * 推送公众号消息给轮到联系单签核的人（通过售后系统）
+             * 推送 "签核被拒绝"消息
              */
-            commonService.pushLxdMsgToAftersale(cs,cf, haveReject, Constant.STR_MSG_PUSH_SIGN_REFUESED);
+            msgInfo = Constant.STR_MSG_PUSH_SIGN_REFUESED;
         } else {
             //没有被拒，且刚刚开始
             if (cf.getStatus().equals(Constant.STR_LXD_INITIAL)) {
@@ -141,13 +141,16 @@ public class ContactSignController {
             //没有被拒，且联系单签核完成
             if(currentStep.equals(Constant.SIGN_FINISHED)) {
                 cf.setStatus(Constant.STR_LXD_CHECKING_FINISHED);
+                 // 推送 "签核完成" 消息给 发起人
+                msgInfo = Constant.STR_MSG_PUSH_SIGN_DONE;
+            } else {
+                 //推送 "轮到签核" 消息给 轮到联系单签核的人
+                msgInfo =  Constant.STR_MSG_PUSH_IS_TURN_TO_SIGN;
             }
+
             contactFormService.update(cf);
-            /**
-             * 推送被拒消息
-             */
-            commonService.pushLxdMsgToAftersale(cs,cf, haveReject, Constant.STR_MSG_PUSH_IS_TURN_TO_SIGN);
         }
+        commonService.pushLxdMsgToAftersale(cs,cf, haveReject, msgInfo);
         return ResultGenerator.genSuccessResult();
     }
 
