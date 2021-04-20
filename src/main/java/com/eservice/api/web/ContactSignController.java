@@ -96,7 +96,7 @@ public class ContactSignController {
             if (item.getResult().equals(Constant.SIGN_REJECT)) {
                 haveReject = true;
             }
-            //签核在初始化，则把当前步骤设为发起部门
+            //签核在初始化，则把当前步骤设为发起部门 --> 就是下个要签核的部门
             if(item.getResult() == Constant.SIGN_INITIAL&&item.getShenHeEnabled()) {
                 currentStep = roleService.findById(item.getRoleId()).getRoleName();
                 break;
@@ -112,10 +112,6 @@ public class ContactSignController {
         }
         contactSignService.update(cs);
 
-        /**
-         * 推送公众号消息给轮到联系单签核的人（通过售后系统）
-         */
-        commonService.pushLxdMsgToAftersale(cs,cf, haveReject, Constant.STR_MSG_PUSH_IS_TURN_TO_SIGN);
 
         if (haveReject) {
             /**
@@ -132,6 +128,11 @@ public class ContactSignController {
 
             cf.setStatus(Constant.STR_LXD_REJECTED);
             contactFormService.update(cf);
+
+            /**
+             * 推送公众号消息给轮到联系单签核的人（通过售后系统）
+             */
+            commonService.pushLxdMsgToAftersale(cs,cf, haveReject, Constant.STR_MSG_PUSH_SIGN_REFUESED);
         } else {
             //没有被拒，且刚刚开始
             if (cf.getStatus().equals(Constant.STR_LXD_INITIAL)) {
@@ -142,6 +143,10 @@ public class ContactSignController {
                 cf.setStatus(Constant.STR_LXD_CHECKING_FINISHED);
             }
             contactFormService.update(cf);
+            /**
+             * 推送被拒消息
+             */
+            commonService.pushLxdMsgToAftersale(cs,cf, haveReject, Constant.STR_MSG_PUSH_IS_TURN_TO_SIGN);
         }
         return ResultGenerator.genSuccessResult();
     }

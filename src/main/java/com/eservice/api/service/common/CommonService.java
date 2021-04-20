@@ -825,7 +825,15 @@ public class CommonService {
 //                    * "0" --> "初始化"
 //                    * "1" --> "同意"
 //                    * "2" --> "拒绝"
-            if( ! item.getResult().equals(0)) {//（虽然在签核流程里，但没有经过签核的人就不用了）
+
+//            if( ! item.getResult().equals(0)) {//（虽然在签核流程里，但没有经过签核的人就不用了）
+//                userList.add(userService.selectByAccount(item.getUser()));
+//            }
+            /**
+             * 被拒绝的联系单，其实result已经被设置为“初始化"0了。
+             * 所以，要根据意见来判断是否参加过签核（签核意见是不允许空的）
+             */
+            if( item.getComment() != null && ! item.getComment().isEmpty()) {
                 userList.add(userService.selectByAccount(item.getUser()));
             }
         }
@@ -863,6 +871,7 @@ public class CommonService {
         String createDateStr = formatter.format(cf.getCreateDate());
         if (cs.getCurrentStep().equals(Constant.SIGN_FINISHED)) {
             //  审核完成时，通知发起人
+            logger.info(cf.getContactTitle() + ", 审核完成时，通知发起人");
             List<UserDetail> userList = userService.selectUsers(cf.getApplicantPerson(), null, null, null, null, 1);
             if (userList.isEmpty() || userList == null) {
                 logger.error("根据 " + cf.getApplicantPerson() + "找不到User");
