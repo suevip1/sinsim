@@ -212,11 +212,8 @@ public class OrderSignController {
             /**
              * 推送公众号消息给轮到的人（通过售后系统）
              */
-
             Contract contract = contractService.findById(contractId);
-            //
-            commonService.pushMachineOrderMsgToAftersale(orderSignObj,contract,machineOrder,haveReject, Constant.STR_MSG_PUSH_IS_TURN_TO_SIGN);
-
+            String msgInfo = null;
             if (haveReject) {
                 machineOrder.setStatus(Constant.ORDER_REJECTED);
                 //需要把之前的签核状态result设置为初始状态“SIGN_INITIAL”，但是签核内容不变(contract & machineOrder)
@@ -240,6 +237,7 @@ public class OrderSignController {
 
                 //如果有订单驳回，则设置合同为initial状态
                 contract.setStatus(Constant.CONTRACT_INITIAL);
+                msgInfo = Constant.STR_MSG_PUSH_SIGN_REFUESED;
             } else {
                 if (machineOrder.getStatus().equals(Constant.ORDER_INITIAL)) {
                     machineOrder.setStatus(Constant.ORDER_CHECKING);
@@ -248,10 +246,15 @@ public class OrderSignController {
                 if(currentStep.equals(Constant.SIGN_FINISHED)) {
                     machineOrder.setStatus(Constant.ORDER_CHECKING_FINISHED);
                     commonService.createMachineByOrderId(machineOrder);
+                    msgInfo = Constant.STR_MSG_PUSH_SIGN_DONE;
+                } else {
+                    msgInfo =  Constant.STR_MSG_PUSH_IS_TURN_TO_SIGN;
                 }
             }
             machineOrderService.update(machineOrder);
             commonService.syncMachineOrderStatusInDesignDepInfo(machineOrder);
+            //推送消息
+            commonService.pushMachineOrderMsgToAftersale(orderSignObj,contract,machineOrder,haveReject, msgInfo);
 
             //更新合同签核记录
             String step = commonService.getCurrentSignStep(contractId);

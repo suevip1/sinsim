@@ -922,7 +922,6 @@ public class ContractController {
 
                             /**
                              * 发起签核时 也给第一个签核人推送
-                             * //todo: 2020 销售新分区，新签核方式
                              */
                             commonService.pushMachineOrderMsgToAftersale(sign,
                                     contract,

@@ -751,9 +751,13 @@ public class CommonService {
                 + ",department_X:" + department_X
                 + ",applicantPerson_X:" + applicantPerson_X
                 + ",msgInfo_X:" + msgInfo_X);
+        StrCreateDate_X = "StrCreateDate=StrCreateDate_X".replaceAll("StrCreateDate_X",StrCreateDate_X);
+        department_X = "department=department_X".replaceAll("department_X",department_X);
+        applicantPerson_X = "applicantPerson=applicantPerson_X".replaceAll("applicantPerson_X",applicantPerson_X);
+        msgInfo_X = "msgInfo=msgInfo_X".replaceAll("msgInfo_X",msgInfo_X);
+
         if(!machineOrderNum_X.equals("") ){
-            machineOrderNum_X = "machineOrderNum=machineOrderNumX".replaceAll("machineOrderNumX",machineOrderNum_X);
-            // todo 替换X
+            machineOrderNum_X = "machineOrderNum=machineOrderNum_X".replaceAll("machineOrderNum_X",machineOrderNum_X);
             String[] cmds = {"curl",
                     "-X",
                     "POST",
@@ -763,7 +767,7 @@ public class CommonService {
                     "--data-urlencode",
                     machineOrderNum_X,
                     "--data-urlencode",
-                    StrCreateDate_X.toString(),
+                    StrCreateDate_X,
                     "--data-urlencode",
                     department_X,
                     "--data-urlencode",
@@ -780,12 +784,8 @@ public class CommonService {
        //     executeLinuxCmd("curl -X POST localhost/api/for/sinimproccess/sendRemind?account=neimao&&machineOrderNumX=mo111&&msgInfo=msg222");
             logger.info("result:" + result);
         }
-        if(!lxdNum_X.equals("") ){ //todo
+        if(!lxdNum_X.equals("") ){
             lxdNum_X = "lxdNum=lxdNum_X".replaceAll("lxdNum_X",lxdNum_X);
-            StrCreateDate_X = "StrCreateDate=StrCreateDate_X".replaceAll("StrCreateDate_X",StrCreateDate_X);
-            department_X = "department=department_X".replaceAll("department_X",department_X);
-            applicantPerson_X = "applicantPerson=applicantPerson_X".replaceAll("applicantPerson_X",applicantPerson_X);
-            msgInfo_X = "msgInfo=msgInfo_X".replaceAll("msgInfo_X",msgInfo_X);
             String[] cmds = {"curl",
                     "-X",
                     "POST",
@@ -845,8 +845,16 @@ public class CommonService {
 
         List<SignContentItem> orderSignContentList = JSON.parseArray(os.getSignContent(), SignContentItem.class);
         List<User> userList = new ArrayList<>();
+
         for (SignContentItem item : orderSignContentList) {
-            if( item.getResult().equals(Constant.SIGN_APPROVE )|| item.getResult().equals(Constant.SIGN_REJECT) ) {//（虽然在签核流程里，但没有经过签核的人就不用了）
+//            if( item.getResult().equals(Constant.SIGN_APPROVE )|| item.getResult().equals(Constant.SIGN_REJECT) ) {//（虽然在签核流程里，但没有经过签核的人就不用了）
+//                userList.add(userService.selectByAccount(item.getUser()));
+//            }
+            /**
+             * 被拒绝的订单，其实result已经被设置为“初始化"0了。
+             * 所以，要根据意见来判断是否参加过签核（签核意见是不允许空的）
+             */
+            if( item.getComment() != null && ! item.getComment().isEmpty()) {
                 userList.add(userService.selectByAccount(item.getUser()));
             }
         }
@@ -902,7 +910,7 @@ public class CommonService {
             if (haveReject) {
                 List<User> userNameList = commonService.getUsersInLxdSign(cs);
                 for (User toUser : userNameList) {
-                    logger.info("被拒绝，发给参与签核的人 " + toUser.getAccount());
+                    logger.info("联系单被拒绝，发给参与签核的人 " + toUser.getAccount());
                     commonService.sendSignInfoViWxMsg(toUser.getAccount(),
                             "",
                             cf.getNum(),
@@ -911,7 +919,7 @@ public class CommonService {
                             cf.getApplicantPerson(),
                             msgInfo);
                 }
-                logger.info("被拒绝，发给发起签核的人 " + cf.getApplicantPerson());
+                logger.info("联系单被拒绝，发给发起签核的人 " + cf.getApplicantPerson());
                 commonService.sendSignInfoViWxMsg(cf.getApplicantPerson(),
                         "",
                         cf.getNum(),
@@ -1010,8 +1018,7 @@ public class CommonService {
                 //驳回，发给所有参与签核的人。+ 录单人
                 List<User> userList = commonService.getUsersInMachineOrderSign(orderSignObj);
                 for (User toUser : userList) {
-
-                    logger.info("订单驳回，发给参与签核的 " + toUser.getAccount());
+                    logger.info("订单拒绝，发给参与签核的人 " + toUser.getAccount());
                     commonService.sendSignInfoViWxMsg(toUser.getAccount(),
                             machineOrder.getOrderNum(),
                             "",
@@ -1043,6 +1050,7 @@ public class CommonService {
                 //没有驳回，发给下1个签核人
                 //如果是销售部经理还要细分发给哪个部门的销售经理，
                 if (role.getRoleName().equals(Constant.SING_STEP_SALES_MANAGER)) {
+                    logger.info("推送签核给销售部经理");
                     List<UserDetail> toSalesManagerList = null;
                     //旧的签核记录里，没有SalesDepartment
                     if(orderSignObj.getSalesDepartment() !=null ) {
@@ -1065,7 +1073,15 @@ public class CommonService {
                                         contract.getRecordUser(),
                                         msgInfo);
                             }
+                        } else {
+                            logger.info("推送消息，找不到销售部经理");
                         }
+                    } else{
+                        /**
+                         * 外贸总监，角色即要有外贸经理的权限，又，，，目前特殊化的东西有点多。
+                         * 外贸总监的销售部门是空的，不是一部也不是二部
+                         */
+                        logger.info("odersign 销售部门为空");
                     }
 
                 } else {
