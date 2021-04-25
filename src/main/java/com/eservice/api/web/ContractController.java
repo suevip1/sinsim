@@ -177,6 +177,12 @@ public class ContractController {
                         salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_1;
                     }  else if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_FOREIGN_2)) {
                         salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_2;
+                    } else if(machineOrderCreator.getRoleId() == Constant.ROLE_ID_FOREIGN_DIRECTOR){
+                        /**
+                         * 外贸总监的MarketGroupName部门为空, 外贸总监录的订单，也算为一部的。
+                         * 外贸经理的MarketGroupName部门为外贸二部
+                         */
+                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_1;
                     }
                     orderSign.setSalesDepartment(salesDepartment);
                 }
@@ -307,6 +313,12 @@ public class ContractController {
                         salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_1;
                     }  else if (machineOrderCreator.getMarketGroupName().equals(Constant.STR_DEPARTMENT_FOREIGN_2)) {
                         salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_2;
+                    } else if(machineOrderCreator.getRoleId() == Constant.ROLE_ID_FOREIGN_DIRECTOR){
+                        /**
+                         * 外贸总监的MarketGroupName部门为空, 外贸总监录的订单，也算为一部的。
+                         * 外贸经理的MarketGroupName部门为外贸二部
+                         */
+                        salesDepartment = Constant.STR_DEPARTMENT_FOREIGN_1;
                     }
                     orderSign.setSalesDepartment(salesDepartment);
                 }

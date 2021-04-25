@@ -364,9 +364,14 @@ public class Constant {
     public static final Integer ROLE_ID_PMC = 12;
     public static final Integer ROLE_ID_COST_ACCOUNTANT = 13;//成本核算员
 
+    /**
+     * 销售员的订单归属各自部门；
+     * 外贸总监录入的订单归属外贸一部，可以给外贸一部的销售员看、而二部的销售员不能看。
+     * 外贸经理录入的订单归属外贸2部，可以给外贸2部的销售员看、而1部的销售员不能看。
+     */
     public static final String STR_DEPARTMENT_DOMESTIC = "内贸部";
     public static final String STR_DEPARTMENT_FOREIGN_FUZZY = "外贸";//一部二部，统一到外贸部经理曹建挺签核，然后到总监骆晓军签核
-    public static final String STR_DEPARTMENT_FOREIGN_1 = "外贸一部";
+    public static final String STR_DEPARTMENT_FOREIGN_1 = "外贸一部"; //外贸总监录的订单，也算为一部的。
     public static final String STR_DEPARTMENT_FOREIGN_2 = "外贸二部";
 
     public static final String STR_MSG_PUSH_IS_START_TO_SIGN = "开始签核";

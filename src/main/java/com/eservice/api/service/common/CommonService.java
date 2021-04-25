@@ -853,8 +853,9 @@ public class CommonService {
             /**
              * 被拒绝的订单，其实result已经被设置为“初始化"0了。
              * 所以，要根据意见来判断是否参加过签核（签核意见是不允许空的）
+             * 对应内贸订单，外贸经理不需要审核，内容为 "--"
              */
-            if( item.getComment() != null && ! item.getComment().isEmpty()) {
+            if( item.getComment() != null && ! item.getComment().isEmpty() && ! item.getComment().equals("--")) {
                 userList.add(userService.selectByAccount(item.getUser()));
             }
         }
@@ -1016,16 +1017,21 @@ public class CommonService {
 
             if (haveReject) {
                 //驳回，发给所有参与签核的人。+ 录单人
-                List<User> userList = commonService.getUsersInMachineOrderSign(orderSignObj);
-                for (User toUser : userList) {
-                    logger.info("订单拒绝，发给参与签核的人 " + toUser.getAccount());
-                    commonService.sendSignInfoViWxMsg(toUser.getAccount(),
-                            machineOrder.getOrderNum(),
-                            "",
-                            createDateStr,
-                            contract.getMarketGroupName(),
-                            contract.getRecordUser(),
-                            msgInfo);
+                List<User> userList = null;
+                userList = commonService.getUsersInMachineOrderSign(orderSignObj);
+                if(userList != null && userList.size() !=0) {
+                    for (User toUser : userList) {
+                        logger.info("订单拒绝，发给参与签核的人 " + toUser.getAccount());
+                        commonService.sendSignInfoViWxMsg(toUser.getAccount(),
+                                machineOrder.getOrderNum(),
+                                "",
+                                createDateStr,
+                                contract.getMarketGroupName(),
+                                contract.getRecordUser(),
+                                msgInfo);
+                    }
+                } else {
+                    logger.warn(machineOrder.getOrderNum() + ", 订单在此次拒绝前，没有参与过签核的人, 异常不可能");
                 }
 
                 //考虑录单人和签核人可能是相同的，这种情况只需要发一次
@@ -1054,12 +1060,20 @@ public class CommonService {
                     List<UserDetail> toSalesManagerList = null;
                     //旧的签核记录里，没有SalesDepartment
                     if(orderSignObj.getSalesDepartment() !=null ) {
+                        /**
+                         * 外贸总监，user.market_group_name 不再是外贸一部、
+                         * 外贸经理，user.market_group_name 还是外贸二部。
+                         * 内贸部的订单：发给内贸经理
+                         * 外贸1部的订单（外贸一部的销售员+外贸总监所录入）：发给外贸经理
+                         * 外贸2部的订单（外贸二部的销售员+外贸经理所录入）：发给外贸经理
+                         */
                         if (orderSignObj.getSalesDepartment().equals(Constant.STR_DEPARTMENT_DOMESTIC)) {
                             toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_DOMESTIC, 1);
                         } else if (orderSignObj.getSalesDepartment().equals(Constant.STR_DEPARTMENT_FOREIGN_1)){
-                            toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_FOREIGN_1, 1);
+                            toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_FOREIGN_FUZZY, 1);
                         } else if (orderSignObj.getSalesDepartment().equals(Constant.STR_DEPARTMENT_FOREIGN_2)){
-                            toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_FOREIGN_2, 1);
+                            //同上,即外贸一部二部，都是由外贸经理来审核
+                            toSalesManagerList = userService.selectUsers(null, null, Constant.ROLE_ID_SALES_MANAGER, null, Constant.STR_DEPARTMENT_FOREIGN_FUZZY, 1);
                         }
 
                         if(toSalesManagerList != null) {
