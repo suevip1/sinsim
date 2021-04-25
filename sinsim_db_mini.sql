@@ -438,6 +438,24 @@ CREATE TABLE `install_plan_actual` (
   KEY `fk_ig_id` (`install_plan_id`) USING BTREE,
   CONSTRAINT `fk_install_plan_id` FOREIGN KEY (`install_plan_id`) REFERENCES `install_plan` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- ----------------------------
+-- Table structure for iot_machine
+-- ----------------------------
+DROP TABLE IF EXISTS `iot_machine`;
+CREATE TABLE `iot_machine` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'iot开头的都是绣花机物联网项目',
+  `nameplate` varchar(50) DEFAULT NULL,
+  `machine_model_info` varchar(255) DEFAULT NULL COMMENT '机型信息',
+  `uptime` varchar(255) DEFAULT NULL COMMENT '已开机的时间',
+  `working_time` varchar(255) DEFAULT NULL COMMENT '刺绣（工作）时间',
+  `nonworking_time` varchar(255) DEFAULT NULL COMMENT '停机时间',
+  `line_broken_number` varchar(50) DEFAULT NULL COMMENT '断线次数',
+  `line_broken_average_time` varchar(100) DEFAULT NULL,
+  `product_total_number` varchar(50) DEFAULT NULL COMMENT '工件总数',
+  `power_on_times` varchar(10) DEFAULT NULL COMMENT '开机次数',
+  `needle_total_number` varchar(50) DEFAULT NULL COMMENT '累计针数',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for `machine`
