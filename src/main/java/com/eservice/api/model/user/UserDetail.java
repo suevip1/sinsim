@@ -198,4 +198,15 @@ public class UserDetail {
     public void setExtranetPermit(Byte extranetPermit) {
         this.extranetPermit = extranetPermit;
     }
+
+    //是否接收推送消息,默认1开启，如果有人不想收，可以设为0即关闭。
+    private Byte acceptWxMsg;
+
+    public Byte getAcceptWxMsg() {
+        return acceptWxMsg;
+    }
+
+    public void setAcceptWxMsg(Byte acceptWxMsg) {
+        this.acceptWxMsg = acceptWxMsg;
+    }
 }

@@ -14,6 +14,7 @@
     <result column="market_group_name" jdbcType="INTEGER" property="marketGroupName" />
     <result column="valid" jdbcType="TINYINT" property="valid" />
     <result column="extranet_permit" jdbcType="TINYINT" property="extranetPermit" />
+      <result column="accept_wx_msg" jdbcType="TINYINT" property="acceptWxMsg" />
 
   </resultMap>
 
@@ -25,6 +26,7 @@
         <result column="market_group_name" jdbcType="INTEGER" property="marketGroupName" />
         <result column="valid" jdbcType="TINYINT" property="valid" />
         <result column="extranet_permit" jdbcType="TINYINT" property="extranetPermit" />
+        <result column="accept_wx_msg" jdbcType="TINYINT" property="acceptWxMsg" />
         <association javaType="com.eservice.api.model.role.Role" property="role">
             <id column="role_id" property="id" />
             <result column="role_name" jdbcType="VARCHAR" property="roleName" />

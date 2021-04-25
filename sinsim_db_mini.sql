@@ -1051,6 +1051,7 @@ CREATE TABLE `user` (
   `market_group_name` varchar(255) DEFAULT NULL,
   `valid` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '员工是否在职，“1”==>在职, “0”==>离职',
   `extranet_permit` tinyint(4) NOT NULL DEFAULT '0' COMMENT '外网时，检查用户权限是否允许外网登录; 0:不允许，1:允许。',
+  `accept_wx_msg` tinyint(4) DEFAULT '1' COMMENT '是否接收推送消息,默认1开启，如果有人不想收，可以关闭。',
   PRIMARY KEY (`id`),
   KEY `idx_user_role_id` (`role_id`) USING BTREE,
   KEY `fk_user_group_id` (`group_id`),

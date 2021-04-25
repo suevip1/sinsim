@@ -704,11 +704,21 @@ public class CommonService {
                                       @RequestParam(defaultValue = "") String department_X,
                                       @RequestParam(defaultValue = "") String applicantPerson_X,
                                       @RequestParam(defaultValue = "") String msgInfo_X ) {
+        String result = null;
+        //该账号是否接收消息推送
+        User user = null;
+        user = userService.selectByAccount(accountX);
+        if( user.getAcceptWxMsg() != null) {
+            if (user.getAcceptWxMsg().intValue() == 0) {
+                result = accountX + " 被设定为不接收微信消息推送";
+                logger.info(result);
+                return result;
+            }
+        }
 
-        Date now = new Date();
+
 //return "skip sendSignInfoViWxMsg";
  //注意，本地和服务器不一样
-        String result = null;
         logger.info("step000");
         String docker0_ip = getDockerGatewayIpFromFile();
 //        String docker0_ip = gatewayIpFromDockerFile;
