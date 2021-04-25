@@ -52,7 +52,8 @@ public class CodeGenerator {
 //            "contact_sign",
 //            "change_item"
 //            "design_dep_info"
-            "contact_fulfill"
+//            "contact_fulfill"
+            "iot_machine"
     };
 
     public static void main(String[] args) {

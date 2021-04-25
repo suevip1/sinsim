@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eservice.api.dao.IotMachineMapper">
+  <resultMap id="BaseResultMap" type="com.eservice.api.model.iot_machine.IotMachine">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="nameplate" jdbcType="VARCHAR" property="nameplate" />
+    <result column="machine_model_info" jdbcType="VARCHAR" property="machineModelInfo" />
+    <result column="uptime" jdbcType="VARCHAR" property="uptime" />
+    <result column="working_time" jdbcType="VARCHAR" property="workingTime" />
+    <result column="nonworking_time" jdbcType="VARCHAR" property="nonworkingTime" />
+    <result column="line_broken_number" jdbcType="VARCHAR" property="lineBrokenNumber" />
+    <result column="line_broken_average_time" jdbcType="VARCHAR" property="lineBrokenAverageTime" />
+    <result column="product_total_number" jdbcType="VARCHAR" property="productTotalNumber" />
+    <result column="power_on_times" jdbcType="VARCHAR" property="powerOnTimes" />
+    <result column="needle_total_number" jdbcType="VARCHAR" property="needleTotalNumber" />
+  </resultMap>
+</mapper>
