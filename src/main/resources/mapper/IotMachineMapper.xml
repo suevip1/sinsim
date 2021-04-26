@@ -16,5 +16,9 @@
     <result column="product_total_number" jdbcType="VARCHAR" property="productTotalNumber" />
     <result column="power_on_times" jdbcType="VARCHAR" property="powerOnTimes" />
     <result column="needle_total_number" jdbcType="VARCHAR" property="needleTotalNumber" />
+
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <result column="user" jdbcType="VARCHAR" property="user" />
   </resultMap>
 </mapper>

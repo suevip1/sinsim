@@ -1,6 +1,7 @@
 package com.eservice.api.model.iot_machine;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "iot_machine")
 public class IotMachine {
@@ -251,5 +252,42 @@ public class IotMachine {
      */
     public void setNeedleTotalNumber(String needleTotalNumber) {
         this.needleTotalNumber = needleTotalNumber;
+    }
+
+    //该机器记录的首次创建时间
+    @Column(name = "create_time")
+    private Date createTime;
+
+    /**
+     * 该机器记录的更新时间
+     */
+    @Column(name = "update_time")
+    private Date updateTime;
+
+    //该机器记录信息的创建账号
+    private String user;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }

@@ -454,6 +454,9 @@ CREATE TABLE `iot_machine` (
   `product_total_number` varchar(50) DEFAULT NULL COMMENT '工件总数',
   `power_on_times` varchar(10) DEFAULT NULL COMMENT '开机次数',
   `needle_total_number` varchar(50) DEFAULT NULL COMMENT '累计针数',
+  `create_time` datetime DEFAULT NULL COMMENT '该机器记录的首次创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '机器记录的更新时间',
+  `user` varchar(50) DEFAULT NULL COMMENT '该机器记录信息的创建账号',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

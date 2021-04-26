@@ -1,16 +1,21 @@
 package com.eservice.api.web;
+import com.alibaba.fastjson.JSON;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.iot_machine.IotMachine;
-import com.eservice.api.service.IotMachineService;
+import com.eservice.api.model.user.User;
+import com.eservice.api.model.user.UserDetail;
+import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.impl.IotMachineServiceImpl;
+import com.eservice.api.service.impl.UserServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.log4j.Logger;
+import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,12 +27,82 @@ import java.util.List;
 @RequestMapping("/iot/machine")
 public class IotMachineController {
     @Resource
-    private IotMachineService iotMachineService;
+    private IotMachineServiceImpl iotMachineService;
+    private Logger logger = Logger.getLogger(IotMachineController.class);
 
+    @Resource
+    private UserServiceImpl userService;
     @PostMapping("/add")
     public Result add(IotMachine iotMachine) {
         iotMachineService.save(iotMachine);
         return ResultGenerator.genSuccessResult();
+    }
+
+    /**
+     * 接收绣花机传来的信息
+     * 如果该绣花机已经存在，则更新该机器信息
+     * 如果该绣花机不存在，则新增该绣花机
+     *
+     * account/password
+     */
+    @PostMapping("/updateInfo")
+//    public Result updateInfo(@RequestParam  String iotMachine) {
+        public Result updateInfo(@RequestBody String iotMachine,
+                                 @RequestParam String account,
+                                 @RequestParam String password) {
+
+        User user = userService.selectByAccount(account);
+        if(user == null){
+            return ResultGenerator.genFailResult(account + " 不存在该账号！");
+        } else if(user.getValid() == Constant.INVALID){
+            return ResultGenerator.genFailResult("禁止登录，" + account + " 已设为离职");
+        }
+        UserDetail userDetail = userService.requestLogin(account, password);
+        if(userDetail == null) {
+            logger.info(account + "login 账号或密码不正确");
+            return ResultGenerator.genFailResult("账号或密码不正确！");
+        }else {
+            logger.info(account + "login success");
+        }
+
+        IotMachine iotMachine1 = JSON.parseObject(iotMachine, IotMachine.class);
+        String msg = null;
+        if (iotMachine1 == null) {
+            msg = "iotMachine1对象JSON解析失败！";
+            logger.warn(msg);
+            return ResultGenerator.genFailResult(msg);
+        }
+
+        // 暂定 机器铭牌号是唯一的，后续可以考虑 同个品牌下的铭牌号是唯一
+        Condition tempCondition = new Condition(IotMachine.class);
+        tempCondition.createCriteria().andCondition("nameplate = ", iotMachine1.getNameplate());
+        List<IotMachine> existIotMachines = iotMachineService.findByCondition(tempCondition);
+        if(existIotMachines == null || existIotMachines.isEmpty()){
+            iotMachine1.setCreateTime(new Date());
+            iotMachine1.setUser(account);
+            iotMachineService.save(iotMachine1);
+            msg = iotMachine1.getNameplate() +",目前不存在该绣花机, 已新增加该机器";
+        } else {
+            // 暂定 机器铭牌号是唯一的
+//            existIotMachines.get(0).setNameplate();
+//            existIotMachines.get(0).setCreateTime();
+            existIotMachines.get(0).setUpdateTime(new Date());
+            existIotMachines.get(0).setMachineModelInfo(iotMachine1.getMachineModelInfo());
+            existIotMachines.get(0).setUptime(iotMachine1.getUptime());
+            existIotMachines.get(0).setWorkingTime(iotMachine1.getWorkingTime());
+            existIotMachines.get(0).setNonworkingTime(iotMachine1.getNonworkingTime());
+            existIotMachines.get(0).setLineBrokenNumber(iotMachine1.getLineBrokenNumber());
+            existIotMachines.get(0).setLineBrokenAverageTime(iotMachine1.getLineBrokenAverageTime());
+            existIotMachines.get(0).setProductTotalNumber(iotMachine1.getProductTotalNumber());
+            existIotMachines.get(0).setPowerOnTimes(iotMachine1.getPowerOnTimes());
+            existIotMachines.get(0).setNeedleTotalNumber(iotMachine1.getNeedleTotalNumber());
+            existIotMachines.get(0).setUser(iotMachine1.getUser());
+
+            iotMachineService.update(existIotMachines.get(0));
+            msg = iotMachine1.getNameplate() +",存在该绣花机, 已更新收到的相关信息";
+        }
+        logger.info(msg);
+        return ResultGenerator.genSuccessResult(msg);
     }
 
     @PostMapping("/delete")
