@@ -1051,10 +1051,23 @@ public class TaskRecordController {
         AbnormalRecord abnormalRecord1 = JSON.parseObject(abnormalRecord, AbnormalRecord.class);
         //在安装异常时，并没有SolutionUser，即还不知道SolutionUser，所以这里设为null
         abnormalRecord1.setSolutionUser(null);
+        //在47服务器saveAndGetID执行成功，但是实际没有数据保存在数据库 --是因为数据库从5.7改为了最新的8，改回旧的mysql docker即可。
         abnormalRecordService.saveAndGetID(abnormalRecord1);
         //获取保存后分配到的id
         Integer abnormalRecordId = abnormalRecord1.getId();
-
+//        if(abnormalRecord1 !=null) {
+//            logger.info("abnormalRecordId: " + abnormalRecordId);
+//            AbnormalRecord abInserted = null;
+//            abInserted = abnormalRecordService.findById(abnormalRecordId);
+//            if(abInserted == null){
+//                logger.info("刚刚尝试插入的数据，却没有在数据库里找到");
+//
+//            } else {   logger.info("刚刚尝试插入的数据，却没有在数据库里找到");
+//                logger.info("刚刚尝试插入的数据，可以根据abnormalRecordId找到");
+//            }
+//        } else {
+//            logger.error("异常，生成 abnormalRecord1 为null");
+//        }
         /**
          * abnormal_image add
          * 因为此时从app端无法知道 abnormal_record_id，所以需要在服务端获取abnormal_record_id
