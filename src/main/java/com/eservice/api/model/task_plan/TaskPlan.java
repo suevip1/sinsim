@@ -16,7 +16,7 @@ public class TaskPlan {
     private Integer taskRecordId;
 
     /**
-     * 计划的类型
+     * 计划的类型  （日计划、弹性计划）-->目前没有在用，全是1。
      */
     @Column(name = "plan_type")
     private Byte planType;

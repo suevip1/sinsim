@@ -49,7 +49,8 @@
         c.contract_ship_date,c.mark,c.domestic_trade_zone,
         mo.create_time,
         os.update_time,
-        os.current_step, mo.order_num, mo.status, mo.id order_id from machine_order mo
+        os.current_step, mo.order_num, mo.status, mo.id order_id
+        from machine_order mo
         LEFT JOIN contract c ON c.id = mo.contract_id
         LEFT JOIN order_sign os ON os.order_id = mo.id
 	    WHERE os.create_time IN (SELECT MAX(create_time) FROM order_sign GROUP BY order_id)
@@ -70,7 +71,15 @@
             and c.market_group_name like CONCAT('%','${market_group_name}','%' )
         </if>
         <if test="role_name!=null and role_name != '' ">
-            and os.current_step like CONCAT('%','${role_name}','%' )
+            <!--            为了 技术部改为设计部，匹配当前已经在签核的订单 暂不使用。 -->
+                        <!--<if test="role_name == '设计部经理' ">-->
+                <!--and-->
+                <!--( os.current_step like CONCAT('%','${role_name}','%' )-->
+                  <!--or os.current_step like CONCAT('%','技术部经理','%' ) )-->
+            <!--</if>-->
+            <!--<if test="role_name != '设计部经理' ">-->
+                and os.current_step like CONCAT('%','${role_name}','%' )
+        <!--             </if>   -->
         </if>
         <!-- 查询 建立时间create_time在传入的参数 query_start_time 和 query_finish_time 之间的订单 -->
         <if test="query_start_time!=null and query_start_time != '' ">
