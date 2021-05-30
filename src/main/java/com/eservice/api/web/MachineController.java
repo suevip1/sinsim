@@ -271,7 +271,19 @@ public class MachineController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
-
+    /**
+     * @param orderNum
+     * @param machineStrId
+     * @param nameplate
+     * @param location
+     * @param status
+     * @param machineType
+     * @param dateType  1: 合同交货日期； 2：计划交货日期
+     * @param query_start_time
+     * @param query_finish_time
+     * @param is_fuzzy
+     * @return
+     */
     @PostMapping("/selectPlanningMachines")
     public Result selectPlanningMachines(@RequestParam(defaultValue = "0") Integer page,
                                          @RequestParam(defaultValue = "0") Integer size,

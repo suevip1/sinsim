@@ -58,8 +58,9 @@ public class TaskPlanController {
     }
 
     @PostMapping("/update")
-    public Result update(TaskPlan taskPlan) {
-        taskPlanService.update(taskPlan);
+    public Result update(String taskPlan) {
+        TaskPlan taskPlan1 = JSON.parseObject(taskPlan, TaskPlan.class);
+        taskPlanService.update(taskPlan1);
         return ResultGenerator.genSuccessResult();
     }
 
