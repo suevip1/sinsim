@@ -130,4 +130,15 @@ public class IotMachineController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 发送MQTT消息，
+     * （给树莓派，树莓派收到该MQTT消息后返回最新的机器信息给服务器）
+     */
+    @PostMapping("/refreshMachineInfo")
+    public Result refreshMachineInfo(@RequestParam(defaultValue = "allMachines")  String iotMachineNameplate) {
+
+        mqttMessageHelper.sendToClient(Constant.S2C_REFRESH_MACHINE_INFO, iotMachineNameplate );
+        return ResultGenerator.genSuccessResult();
+    }
 }

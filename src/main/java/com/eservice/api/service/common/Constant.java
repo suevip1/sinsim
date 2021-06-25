@@ -290,6 +290,11 @@ public class Constant {
      */
     public static final String S2C_MACHINE_QUALITY_INSPECT = "/s2c/machine_quality_inspect/";
 
+    /**
+     * 刷新机器信息
+     */
+    public static final String S2C_REFRESH_MACHINE_INFO = "/s2c/refresh_machine_info/";
+
     public enum ValidEnum {
         INVALID(0), VALID(1);
         private Integer value;
