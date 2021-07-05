@@ -8,6 +8,7 @@ import com.eservice.api.model.user.UserDetail;
 import com.eservice.api.service.common.Constant;
 import com.eservice.api.service.impl.IotMachineServiceImpl;
 import com.eservice.api.service.impl.UserServiceImpl;
+import com.eservice.api.service.mqtt.MqttMessageHelper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
@@ -31,7 +32,11 @@ public class IotMachineController {
     private Logger logger = Logger.getLogger(IotMachineController.class);
 
     @Resource
+    private MqttMessageHelper mqttMessageHelper;
+
+    @Resource
     private UserServiceImpl userService;
+
     @PostMapping("/add")
     public Result add(IotMachine iotMachine) {
         iotMachineService.save(iotMachine);
@@ -140,5 +145,20 @@ public class IotMachineController {
 
         mqttMessageHelper.sendToClient(Constant.S2C_REFRESH_MACHINE_INFO, iotMachineNameplate );
         return ResultGenerator.genSuccessResult();
+    }
+
+    /**
+     * 根据账户、铭牌号 获取该账户名下对应的机器IOT信息
+     * 比如用户可以以此查看自己的机器
+     */
+    @PostMapping("/selectIotMachine")
+    public Result selectIotMachine(@RequestParam(defaultValue = "0") Integer page,
+                                @RequestParam(defaultValue = "0") Integer size,
+                                String account,
+                                String nameplate) {
+        PageHelper.startPage(page, size);
+        List<IotMachine> list = iotMachineService.selectIotMachine(account, nameplate);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

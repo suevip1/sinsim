@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -20,5 +21,9 @@ import javax.annotation.Resource;
 public class IotMachineServiceImpl extends AbstractService<IotMachine> implements IotMachineService {
     @Resource
     private IotMachineMapper iotMachineMapper;
+
+    public List<IotMachine> selectIotMachine(String account, String nameplate) {
+        return iotMachineMapper.selectIotMachine(account, nameplate);
+    }
 
 }

@@ -21,4 +21,21 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     <result column="user" jdbcType="VARCHAR" property="user" />
   </resultMap>
+
+  <select id="selectIotMachine" resultMap="BaseResultMap">
+    SELECT
+        *
+    FROM
+        iot_machine
+    WHERE 1=1
+    <if test="account != null and account != ''">
+      and iot_machine.`user` =#{account}
+    </if>
+    <if test="nameplate != null and nameplate != ''">
+      and iot_machine.nameplate = #{nameplate};
+    </if>
+
+  </select>
+
+
 </mapper>
