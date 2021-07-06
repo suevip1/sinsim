@@ -139,7 +139,7 @@ public class MachineController {
         Machine machineOld = machineService.findById(machine1.getId());
         if (machineOld != null) {
             if( (machineOld.getLocation() == null || machineOld.getLocation().isEmpty())
-                    && !machine1.getLocation().isEmpty()) {
+                    && (machine1.getLocation() !=null )) {
                 MachineOrder machineOrder = machineOrderService.getMachineOrderByNameplate(machine1.getNameplate());
                 List<Task> taskList = taskService.getTaskByNameplate(machine1.getNameplate());
                 if (taskList != null) {
