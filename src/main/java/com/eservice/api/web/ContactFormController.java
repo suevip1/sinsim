@@ -855,7 +855,7 @@ public class ContactFormController {
                                     .setCellValue(new HSSFRichTextString(item.getComment()));
                         }
                         workSheet.getRow(i + j).getCell((short) 11)
-                                .setCellValue(new HSSFRichTextString(this.getResultString(item.getResult())));
+                                .setCellValue(new HSSFRichTextString(this.getResultString(item.getShenHeEnabled(), item.getResult())));
 
                         if (!item.getShenHeEnabled()) {
                             for (int q = 0; q < 11; q++) {
@@ -923,14 +923,20 @@ public class ContactFormController {
         }
     }
 
-    String getResultString(Integer resultIndex) {
+
+    String getResultString(boolean shenHeEnable,Integer resultIndex) {
         String res = "未审核";
-        if (resultIndex == Constant.SIGN_APPROVE) {
-            res = "接受";
-        } else if (resultIndex == Constant.SIGN_REJECT) {
-            res = "驳回";
+        if(shenHeEnable == false){
+            res = "不需审核";
         } else {
-            res = "无需审核";
+            if (resultIndex == Constant.SIGN_APPROVE) {
+                res = "接受";
+            } else if (resultIndex == Constant.SIGN_REJECT) {
+                res = "驳回";
+            } else if (resultIndex == Constant.SIGN_INITIAL) {
+                // 无需审核、未审核、给写明白
+                res = "未审核";
+            }
         }
         return res;
     }
