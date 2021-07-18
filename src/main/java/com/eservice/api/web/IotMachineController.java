@@ -81,31 +81,16 @@ public class IotMachineController {
         // 暂定 机器铭牌号是唯一的，后续可以考虑 同个品牌下的铭牌号是唯一
         Condition tempCondition = new Condition(IotMachine.class);
         tempCondition.createCriteria().andCondition("nameplate = ", iotMachine1.getNameplate());
-        List<IotMachine> existIotMachines = iotMachineService.findByCondition(tempCondition);
-        if(existIotMachines == null || existIotMachines.isEmpty()){
-            iotMachine1.setCreateTime(new Date());
-            iotMachine1.setUser(account);
-            iotMachineService.save(iotMachine1);
-            msg = iotMachine1.getNameplate() +",目前不存在该绣花机, 已新增加该机器";
-        } else {
-            // 暂定 机器铭牌号是唯一的
-//            existIotMachines.get(0).setNameplate();
-//            existIotMachines.get(0).setCreateTime();
-            existIotMachines.get(0).setUpdateTime(new Date());
-            existIotMachines.get(0).setMachineModelInfo(iotMachine1.getMachineModelInfo());
-            existIotMachines.get(0).setUptime(iotMachine1.getUptime());
-            existIotMachines.get(0).setWorkingTime(iotMachine1.getWorkingTime());
-            existIotMachines.get(0).setNonworkingTime(iotMachine1.getNonworkingTime());
-            existIotMachines.get(0).setLineBrokenNumber(iotMachine1.getLineBrokenNumber());
-            existIotMachines.get(0).setLineBrokenAverageTime(iotMachine1.getLineBrokenAverageTime());
-            existIotMachines.get(0).setProductTotalNumber(iotMachine1.getProductTotalNumber());
-            existIotMachines.get(0).setPowerOnTimes(iotMachine1.getPowerOnTimes());
-            existIotMachines.get(0).setNeedleTotalNumber(iotMachine1.getNeedleTotalNumber());
-            existIotMachines.get(0).setUser(iotMachine1.getUser());
+//        List<IotMachine> existIotMachines = iotMachineService.findByCondition(tempCondition);
 
-            iotMachineService.update(existIotMachines.get(0));
-            msg = iotMachine1.getNameplate() +",存在该绣花机, 已更新收到的相关信息";
-        }
+        /**
+         * 改为要记录历史记录之后，要记录创建时间，更新时间就没用了
+          */
+        iotMachine1.setCreateTime(new Date());
+        iotMachine1.setUser(account);
+        iotMachineService.save(iotMachine1);
+        msg = iotMachine1.getNameplate() + iotMachine1.getCreateTime() + ",已记录该机器的信息";
+
         logger.info(msg);
         return ResultGenerator.genSuccessResult(msg);
     }

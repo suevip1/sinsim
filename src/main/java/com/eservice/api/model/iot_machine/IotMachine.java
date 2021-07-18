@@ -254,12 +254,12 @@ public class IotMachine {
         this.needleTotalNumber = needleTotalNumber;
     }
 
-    //该机器记录的首次创建时间
+    //该机器记录的首次创建时间 -->改为要记录历史记录之后，这里就作为创建时间
     @Column(name = "create_time")
     private Date createTime;
 
     /**
-     * 该机器记录的更新时间
+     * 该机器记录的更新时间 -->改为要记录历史记录之后，这里就弃用了
      */
     @Column(name = "update_time")
     private Date updateTime;
