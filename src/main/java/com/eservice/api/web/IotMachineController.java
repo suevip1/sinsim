@@ -146,4 +146,15 @@ public class IotMachineController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 让服务器发送MQTT消息
+     * 可用于：通过发送MQTT消息，通知订阅了某topic的树莓派执行某个动作，比如把数据发给服务器
+     * 这样就不需要服务器通过HTTP访问树莓派了。
+     */
+    @PostMapping("/sendMqtt")
+    public void sendMqtt(String topic) {
+        logger.info("sendMqttToIotMachine ：发MQTT （给树莓派）: " + topic);
+        mqttMessageHelper.sendToClient(topic, "by sendMqtt" );
+    }
 }
