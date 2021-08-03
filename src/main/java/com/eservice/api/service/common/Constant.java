@@ -74,6 +74,11 @@ public class Constant {
      */
     public static final Byte ORDER_CHANGED = 3;
     /**
+     * 正在改单，改单过程中，用于：标识改单是否完成
+     * 一个合同下，多个订单，多个改单，非第一次改单时，前面改单的结果是ORDER_CHANGED，本次改单的状态是 ORDER_CHANGE_ING
+     */
+    public static final Byte ORDER_CHANGE_ING = 9;
+    /**
      * 已拆单
      */
     public static final Byte ORDER_SPLITED = 4;

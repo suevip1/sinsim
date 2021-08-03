@@ -467,9 +467,25 @@ public class ContractController {
         for (MachineOrderWrapper orderItem : machineOrderWrapperList) {
             MachineOrder machineOrder = orderItem.getMachineOrder();
             //设置被改单的需求单状态(machine_order/order_sign)
-            if (machineOrder.getStatus().equals(Constant.ORDER_CHANGED)) {
+            /**
+             * 一个合同下，多个订单，多个改单
+             * 前面已经被改好的改单，状态为 ORDER_CHANGED， 改好后的订单 状态为 ORDER_CHANGE_FINISHED
+             * 改单刚刚开始时（还在改单中），状态为 ORDER_CHANGE_ING， 由前端传过来，
+             * 这种情况表示正在改单，要把状态设置为 ORDER_CHANGED，其他的照旧处理
+             * 之所以分 ORDER_CHANGE_ING、ORDER_CHANGED，是因为为了修复 多个订单都改单的情况下，对应的机器数量会处理不对
+             * 一个订单改单-不改机器数量：OK
+             * 一个订单改单-新增机器数量：OK
+             * 一个订单改单-减少机器数量：OK
+             *
+             * 2个订单都改单-不改机器数量：OK
+             * 2个订单都改单-新增机器数量：ok
+             * 2个订单都改单-减少机器数量：OK
+             *
+             */
+            if (machineOrder.getStatus().equals(Constant.ORDER_CHANGE_ING)) {
                 //更新了被改的需求单为“改单”，持久化至数据库
                 machineOrder.setUpdateTime(new Date());
+                machineOrder.setStatus(Constant.ORDER_CHANGED);
                 machineOrderService.update(machineOrder);
                 //获取被改单对应机器，设置改单状态(machine)
                 Condition tempCondition = new Condition(Machine.class);
@@ -523,6 +539,7 @@ public class ContractController {
                          * 改单后，机器数量增加了，需要新增机器 ,原先：多出部分机器在审核完成以后自动添加
                          * --> 2020-0409：有联系单后不再需要审核订单了，所以需要在此生成机器。
                          */
+                        logger.info("改单前，原订单机器数量： " + machineList.size());
                         logger.info("改单后，机器数量增加到了： " + newOrder.getMachineNum());
                         ////step1  把 被改订单的机器 全部之间挂到新生成的订单，即旧订单就没机器了。
                         for (int n=0; n<machineList.size(); n++) {
