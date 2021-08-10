@@ -493,15 +493,21 @@ public class CommonService {
     /**
      * 处理 12+1 这种形式
      * 比如头数写 12+1，返回应该为13
-     *
+     * 26+2/26+2
      */
     public int getRealSumValue(String str){
-
-        String[] numbers = str.trim().split("\\+");
         int headSum = 0;
-        for(int i =0; i<numbers.length; i++){
-            headSum = headSum + Integer.valueOf(numbers[i]);
+        try {
+            String[] numbers = str.trim().split("\\+");
+
+            for(int i =0; i<numbers.length; i++){
+                headSum = headSum + Integer.valueOf(numbers[i]);
+            }
+        } catch (Exception e){
+            logger.error("getRealSumValue error:" + e.getMessage());
+            headSum = 0;
         }
+
         return headSum;
     }
 	
