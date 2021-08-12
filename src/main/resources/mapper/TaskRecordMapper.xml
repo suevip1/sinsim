@@ -236,7 +236,10 @@
         join machine_order mo on mo.id = m.order_id
         join task_plan tp on tr.id = tp.task_record_id
         left join order_loading_list oll on oll.order_id = mo.id
-        where tr.status !=0 and tr.status !=1 and tr.status !=6
+--         where tr.status !=0 and tr.status !=1 and tr.status !=6  and tr.status !=4
+--  不再显示 已安装完成的机器，否则会数据量过大（机器数量到一定程度后），造成 org.apache.catalina.connector.ClientAbortException: java.io.IOException: Broken pipe
+        where tr. STATUS = 2 || tr. STATUS = 3 ||tr. STATUS = 5 ||tr. STATUS = 7||tr. STATUS = 8||tr. STATUS = 9
+        ORDER BY location, order_num
   </select>
 
     <select id="selectAllInstallTaskRecordDetailByUserAccountChuChangJianCe" resultMap="TaskRecordDetail">
