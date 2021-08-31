@@ -904,6 +904,17 @@ public class MachineOrderDetail {
         this.machineFrameLength = machineFrameLength;
     }
 
+    //2021-08-30新增的机头款式
+    private String machineHeadStyle;
+
+    public String getMachineHeadStyle() {
+        return machineHeadStyle;
+    }
+
+    public void setMachineHeadStyle(String machineHeadStyle) {
+        this.machineHeadStyle = machineHeadStyle;
+    }
+
     public String getOrderType() {
         return orderType;
     }

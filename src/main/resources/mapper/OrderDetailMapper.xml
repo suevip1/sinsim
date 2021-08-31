@@ -12,6 +12,7 @@
     <result column="special_towel_motor" jdbcType="VARCHAR" property="specialTowelMotor" />
     <result column="special_taping_head" jdbcType="VARCHAR" property="specialTapingHead" />
     <result column="special_towel_needle" jdbcType="VARCHAR" property="specialTowelNeedle" />
+    <result column="special_towel_head" jdbcType="VARCHAR" property="specialTowelHead" />
     <result column="electric_pc" jdbcType="VARCHAR" property="electricPc" />
     <result column="electric_language" jdbcType="VARCHAR" property="electricLanguage" />
     <result column="electric_motor" jdbcType="VARCHAR" property="electricMotor" />
@@ -39,7 +40,11 @@
     <result column="framework_stop" jdbcType="VARCHAR" property="frameworkStop" />
     <result column="framework_pole_height" jdbcType="VARCHAR" property="frameworkPoleHeight" />
     <result column="framework_light" jdbcType="VARCHAR" property="frameworkLight" />
+    <result column="framework_machine_foot_type" jdbcType="VARCHAR" property="frameworkMachineFootType" />
+    <result column="framework_platen_support" jdbcType="VARCHAR" property="frameworkPlatenSupport" />
     <result column="driver_type" jdbcType="VARCHAR" property="driverType" />
+    <result column="driver_x_type" jdbcType="VARCHAR" property="driverXType" />
+    <result column="driver_y_type" jdbcType="VARCHAR" property="driverYType" />
     <result column="driver_method" jdbcType="VARCHAR" property="driverMethod" />
     <result column="driver_reel_hole" jdbcType="VARCHAR" property="driverReelHole" />
     <result column="driver_horizon_num" jdbcType="TINYINT" property="driverHorizonNum" />
@@ -51,19 +56,34 @@
     insert into
     order_detail(
     special_towel_color,special_towel_daxle,special_towel_haxle,special_towel_motor,special_taping_head,
-    special_towel_needle,electric_pc,electric_language,electric_motor,electric_motor_xy,electric_trim,
+    special_towel_needle,special_towel_head, electric_pc,electric_language,electric_motor,electric_motor_xy,electric_trim,
     electric_power, electric_switch,color_change_mode,electric_oil,axle_split,axle_panel,
     axle_needle,axle_needle_type,axle_rail,axle_down_check,axle_hook,axle_jump,
-    axle_upper_thread,axle_addition,framework_color,framework_platen,framework_platen_color,
-    framework_ring,framework_bracket,framework_stop,framework_pole_height,framework_light,driver_type,
+    axle_upper_thread,axle_addition,framework_color,
+    framework_platen,
+    framework_platen_color,
+    framework_ring,framework_bracket,framework_stop,framework_pole_height,framework_light,
+    driver_type,
+    driver_x_type,
+    driver_y_type,
+    framework_machine_foot_type,
+    framework_platen_support,
     driver_method,driver_reel_hole,driver_horizon_num,driver_vertical_num,driver_reel)
     values(
     #{specialTowelColor},#{specialTowelDaxle},#{specialTowelHaxle},#{specialTowelMotor},#{specialTapingHead},
-    #{specialTowelNeedle},#{electricPc},#{electricLanguage},#{electricMotor},#{electricMotorXy},#{electricTrim},
+    #{specialTowelNeedle}, #{specialTowelHead}, #{electricPc},#{electricLanguage},#{electricMotor},#{electricMotorXy},#{electricTrim},
     #{electricPower},#{electricSwitch},#{colorChangeMode},#{electricOil},#{axleSplit},#{axlePanel},
     #{axleNeedle},#{axleNeedleType},#{axleRail},#{axleDownCheck},#{axleHook},#{axleJump},
-    #{axleUpperThread},#{axleAddition},#{frameworkColor},#{frameworkPlaten},#{frameworkPlatenColor},
-    #{frameworkRing},#{frameworkBracket},#{frameworkStop},#{frameworkPoleHeight},#{frameworkLight},#{driverType},
+    #{axleUpperThread},#{axleAddition},#{frameworkColor},
+    #{frameworkPlaten},
+--     虽然以后不用“台板”字段了，但是数据库里还保留着旧的数据，所以不要删掉，删掉就没法写入了
+    #{frameworkPlatenColor},
+    #{frameworkRing},#{frameworkBracket},#{frameworkStop},#{frameworkPoleHeight},#{frameworkLight},
+    #{driverType},
+    #{driverXType},
+    #{driverYType},
+    #{frameworkMachineFootType},
+    #{frameworkPlatenSupport},
     #{driverMethod},#{driverReelHole},#{driverHorizonNum},#{driverVerticalNum},#{driverReel})
 
   </insert>

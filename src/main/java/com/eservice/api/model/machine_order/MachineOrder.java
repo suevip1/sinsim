@@ -745,6 +745,17 @@ public class MachineOrder {
     //机架长度，来自于技术部经理的签核内容，从“长度”字符开始截取。
     private String machineFrameLength;
 
+    //2021-08-30新增的机头款式
+    private String machineHeadStyle;
+
+    public String getMachineHeadStyle() {
+        return machineHeadStyle;
+    }
+
+    public void setMachineHeadStyle(String machineHeadStyle) {
+        this.machineHeadStyle = machineHeadStyle;
+    }
+
     public String getMachineFrameLength() {
         return machineFrameLength;
     }

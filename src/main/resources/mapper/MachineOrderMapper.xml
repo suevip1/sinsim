@@ -48,6 +48,8 @@
 		<result column="warranty_fee" jdbcType="VARCHAR" property="warrantyFee"/>
 		<result column="machine_frame_length" jdbcType="VARCHAR" property="machineFrameLength"/>
 
+		<result column="machine_head_style" jdbcType="VARCHAR" property="machineHeadStyle"/>
+
 	</resultMap>
 
 	<resultMap id="MachineOrderDetailMap" type="com.eservice.api.model.machine_order.MachineOrderDetail">
@@ -98,6 +100,7 @@
 		<result column="business_expense" jdbcType="VARCHAR" property="businessExpense"/>
 		<result column="warranty_fee" jdbcType="VARCHAR" property="warrantyFee"/>
 		<result column="machine_frame_length" jdbcType="VARCHAR" property="machineFrameLength"/>
+		<result column="machine_head_style" jdbcType="VARCHAR" property="machineHeadStyle"/>
 
 		<result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
 
@@ -114,6 +117,8 @@
 			<result column="special_towel_motor" jdbcType="VARCHAR" property="specialTowelMotor"/>
 			<result column="special_taping_head" jdbcType="VARCHAR" property="specialTapingHead"/>
 			<result column="special_towel_needle" jdbcType="VARCHAR" property="specialTowelNeedle"/>
+			<result column="special_towel_head" jdbcType="VARCHAR" property="specialTowelHead"/>
+
 			<result column="electric_pc" jdbcType="VARCHAR" property="electricPc"/>
 			<result column="electric_language" jdbcType="VARCHAR" property="electricLanguage"/>
 			<result column="electric_motor" jdbcType="VARCHAR" property="electricMotor"/>
@@ -141,7 +146,11 @@
 			<result column="framework_stop" jdbcType="VARCHAR" property="frameworkStop"/>
 			<result column="framework_pole_height" jdbcType="VARCHAR" property="frameworkPoleHeight" />
 			<result column="framework_light" jdbcType="VARCHAR" property="frameworkLight"/>
+			<result column="framework_machine_foot_type" jdbcType="VARCHAR" property="frameworkMachineFootType" />
+			<result column="framework_platen_support" jdbcType="VARCHAR" property="frameworkPlatenSupport" />
 			<result column="driver_type" jdbcType="VARCHAR" property="driverType"/>
+			<result column="driver_x_type" jdbcType="VARCHAR" property="driverXType" />
+			<result column="driver_y_type" jdbcType="VARCHAR" property="driverYType" />
 			<result column="driver_method" jdbcType="VARCHAR" property="driverMethod"/>
 			<result column="driver_reel_hole" jdbcType="VARCHAR" property="driverReelHole"/>
 			<result column="driver_horizon_num" jdbcType="TINYINT" property="driverHorizonNum"/>
@@ -195,13 +204,13 @@
     package_method,wrap_machine,wrap_machine_change,package_mark,machine_num,machine_type, machine_price,
     intermediary_price,discounts, order_total_discounts, equipment, contract_ship_date, plan_ship_date,
     sellman, maintain_type, maintain_person,status,create_time, update_time, end_time, mark, all_urgent,
-    order_type, gross_profit, business_expense, warranty_fee, machine_frame_length)
+    order_type, gross_profit, business_expense, warranty_fee, machine_frame_length, machine_head_style)
     values(
     #{orderNum},#{originalOrderId},#{contractId},#{orderDetailId},#{createUserId},#{country},#{brand},#{needleNum},#{headNum},#{headDistance},#{xDistance},
     #{yDistance},#{packageMethod},#{wrapMachine},#{wrapMachineChange},#{packageMark},#{machineNum},#{machineType},
     #{machinePrice},#{intermediaryPrice},#{discounts},#{orderTotalDiscounts},#{equipment},#{contractShipDate},#{planShipDate},
     #{sellman},#{maintainType},#{maintainPerson},#{status},#{createTime},#{updateTime},#{endTime},#{mark},#{allUrgent},
-    #{orderType},#{grossProfit},#{businessExpense},#{warrantyFee}, #{machineFrameLength})
+    #{orderType},#{grossProfit},#{businessExpense},#{warrantyFee}, #{machineFrameLength}, #{machineHeadStyle})
   </insert>
 
 	<select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">
@@ -224,6 +233,7 @@
 			od.special_towel_motor,
 			od.special_taping_head,
 			od.special_towel_needle,
+		od.special_towel_head,
 			od.electric_pc,
 			od.electric_language,
 			od.electric_motor,
@@ -251,7 +261,11 @@
 			od.framework_stop,
 			od.framework_pole_height,
 			od.framework_light,
+		od.framework_machine_foot_type,
+		od.framework_platen_support,
 			od.driver_type,
+		od.driver_x_type,
+		od.driver_y_type,
 			od.driver_method,
 			od.driver_reel_hole,
 			od.driver_horizon_num,
@@ -373,6 +387,7 @@
 			od.special_towel_motor,
 			od.special_taping_head,
 			od.special_towel_needle,
+		od.special_towel_head,
 			od.electric_pc,
 			od.electric_language,
 			od.electric_motor,
@@ -400,7 +415,11 @@
 			od.framework_stop,
 			od.framework_pole_height,
 			od.framework_light,
+		od.framework_machine_foot_type,
+		od.framework_platen_support,
 			od.driver_type,
+		od.driver_x_type,
+		od.driver_y_type,
 			od.driver_method,
 			od.driver_reel_hole,
 			od.driver_horizon_num,

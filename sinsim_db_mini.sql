@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2020-08-17 14:53:29
+Date: 2021-08-31 15:51:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -529,29 +529,12 @@ CREATE TABLE `machine_order` (
   `update_time` datetime DEFAULT NULL COMMENT '订单信息更新时间',
   `end_time` datetime DEFAULT NULL COMMENT '订单结束时间',
   `all_urgent` tinyint(4) DEFAULT NULL COMMENT '该订单的机器全部加急；1表示加急,0表示取消加急(曾经加急后来取消了)，默认为null',
-
-  `embroidery_application` varchar(20) DEFAULT NULL COMMENT '绣品应用',
-  `line_type` varchar(20) DEFAULT NULL COMMENT '线种',
-  `highest_speed` varchar(20) DEFAULT NULL COMMENT '最高速度',
-  `platen_height` varchar(20) DEFAULT NULL COMMENT '台板高度',
-  `debug_pattern` varchar(20) DEFAULT NULL COMMENT '调试花样',
-  `else_auto_line_chage` varchar(20) DEFAULT NULL COMMENT '自动换底线',
-  `else_upper_shaft_refueling_method` varchar(20) DEFAULT NULL COMMENT '上轴加油方式',
-  `else_down_shaft_refueling_method` varchar(20) DEFAULT NULL COMMENT '下轴加油方式',
-  `bluetooth` varchar(20) DEFAULT NULL COMMENT '蓝牙功能',
-  `gold_wire_anti_twine` varchar(20) DEFAULT NULL COMMENT '金线防缠绕',
-  `pattern_docking_assistance` varchar(20) DEFAULT NULL COMMENT '花样对接辅助',
-  `gas_frame` varchar(20) DEFAULT NULL COMMENT '气框', 
-  
-  `order_type` varchar(20) DEFAULT NULL COMMENT '订单分类：1.直销 2.经销商 3.代理商',
-  `gross_profit` varchar(255) DEFAULT NULL COMMENT '毛利率：百分比数字,已改为从成本核算员审核意见中抽取',
-  `business_expense` varchar(100) DEFAULT NULL COMMENT '业务费',
-
-  `warranty_fee` varchar(100) DEFAULT NULL COMMENT '保修费', 
-
-  `warranty_fee` varchar(100) DEFAULT NULL COMMENT '保修费',
-  `machine_frame_length` varchar(255) DEFAULT NULL COMMENT '机架长度，截取自于技术部经理的审核意见中',
-
+  `order_type` varchar(20) DEFAULT NULL,
+  `gross_profit` varchar(250) DEFAULT NULL,
+  `business_expense` varchar(100) DEFAULT NULL,
+  `warranty_fee` varchar(100) DEFAULT NULL,
+  `machine_frame_length` varchar(200) DEFAULT NULL,
+  `machine_head_style` varchar(50) DEFAULT NULL COMMENT '机头款式',
   PRIMARY KEY (`id`),
   KEY `fk_o_machine_type` (`machine_type`),
   KEY `fk_o_order_detail_id` (`order_detail_id`),
@@ -669,6 +652,7 @@ CREATE TABLE `order_detail` (
   `special_towel_motor` varchar(255) DEFAULT NULL COMMENT '特种：主电机',
   `special_taping_head` varchar(255) DEFAULT NULL COMMENT '特种：特种：盘带头',
   `special_towel_needle` varchar(255) DEFAULT NULL COMMENT '特种：毛巾机针',
+  `special_towel_head` varchar(50) DEFAULT NULL COMMENT '毛巾机头',
   `electric_pc` varchar(255) DEFAULT NULL COMMENT '电气： 电脑',
   `electric_language` varchar(255) DEFAULT NULL,
   `electric_motor` varchar(255) DEFAULT NULL COMMENT '电气：主电机',
@@ -696,14 +680,16 @@ CREATE TABLE `order_detail` (
   `framework_pole_height` varchar(255) DEFAULT NULL,
   `framework_stop` varchar(255) DEFAULT NULL COMMENT '机架台板：急停装置',
   `framework_light` varchar(255) DEFAULT NULL COMMENT '机架台板：日光灯',
+  `framework_machine_foot_type` varchar(50) DEFAULT NULL COMMENT '机脚类型',
+  `framework_platen_support` varchar(50) DEFAULT NULL COMMENT '台板支撑',
   `driver_type` varchar(255) DEFAULT NULL COMMENT '驱动：类型',
+  `driver_x_type` varchar(50) DEFAULT NULL COMMENT 'X驱动类型',
+  `driver_y_type` varchar(50) DEFAULT NULL COMMENT 'Y驱动类型',
   `driver_method` varchar(255) DEFAULT NULL COMMENT '驱动：方式',
   `driver_reel_hole` varchar(255) DEFAULT NULL COMMENT '驱动：绷架孔',
   `driver_horizon_num` tinyint(4) DEFAULT NULL COMMENT '驱动：横档数量',
   `driver_vertical_num` tinyint(4) DEFAULT NULL COMMENT '驱动：直档数量',
   `driver_reel` varchar(255) DEFAULT NULL COMMENT '驱动：绷架',
-  `electric_stable_voltage` varchar(20) DEFAULT NULL COMMENT '稳压电源',
-  `electric_shelf_light` varchar(20) DEFAULT NULL COMMENT '线架照明灯',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -742,6 +728,7 @@ CREATE TABLE `order_sign` (
   `sign_content` text NOT NULL COMMENT '签核内容，以json格式的数组形式存放, 所有项完成后更新status为完成\r\n[ \r\n    {"role_id": 1, "role_name":"技术部"，“person”：“张三”，”comment“: "同意"， ”update_time“:"2017-11-05 12:08:55"},\r\n    {"role_id":2, "role_name":"PMC"，“person”：“李四”，”comment“: "同意，但是部分配件需要新设计"， ”update_time“:"2017-11-06 12:08:55"}\r\n]',
   `create_time` datetime NOT NULL COMMENT '签核流程开始时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `sales_department` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_os_order_id` (`order_id`),
   CONSTRAINT `fk_os_order_id` FOREIGN KEY (`order_id`) REFERENCES `machine_order` (`id`)
@@ -849,7 +836,7 @@ CREATE TABLE `quality_inspect_record` (
   `re_inspect` varchar(100) DEFAULT NULL COMMENT ' 复检结果。 即最多复检一次。有弹框提示是否确认。不需要编辑。',
   `update_time` datetime DEFAULT NULL,
   `task_name` varchar(20) DEFAULT NULL COMMENT '工序名称，因为“质检内容：要允许编辑”，所以这个表要和quality_inspect脱离关系，所有质检信息都要保存在此表，不依赖质检内容的表。',
-  `order_number` varchar(30) DEFAULT NULL,
+  `order_number` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

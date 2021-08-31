@@ -44,6 +44,18 @@ public class OrderDetail {
     @Column(name = "special_towel_needle")
     private String specialTowelNeedle;
 
+    //2021-08-30新增 毛巾机头
+    @Column(name = "special_towel_head")
+    private String specialTowelHead;
+
+    public String getSpecialTowelHead() {
+        return specialTowelHead;
+    }
+
+    public void setSpecialTowelHead(String specialTowelHead) {
+        this.specialTowelHead = specialTowelHead;
+    }
+
     /**
      * 电气： 电脑
      */
@@ -213,12 +225,62 @@ public class OrderDetail {
      */
     @Column(name = "framework_light")
     private String frameworkLight;
+    /**
+     * 机架台板：机脚类型
+     */
+    @Column(name = "framework_machine_foot_type")
+    private String frameworkMachineFootType;
+
+    /**
+     * 机架台板：台板支撑
+     */
+    @Column(name = "framework_platen_support")
+    private String frameworkPlatenSupport;
+
+    public String getFrameworkMachineFootType() {
+        return frameworkMachineFootType;
+    }
+
+    public void setFrameworkMachineFootType(String frameworkMachineFootType) {
+        this.frameworkMachineFootType = frameworkMachineFootType;
+    }
+
+    public String getFrameworkPlatenSupport() {
+        return frameworkPlatenSupport;
+    }
+
+    public void setFrameworkPlatenSupport(String frameworkPlatenSupport) {
+        this.frameworkPlatenSupport = frameworkPlatenSupport;
+    }
 
     /**
      * 驱动：类型
      */
     @Column(name = "driver_type")
     private String driverType;
+
+    // 2021-0830 X驱动类型
+    @Column(name = "driver_x_type")
+    private String driverXType;
+    // 2021-0830 Y驱动类型
+    @Column(name = "driver_y_type")
+    private String driverYType;
+
+    public String getDriverXType() {
+        return driverXType;
+    }
+
+    public void setDriverXType(String driverXType) {
+        this.driverXType = driverXType;
+    }
+
+    public String getDriverYType() {
+        return driverYType;
+    }
+
+    public void setDriverYType(String driverYType) {
+        this.driverYType = driverYType;
+    }
 
     /**
      * 驱动：方式
