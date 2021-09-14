@@ -1467,9 +1467,13 @@ public class ContractController {
                 cell2 = sheetX.getRow(2).getCell((short) 4);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getBrand()));
                 //H3
-                cell2 = sheetX.getRow(2).getCell((short) 7);
+                cell2 = sheetX.getRow(2).getCell((short) 6);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineType().getName()));
-
+                //I3 机头款式
+                cell2 = sheetX.getRow(2).getCell((short) 7);
+                if(machineOrderDetail.getMachineHeadStyle() != null) { ///新旧订单兼容。旧订单没有这项
+                    cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineHeadStyle()));
+                }
                 //C4
                 cell2 = sheetX.getRow(3).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getNeedleNum()
@@ -1485,16 +1489,18 @@ public class ContractController {
                 cell2 = sheetX.getRow(4).getCell((short) 7);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getyDistance()));
 
-                //D6
+                //D6 毛巾机头
                 cell2 = sheetX.getRow(5).getCell((short) 3);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelColor()));
-                //F6
+                if(machineOrderDetail.getOrderDetail().getSpecialTowelHead() != null) {
+                    cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelHead()));
+                }
+                //F6 毛巾色数
                 cell2 = sheetX.getRow(5).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelDaxle()));
-                //H6
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelColor()));
+                //H6 毛巾机针
                 cell2 = sheetX.getRow(5).getCell((short) 7);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelHaxle()));
-                //K6
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelNeedle()));
+                //K6 主电机
                 cell2 = sheetX.getRow(5).getCell((short) 10);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelMotor()));
 
@@ -1502,10 +1508,8 @@ public class ContractController {
                 cell2 = sheetX.getRow(6).getCell((short) 3);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTapingHead()));
                 //H7
-                cell2 = sheetX.getRow(6).getCell((short) 7);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getSpecialTowelNeedle()));
 
-                //C8
+                //C8 电控型号（电脑）
                 cell2 = sheetX.getRow(7).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getElectricPc()));
                 //D8
@@ -1568,36 +1572,51 @@ public class ContractController {
                 //C15
                 cell2 = sheetX.getRow(14).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkColor()));
-                //f15
+                //f15 机脚类型
                 cell2 = sheetX.getRow(14).getCell((short) 5);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkPlaten()));
-
+                if(machineOrderDetail.getOrderDetail().getFrameworkMachineFootType() !=null) {
+                    cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkMachineFootType()));
+                }
                 //G15
-                cell2 = sheetX.getRow(14).getCell((short) 6);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkPlatenColor()));
-
-                //i15
-                cell2 = sheetX.getRow(14).getCell((short) 8);
+                //h15 台板支撑
+                cell2 = sheetX.getRow(14).getCell((short) 7);
+                if(machineOrderDetail.getOrderDetail().getFrameworkPlatenSupport() != null) {
+                    cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkPlatenSupport()));
+                }
+                //k15
+                cell2 = sheetX.getRow(14).getCell((short) 10);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkRing()));
 
-                //C16
+                //C16 电脑托架
                 cell2 = sheetX.getRow(15).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkBracket()));
+
                 //f16
                 cell2 = sheetX.getRow(15).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkStop()));
-                //i16
-                cell2 = sheetX.getRow(15).getCell((short) 8);
+                //H16 台板颜色
+                cell2 = sheetX.getRow(15).getCell((short) 7);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkPlatenColor()));
+
+                //K16
+                cell2 = sheetX.getRow(15).getCell((short) 10);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkPoleHeight()));
                 //i16 取消
 //                cell2 = sheetX.getRow(15).getCell((short) 8);
 //                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getFrameworkLight()));
 
-                //C17
+                //C17 X驱动类型
                 cell2 = sheetX.getRow(16).getCell((short) 2);
-                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverType()));
-                //f17
+                if(machineOrderDetail.getOrderDetail().getDriverXType() != null) {
+                    cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverXType()));
+                }
+                //f17 y驱动类型
                 cell2 = sheetX.getRow(16).getCell((short) 5);
+                if(machineOrderDetail.getOrderDetail().getDriverYType() != null) {
+                    cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverYType()));
+                }
+                //H17 框架类型 (原先的驱动方式)
+                cell2 = sheetX.getRow(16).getCell((short) 7);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverMethod()));
 
                 //F18
@@ -1617,15 +1636,15 @@ public class ContractController {
                 cell2 = sheetX.getRow(19).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getPackageMethod()));
 
-                //C21
+                //F20
                 cell2 = sheetX.getRow(19).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getPackageMark()));
 
-                //C20
+                //C21
                 cell2 = sheetX.getRow(20).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getWrapMachine()));
 
-                //C21
+                //F21
                 cell2 = sheetX.getRow(20).getCell((short) 5);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getWrapMachineChange()));
 

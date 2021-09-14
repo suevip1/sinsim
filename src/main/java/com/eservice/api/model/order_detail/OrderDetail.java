@@ -905,7 +905,7 @@ public class OrderDetail {
     }
 
     /**
-     * 获取驱动：方式
+     * 获取驱动：方式 (新名称：框架类型)
      *
      * @return driver_method - 驱动：方式
      */
