@@ -26,4 +26,9 @@ public class MachineTypeServiceImpl extends AbstractService<MachineType> impleme
         return machineTypeMapper.selectByName(name);
     }
 
+    //查询第n条之后的记录（目前n为23，返回从24开始，1-23不再用了）
+    public List<MachineType> selectAfterN(int nn)
+    {
+        return machineTypeMapper.selectAfterN(nn);
+    }
 }

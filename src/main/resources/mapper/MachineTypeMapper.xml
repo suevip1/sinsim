@@ -13,4 +13,10 @@
 	<select id="selectByName" resultMap="BaseResultMap">
 		SELECT * FROM machine_type where name=#{name}
 	</select>
+
+	<select id="selectAfterN" resultMap="BaseResultMap">
+		SELECT * from machine_type limit #{nn},1111
+-- 		1111够多了
+	</select>
+
 </mapper>

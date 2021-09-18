@@ -1466,11 +1466,11 @@ public class ContractController {
                 //E3
                 cell2 = sheetX.getRow(2).getCell((short) 4);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getBrand()));
-                //H3
+                //g3
                 cell2 = sheetX.getRow(2).getCell((short) 6);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineType().getName()));
                 //I3 机头款式
-                cell2 = sheetX.getRow(2).getCell((short) 7);
+                cell2 = sheetX.getRow(2).getCell((short) 8);
                 if(machineOrderDetail.getMachineHeadStyle() != null) { ///新旧订单兼容。旧订单没有这项
                     cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getMachineHeadStyle()));
                 }

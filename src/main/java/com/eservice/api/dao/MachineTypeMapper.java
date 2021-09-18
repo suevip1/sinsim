@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface MachineTypeMapper extends Mapper<MachineType> {
     List<MachineType> selectByName(@Param("name")  String name);
+    List<MachineType> selectAfterN(@Param("nn")  int nn);
 }

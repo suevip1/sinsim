@@ -92,4 +92,20 @@ public class MachineTypeController {
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
+    /**
+     * 查询机器类型，从第N个开始的机器类型
+     * 机型名称改了，之前的名称以后不用了，但是在旧订单里还要用所以无法删除。
+     * 返回N个之后的机型（即所有新的机型名称）用于新订单
+     */
+    @PostMapping("/selectAfterN")
+    public Result selectAfterN(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+//        PageHelper.startPage(page, size);// 这一行加了，会出错：IndexOutOfBoundsException: Index: 0, Size: 0
+//        PageHelper.startPage(page, 20);
+        //
+        List<MachineType> list = machineTypeService.selectAfterN(23);
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
 }
