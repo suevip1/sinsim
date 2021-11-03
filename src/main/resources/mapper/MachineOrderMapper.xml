@@ -478,7 +478,8 @@
 			and mo.contract_id=#{contract_id}
 		</if>
 		<if test="order_num != null and order_num != ''">
-			and mo.order_num like CONCAT('%','${order_num}','%' )
+-- 			and mo.order_num like CONCAT('%','${order_num}','%' )
+			and mo.order_num =#{order_num}
 		</if>
 		<if test="contract_num != null and contract_num != ''">
 			and con.contract_num = CONCAT('%','${contract_num}','%' )

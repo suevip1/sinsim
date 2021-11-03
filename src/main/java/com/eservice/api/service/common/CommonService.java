@@ -591,6 +591,7 @@ public class CommonService {
                     || (13 == roleId)   //成本核算员
                     || (14 == roleId)   //财务经理
                     || (33 == roleId)   //营销副总
+                    || (30 == roleId)   //外贸总监
                     || (15 == roleId)) {//财务会计
                 displayPrice = true;
             }
