@@ -512,6 +512,7 @@ CREATE TABLE `machine_order` (
   `package_method` varchar(255) NOT NULL COMMENT '包装方式',
   `wrap_machine` varchar(255) DEFAULT NULL COMMENT '绕线机配置',
   `wrap_machine_change` varchar(255) DEFAULT NULL COMMENT '绕线机置换',
+  `wrap_stand_remove` varchar(10) DEFAULT NULL COMMENT '线架拆除： 是,否',
   `package_mark` text COMMENT '包装备注',
   `equipment` text COMMENT '机器装置，json的字符串，包含装置名称、数量、单价',
   `machine_price` varchar(255) NOT NULL COMMENT '机器价格（不包括装置）',

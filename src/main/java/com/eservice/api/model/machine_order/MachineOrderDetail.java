@@ -125,6 +125,18 @@ public class MachineOrderDetail {
     @Column(name = "wrap_machine_change")
     private String wrapMachineChange;
 
+    // 线架拆除： 是/否
+    @Column(name = "wrap_stand_remove")
+    private String wrapStandRemove;
+
+    public String getWrapStandRemove() {
+        return wrapStandRemove;
+    }
+
+    public void setWrapStandRemove(String wrapStandRemove) {
+        this.wrapStandRemove = wrapStandRemove;
+    }
+
     @Column(name = "package_mark")
     private String packageMark;
 

@@ -1632,9 +1632,12 @@ public class ContractController {
                 //C19
                 cell2 = sheetX.getRow(18).getCell((short) 2);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getOrderDetail().getDriverVerticalNum().toString()));
-                //C20
-                cell2 = sheetX.getRow(19).getCell((short) 2);
+                //b20 包装方式：
+                cell2 = sheetX.getRow(19).getCell((short) 1);
                 cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getPackageMethod()));
+                //d20 线架拆除：
+                cell2 = sheetX.getRow(19).getCell((short) 3);
+                cell2.setCellValue(new HSSFRichTextString(machineOrderDetail.getWrapStandRemove()));
 
                 //F20
                 cell2 = sheetX.getRow(19).getCell((short) 5);
