@@ -2039,10 +2039,9 @@ public class ContractController {
         if (contractNum == null) {
             return ResultGenerator.genFailResult("请输入合同编号！");
         } else {
-            Condition condition = new Condition(Contract.class);
-            condition.createCriteria().andCondition("contract_num = ", contractNum);
-            condition.createCriteria().andCondition("contract_num = ", contractNum);
-            List<Contract> list = contractService.findByCondition(condition);
+
+
+            List<Contract> list = contractService.isContractExist( contractNum );
             if (list.size() == 0) {
                 return ResultGenerator.genSuccessResult();
             } else {

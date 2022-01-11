@@ -205,4 +205,18 @@
         WHERE 
             mo.order_num = #{orderNumber} and valid='1' 
     </select>
+
+    <!-- 合同号为contractNum的合同是否存在， 合同的全部订单已经被删除（valid为0），这种合同视为不存在了-->
+    <!-- 返回的合同不为空, 就表示存在了-->
+    <select id="isContractExist" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            contract c
+        JOIN machine_order mo ON mo.contract_id = c.id
+        WHERE
+           	c.contract_num= #{contractNum}
+        AND mo.valid != 0
+    </select>
+
 </mapper>

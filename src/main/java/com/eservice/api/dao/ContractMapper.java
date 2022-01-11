@@ -41,4 +41,6 @@ public interface ContractMapper extends Mapper<Contract> {
     List<ContractDetail> selectAllCustomer(@Param("name") String name);
 
     List<Contract> getContractByOrderNumber(@Param("orderNumber") String orderNumber);
+
+    List<Contract> isContractExist(@Param("contractNum") String contractNum);
 }
