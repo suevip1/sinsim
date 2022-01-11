@@ -260,7 +260,8 @@ public class MachineOrderController {
             return ResultGenerator.genFailResult("请输入需求单编号！");
         } else {
             Condition condition = new Condition(MachineOrder.class);
-            condition.createCriteria().andCondition("order_num = ", orderNum);
+            condition.createCriteria().andCondition("order_num = ", orderNum)
+                    .andCondition("valid = ", 1);
             List<MachineOrder> list = machineOrderService.findByCondition(condition);
             if (list.size() == 0) {
                 return ResultGenerator.genSuccessResult();

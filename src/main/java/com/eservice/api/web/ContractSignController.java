@@ -83,7 +83,8 @@ public class ContractSignController {
 
                 //需求单也需要设置为签核完成状态“ORDER_CHECKING_FINISHED”
                 Condition tempCondition = new Condition(ContractSign.class);
-                tempCondition.createCriteria().andCondition("contract_id = ", contract.getId());
+                tempCondition.createCriteria().andCondition("contract_id = ", contract.getId())
+                        .andCondition("valid = ", 1);
                 List<MachineOrder> machineOrderList = machineOrderService.findByCondition(tempCondition);
                 for (MachineOrder item : machineOrderList) {
                     if (item.getStatus().equals(Constant.ORDER_CHECKING)) {
@@ -142,7 +143,9 @@ public class ContractSignController {
 
                         //需求单也需要重新设置为审核中
                         Condition tempCondition = new Condition(ContractSign.class);
-                        tempCondition.createCriteria().andCondition("contract_id = ", contract.getId());
+                        tempCondition.createCriteria().andCondition("contract_id = ", contract.getId())
+                                .andCondition("valid = ", 1);
+
                         List<MachineOrder> machineOrderList = machineOrderService.findByCondition(tempCondition);
                         for (MachineOrder item : machineOrderList) {
                             if (item.getStatus() == Constant.ORDER_REJECTED) {

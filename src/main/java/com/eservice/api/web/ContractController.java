@@ -118,9 +118,11 @@ public class ContractController {
             return ResultGenerator.genFailResult("Contract对象JSON解析失败！");
         }
 
-        Condition condition = new Condition(Contract.class);
-        condition.createCriteria().andCondition("contract_num = ", contract1.getContractNum());
-        List<Contract> list = contractService.findByCondition(condition);
+//        Condition condition = new Condition(Contract.class);
+//        condition.createCriteria().andCondition("contract_num = ", contract1.getContractNum());
+//        List<Contract> list = contractService.findByCondition(condition);
+
+        List<Contract> list = contractService.isContractExist( contract1.getContractNum() );
         if (list.size() != 0) {
            logger.error("合同编号已存在");
            return ResultGenerator.genFailResult("合同编号已存在！请换一个编号");
@@ -152,7 +154,8 @@ public class ContractController {
                 orderTemp.setStatus(Constant.ORDER_INITIAL);
 
                 Condition condition2 = new Condition(Contract.class);
-                condition2.createCriteria().andCondition("order_num = ", orderTemp.getOrderNum());
+                condition2.createCriteria().andCondition("order_num = ", orderTemp.getOrderNum())
+                        .andCondition("valid = ", 1);
                 List<MachineOrder> orderList = machineOrderService.findByCondition(condition2);
                 if (orderList.size() != 0) {
                     logger.error("订单号已存在！请换一个");
@@ -929,8 +932,10 @@ public class ContractController {
 
                 //设置该合同下的需求单状态，如果处于“ORDER_INITIAL”状态，则设置为“ORDER_CHECKING”
                 Condition tempCondition = new Condition(MachineOrder.class);
-                tempCondition.createCriteria().andCondition("contract_id = ", contractId);
-                tempCondition.createCriteria().andCondition("status = ", Constant.ORDER_INITIAL);
+                tempCondition.createCriteria().andCondition("contract_id = ", contractId)
+                        .andCondition("status = ", Constant.ORDER_INITIAL)
+                        .andCondition("valid = ", 1);
+
                 List<MachineOrder> orderList = machineOrderService.findByCondition(tempCondition);
                 for (MachineOrder orderItem : orderList) {
                     if (orderItem.getStatus().equals(Constant.ORDER_INITIAL)) {
@@ -1042,7 +1047,8 @@ public class ContractController {
             List<Integer> validMachineOrderIdList = new ArrayList<Integer>();
             MachineOrder mo;
             Condition tempCondition = new Condition(MachineOrder.class);
-            tempCondition.createCriteria().andCondition("contract_id = ", contractId);
+            tempCondition.createCriteria().andCondition("contract_id = ", contractId)
+                    .andCondition("valid = ", 1);
             List<MachineOrder> validOrderList = machineOrderService.findByCondition(tempCondition);
             for (int i = 0; i < validOrderList.size(); i++) {
                 mo = validOrderList.get(i);
@@ -2039,8 +2045,6 @@ public class ContractController {
         if (contractNum == null) {
             return ResultGenerator.genFailResult("请输入合同编号！");
         } else {
-
-
             List<Contract> list = contractService.isContractExist( contractNum );
             if (list.size() == 0) {
                 return ResultGenerator.genSuccessResult();
