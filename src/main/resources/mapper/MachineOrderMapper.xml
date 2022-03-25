@@ -376,6 +376,15 @@
 		<if test="oderSignCurrentStep != null and oderSignCurrentStep != '' ">
 			and os.current_step = #{oderSignCurrentStep}
 		</if>
+
+		<!-- 查询 生产部 回复交期  之间的订单 -->
+		<if test="queryStartTimePlanShipDate!=null and queryStartTimePlanShipDate != '' ">
+			and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &gt;= #{queryStartTimePlanShipDate}
+		</if>
+		<if test="queryFinishTimePlanShipDate!=null and queryFinishTimePlanShipDate != '' ">
+			and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{queryFinishTimePlanShipDate}
+		</if>
+
 		GROUP BY mo.id
 		ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
 	</select>
@@ -532,6 +541,15 @@
 		<if test="oderSignCurrentStep != null and oderSignCurrentStep != '' ">
 			and os.current_step = #{oderSignCurrentStep}
 		</if>
+
+		<!-- 查询 生产部 回复交期  之间的订单 -->
+		<if test="queryStartTimePlanShipDate!=null and queryStartTimePlanShipDate != '' ">
+			and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &gt;= #{queryStartTimePlanShipDate}
+		</if>
+		<if test="queryFinishTimePlanShipDate!=null and queryFinishTimePlanShipDate != '' ">
+			and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{queryFinishTimePlanShipDate}
+		</if>
+
 		GROUP BY mo.id
 		ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
 	</select>

@@ -184,6 +184,8 @@ public class MachineOrderController {
      * @param query_finish_time
      * @param queryStartTimeSign
      * @param queryFinishTimeSign
+     * @param queryStartTimePlanShipDate, //这个是查询 计划日期（生产部的回复交期）
+     * @param queryFinishTimePlanShipDate,//这个是查询 计划日期（生产部的回复交期）
      * @param machine_name
      * @param is_fuzzy
      * @return
@@ -207,6 +209,8 @@ public class MachineOrderController {
             String machine_name,// 这个其实是机型
             String oderSignCurrentStep, //订单签核的当前步骤
             String searchDepartment, // 查询框里 查询部门，注意，这个和marketGroupName互不干涉
+            String queryStartTimePlanShipDate, //这个是查询 计划日期（生产部的回复交期）
+            String queryFinishTimePlanShipDate,//这个是查询 计划日期（生产部的回复交期）
             @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page,size);
 
@@ -234,6 +238,8 @@ public class MachineOrderController {
                 machine_name,
                 oderSignCurrentStep,
                 searchDepartment,
+                queryStartTimePlanShipDate,
+                queryFinishTimePlanShipDate,
                 is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
@@ -317,6 +323,8 @@ public class MachineOrderController {
                                       String machine_name,
                                       String oderSignCurrentStep, //订单签核的当前步骤
                                       String searchDepartment,
+                                      String queryStartTimePlanShipDate, //这个是查询 计划日期（生产部的回复交期）
+                                      String queryFinishTimePlanShipDate,//这个是查询 计划日期（生产部的回复交期）
                                       @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         List<MachineOrderDetail> list = machineOrderService.selectOrder(
                 id,
@@ -334,6 +342,8 @@ public class MachineOrderController {
                 machine_name,
                 oderSignCurrentStep,
                 searchDepartment,
+                queryStartTimePlanShipDate,
+                queryFinishTimePlanShipDate,
                 is_fuzzy);
 
             HSSFWorkbook wb = null;
@@ -535,6 +545,8 @@ public class MachineOrderController {
                                         String machine_name,
                                         String oderSignCurrentStep,
                                         String searchDepartment,
+                                        String queryStartTimePlanShipDate, //这个是查询 计划日期（生产部的回复交期）
+                                        String queryFinishTimePlanShipDate,//这个是查询 计划日期（生产部的回复交期）
                                         @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
                 List<MachineOrderDetail> list = machineOrderService.selectOrder(
                         id,
@@ -552,6 +564,8 @@ public class MachineOrderController {
                         machine_name,
                         oderSignCurrentStep,
                         searchDepartment,
+                        queryStartTimePlanShipDate,
+                        queryFinishTimePlanShipDate,
                         is_fuzzy);
 
                 HSSFWorkbook wb = null;
