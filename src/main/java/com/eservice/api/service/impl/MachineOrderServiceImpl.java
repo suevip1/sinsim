@@ -57,6 +57,8 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                                                 String searchDepartment,
                                                 String queryStartTimePlanShipDate, //这个是查询 计划日期（生产部的回复交期）
                                                 String queryFinishTimePlanShipDate,//这个是查询 计划日期（生产部的回复交期）
+                                                String needleNum,   //针数
+                                                String headNum,     //头数
                                                 Boolean is_fuzzy) {
 
         String[] arr;
@@ -93,7 +95,9 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     oderSignCurrentStep,
                     searchDepartment,
                     queryStartTimePlanShipDate,
-                    queryFinishTimePlanShipDate
+                    queryFinishTimePlanShipDate,
+                    needleNum,
+                    headNum
             );
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
@@ -121,7 +125,9 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
                     oderSignCurrentStep,
                     searchDepartment,
                     queryStartTimePlanShipDate,
-                    queryFinishTimePlanShipDate);
+                    queryFinishTimePlanShipDate,
+                    needleNum,
+                    headNum );
             for (int i = 0; i < machineOrderDetailList.size(); i++) {
                 machineOrderDetailList.get(i).setContactFormDetailList(getRelatedLxdByOrderNum(machineOrderDetailList.get(i).getOrderNum()));
 //                machineOrderDetailList.get(i).setGrossProfit(getGrossProfitByOrderSignContent(machineOrderDetailList.get(i).getOrderSign()));//

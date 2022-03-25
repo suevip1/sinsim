@@ -211,6 +211,8 @@ public class MachineOrderController {
             String searchDepartment, // 查询框里 查询部门，注意，这个和marketGroupName互不干涉
             String queryStartTimePlanShipDate, //这个是查询 计划日期（生产部的回复交期）
             String queryFinishTimePlanShipDate,//这个是查询 计划日期（生产部的回复交期）
+            String needleNum,   //针数
+            String headNum,     //头数
             @RequestParam(defaultValue = "true") Boolean is_fuzzy) {
         PageHelper.startPage(page,size);
 
@@ -240,6 +242,8 @@ public class MachineOrderController {
                 searchDepartment,
                 queryStartTimePlanShipDate,
                 queryFinishTimePlanShipDate,
+                needleNum,
+                headNum,
                 is_fuzzy);
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
@@ -344,6 +348,8 @@ public class MachineOrderController {
                 searchDepartment,
                 queryStartTimePlanShipDate,
                 queryFinishTimePlanShipDate,
+                null,
+                null,
                 is_fuzzy);
 
             HSSFWorkbook wb = null;
@@ -566,6 +572,8 @@ public class MachineOrderController {
                         searchDepartment,
                         queryStartTimePlanShipDate,
                         queryFinishTimePlanShipDate,
+                        null,
+                        null,
                         is_fuzzy);
 
                 HSSFWorkbook wb = null;

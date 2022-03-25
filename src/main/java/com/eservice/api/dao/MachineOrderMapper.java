@@ -27,7 +27,10 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
                                               @Param("oderSignCurrentStep") String oderSignCurrentStep,
                                               @Param("searchDepartment") String searchDepartment,
                                               @Param("queryStartTimePlanShipDate")String queryStartTimePlanShipDate,
-                                              @Param("queryFinishTimePlanShipDate")String queryFinishTimePlanShipDate);
+                                              @Param("queryFinishTimePlanShipDate")String queryFinishTimePlanShipDate,
+                                              @Param("needleNum")String needleNum,   //针数
+                                              @Param("headNum")String headNum      //头数
+                                               );
     List<MachineOrderDetail>  selectOrder(@Param("id") Integer id,
                                           @Param("contract_id") Integer contract_id,
                                           @Param("order_num") String order_num,
@@ -44,7 +47,10 @@ public interface MachineOrderMapper extends Mapper<MachineOrder> {
                                           @Param("oderSignCurrentStep") String oderSignCurrentStep,
                                           @Param("searchDepartment") String searchDepartment,
                                           @Param("queryStartTimePlanShipDate")String queryStartTimePlanShipDate,
-                                          @Param("queryFinishTimePlanShipDate")String queryFinishTimePlanShipDate);
+                                          @Param("queryFinishTimePlanShipDate")String queryFinishTimePlanShipDate,
+                                          @Param("needleNum")String needleNum,   //针数
+                                          @Param("headNum")String headNum      //头数
+                                          );
 
     void saveAndGetID(MachineOrder machineOrder);
 

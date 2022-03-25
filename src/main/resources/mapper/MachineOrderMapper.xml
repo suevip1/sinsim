@@ -384,6 +384,12 @@
 		<if test="queryFinishTimePlanShipDate!=null and queryFinishTimePlanShipDate != '' ">
 			and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{queryFinishTimePlanShipDate}
 		</if>
+		<if test="needleNum != null and needleNum != '' ">
+			and mo.needle_num = #{needleNum}
+		</if>
+		<if test="headNum != null and headNum != '' ">
+			and mo.head_num = #{headNum}
+		</if>
 
 		GROUP BY mo.id
 		ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
@@ -550,6 +556,12 @@
 			and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{queryFinishTimePlanShipDate}
 		</if>
 
+		<if test="needleNum != null and needleNum != '' ">
+			and mo.needle_num = #{needleNum}
+		</if>
+		<if test="headNum != null and headNum != '' ">
+			and mo.head_num = #{headNum}
+		</if>
 		GROUP BY mo.id
 		ORDER By mo.create_time DESC,mo.update_time DESC,os_update_time DESC
 	</select>
