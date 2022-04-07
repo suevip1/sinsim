@@ -1016,6 +1016,7 @@ public class MachineOrderDetail {
         this.lxdPassed = lxdPassed;
     }
 
+    //剪线方式
     @Column(name = "electric_trim")
     private String electricTrim;
 
@@ -1049,5 +1050,5 @@ public class MachineOrderDetail {
     public void setDomesticTradeZone(String domesticTradeZone) {
         this.domesticTradeZone = domesticTradeZone;
     }
-
+    
 }

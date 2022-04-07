@@ -1256,4 +1256,43 @@ public class TaskRecordController {
         return ResultGenerator.genSuccessResult(ret);
     }
 
+    /// 订单结构表的查询
+    /// 包括了 订单信息、工序信息
+    /// 一个订单下有多个机器时，每个机器都列为一行。
+    @PostMapping("selectMachineOrderStructureTable")
+    public Result selectMachineOrderStructureTable(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "0") Integer size,
+            String queryMachineOrderCreateTime, //订单录入时间
+            String orderNum,
+            String saleMan,
+            String machineType,     ///机器类型
+            String nameplate,
+            String needleNum,
+            String headNum,
+            String electricTrim,    ///剪线方式
+            String TaskRecordStatus, ///工序状态
+            String taskRecordEndTime,///工序完成(结束)时间
+            String queryStartTimePlanShipDate, // 回复交期，
+            String queryFinishTimePlanShipDate, // 回复交期，
+            String taskName
+    ) {
+        PageHelper.startPage(page, size);
+        List<TaskRecordDetail> list = taskRecordService.selectMachineOrderStructureTable(
+                queryMachineOrderCreateTime, //订单录入时间
+                orderNum,
+                saleMan,
+                machineType,     ///机器类型
+                nameplate,
+                needleNum,
+                headNum,
+                electricTrim,    ///剪线方式
+                TaskRecordStatus, ///工序状态
+                taskRecordEndTime,///工序完成(结束)时间
+                queryStartTimePlanShipDate,
+                queryFinishTimePlanShipDate,
+                taskName );
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }

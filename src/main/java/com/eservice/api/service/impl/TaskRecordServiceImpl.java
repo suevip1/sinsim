@@ -124,4 +124,35 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
     public List<TaskReport> selectTaskReports(String taskName, String installStartTime, String installFinishTime) {
         return taskRecordMapper.selectTaskReports(taskName, installStartTime, installFinishTime);
     }
+
+    public List<TaskRecordDetail> selectMachineOrderStructureTable(  String queryMachineOrderCreateTime, //订单录入时间
+                                                                     String orderNum,
+                                                                     String saleMan,
+                                                                     String machineType,     ///机器类型
+                                                                     String nameplate,
+                                                                     String needleNum,
+                                                                     String headNum,
+                                                                     String electricTrim,    ///剪线方式
+                                                                     String TaskRecordStatus, ///工序状态
+                                                                     String taskRecordEndTime,///工序完成(结束)时间
+                                                                     String queryStartTimePlanShipDate,
+                                                                     String queryFinishTimePlanShipDate,
+                                                                     String taskName ) {
+        return taskRecordMapper.selectMachineOrderStructureTable(
+                queryMachineOrderCreateTime, //订单录入时间
+                orderNum,
+                saleMan,
+                machineType,     ///机器类型
+                nameplate,
+                needleNum,
+                headNum,
+                electricTrim,    ///剪线方式
+                TaskRecordStatus, ///工序状态
+                taskRecordEndTime,///工序完成(结束)时间
+                queryStartTimePlanShipDate,
+                queryFinishTimePlanShipDate,
+                taskName);
+    }
+
+
 }

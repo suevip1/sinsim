@@ -89,6 +89,10 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="wait_timespan" jdbcType="INTEGER" property="waitTimespan"/>
         <result column="cmt_feedback" jdbcType="VARCHAR" property="cmtFeedback"/>
+
+        <result column="electric_trim" jdbcType="VARCHAR" property="electricTrim"/>
+        <result column="axle_jump" jdbcType="VARCHAR" property="axleJump"/>
+
         <association javaType="com.eservice.api.model.process_record.ProcessRecord" property="processRecord">
             <id column="process_record_id_in_association" property="id"/>
             <result column="machine_id" jdbcType="INTEGER" property="machineId"/>
@@ -623,6 +627,42 @@
         order_num DESC,
         install_begin_time;
 
+    </select>
+
+    <select id="selectMachineOrderStructureTable" resultMap="TaskRecordDetail">
+        SELECT
+        mo.create_time,
+        mo.order_num,
+        mo.sellman,
+        mo.needle_num,
+        mo.head_num,
+        mo.head_distance,
+        mo.x_distance,
+        mo.y_distance,
+        mo.machine_num,
+        mo.machine_head_style,
+        mo.plan_ship_date,
+        od.electric_trim,
+        od.axle_jump,
+        tr.task_name,
+        tr.install_end_time,
+        m.nameplate
+        FROM
+        task_record tr
+        JOIN process_record pr ON tr.process_record_id = pr.id
+        JOIN machine m ON m.id = pr.machine_id
+        JOIN machine_order mo ON mo.id = m.order_id
+        JOIN order_detail od on od.id = mo.order_detail_id
+        WHERE
+--         测试调试 完成，则表示机器安装完成，不用管后面工序。
+        tr.task_name = '测试调试'
+        <if test="queryStartTimePlanShipDate!=null and queryStartTimePlanShipDate != '' ">
+            and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &gt;= #{queryStartTimePlanShipDate}
+        </if>
+        <if test="queryFinishTimePlanShipDate !=null and queryFinishTimePlanShipDate != '' ">
+            and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{queryFinishTimePlanShipDate}
+        </if>
+        ORDER BY mo.plan_ship_date
     </select>
 
 </mapper>

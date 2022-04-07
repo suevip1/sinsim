@@ -63,4 +63,25 @@ public class TaskRecordDetail extends TaskRecord{
     public void setTask(Task task) {
         this.task = task;
     }
+
+
+    ///订单结构表用到 剪线，跳跃方式
+    private String electricTrim;
+    private String  axleJump;
+
+    public String getElectricTrim() {
+        return electricTrim;
+    }
+
+    public void setElectricTrim(String electricTrim) {
+        this.electricTrim = electricTrim;
+    }
+
+    public String getAxleJump() {
+        return axleJump;
+    }
+
+    public void setAxleJump(String axleJump) {
+        this.axleJump = axleJump;
+    }
 }
