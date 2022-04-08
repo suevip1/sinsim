@@ -1265,7 +1265,7 @@ public class TaskRecordController {
             @RequestParam(defaultValue = "0") Integer size,
             String queryMachineOrderCreateTime, //订单录入时间
             String orderNum,
-            String saleMan,
+            String sellMan,  /// 统一用这个写错的词
             String machineType,     ///机器类型
             String nameplate,
             String needleNum,
@@ -1281,7 +1281,7 @@ public class TaskRecordController {
         List<TaskRecordDetail> list = taskRecordService.selectMachineOrderStructureTable(
                 queryMachineOrderCreateTime, //订单录入时间
                 orderNum,
-                saleMan,
+                sellMan,
                 machineType,     ///机器类型
                 nameplate,
                 needleNum,

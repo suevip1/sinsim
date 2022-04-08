@@ -2,6 +2,7 @@ package com.eservice.api.model.task_record;
 
 import com.eservice.api.model.machine.Machine;
 import com.eservice.api.model.machine_order.MachineOrder;
+import com.eservice.api.model.machine_type.MachineType;
 import com.eservice.api.model.order_loading_list.OrderLoadingList;
 import com.eservice.api.model.process_record.ProcessRecord;
 import com.eservice.api.model.task.Task;
@@ -83,5 +84,15 @@ public class TaskRecordDetail extends TaskRecord{
 
     public void setAxleJump(String axleJump) {
         this.axleJump = axleJump;
+    }
+
+    private MachineType machineType;
+
+    public MachineType getMachineType() {
+        return machineType;
+    }
+
+    public void setMachineType(MachineType machineType) {
+        this.machineType = machineType;
     }
 }

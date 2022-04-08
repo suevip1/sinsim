@@ -176,6 +176,11 @@
             <result column="group_id" jdbcType="INTEGER" property="groupId"/>
             <result column="standard_minutes" jdbcType="INTEGER" property="standardMinutes" />
         </association>
+
+        <association javaType="com.eservice.api.model.machine_type.MachineType" property="machineType">
+            <id column="machineTypeID" property="id"/>
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+        </association>
     </resultMap>
     <!--根据 taskId查task record, process record, machine, machine_order-->
     <select id="selectTaskRecordDetail" resultMap="TaskRecordDetail">
@@ -646,13 +651,16 @@
         od.axle_jump,
         tr.task_name,
         tr.install_end_time,
-        m.nameplate
+        m.nameplate,
+        mt.id machineTypeID,
+        mt.`name`
         FROM
         task_record tr
         JOIN process_record pr ON tr.process_record_id = pr.id
         JOIN machine m ON m.id = pr.machine_id
         JOIN machine_order mo ON mo.id = m.order_id
         JOIN order_detail od on od.id = mo.order_detail_id
+        JOIN machine_type mt ON mo.machine_type = mt.id
         WHERE
 --         测试调试 完成，则表示机器安装完成，不用管后面工序。
         tr.task_name = '测试调试'
@@ -662,6 +670,21 @@
         <if test="queryFinishTimePlanShipDate !=null and queryFinishTimePlanShipDate != '' ">
             and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &lt;= #{queryFinishTimePlanShipDate}
         </if>
+
+        <if test="orderNum != null and orderNum != ''">
+            and mo.order_num like CONCAT('%','${orderNum}','%' )
+        </if>
+        <if test="sellMan != null and sellMan != ''">
+            <if test="sellMan != null and sellMan != ''">
+
+                and mo.sellman like CONCAT('%','${sellMan}','%' )
+            </if>
+            <!--<else if>-->
+                <!-- todo -->
+            <!--</else>-->
+--             and mo.sellman like CONCAT('%','${sellMan}','%' )
+        </if>
+
         ORDER BY mo.plan_ship_date
     </select>
 

@@ -81,7 +81,7 @@ public interface TaskRecordMapper extends Mapper<TaskRecord> {
 
     List<TaskRecordDetail> selectMachineOrderStructureTable(@Param("queryMachineOrderCreateTime")String queryMachineOrderCreateTime, //订单录入时间
                                                             @Param("orderNum")String orderNum,
-                                                            @Param("saleMan")String saleMan,
+                                                            @Param("sellMan")String sellMan,
                                                             @Param("machineType")String machineType,     ///机器类型
                                                             @Param("nameplate")String nameplate,
                                                             @Param("needleNum")String needleNum,

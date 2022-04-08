@@ -127,7 +127,7 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
 
     public List<TaskRecordDetail> selectMachineOrderStructureTable(  String queryMachineOrderCreateTime, //订单录入时间
                                                                      String orderNum,
-                                                                     String saleMan,
+                                                                     String sellMan,
                                                                      String machineType,     ///机器类型
                                                                      String nameplate,
                                                                      String needleNum,
@@ -141,7 +141,7 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
         return taskRecordMapper.selectMachineOrderStructureTable(
                 queryMachineOrderCreateTime, //订单录入时间
                 orderNum,
-                saleMan,
+                sellMan,
                 machineType,     ///机器类型
                 nameplate,
                 needleNum,
