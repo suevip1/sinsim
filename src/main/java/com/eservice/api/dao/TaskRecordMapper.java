@@ -82,12 +82,12 @@ public interface TaskRecordMapper extends Mapper<TaskRecord> {
     List<TaskRecordDetail> selectMachineOrderStructureTable(@Param("queryMachineOrderCreateTime")String queryMachineOrderCreateTime, //订单录入时间
                                                             @Param("orderNum")String orderNum,
                                                             @Param("sellMan")String sellMan,
-                                                            @Param("machineType")String machineType,     ///机器类型
+                                                            @Param("machineType")Integer machineType,     ///机器类型
                                                             @Param("nameplate")String nameplate,
                                                             @Param("needleNum")String needleNum,
                                                             @Param("headNum") String headNum,
                                                             @Param("electricTrim") String electricTrim,    ///剪线方式
-                                                            @Param("TaskRecordStatus")String TaskRecordStatus, ///工序状态
+                                                            @Param("machineFinishStatus")String machineFinishStatus, ///
                                                             @Param("taskRecordEndTime")String taskRecordEndTime,///工序完成(结束)时间
                                                             @Param("queryStartTimePlanShipDate")String queryStartTimePlanShipDate,
                                                             @Param("queryFinishTimePlanShipDate")String queryFinishTimePlanShipDate,

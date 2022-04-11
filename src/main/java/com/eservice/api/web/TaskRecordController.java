@@ -1266,12 +1266,12 @@ public class TaskRecordController {
             String queryMachineOrderCreateTime, //订单录入时间
             String orderNum,
             String sellMan,  /// 统一用这个写错的词
-            String machineType,     ///机器类型
+            Integer machineType,     ///机器类型
             String nameplate,
             String needleNum,
             String headNum,
             String electricTrim,    ///剪线方式
-            String TaskRecordStatus, ///工序状态
+            String machineFinishStatus, ///机器完成状态--> 固定了是查询“测试调试”工序，该工序完成，则表示机器完成安装。
             String taskRecordEndTime,///工序完成(结束)时间
             String queryStartTimePlanShipDate, // 回复交期，
             String queryFinishTimePlanShipDate, // 回复交期，
@@ -1287,7 +1287,7 @@ public class TaskRecordController {
                 needleNum,
                 headNum,
                 electricTrim,    ///剪线方式
-                TaskRecordStatus, ///工序状态
+                machineFinishStatus, ///工序状态
                 taskRecordEndTime,///工序完成(结束)时间
                 queryStartTimePlanShipDate,
                 queryFinishTimePlanShipDate,

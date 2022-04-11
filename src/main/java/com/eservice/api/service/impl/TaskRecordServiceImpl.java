@@ -128,12 +128,12 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
     public List<TaskRecordDetail> selectMachineOrderStructureTable(  String queryMachineOrderCreateTime, //订单录入时间
                                                                      String orderNum,
                                                                      String sellMan,
-                                                                     String machineType,     ///机器类型
+                                                                     Integer machineType,     ///机器类型
                                                                      String nameplate,
                                                                      String needleNum,
                                                                      String headNum,
                                                                      String electricTrim,    ///剪线方式
-                                                                     String TaskRecordStatus, ///工序状态
+                                                                     String machineFinishStatus, ///机器完成状态
                                                                      String taskRecordEndTime,///工序完成(结束)时间
                                                                      String queryStartTimePlanShipDate,
                                                                      String queryFinishTimePlanShipDate,
@@ -147,7 +147,7 @@ public class TaskRecordServiceImpl extends AbstractService<TaskRecord> implement
                 needleNum,
                 headNum,
                 electricTrim,    ///剪线方式
-                TaskRecordStatus, ///工序状态
+                machineFinishStatus, ///
                 taskRecordEndTime,///工序完成(结束)时间
                 queryStartTimePlanShipDate,
                 queryFinishTimePlanShipDate,

@@ -675,15 +675,29 @@
             and mo.order_num like CONCAT('%','${orderNum}','%' )
         </if>
         <if test="sellMan != null and sellMan != ''">
-            <if test="sellMan != null and sellMan != ''">
-
-                and mo.sellman like CONCAT('%','${sellMan}','%' )
-            </if>
-            <!--<else if>-->
-                <!-- todo -->
-            <!--</else>-->
---             and mo.sellman like CONCAT('%','${sellMan}','%' )
+            and mo.sellman like CONCAT('%','${sellMan}','%' )
         </if>
+
+--         测试调试 完成，则表示机器安装完成
+        <if test="machineType != null and machineType != ''">
+            <if test="machineType ==  ''">
+                and mt.name = #{machineType}
+            </if>
+        </if>
+
+        <if test="machineFinishStatus != null and machineFinishStatus != ''">
+
+            <choose>
+                <when test= "machineFinishStatus == 4 ">
+                    and tr.status = #{machineFinishStatus}
+                </when>
+                <otherwise>
+                    --  传入的状态不为4，表示查询未完成的机器
+                    and tr.status != '4'
+                </otherwise>
+            </choose>
+        </if>
+
 
         ORDER BY mo.plan_ship_date
     </select>
