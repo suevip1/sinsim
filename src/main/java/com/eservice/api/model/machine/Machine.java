@@ -265,4 +265,24 @@ public class Machine {
     public void setIsUrgent(Boolean isUrgent) {
         this.isUrgent = isUrgent;
     }
+
+    /// 机架交期，以生成铭牌号的时间为交期，即表示拿到了机架。目前用在订单结构表
+    @Column(name = "machine_framework_create_time")
+    private Date machineFrameworkCreateTime;
+
+    public Boolean getUrgent() {
+        return isUrgent;
+    }
+
+    public void setUrgent(Boolean urgent) {
+        isUrgent = urgent;
+    }
+
+    public Date getMachineFrameworkCreateTime() {
+        return machineFrameworkCreateTime;
+    }
+
+    public void setMachineFrameworkCreateTime(Date machineFrameworkCreateTime) {
+        this.machineFrameworkCreateTime = machineFrameworkCreateTime;
+    }
 }

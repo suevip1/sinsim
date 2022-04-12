@@ -115,6 +115,7 @@
             <result column="installed_time" jdbcType="TIMESTAMP" property="installedTime"/>
             <result column="ship_time" jdbcType="TIMESTAMP" property="shipTime"/>
             <result column="is_urgent" jdbcType="TINYINT" property="isUrgent"/>
+            <result column="machine_framework_create_time" jdbcType="TIMESTAMP" property="machineFrameworkCreateTime"/>
         </association>
         <association javaType="com.eservice.api.model.machine_order.MachineOrder" property="machineOrder">
             <id column="order_num" jdbcType="VARCHAR" property="orderNum"/>
@@ -652,6 +653,7 @@
         tr.task_name,
         tr.install_end_time,
         m.nameplate,
+        m.machine_framework_create_time,
         mt.id machineTypeID,
         mt.`name`
         FROM
@@ -698,7 +700,16 @@
             </choose>
         </if>
 
+        <if test="electricTrim != null and electricTrim != ''">
+          and od.electric_trim like CONCAT('%','${electricTrim}','%' )
+        </if>
 
+        <if test="needleNum != null and needleNum != ''">
+            and mo.needle_num = #{needleNum}
+        </if>
+        <if test="headNum != null and headNum != ''">
+            and mo.head_num = #{headNum}
+        </if>
         ORDER BY mo.plan_ship_date
     </select>
 

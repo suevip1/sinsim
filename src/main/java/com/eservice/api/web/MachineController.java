@@ -108,6 +108,7 @@ public class MachineController {
             if (list.size() >= 1) {
                 return ResultGenerator.genFailResult("机器编号已存在！");
             }else {
+                machine1.setMachineFrameworkCreateTime(new Date());
                 machineService.update(machine1);
                 return ResultGenerator.genSuccessResult();
             }
