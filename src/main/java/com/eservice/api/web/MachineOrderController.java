@@ -630,7 +630,7 @@ public class MachineOrderController {
                     sheet1.getRow(0).getCell(columnX++).setCellValue("毛利");
                     sheet1.getRow(0).getCell(columnX++).setCellValue("订单类型");
                     sheet1.getRow(0).getCell(columnX++).setCellValue("保修费");
-                    sheet1.getRow(0).getCell(columnX++).setCellValue("签核完成时间");
+                    sheet1.getRow(0).getCell(columnX++).setCellValue("签核更新日期");
                     DataFormat dataFormat = wb.createDataFormat();
                     CellStyle cellStyle;
                     HSSFCellStyle wrapStyle=wb.createCellStyle();     
@@ -646,7 +646,7 @@ public class MachineOrderController {
                     cellStyle=wb.createCellStyle();
                     cellStyle.setDataFormat(dataFormat.getFormat("#,##0.00"));//金额格式
                     for(int i=0; i<list.size(); i++ ) {
-                        String dateStringSignFinish = "未完成签核";
+                        String dateStringSignFinish = "未曾签核"; ///这里其实是最近一次签核的日期
                         int r = i+1;
                         MachineOrderDetail mod=list.get(i);
                         row = sheet1.createRow(r);//新创建一行
@@ -675,10 +675,15 @@ public class MachineOrderController {
                                 //如果签核完成，取最后一个角色的签核时间
                                 signContentItemList = JSON.parseArray(orderSign.getSignContent(), SignContentItem.class);
                                 // 注意订单签核没有enable开关
-                                if (signContentItemList.get(signContentItemList.size() - 1).getDate() != null) {
-                                    dateStringSignFinish = formatter.format(signContentItemList.get(signContentItemList.size() - 1).getDate());
-                                 } else {
-                                    logger.warn("signContentItemList.get(signContentItemList.size()-1).getDate() 是 null，比如测试数据手动乱改动时可能出现");
+                                if(signContentItemList != null )
+                                    if(signContentItemList.size() != 0 ) { //改单等情况，不需要签核所以没有新的签核记录
+                                        if (signContentItemList.get(signContentItemList.size() - 1).getDate() != null) {
+                                            dateStringSignFinish = formatter.format(signContentItemList.get(signContentItemList.size() - 1).getDate());
+                                        } else {
+                                            logger.warn("signContentItemList.get(signContentItemList.size()-1).getDate() 是 null，比如测试数据手动乱改动时可能出现");
+                                        }
+                                    } else {
+                                        dateStringSignFinish = "";
                                 }
                             }
 

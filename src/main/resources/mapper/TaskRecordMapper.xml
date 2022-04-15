@@ -680,15 +680,14 @@
             and mo.sellman like CONCAT('%','${sellMan}','%' )
         </if>
 
---         测试调试 完成，则表示机器安装完成
         <if test="machineType != null and machineType != ''">
             <if test="machineType ==  ''">
                 and mt.name = #{machineType}
             </if>
         </if>
 
+        --         测试调试 完成，则表示机器安装完成
         <if test="machineFinishStatus != null and machineFinishStatus != ''">
-
             <choose>
                 <when test= "machineFinishStatus == 4 ">
                     and tr.status = #{machineFinishStatus}
