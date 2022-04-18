@@ -650,10 +650,12 @@
         mo.plan_ship_date,
         od.electric_trim,
         od.axle_jump,
+        tr.id,
         tr.task_name,
         tr.install_end_time,
-        m.nameplate,
+        (  m.nameplate),
         m.machine_framework_create_time,
+        m.machine_strid,
         mt.id machineTypeID,
         mt.`name`
         FROM
@@ -664,8 +666,9 @@
         JOIN order_detail od on od.id = mo.order_detail_id
         JOIN machine_type mt ON mo.machine_type = mt.id
         WHERE
---         测试调试 完成，则表示机器安装完成，不用管后面工序。
-        tr.task_name = '测试调试'
+        1=1
+--         测试调试 完成，则表示机器安装完成，不用管后面工序。 -->
+--         and tr.task_name = '测试调试'  --改了， 所有工序都要看
         <if test="queryStartTimePlanShipDate!=null and queryStartTimePlanShipDate != '' ">
             and DATE_FORMAT(mo.plan_ship_date,'%Y-%m-%d') &gt;= #{queryStartTimePlanShipDate}
         </if>
@@ -686,7 +689,7 @@
             </if>
         </if>
 
-        --         测试调试 完成，则表示机器安装完成
+        --  机器安装是否完成
         <if test="machineFinishStatus != null and machineFinishStatus != ''">
             <choose>
                 <when test= "machineFinishStatus == 4 ">

@@ -2,7 +2,9 @@ package com.eservice.api.web;
 import com.eservice.api.model.install_group.InstallGroup;
 import com.eservice.api.model.install_plan.InstallPlan;
 import com.eservice.api.model.install_plan_actual.InstallPlanActual;
+import com.eservice.api.model.machine.MachineAndTask;
 import com.eservice.api.model.machine_order.MachineOrderDetail;
+import com.eservice.api.model.order_detail.OrderDetail;
 import com.eservice.api.model.quality_inspect_record.QualityInspectRecord;
 import com.eservice.api.service.common.NodeDataModel;
 import com.alibaba.fastjson.JSON;
@@ -1278,7 +1280,7 @@ public class TaskRecordController {
             String taskName
     ) {
         PageHelper.startPage(page, size);
-        List<TaskRecordDetail> list = taskRecordService.selectMachineOrderStructureTable(
+        List<TaskRecordDetail> taskRecordDetailList = taskRecordService.selectMachineOrderStructureTable(
                 queryMachineOrderCreateTime, //订单录入时间
                 orderNum,
                 sellMan,
@@ -1292,7 +1294,76 @@ public class TaskRecordController {
                 queryStartTimePlanShipDate,
                 queryFinishTimePlanShipDate,
                 taskName );
-        PageInfo pageInfo = new PageInfo(list);
+        /**
+         * 对返回的数据进行处理：
+         * 返回数据是以工序为单位，需要转换为 以机器为单位，附带该机器的工序信息.
+         */
+        List<MachineAndTask> machineAndTaskList = new ArrayList<>();
+
+        for(int i=0; i<taskRecordDetailList.size(); i++) {
+            //查询 machineAndTaskList 是否已经存在该机器, 如果查到了，则记录对应的taskRecordId等
+            boolean flagMachineExisted = false;
+            int taskRecordId = 0;
+            int numberOf = 0; //记录是哪个machineAndTask包含了该工序所在机器。
+            MachineAndTask machineAndTaskTobeAdd = new MachineAndTask();
+            MachineAndTask machineAndTaskTobeUpdate = new MachineAndTask();
+            for (int k = 0; k < machineAndTaskList.size(); k++) {
+                if (machineAndTaskList.get(k).getMachineStrId() != null
+                        && machineAndTaskList.get(k).getMachineStrId().equalsIgnoreCase(
+                        taskRecordDetailList.get(i).getMachine().getMachineStrId())) {
+                    flagMachineExisted = true;
+                    taskRecordId = taskRecordDetailList.get(i).getId();
+                    numberOf = k;
+                    break;
+                }
+            }
+            machineAndTaskTobeAdd.setMachineStrId(taskRecordDetailList.get(i).getMachine().getMachineStrId());
+            machineAndTaskTobeAdd.setNameplate(taskRecordDetailList.get(i).getMachine().getNameplate());
+            TaskRecord taskRecord = new TaskRecord();
+            taskRecord.setTaskName(taskRecordDetailList.get(i).getTaskName());
+            taskRecord.setInstallEndTime(taskRecordDetailList.get(i).getInstallEndTime());
+
+            List<TaskRecord> taskRecordList = new ArrayList<>();
+            taskRecordList.add(taskRecord);
+            machineAndTaskTobeAdd.setTaskRecordList(taskRecordList);
+            machineAndTaskTobeAdd.setMachineTypeWhole(taskRecordDetailList.get(i).getMachineType());
+            machineAndTaskTobeAdd.setMachineOrder(taskRecordDetailList.get(i).getMachineOrder());
+            machineAndTaskTobeAdd.setMachineStrId(taskRecordDetailList.get(i).getMachine().getMachineStrId());
+
+            /**
+             * 如果 machineAndTaskList 里存在该机器，则在该 machineAndTaskList 的taskRecordList里 加上工序;
+             * 如果 machineAndTaskList 里没有该机器，则新建一个;
+             *
+             */
+            if (flagMachineExisted == true) {
+                TaskRecord taskRecord1 = taskRecordService.findById(taskRecordId);
+                if (taskRecord1 == null) {
+                    logger.warn("异常，taskRecord 为空");
+                } else {
+                    List<TaskRecord> taskRecordList1 = machineAndTaskList.get(numberOf).getTaskRecordList();
+                    taskRecordList1.add(taskRecord1);
+                    machineAndTaskList.get(numberOf).setTaskRecordList(taskRecordList1);
+//                    logger.info("更新一个machineAndTaskTobeAdd， " + machineAndTaskTobeAdd.getMachineStrId() );
+                    if (machineAndTaskTobeAdd.getTaskRecordList() == null) {
+//                        logger.info("machineAndTaskTobeAdd.getTaskRecordList(). is null");
+                    } else {
+//                        logger.info(machineAndTaskTobeAdd.getTaskRecordList().size());
+                    }
+                }
+            } else {
+//                logger.info(" 增加一个machineAndTaskTobeAdd， " + machineAndTaskTobeAdd.getMachineStrId()  );
+
+                if (machineAndTaskTobeAdd.getTaskRecordList() == null) {
+//                    logger.info("machineAndTaskTobeAdd.getTaskRecordList(). is null");
+                } else {
+//                    logger.info(machineAndTaskTobeAdd.getTaskRecordList().size());
+                }
+                machineAndTaskList.add(machineAndTaskTobeAdd);
+            }
+
+        }
+
+        PageInfo pageInfo = new PageInfo(machineAndTaskList);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }
