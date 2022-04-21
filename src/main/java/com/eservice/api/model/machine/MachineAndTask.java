@@ -45,7 +45,7 @@ public class MachineAndTask extends Machine {
         this.taskRecordList = taskRecord;
     }
 
-    public MachineType getmachineTypeWhole() {
+    public MachineType getMachineTypeWhole() {
         return machineTypeWhole;
     }
 

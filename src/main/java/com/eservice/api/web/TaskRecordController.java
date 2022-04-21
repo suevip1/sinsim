@@ -1329,6 +1329,8 @@ public class TaskRecordController {
             machineAndTaskTobeAdd.setMachineTypeWhole(taskRecordDetailList.get(i).getMachineType());
             machineAndTaskTobeAdd.setMachineOrder(taskRecordDetailList.get(i).getMachineOrder());
             machineAndTaskTobeAdd.setMachineStrId(taskRecordDetailList.get(i).getMachine().getMachineStrId());
+            machineAndTaskTobeAdd.setElectricTrim(taskRecordDetailList.get(i).getElectricTrim());
+            machineAndTaskTobeAdd.setAxleJump(taskRecordDetailList.get(i).getAxleJump());
 
             /**
              * 如果 machineAndTaskList 里存在该机器，则在该 machineAndTaskList 的taskRecordList里 加上工序;

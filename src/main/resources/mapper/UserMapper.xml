@@ -55,7 +55,7 @@
         LEFT JOIN install_group ig ON u.group_id = ig.id
         where 1=1
         <if test="account != null and account != ''">
-            and u.account like CONCAT('%','${account}','%' )
+            and u.account = #{account}
         </if>
         <if test="name != null and name != ''">
             and u.name like CONCAT('%','${name}','%' )
