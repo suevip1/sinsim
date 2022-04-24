@@ -1,6 +1,7 @@
 package com.eservice.api.web;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultGenerator;
 import com.eservice.api.model.contract.Contract;
@@ -176,7 +177,7 @@ public class MachineOrderController {
      * @param contract_id
      * @param order_num
      * @param contract_num
-     * @param status   支持多个状态用逗号隔开， "2,3,4"
+     * @param status   支持多个状态用逗号隔开， "2,3,4"， 指订单状态
      * @param sellman
      * @param customer
      * @param marketGroupName
@@ -374,7 +375,7 @@ public class MachineOrderController {
                 headcellstyle.setFont(headfont);
                 Row row;
                 row = sheet1.createRow(0);//新创建一行，行号为row+1
-                int columnSum = 36;
+                int columnSum = 38;
                 for(int c=0; c<columnSum; c++){//列头
                     row.createCell(c);//创建一个单元格，列号为col+1
                     sheet1.setColumnWidth(c,4500);
@@ -393,7 +394,9 @@ public class MachineOrderController {
                 sheet1.getRow(0).getCell(columnX++).setCellValue("单价");
                 sheet1.getRow(0).getCell(columnX++).setCellValue("装置");
                 sheet1.getRow(0).getCell(columnX++).setCellValue("装置总价");
-                sheet1.getRow(0).getCell(columnX++).setCellValue("优惠金额");
+                sheet1.getRow(0).getCell(columnX++).setCellValue("单台总价");//
+                sheet1.getRow(0).getCell(columnX++).setCellValue("优惠金额/台");
+                sheet1.getRow(0).getCell(columnX++).setCellValue("优惠金额（整体）");
                 sheet1.getRow(0).getCell(columnX++).setCellValue("订单总价");
                 sheet1.getRow(0).getCell(columnX++).setCellValue("币种");
                 sheet1.getRow(0).getCell(columnX++).setCellValue("销售员");
@@ -463,14 +466,14 @@ public class MachineOrderController {
                         sheet1.getRow(r).getCell(columnX++).setCellValue(machineInfo);//
                     }
                     sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getMachineNum());//
-                    sheet1.getRow(r).getCell(columnX).setCellValue(mod.getMachinePrice());//
+                    sheet1.getRow(r).getCell(columnX).setCellValue(mod.getMachinePrice());//机器单价 （单独一台机器，不包括装置）
                     cellStyle=wb.createCellStyle();
                     cellStyle.setDataFormat(dataFormat.getFormat("#,##0.00"));//金额格式
                     sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
 
                     List<Equipment> epArray = JSON.parseArray(mod.getEquipment(), Equipment.class);
                     String strEp="";
-                    int epAmount=0;
+                    double epAmount=0;
                     for(Equipment itemEquipment:epArray)
                     {
                         strEp+=itemEquipment.getName()+":"+itemEquipment.getNumber()+"个"+"\r\n";
@@ -480,15 +483,27 @@ public class MachineOrderController {
                     sheet1.getRow(r).getCell(columnX).setCellStyle(wrapStyle);
                     sheet1.getRow(r).getCell(columnX++).setCellValue(new HSSFRichTextString(strEp));//装置
 
-                    sheet1.getRow(r).getCell(columnX).setCellValue(epAmount);//装置金额
+                    sheet1.getRow(r).getCell(columnX).setCellValue(epAmount);//装置总价
                     sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
 
-                    sheet1.getRow(r).getCell(columnX).setCellValue(mod.getDiscounts());//优惠金额
-                    Double totalAmount=Double.parseDouble(mod.getMachinePrice())*mod.getMachineNum()
-                    +epAmount - Double.parseDouble(mod.getDiscounts());
-                    sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
+                    // 单台总价 = 机器单价 + 装置总价 (即单个机器配置的各个装置*各个装置数量)
+                    double machineAndEquipmentsAmount = Double.valueOf(mod.getMachinePrice()) + epAmount ;
+                    sheet1.getRow(r).getCell(columnX++).setCellValue(machineAndEquipmentsAmount);//单台总价
 
-                    sheet1.getRow(r).getCell(columnX).setCellValue(totalAmount);//总金额
+                    sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getDiscounts());//优惠金额(每台的)
+                    sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getOrderTotalDiscounts());//优惠金额(整体订单的)
+
+                    /**
+                     *订单总价： 不包括 居间费，即订单总价和居间费无关，不需要加上。 其他的比如业务费。保修费都不被包含，这些通常是一个百分比数。
+                     *订单总价： 要减去每台的优惠金额
+                     *订单总价： 要减去订单的总优惠金额
+                     */
+                    //订单总价：（机器单价 + 单台机器配置的装置的总价 ） * 台数
+                    Double orderTotalAmount = machineAndEquipmentsAmount * mod.getMachineNum()
+                            - Double.valueOf(mod.getDiscounts()) * mod.getMachineNum()
+                            - Double.valueOf(mod.getOrderTotalDiscounts());
+
+                    sheet1.getRow(r).getCell(columnX).setCellValue(orderTotalAmount);//订单总价
                     sheet1.getRow(r).getCell(columnX++).setCellStyle(cellStyle);
 
                     sheet1.getRow(r).getCell(columnX++).setCellValue(mod.getCurrencyType());//币种
