@@ -153,6 +153,13 @@
             <result column="machine_frame_length" jdbcType="VARCHAR" property="machineFrameLength"/>
             <result column="machine_head_style" jdbcType="VARCHAR" property="machineHeadStyle"/>
 
+            <result column="container_size" jdbcType="VARCHAR" property="containerSize"/>
+            <result column="profit_margin" jdbcType="VARCHAR" property="profitMargin"/>
+            <result column="machine_weight" jdbcType="VARCHAR" property="machineWeight"/>
+            <result column="finance_remark" jdbcType="VARCHAR" property="financeRemark"/>
+            <result column="responsible_do_fee" jdbcType="VARCHAR" property="responsibleDoFee"/>
+            <result column="delivery_fee" jdbcType="VARCHAR" property="deliveryFee"/>
+
         </association>
         <association javaType="com.eservice.api.model.order_loading_list.OrderLoadingList" property="orderLoadingList">
             <id column="order_loading_list_id" property="id"/>

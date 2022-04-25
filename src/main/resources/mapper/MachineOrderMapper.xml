@@ -52,6 +52,13 @@
 
 		<result column="machine_head_style" jdbcType="VARCHAR" property="machineHeadStyle"/>
 
+		<result column="container_size" jdbcType="VARCHAR" property="containerSize"/>
+		<result column="profit_margin" jdbcType="VARCHAR" property="profitMargin"/>
+		<result column="machine_weight" jdbcType="VARCHAR" property="machineWeight"/>
+		<result column="finance_remark" jdbcType="VARCHAR" property="financeRemark"/>
+		<result column="responsible_do_fee" jdbcType="VARCHAR" property="responsibleDoFee"/>
+		<result column="delivery_fee" jdbcType="VARCHAR" property="deliveryFee"/>
+
 	</resultMap>
 
 	<resultMap id="MachineOrderDetailMap" type="com.eservice.api.model.machine_order.MachineOrderDetail">
@@ -105,6 +112,13 @@
 		<result column="warranty_fee" jdbcType="VARCHAR" property="warrantyFee"/>
 		<result column="machine_frame_length" jdbcType="VARCHAR" property="machineFrameLength"/>
 		<result column="machine_head_style" jdbcType="VARCHAR" property="machineHeadStyle"/>
+
+		<result column="container_size" jdbcType="VARCHAR" property="containerSize"/>
+		<result column="profit_margin" jdbcType="VARCHAR" property="profitMargin"/>
+		<result column="machine_weight" jdbcType="VARCHAR" property="machineWeight"/>
+		<result column="finance_remark" jdbcType="VARCHAR" property="financeRemark"/>
+		<result column="responsible_do_fee" jdbcType="VARCHAR" property="responsibleDoFee"/>
+		<result column="delivery_fee" jdbcType="VARCHAR" property="deliveryFee"/>
 
 		<result column="nameplate" jdbcType="VARCHAR" property="nameplate"/>
 
@@ -215,7 +229,8 @@
     #{packageMark},#{machineNum},#{machineType},
     #{machinePrice},#{intermediaryPrice},#{discounts},#{orderTotalDiscounts},#{equipment},#{contractShipDate},#{planShipDate},
     #{sellman},#{maintainType},#{maintainPerson},#{status},#{createTime},#{updateTime},#{endTime},#{mark},#{allUrgent},
-    #{orderType},#{grossProfit},#{businessExpense},#{warrantyFee}, #{machineFrameLength}, #{machineHeadStyle})
+    #{orderType},#{grossProfit},#{businessExpense},#{warrantyFee}, #{machineFrameLength}, #{machineHeadStyle},
+    #{containerSize}, #{profitMargin},#{machineWeight},#{financeRemark},#{responsibleDoFee},#{deliveryFee})
   </insert>
 
 	<select id="getOrderAllDetail" resultMap="MachineOrderDetailMap">

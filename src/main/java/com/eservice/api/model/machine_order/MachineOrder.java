@@ -806,4 +806,67 @@ public class MachineOrder {
     public void setWarrantyFee(String warrantyFee) {
         this.warrantyFee = warrantyFee;
     }
+
+    //四期新增
+    //集装箱型号
+    private String containerSize;
+    //利润率
+    private String profitMargin;
+    //机器重量
+    private String machineWeight;
+    //备注
+    private String financeRemark;
+    //包干费 销售填写的条目
+    private String responsibleDoFee;
+
+    //运输费 销售填写的条目
+    private String deliveryFee;
+
+    public String getContainerSize() {
+        return containerSize;
+    }
+
+    public void setContainerSize(String containerSize) {
+        this.containerSize = containerSize;
+    }
+
+    public String getProfitMargin() {
+        return profitMargin;
+    }
+
+    public void setProfitMargin(String profitMargin) {
+        this.profitMargin = profitMargin;
+    }
+
+    public String getMachineWeight() {
+        return machineWeight;
+    }
+
+    public void setMachineWeight(String machineWeight) {
+        this.machineWeight = machineWeight;
+    }
+
+    public String getFinanceRemark() {
+        return financeRemark;
+    }
+
+    public void setFinanceRemark(String financeRemark) {
+        this.financeRemark = financeRemark;
+    }
+
+    public String getResponsibleDoFee() {
+        return responsibleDoFee;
+    }
+
+    public void setResponsibleDoFee(String responsibleDoFee) {
+        this.responsibleDoFee = responsibleDoFee;
+    }
+
+    public String getDeliveryFee() {
+        return deliveryFee;
+    }
+
+    public void setDeliveryFee(String deliveryFee) {
+        this.deliveryFee = deliveryFee;
+    }
 }
