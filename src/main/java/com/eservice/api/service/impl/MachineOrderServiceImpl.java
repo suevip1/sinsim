@@ -175,7 +175,7 @@ public class MachineOrderServiceImpl extends AbstractService<MachineOrder> imple
 //        }
     }
 
-    //从订单的成本核算员签核意见中，查找毛利率
+    //从订单的成本核算员签核意见中，查找毛利率 ---以弃用，改为成本核算员在订单里填写
     public String getGrossProfitByOrderSignContent(OrderSign orderSign) {
         String grossProfitString = "";
         List<SignContentItem> signContentItemList = JSON.parseArray(orderSign.getSignContent(), SignContentItem.class);

@@ -896,7 +896,7 @@ public class MachineOrderDetail {
     //订单分类：1.直销 2.经销商 3.代理商
     private String orderType;
 
-    //毛利率： 来自于成本核算员的签核内容，从“毛利”字符开始截取。
+    //毛利率： 来自于成本核算员的签核内容，从“毛利”字符开始截取。 -->改为成本核算员填写。
     private String grossProfit;
 
     //业务费

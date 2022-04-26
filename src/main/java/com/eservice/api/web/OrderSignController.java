@@ -155,25 +155,25 @@ public class OrderSignController {
                 }
                 /**
                  * 成本核算员签核，更新相关内容：
-                 * 1. 毛利率
+                 * 1. 毛利率 --已弃用，改为在订单里填写。
                  */
-                if(item.getRoleId() == Constant.ROLE_ID_COST_ACCOUNTANT){
-                    String grossProfitString = "";
-                        int start = 0;
-                        start = item.getComment().indexOf("【毛利率】");
-                        if(start == -1) {
-                            start = item.getComment().indexOf("[毛利率]");
-                        }
-                        if(start == -1) {
-                            start = item.getComment().indexOf("毛利率");
-                        }
-                        if(start != -1) {
-                            grossProfitString = item.getComment().substring(start);
-                            machineOrder.setGrossProfit(grossProfitString);
-                            machineOrderService.update(machineOrder);
-                            logger.info("更新了毛利率为: " + grossProfitString );
-                        }
-                }
+//                if(item.getRoleId() == Constant.ROLE_ID_COST_ACCOUNTANT){
+//                    String grossProfitString = "";
+//                        int start = 0;
+//                        start = item.getComment().indexOf("【毛利率】");
+//                        if(start == -1) {
+//                            start = item.getComment().indexOf("[毛利率]");
+//                        }
+//                        if(start == -1) {
+//                            start = item.getComment().indexOf("毛利率");
+//                        }
+//                        if(start != -1) {
+//                            grossProfitString = item.getComment().substring(start);
+//                            machineOrder.setGrossProfit(grossProfitString);
+//                            machineOrderService.update(machineOrder);
+//                            logger.info("更新了毛利率为: " + grossProfitString );
+//                        }
+//                }
 
                 /**
                  * 外贸部特殊情况，【外贸部销售经理】审核之后，再由【外贸部总监】审核
