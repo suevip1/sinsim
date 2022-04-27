@@ -47,9 +47,13 @@
     <result column="driver_y_type" jdbcType="VARCHAR" property="driverYType" />
     <result column="driver_method" jdbcType="VARCHAR" property="driverMethod" />
     <result column="driver_reel_hole" jdbcType="VARCHAR" property="driverReelHole" />
+    <result column="driver_reel" jdbcType="VARCHAR" property="driverReel" />
     <result column="driver_horizon_num" jdbcType="TINYINT" property="driverHorizonNum" />
     <result column="driver_vertical_num" jdbcType="TINYINT" property="driverVerticalNum" />
-    <result column="driver_reel" jdbcType="VARCHAR" property="driverReel" />
+
+    <result column="special_zhirongxiu" jdbcType="VARCHAR" property="specialZhirongxiu" />
+    <result column="framework_wire_rack" jdbcType="VARCHAR" property="frameworkWireRack" />
+    <result column="framework_wire_rack_platen" jdbcType="VARCHAR" property="frameworkWireRackPlaten" />
   </resultMap>
 
   <insert id="saveAndGetID"   useGeneratedKeys="true"  parameterType="com.eservice.api.model.order_detail.OrderDetail" keyProperty="id">
@@ -68,7 +72,8 @@
     driver_y_type,
     framework_machine_foot_type,
     framework_platen_support,
-    driver_method,driver_reel_hole,driver_horizon_num,driver_vertical_num,driver_reel)
+    driver_method,driver_reel_hole,driver_horizon_num,driver_vertical_num,driver_reel,
+    special_zhirongxiu, framework_wire_rack, framework_wire_rack_platen)
     values(
     #{specialTowelColor},#{specialTowelDaxle},#{specialTowelHaxle},#{specialTowelMotor},#{specialTapingHead},
     #{specialTowelNeedle}, #{specialTowelHead}, #{electricPc},#{electricLanguage},#{electricMotor},#{electricMotorXy},#{electricTrim},
@@ -84,7 +89,8 @@
     #{driverYType},
     #{frameworkMachineFootType},
     #{frameworkPlatenSupport},
-    #{driverMethod},#{driverReelHole},#{driverHorizonNum},#{driverVerticalNum},#{driverReel})
+    #{driverMethod},#{driverReelHole},#{driverHorizonNum},#{driverVerticalNum},#{driverReel},
+     #{specialZhirongxiu}, #{frameworkWireRack}, #{frameworkWireRackPlaten})
 
   </insert>
 

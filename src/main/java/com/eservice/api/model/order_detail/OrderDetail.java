@@ -993,4 +993,41 @@ public class OrderDetail {
     public void setDriverReel(String driverReel) {
         this.driverReel = driverReel;
     }
+
+    //4期新增
+    // 特种秀选项 植绒绣
+    @Column(name = "special_zhirongxiu")
+    private String specialZhirongxiu;
+
+    //机架台板系统：  线架
+    @Column(name = "framework_wire_rack")
+    private String frameworkWireRack;
+
+    //机架台板系统： 线架台板
+    @Column(name = "framework_wire_rack_platen")
+    private String frameworkWireRackPlaten;
+
+    public String getSpecialZhirongxiu() {
+        return specialZhirongxiu;
+    }
+
+    public void setSpecialZhirongxiu(String specialZhirongxiu) {
+        this.specialZhirongxiu = specialZhirongxiu;
+    }
+
+    public String getFrameworkWireRack() {
+        return frameworkWireRack;
+    }
+
+    public void setFrameworkWireRack(String frameworkWireRack) {
+        this.frameworkWireRack = frameworkWireRack;
+    }
+
+    public String getFrameworkWireRackPlaten() {
+        return frameworkWireRackPlaten;
+    }
+
+    public void setFrameworkWireRackPlaten(String frameworkWireRackPlaten) {
+        this.frameworkWireRackPlaten = frameworkWireRackPlaten;
+    }
 }
