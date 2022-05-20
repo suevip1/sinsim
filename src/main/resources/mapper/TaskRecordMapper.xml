@@ -229,8 +229,9 @@
         <if test="machineOrderNumber != null and machineOrderNumber !='' ">
           and mo.order_num like CONCAT('%','${machineOrderNumber}','%' )
         </if>
+--   APP已改为 只扫码一次，所以只有 install_end_time
         <if test="queryStartTime!=null and queryStartTime != '' ">
-          and DATE_FORMAT(tr.install_begin_time,'%Y-%m-%d') &gt;= #{queryStartTime}
+          and DATE_FORMAT(tr.install_end_time,'%Y-%m-%d') &gt;= #{queryStartTime}
         </if>
         <if test="queryFinishTime != null and queryFinishTime != '' ">
           and DATE_FORMAT(tr.install_end_time,'%Y-%m-%d') &lt;= #{queryFinishTime}
