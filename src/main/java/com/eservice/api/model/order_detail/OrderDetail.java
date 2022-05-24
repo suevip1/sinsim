@@ -999,13 +999,25 @@ public class OrderDetail {
     @Column(name = "special_zhirongxiu")
     private String specialZhirongxiu;
 
-    //机架台板系统：  线架
+    //机架台板系统：  线架 --弃用了
     @Column(name = "framework_wire_rack")
     private String frameworkWireRack;
 
-    //机架台板系统： 线架台板
+    //机架台板系统： 线架台板  --弃用了
     @Column(name = "framework_wire_rack_platen")
     private String frameworkWireRackPlaten;
+
+    // 驱动传动箱
+    @Column(name = "framework_drive_gearbox")
+    private String frameworkDriveGearbox;
+
+    public String getFrameworkDriveGearbox() {
+        return frameworkDriveGearbox;
+    }
+
+    public void setFrameworkDriveGearbox(String frameworkDriveGearbox) {
+        this.frameworkDriveGearbox = frameworkDriveGearbox;
+    }
 
     public String getSpecialZhirongxiu() {
         return specialZhirongxiu;

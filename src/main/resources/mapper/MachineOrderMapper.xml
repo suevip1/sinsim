@@ -178,6 +178,8 @@
 			<result column="special_zhirongxiu" jdbcType="VARCHAR" property="specialZhirongxiu" />
 			<result column="framework_wire_rack" jdbcType="VARCHAR" property="frameworkWireRack" />
 			<result column="framework_wire_rack_platen" jdbcType="VARCHAR" property="frameworkWireRackPlaten" />
+			<result column="framework_drive_gearbox" jdbcType="VARCHAR" property="frameworkDriveGearbox" />
+
 		</association>
 		<association javaType="com.eservice.api.model.machine_type.MachineType" property="machineType">
 			<id column="machineTypeID" property="id"/>
@@ -262,6 +264,7 @@
 		od.special_zhirongxiu,
 		od.framework_wire_rack,
 		od.framework_wire_rack_platen,
+		od.framework_drive_gearbox,
 			od.electric_pc,
 			od.electric_language,
 			od.electric_motor,
@@ -434,6 +437,7 @@
 		od.special_zhirongxiu,
 		od.framework_wire_rack,
 		od.framework_wire_rack_platen,
+		od.framework_drive_gearbox,
 			od.electric_pc,
 			od.electric_language,
 			od.electric_motor,

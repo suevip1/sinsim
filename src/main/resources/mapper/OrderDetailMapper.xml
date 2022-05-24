@@ -54,6 +54,7 @@
     <result column="special_zhirongxiu" jdbcType="VARCHAR" property="specialZhirongxiu" />
     <result column="framework_wire_rack" jdbcType="VARCHAR" property="frameworkWireRack" />
     <result column="framework_wire_rack_platen" jdbcType="VARCHAR" property="frameworkWireRackPlaten" />
+    <result column="framework_drive_gearbox" jdbcType="VARCHAR" property="frameworkDriveGearbox" />
   </resultMap>
 
   <insert id="saveAndGetID"   useGeneratedKeys="true"  parameterType="com.eservice.api.model.order_detail.OrderDetail" keyProperty="id">
@@ -73,7 +74,8 @@
     framework_machine_foot_type,
     framework_platen_support,
     driver_method,driver_reel_hole,driver_horizon_num,driver_vertical_num,driver_reel,
-    special_zhirongxiu, framework_wire_rack, framework_wire_rack_platen)
+    special_zhirongxiu, framework_wire_rack, framework_wire_rack_platen,
+    framework_drive_gearbox)
     values(
     #{specialTowelColor},#{specialTowelDaxle},#{specialTowelHaxle},#{specialTowelMotor},#{specialTapingHead},
     #{specialTowelNeedle}, #{specialTowelHead}, #{electricPc},#{electricLanguage},#{electricMotor},#{electricMotorXy},#{electricTrim},
@@ -90,7 +92,8 @@
     #{frameworkMachineFootType},
     #{frameworkPlatenSupport},
     #{driverMethod},#{driverReelHole},#{driverHorizonNum},#{driverVerticalNum},#{driverReel},
-     #{specialZhirongxiu}, #{frameworkWireRack}, #{frameworkWireRackPlaten})
+     #{specialZhirongxiu}, #{frameworkWireRack}, #{frameworkWireRackPlaten},
+     #{frameworkDriveGearbox})
 
   </insert>
 

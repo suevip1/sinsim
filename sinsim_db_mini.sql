@@ -701,6 +701,7 @@ CREATE TABLE `order_detail` (
   `driver_horizon_num` tinyint(4) DEFAULT NULL COMMENT '驱动：横档数量',
   `driver_vertical_num` tinyint(4) DEFAULT NULL COMMENT '驱动：直档数量',
   `driver_reel` varchar(255) DEFAULT NULL COMMENT '驱动：绷架',
+  `framework_drive_gearbox` varchar(255) DEFAULT NULL COMMENT '驱动传动箱',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
