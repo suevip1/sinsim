@@ -44,4 +44,10 @@ public class InstallPlanActualServiceImpl extends AbstractService<InstallPlanAct
     public List<InstallPlanActual> getInstallPlanActualList(Integer installPlanId){
         return installPlanActualMapper.getInstallPlanActualList(installPlanId);
     }
+
+    public List<InstallPlanActualDetails> selectInstallPlanActualDetailsForShowingBoard(
+            String queryStartTime,
+            String queryFinishTime){
+        return installPlanActualMapper.selectInstallPlanActualDetailsForShowingBoard( queryStartTime, queryFinishTime );
+    }
 }

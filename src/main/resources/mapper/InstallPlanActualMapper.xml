@@ -72,11 +72,12 @@
     <if test="type != null and type != ''">
       and ig.type = #{type}
     </if>
+--     install_plan_actual.create_date的属性已从 dateTime改为 date, 方便比较日期（在看板里查询当天的总装、部装）
     <if test="queryStartTime!=null and queryStartTime != '' ">
-      and DATE_FORMAT(ip.install_date_plan,'%Y-%m-%d') &gt;= #{queryStartTime}
+      and DATE_FORMAT(ipa.create_date,'%Y-%m-%d') &gt;= #{queryStartTime}
     </if>
     <if test="queryFinishTime!=null and queryFinishTime != '' ">
-      and DATE_FORMAT(ip.install_date_plan,'%Y-%m-%d') &lt;= #{queryFinishTime}
+      and DATE_FORMAT(ipa.create_date,'%Y-%m-%d') &lt;= #{queryFinishTime}
     </if>
     <if test="isNotFinished">
       and (ipa.head_count_done &lt; mo.head_num or ipa.head_count_done is null)
@@ -117,6 +118,27 @@
     </if>
 
     ORDER BY ip.create_date desc, ip.install_date_plan desc , ipa.create_date desc
+  </select>
+  <select id="selectInstallPlanActualDetailsForShowingBoard"  resultMap="InstallActualDetailsResultMap">
+    SELECT
+    todo: 问题： 去除重复的
+    * FROM install_plan_actual ipa
+    LEFT JOIN install_plan ip on ipa.install_plan_id = ip.id
+    LEFT JOIN machine_order mo on mo.id = ip.order_id
+    LEFT JOIN machine m on m.id = ip.machine_id
+    LEFT JOIN install_group ig on ig.id = ip.install_group_id
+    join process_record pr on pr.machine_id = m.id
+    join task_record tr on tr.process_record_id = pr.id
+    left join abnormal_record ar on ar.task_record_id = tr.id
+
+    where  1=1
+    --     install_plan_actual.create_date的属性已从 dateTime改为 date, 方便比较日期（在看板里查询当天的总装、部装）
+    <if test="queryStartTime!=null and queryStartTime != '' ">
+      and DATE_FORMAT(ipa.create_date,'%Y-%m-%d') &gt;= #{queryStartTime}
+    </if>
+    <if test="queryFinishTime!=null and queryFinishTime != '' ">
+      and DATE_FORMAT(ipa.create_date,'%Y-%m-%d') &lt;= #{queryFinishTime}
+    </if>
   </select>
 
   <select id="getInstallPlanActual" resultMap="BaseResultMap">

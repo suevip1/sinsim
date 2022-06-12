@@ -277,4 +277,23 @@ public class InstallPlanActualController {
         return ResultGenerator.genSuccessResult(installPlanActualList);
     }
 
+    /**
+     * 生产看板 查询当天的 总装+部装的情况，包括异常情况
+     * @param queryStartTime
+     * @param queryFinishTime
+     * @return
+     */
+    @PostMapping("/selectInstallPlanActualDetailsForShowingBoard")
+    public Result selectInstallPlanActualDetailsForShowingBoard(@RequestParam(defaultValue = "0") Integer page,
+                                                 @RequestParam(defaultValue = "0") Integer size,
+                                                 String queryStartTime,
+                                                 String queryFinishTime ) {
+        PageHelper.startPage(page, size);
+       List<InstallPlanActualDetails> list = installPlanActualService.selectInstallPlanActualDetailsForShowingBoard(
+                queryStartTime,
+                queryFinishTime );
+        PageInfo pageInfo = new PageInfo(list);
+
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
 }
