@@ -121,8 +121,10 @@
   </select>
   <select id="selectInstallPlanActualDetailsForShowingBoard"  resultMap="InstallActualDetailsResultMap">
     SELECT
-    todo: 问题： 去除重复的
-    * FROM install_plan_actual ipa
+
+    *,
+    count(distinct ig.group_name)
+    FROM install_plan_actual ipa
     LEFT JOIN install_plan ip on ipa.install_plan_id = ip.id
     LEFT JOIN machine_order mo on mo.id = ip.order_id
     LEFT JOIN machine m on m.id = ip.machine_id
