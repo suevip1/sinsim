@@ -117,5 +117,32 @@ public class InstallPlanActualDetails extends InstallPlanActual{
         this.installDatePlan = installDatePlan;
     }
 
+    //工序名称，比如用于看板查询
+    private String taskName;
+    private String abnormalName;
+    private String taskStatus; //有异常报告未解决则设为 异常，
 
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public String getAbnormalName() {
+        return abnormalName;
+    }
+
+    public void setAbnormalName(String abnormalName) {
+        this.abnormalName = abnormalName;
+    }
+
+    public String getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(String taskStatus) {
+        this.taskStatus = taskStatus;
+    }
 }

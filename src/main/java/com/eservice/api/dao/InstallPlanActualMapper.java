@@ -31,4 +31,8 @@ public interface InstallPlanActualMapper extends Mapper<InstallPlanActual> {
     List<InstallPlanActualDetails> selectInstallPlanActualDetailsForShowingBoard(
             @Param("queryStartTime") String queryStartTime,
             @Param("queryFinishTime") String queryFinishTime);
+
+    List<InstallPlanActualDetails> selectInstallPlanActualDetailsForShowingBoard_Parts(
+            @Param("queryStartTime") String queryStartTime,
+            @Param("queryFinishTime") String queryFinishTime);
 }

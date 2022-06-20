@@ -50,4 +50,10 @@ public class InstallPlanActualServiceImpl extends AbstractService<InstallPlanAct
             String queryFinishTime){
         return installPlanActualMapper.selectInstallPlanActualDetailsForShowingBoard( queryStartTime, queryFinishTime );
     }
+
+    public List<InstallPlanActualDetails> selectInstallPlanActualDetailsForShowingBoard_Parts(
+            String queryStartTime,
+            String queryFinishTime){
+        return installPlanActualMapper.selectInstallPlanActualDetailsForShowingBoard_Parts( queryStartTime, queryFinishTime );
+    }
 }

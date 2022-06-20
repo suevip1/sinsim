@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.eservice.api.core.Result;
 import com.eservice.api.core.ResultCode;
 import com.eservice.api.core.ResultGenerator;
+import com.eservice.api.model.abnormal_record.AbnormalRecord;
+import com.eservice.api.model.abnormal_record.AbnormalRecordDetail;
 import com.eservice.api.model.install_plan.InstallPlan;
 import com.eservice.api.model.install_plan_actual.InstallPlanActual;
 import com.eservice.api.model.install_plan_actual.InstallPlanActualDetails;
@@ -11,6 +13,8 @@ import com.eservice.api.model.install_plan_actual.InstallPlanActualListInfo;
 import com.eservice.api.model.machine_order.MachineOrder;
 import com.eservice.api.service.InstallPlanService;
 import com.eservice.api.service.common.CommonService;
+import com.eservice.api.service.common.Constant;
+import com.eservice.api.service.impl.AbnormalRecordServiceImpl;
 import com.eservice.api.service.impl.InstallPlanActualServiceImpl;
 import com.eservice.api.service.impl.MachineOrderServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -38,6 +42,9 @@ import java.util.List;
 public class InstallPlanActualController {
     @Resource
     private InstallPlanActualServiceImpl installPlanActualService;
+
+    @Resource
+    private AbnormalRecordServiceImpl abnormalRecordService;
 
     @Resource
     private InstallPlanService installPlanService;
@@ -150,14 +157,14 @@ public class InstallPlanActualController {
      * @return 添加或更新（比如分多次完成）成功的个数，比如非法的数据比如不合理的数量，无法被添加。
      *
      * 更新： app上不再反馈总装排产，在app扫码完成某工序时，自动生成对应installPlanActual的总装排产的数据，
-     * 所以这个controller类，包括这个接口，应该不再被使用了
+     * 所以这个controller类，包括这个接口，应该不再被使用了 ---APP 部装还是用这个接口。
      */
     @PostMapping("/addInstallPlanActualList")
 //    public Result addInstallPlanActualList(List<String> installPlanActualList) { //不能支持List
     public Result addInstallPlanActualList( String installPlanActualListInfo) {
         List<InstallPlanActual> installPlanActualList = new ArrayList<>();
         installPlanActualList = JSONObject.parseArray(installPlanActualListInfo,InstallPlanActual.class);
-        logger.info(" sss " + installPlanActualList.size());
+        logger.info(" 添加的安装个数 " + installPlanActualList.size());
 
         InstallPlanActual installPlanActual;
         Result result;
@@ -223,7 +230,7 @@ public class InstallPlanActualController {
      * @param nameplate 机器编号
      * @param installGroupName 安装组名称
      * @param type 排产类型： 部装，总装
-     * @param queryStartTime 计划日期起始
+     * @param queryStartTime 计划日期起始 --注意，这里是【计划】日期，不是实际日期
      * @param queryFinishTime 计划日期结束
      * @param isNotFinished true时查询未完成的排产，为false时查询 或空时 不管是否完成。
      * @return
@@ -279,6 +286,8 @@ public class InstallPlanActualController {
 
     /**
      * 生产看板 查询当天的 总装+部装的情况，包括异常情况
+     * 目前如果安装报了异常，是不会生成InstallPlanActual数据，即只有在安装成功时才生成该数据。
+     * 所以需要根据日期去查询异常 （用日期查询当天的异常比较快）
      * @param queryStartTime
      * @param queryFinishTime
      * @return
@@ -293,7 +302,71 @@ public class InstallPlanActualController {
                 queryStartTime,
                 queryFinishTime );
         PageInfo pageInfo = new PageInfo(list);
+// 之前 部装的数据没有出来。 因为 addInstallPlanActualList 添加部装，和task_record 不相关（没有taskRecord数据）。
+        List<InstallPlanActualDetails> list_parts = installPlanActualService.selectInstallPlanActualDetailsForShowingBoard_Parts(
+                queryStartTime,
+                queryFinishTime );
+        for(int p=0; p< list_parts.size(); p++){
+            list.add(list_parts.get(p));
+        }
 
+        //总装，task status是数字， 要转换
+        //部装，没有taskName, 只有install group_name ， 要转换
+        for(int k=0; k< list.size(); k++){
+
+            if(list.get(k).getType().equals("总装")) {
+                if (list.get(k).getTaskStatus().equals(Constant.TASK_INITIAL.toString())) {
+                    list.get(k).setTaskStatus(Constant.STR_TASK_INITIAL);
+                } else if (list.get(k).getTaskStatus().equals(Constant.TASK_PLANED.toString())) {
+                    list.get(k).setTaskStatus(Constant.STR_TASK_PLANED);
+                } else if (list.get(k).getTaskStatus().equals(Constant.TASK_INSTALL_WAITING.toString())) {
+                    list.get(k).setTaskStatus(Constant.STR_TASK_INSTALL_WAITING);
+                } else if (list.get(k).getTaskStatus().equals(Constant.TASK_INSTALLING.toString())) {
+                    list.get(k).setTaskStatus(Constant.STR_TASK_INSTALLING);
+                } else if (list.get(k).getTaskStatus().equals(Constant.TASK_INSTALLED.toString())) {
+                    list.get(k).setTaskStatus(Constant.STR_TASK_INSTALLED);
+                }
+            } else if(list.get(k).getType().equals("部装")) {
+
+                //如果是部装，没有taskRecord, 用安装组名称 来表示 taskName
+                list.get(k).setTaskName( list.get(k).getGroupName());
+                //如果是部装，没有taskRecord, 所以根据是否完成来判断taskStatus
+                if(list.get(k).getHeadNum().equals( list.get(k).getHeadCountDone().toString())){
+                    list.get(k).setTaskStatus("安装完成");
+                } else {
+                    list.get(k).setTaskStatus("未完成");
+                }
+            }
+        }
+
+//        所以需要根据日期去查询异常 （用日期查询当天的异常比较快）
+        List<AbnormalRecordDetail> abnormalRecordDetailList
+                = abnormalRecordService.selectAbnormalRecordDetailList(
+                        null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                2,//未解决
+                queryStartTime,
+                queryFinishTime);
+        for(int i=0; i< abnormalRecordDetailList.size(); i++){
+
+            InstallPlanActualDetails item = new InstallPlanActualDetails();
+            item.setAbnormalName(abnormalRecordDetailList.get(i).getAbnormal().getAbnormalName());
+            item.setTaskName(abnormalRecordDetailList.get(i).getTaskRecord().getTaskName());
+            item.setNameplate(abnormalRecordDetailList.get(i).getMachine().getNameplate());
+            item.setOrderNum(abnormalRecordDetailList.get(i).getOrderNum());
+
+            MachineOrder machineOrder = machineOrderService.getMachineOrder(abnormalRecordDetailList.get(i).getOrderNum());
+            if(machineOrder != null){
+                item.setHeadNum(machineOrder.getHeadNum());
+            }
+//            item.setHeadCountDone('');
+            item.setTaskStatus(abnormalRecordDetailList.get(i).getAbnormal().getAbnormalName());
+            list.add(item);
+        }
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

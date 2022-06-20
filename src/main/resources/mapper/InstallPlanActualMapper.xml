@@ -73,11 +73,12 @@
       and ig.type = #{type}
     </if>
 --     install_plan_actual.create_date的属性已从 dateTime改为 date, 方便比较日期（在看板里查询当天的总装、部装）
+--    -->不行，这里是按 计划日期，不是按实际日期查询，改回ip.install_date_plan
     <if test="queryStartTime!=null and queryStartTime != '' ">
-      and DATE_FORMAT(ipa.create_date,'%Y-%m-%d') &gt;= #{queryStartTime}
+      and DATE_FORMAT(ip.install_date_plan,'%Y-%m-%d') &gt;= #{queryStartTime}
     </if>
     <if test="queryFinishTime!=null and queryFinishTime != '' ">
-      and DATE_FORMAT(ipa.create_date,'%Y-%m-%d') &lt;= #{queryFinishTime}
+      and DATE_FORMAT(ip.install_date_plan,'%Y-%m-%d') &lt;= #{queryFinishTime}
     </if>
     <if test="isNotFinished">
       and (ipa.head_count_done &lt; mo.head_num or ipa.head_count_done is null)
@@ -123,7 +124,8 @@
     SELECT
 
     *,
-    count(distinct ig.group_name)
+    tr.`status` as taskStatus,
+    count(distinct ig.group_name)  -- 这里的方法不对，无法查询到多个。。。需要:GROUP BY tr.task_name
     FROM install_plan_actual ipa
     LEFT JOIN install_plan ip on ipa.install_plan_id = ip.id
     LEFT JOIN machine_order mo on mo.id = ip.order_id
@@ -132,9 +134,39 @@
     join process_record pr on pr.machine_id = m.id
     join task_record tr on tr.process_record_id = pr.id
     left join abnormal_record ar on ar.task_record_id = tr.id
-
+    LEFT JOIN abnormal a on a.id = ar.abnormal_type
     where  1=1
+    and (tr.`status` = 4 || tr.`status` = 3 )
     --     install_plan_actual.create_date的属性已从 dateTime改为 date, 方便比较日期（在看板里查询当天的总装、部装）
+    <if test="queryStartTime!=null and queryStartTime != '' ">
+      and DATE_FORMAT(ipa.create_date,'%Y-%m-%d') &gt;= #{queryStartTime}
+    </if>
+    <if test="queryFinishTime!=null and queryFinishTime != '' ">
+      and DATE_FORMAT(ipa.create_date,'%Y-%m-%d') &lt;= #{queryFinishTime}
+    </if>
+    GROUP BY tr.task_name, m.nameplate
+--      工序名称+铭牌号， 只出现一次
+  </select>
+
+  <select id="selectInstallPlanActualDetailsForShowingBoard_Parts" resultMap="InstallActualDetailsResultMap">
+    SELECT
+      ipa.head_count_done,
+      ipa.cmt_feedback,
+      ipa.create_date,
+      ip.type,
+      ip.cmt_send,
+      mo.order_num,
+    mo.head_num,
+      m.nameplate,
+      ig.group_name
+    FROM
+        install_plan_actual ipa
+    LEFT JOIN install_plan ip ON ip.id = ipa.install_plan_id
+    LEFT JOIN machine_order mo ON ip.order_id = mo.id
+    LEFT JOIN machine m ON ip.machine_id = m.id
+    LEFT JOIN install_group ig on ig.id = ip.install_group_id
+    WHERE
+        ip.type = '部装'
     <if test="queryStartTime!=null and queryStartTime != '' ">
       and DATE_FORMAT(ipa.create_date,'%Y-%m-%d') &gt;= #{queryStartTime}
     </if>
